@@ -8,6 +8,7 @@ import { filter } from 'rxjs/operators';
 import { ZcSidenavMenuItems } from '../../menu-items/zc-sidenav-menu-items/zc-sidenav-menu-items';
 import { Footer } from '../../footer/footer';
 import { ThemeToggle } from '../../theme-toggle/theme-toggle';
+import { LanguageSwitcher } from '../../language-switcher/language-switcher';
 import { I18nService } from '../../../services/i18n.service';
 
 @Component({
@@ -22,6 +23,7 @@ import { I18nService } from '../../../services/i18n.service';
     ZcSidenavMenuItems,
     Footer,
     ThemeToggle,
+    LanguageSwitcher,
   ],
   templateUrl: './zc-nav-mobile.html',
   styleUrl: './zc-nav-mobile.css',

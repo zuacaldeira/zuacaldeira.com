@@ -1,0 +1,13 @@
+button[mat-icon-button] {
+  color: var(--zc-text-muted);
+  transition: color var(--zc-transition-fast);
+}
+
+button[mat-icon-button]:hover {
+  color: var(--zc-text-heading);
+}
+
+.active-lang {
+  font-weight: 700;
+  color: var(--zc-accent);
+}
