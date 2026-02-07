@@ -1,0 +1,8 @@
+<div class="desktop-menu-items" role="navigation" aria-label="Main navigation">
+  @for (item of navItems; track item.route) {
+    <a [routerLink]="item.route" routerLinkActive="active-link"
+       [routerLinkActiveOptions]="{ exact: item.route === '/home' }">
+      {{ item.label }}
+    </a>
+  }
+</div>

@@ -1,0 +1,43 @@
+<div class="research-page">
+  <app-section-header
+    title="Research"
+    subtitle="Session Types for safe concurrent programming, under Vasco T. Vasconcelos." />
+
+  <div class="publications">
+    @for (pub of publications; track pub.title) {
+      <mat-card appearance="outlined" class="publication-card">
+        <mat-card-header>
+          <mat-card-title>{{ pub.title }}</mat-card-title>
+          <mat-card-subtitle>
+            {{ pub.authors.join(', ') }} &mdash; {{ pub.venue }}, {{ pub.year }}
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="abstract">{{ pub.abstract }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          @if (pub.doi) {
+            <a mat-button [href]="'https://doi.org/' + pub.doi" target="_blank" rel="noopener noreferrer">
+              <mat-icon>open_in_new</mat-icon>
+              DOI
+            </a>
+          }
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+
+  <div class="research-links">
+    <h2>Research Profiles</h2>
+    <div class="link-buttons">
+      <a mat-stroked-button href="https://www.researchgate.net/profile/Alexandre-Caldeira" target="_blank" rel="noopener noreferrer">
+        ResearchGate
+        <mat-icon>open_in_new</mat-icon>
+      </a>
+      <a mat-stroked-button href="https://scholar.google.com" target="_blank" rel="noopener noreferrer">
+        Google Scholar
+        <mat-icon>open_in_new</mat-icon>
+      </a>
+    </div>
+  </div>
+</div>

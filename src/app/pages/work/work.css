@@ -1,0 +1,21 @@
+.work-page {
+  max-width: var(--zc-max-width);
+  margin: 0 auto;
+  padding: var(--zc-space-12) var(--zc-space-6);
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--zc-space-6);
+}
+
+@media (max-width: 768px) {
+  .work-page {
+    padding: var(--zc-space-8) var(--zc-space-4);
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}

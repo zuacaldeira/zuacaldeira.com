@@ -1,0 +1,41 @@
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 280px;
+}
+
+.sidenav-header {
+  background: transparent;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.mobile-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--zc-border-light);
+}
+
+:host-context(html.dark-theme) .mobile-toolbar {
+  background: rgba(25, 23, 22, 0.85);
+}
+
+.logo {
+  text-decoration: none;
+  margin-left: var(--zc-space-2);
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--zc-text-heading);
+  letter-spacing: -0.02em;
+}

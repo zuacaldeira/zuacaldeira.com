@@ -1,0 +1,37 @@
+mat-card {
+  height: 100%;
+  border-radius: var(--zc-radius-xl) !important;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-card-header {
+  padding: var(--zc-space-6) var(--zc-space-6) 0;
+}
+
+mat-card-content {
+  padding: var(--zc-space-4) var(--zc-space-6);
+  flex: 1;
+}
+
+mat-card-actions {
+  padding: 0 var(--zc-space-4) var(--zc-space-4);
+}
+
+.description {
+  color: var(--zc-text-body);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  margin: 0 0 var(--zc-space-4);
+}
+
+mat-chip-set {
+  margin-top: var(--zc-space-2);
+}
+
+a mat-icon {
+  margin-right: var(--zc-space-2);
+  font-size: 1rem;
+  height: 16px;
+  width: 16px;
+}

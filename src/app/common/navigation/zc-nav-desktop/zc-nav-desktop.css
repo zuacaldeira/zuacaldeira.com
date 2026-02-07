@@ -1,0 +1,42 @@
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--zc-border-light);
+  padding: 0;
+}
+
+:host-context(html.dark-theme) mat-toolbar {
+  background: rgba(25, 23, 22, 0.85);
+}
+
+.toolbar-content {
+  width: 100%;
+  max-width: var(--zc-max-width);
+  margin: 0 auto;
+  padding: 0 var(--zc-space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.logo {
+  text-decoration: none;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--zc-text-heading);
+  letter-spacing: -0.02em;
+}
+
+nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}

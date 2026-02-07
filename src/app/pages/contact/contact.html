@@ -1,0 +1,19 @@
+<div class="contact-page">
+  <app-section-header
+    title="Contact"
+    subtitle="Let's connect — reach out through any of these channels." />
+
+  <div class="social-grid">
+    @for (link of socialLinks; track link.platform) {
+      <a mat-stroked-button
+         [href]="link.url"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="social-button hover-lift"
+         [attr.aria-label]="link.label">
+        <mat-icon>{{ link.icon }}</mat-icon>
+        {{ link.platform }}
+      </a>
+    }
+  </div>
+</div>

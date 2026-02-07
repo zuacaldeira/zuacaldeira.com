@@ -1,0 +1,21 @@
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<header>
+  <mat-toolbar>
+    <div class="toolbar-content">
+      <a routerLink="/home" class="logo" aria-label="Home">
+        <span class="logo-text">zc</span>
+      </a>
+      <nav>
+        <app-zc-desktop-menu-items />
+      </nav>
+      <app-theme-toggle />
+    </div>
+  </mat-toolbar>
+</header>
+
+<main id="main-content">
+  <router-outlet />
+</main>
+
+<app-footer />

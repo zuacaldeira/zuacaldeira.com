@@ -1,0 +1,15 @@
+mat-card {
+  border-radius: var(--zc-radius-xl) !important;
+}
+
+mat-card-header {
+  padding: var(--zc-space-6) var(--zc-space-6) 0;
+}
+
+mat-card-content {
+  padding: var(--zc-space-4) var(--zc-space-6) var(--zc-space-6);
+}
+
+.race-details {
+  margin-top: var(--zc-space-2);
+}

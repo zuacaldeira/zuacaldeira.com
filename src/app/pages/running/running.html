@@ -1,0 +1,37 @@
+<div class="running-page">
+  <app-section-header
+    title="Running"
+    subtitle="Training and racing through Berlin's seasons." />
+
+  @if (upcomingRaces.length > 0) {
+    <section class="race-section">
+      <h2>Upcoming Races</h2>
+      <div class="race-grid">
+        @for (race of upcomingRaces; track race.name) {
+          <app-race-card [race]="race" />
+        }
+      </div>
+    </section>
+  }
+
+  @if (completedRaces.length > 0) {
+    <section class="race-section">
+      <h2>Completed</h2>
+      <div class="race-grid">
+        @for (race of completedRaces; track race.name) {
+          <app-race-card [race]="race" />
+        }
+      </div>
+    </section>
+  }
+
+  <div class="strava-link">
+    <a mat-stroked-button
+       href="https://www.strava.com/athletes/zuacaldeira"
+       target="_blank"
+       rel="noopener noreferrer">
+      <mat-icon>directions_run</mat-icon>
+      Follow on Strava
+    </a>
+  </div>
+</div>

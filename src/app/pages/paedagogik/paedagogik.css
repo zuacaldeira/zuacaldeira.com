@@ -1,0 +1,35 @@
+.paedagogik-page {
+  max-width: var(--zc-max-width);
+  margin: 0 auto;
+  padding: var(--zc-space-12) var(--zc-space-6);
+}
+
+.intro {
+  margin-bottom: var(--zc-space-8);
+}
+
+.intro {
+  max-width: 65ch;
+}
+
+.intro p {
+  color: var(--zc-text-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  margin: 0;
+}
+
+.intro strong {
+  color: var(--zc-text-heading);
+  font-weight: 600;
+}
+
+.tab-content {
+  padding: var(--zc-space-8) 0;
+}
+
+@media (max-width: 768px) {
+  .paedagogik-page {
+    padding: var(--zc-space-8) var(--zc-space-4);
+  }
+}

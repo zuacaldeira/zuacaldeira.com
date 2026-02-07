@@ -1,0 +1,41 @@
+.running-page {
+  max-width: var(--zc-max-width);
+  margin: 0 auto;
+  padding: var(--zc-space-12) var(--zc-space-6);
+}
+
+.race-section {
+  margin-bottom: var(--zc-space-12);
+}
+
+.race-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--zc-space-6);
+  color: var(--zc-text-heading);
+}
+
+.race-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--zc-space-6);
+}
+
+.strava-link {
+  margin-top: var(--zc-space-8);
+}
+
+.strava-link a mat-icon {
+  margin-right: var(--zc-space-2);
+}
+
+@media (max-width: 768px) {
+  .running-page {
+    padding: var(--zc-space-8) var(--zc-space-4);
+  }
+
+  .race-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,22 @@
+.desktop-menu-items {
+  display: flex;
+  gap: var(--zc-space-6);
+  align-items: center;
+}
+
+a {
+  text-decoration: none;
+  color: var(--zc-text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: var(--zc-space-2) 0;
+  border-bottom: 2px solid transparent;
+  transition: color var(--zc-transition-fast), border-color var(--zc-transition-fast);
+}
+
+a:hover,
+a.active-link {
+  color: var(--zc-text-heading);
+  border-bottom-color: var(--zc-accent);
+}

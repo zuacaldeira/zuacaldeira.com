@@ -1,0 +1,17 @@
+<div class="facharbeiten">
+  @for (item of facharbeiten; track item.title) {
+    <div class="facharbeit-item">
+      <div class="item-content">
+        <h3>{{ item.title }}</h3>
+        <p class="subject">{{ item.subject }} &mdash; {{ item.year }}</p>
+        <p class="description">{{ item.description }}</p>
+      </div>
+      @if (item.pdfUrl) {
+        <a mat-stroked-button [href]="item.pdfUrl" target="_blank" rel="noopener noreferrer">
+          <mat-icon>download</mat-icon>
+          PDF
+        </a>
+      }
+    </div>
+  }
+</div>

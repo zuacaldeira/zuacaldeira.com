@@ -1,0 +1,16 @@
+button {
+  color: var(--zc-text-muted);
+  transition: color var(--zc-transition-fast);
+}
+
+button:hover {
+  color: var(--zc-text-heading);
+}
+
+button mat-icon {
+  transition: transform 0.4s ease, opacity 0.3s ease;
+}
+
+button:active mat-icon {
+  transform: rotate(180deg);
+}

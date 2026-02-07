@@ -1,0 +1,79 @@
+.hero {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--zc-space-16) var(--zc-space-6);
+  background: var(--zc-bg-warm);
+}
+
+.hero-content {
+  max-width: var(--zc-max-width);
+  width: 100%;
+}
+
+.hero-greeting {
+  font-size: 1.125rem;
+  color: var(--zc-accent);
+  font-weight: 500;
+  margin: 0 0 var(--zc-space-2);
+  letter-spacing: 0.02em;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+  animation-delay: 0.1s;
+}
+
+.hero-name {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  margin: 0 0 var(--zc-space-4);
+  color: var(--zc-text-heading);
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+  animation-delay: 0.2s;
+}
+
+.hero-tagline {
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  color: var(--zc-text-body);
+  margin: 0 0 var(--zc-space-2);
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+  animation-delay: 0.3s;
+}
+
+.hero-location {
+  font-size: 1rem;
+  color: var(--zc-text-muted);
+  margin: 0 0 var(--zc-space-8);
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+  animation-delay: 0.4s;
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--zc-space-4);
+  align-items: center;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+  animation-delay: 0.5s;
+}
+
+.hero-cta mat-icon {
+  margin-left: var(--zc-space-2);
+  font-size: 1.125rem;
+  height: 18px;
+  width: 18px;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 60vh;
+    padding: var(--zc-space-12) var(--zc-space-4);
+  }
+}

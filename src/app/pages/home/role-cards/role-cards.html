@@ -1,0 +1,17 @@
+<section class="role-cards">
+  <div class="cards-grid">
+    @for (role of roles; track role.title) {
+      <a [routerLink]="role.route" class="card-link hover-lift">
+        <mat-card appearance="outlined">
+          <mat-card-header>
+            <mat-icon class="role-icon">{{ role.icon }}</mat-icon>
+            <mat-card-title>{{ role.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ role.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </a>
+    }
+  </div>
+</section>

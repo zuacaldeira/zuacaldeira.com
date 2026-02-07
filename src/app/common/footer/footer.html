@@ -1,0 +1,30 @@
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-brand">
+      <span class="logo-text">zuacaldeira</span>
+      <p>Researcher. Developer. Educator. Runner.</p>
+    </div>
+
+    <div class="footer-nav">
+      <h4>Pages</h4>
+      <ul>
+        @for (item of navItems; track item.route) {
+          <li><a [routerLink]="item.route">{{ item.label }}</a></li>
+        }
+      </ul>
+    </div>
+
+    <div class="footer-social">
+      <h4>Connect</h4>
+      <ul>
+        @for (link of socialLinks; track link.platform) {
+          <li><a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.platform }}</a></li>
+        }
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&copy; {{ currentYear }} Alexandre Caldeira</span>
+  </div>
+</footer>

@@ -1,0 +1,25 @@
+<mat-card appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>{{ race.name }}</mat-card-title>
+    <mat-card-subtitle>{{ race.date }} &mdash; {{ race.location }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="race-details">
+      <mat-chip-set>
+        <mat-chip>
+          <mat-icon matChipAvatar>straighten</mat-icon>
+          {{ race.distance }}
+        </mat-chip>
+        @if (race.result) {
+          <mat-chip highlighted>
+            <mat-icon matChipAvatar>timer</mat-icon>
+            {{ race.result }}
+          </mat-chip>
+        }
+        @if (race.upcoming) {
+          <mat-chip>Upcoming</mat-chip>
+        }
+      </mat-chip-set>
+    </div>
+  </mat-card-content>
+</mat-card>

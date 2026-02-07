@@ -1,0 +1,48 @@
+.about-page {
+  max-width: var(--zc-max-width);
+  margin: 0 auto;
+  padding: var(--zc-space-12) var(--zc-space-6);
+}
+
+.about-content {
+  display: grid;
+  gap: var(--zc-space-8);
+}
+
+.about-text {
+  max-width: 65ch;
+}
+
+.about-text h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: var(--zc-space-12) 0 var(--zc-space-4);
+  color: var(--zc-text-heading);
+}
+
+.about-text h2:first-child {
+  margin-top: 0;
+}
+
+.about-text p {
+  color: var(--zc-text-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  margin: 0 0 var(--zc-space-4);
+}
+
+.about-text strong {
+  color: var(--zc-text-heading);
+  font-weight: 600;
+}
+
+.about-text em {
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .about-page {
+    padding: var(--zc-space-8) var(--zc-space-4);
+  }
+}

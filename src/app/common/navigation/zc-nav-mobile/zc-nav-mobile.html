@@ -1,0 +1,40 @@
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+    [attr.role]="'dialog'"
+    [mode]="'over'"
+    [opened]="false">
+    <mat-toolbar class="sidenav-header">
+      <span>Menu</span>
+      <span class="spacer"></span>
+      <button mat-icon-button (click)="drawer.close()" aria-label="Close menu">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar>
+    <nav aria-label="Main navigation">
+      <app-zc-sidenav-menu-items />
+    </nav>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <header>
+      <mat-toolbar class="mobile-toolbar">
+        <button type="button" aria-label="Open menu" mat-icon-button (click)="toggle(drawer)">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <a routerLink="/home" class="logo" aria-label="Home">
+          <span class="logo-text">zc</span>
+        </a>
+        <span class="spacer"></span>
+        <app-theme-toggle />
+      </mat-toolbar>
+    </header>
+
+    <main id="main-content">
+      <router-outlet />
+    </main>
+
+    <app-footer />
+  </mat-sidenav-content>
+</mat-sidenav-container>
