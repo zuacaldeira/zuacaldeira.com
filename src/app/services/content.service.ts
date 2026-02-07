@@ -136,39 +136,38 @@ export class ContentService {
 
   readonly facharbeiten: readonly Facharbeit[] = [
     {
-      title: 'Sprachentwicklung bei mehrsprachigen Kindern im Kita-Alltag',
-      subject: 'Sprache & Kommunikation',
+      title: 'Schriftliche Reflexion — Berufliche Identität',
+      subject: 'LF1 — Berufliche Identität',
       year: 2025,
       description:
-        'Analysis of language development patterns in multilingual children within a bilingual kindergarten setting.',
-      pdfUrl: 'assets/pdfs/facharbeit-sprache.pdf',
+        'Written reflection on professional identity as part of the educator training program.',
+      pdfUrl: 'assets/pdfs/reflexion-berufliche-identitaet.pdf',
     },
     {
-      title: 'Digitale Medien in der frühkindlichen Bildung',
-      subject: 'Medienpädagogik',
+      title: 'Bronfenbrenner — Lebenswelten und Diversität',
+      subject: 'LF3 — Lebenswelten und Diversität',
+      year: 2024,
+      description:
+        'SOL paper on Bronfenbrenner\'s ecological systems theory in the context of diverse living environments.',
+      pdfUrl: 'assets/pdfs/bronfenbrenner-lebenswelten.pdf',
+    },
+    {
+      title: 'Filmzusammenfassung — Anthroposophie (V1)',
+      subject: 'LF Waldorf — Anthroposophie',
       year: 2025,
       description:
-        'Exploring the role and responsible integration of digital media in early childhood education.',
-      pdfUrl: 'assets/pdfs/facharbeit-medien.pdf',
+        'Film reflection and summary on anthroposophy in the context of Waldorf pedagogy.',
+      pdfUrl: 'assets/pdfs/filmzusammenfassung-anthroposophie-v1.pdf',
+    },
+    {
+      title: 'Filmzusammenfassung — Anthroposophie (V2)',
+      subject: 'LF Waldorf — Anthroposophie',
+      year: 2025,
+      description:
+        'Revised film reflection and summary on anthroposophy in the context of Waldorf pedagogy.',
+      pdfUrl: 'assets/pdfs/filmzusammenfassung-anthroposophie-v2.pdf',
     },
   ];
 
-  readonly praesentationen: readonly Praesentation[] = [
-    {
-      title: 'Bildung für nachhaltige Entwicklung (BNE) in der Kita',
-      subject: 'Naturpädagogik',
-      year: 2025,
-      description:
-        'Presentation on implementing sustainability education in early childhood settings.',
-      pdfUrl: 'assets/pdfs/praesentation-bne.pdf',
-    },
-    {
-      title: 'Partizipation und Kinderrechte',
-      subject: 'Sozialpädagogik',
-      year: 2024,
-      description:
-        'Exploring children\'s rights and participation in daily kindergarten routines.',
-      pdfUrl: 'assets/pdfs/praesentation-partizipation.pdf',
-    },
-  ];
+  readonly praesentationen: readonly Praesentation[] = [];
 }
