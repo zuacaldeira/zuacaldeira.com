@@ -28,7 +28,8 @@ src/app/
   common/           # Shared UI: navigation/, footer/, theme-toggle/, section-header/
   pages/            # Route components: home/, about/, research/, work/, paedagogik/, running/, contact/
   services/         # ThemeService, ContentService
-  models/           # TypeScript interfaces
+  models/           # TypeScript interfaces (including i18n.ts)
+  i18n/             # Translation files: en.ts, pt.ts (de.ts, fr.ts planned)
 ```
 
 ## Routing
@@ -74,6 +75,14 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - Tertiary: `mat.$violet-palette`
 - Typography: Inter
 - Dark theme via `.dark-theme` class on `<html>`
+
+## Internationalization (i18n)
+
+- **Type-safe translations** via the `Translations` interface in `models/i18n.ts`
+- Supported languages: `'en' | 'pt' | 'de' | 'fr'` (English and Portuguese implemented, German and French planned)
+- Translation files live in `src/app/i18n/` — one file per language exporting a `Translations` object
+- Covers all sections: nav, hero, about, research, work, paedagogik, running, contact, footer, common labels
+- Content arrays (`roleCards`, `projects`, `facharbeiten`) are also translated
 
 ## TypeScript
 
