@@ -27,7 +27,7 @@ Build output: `dist/zuacaldeira-com/browser/` (prerendered static HTML).
 src/app/
   common/           # Shared UI: navigation/, footer/, theme-toggle/, section-header/
   pages/            # Route components: home/, about/, research/, work/, paedagogik/, running/, contact/
-  services/         # ThemeService, ContentService
+  services/         # ThemeService, ContentService, I18nService
   models/           # TypeScript interfaces (including i18n.ts)
   i18n/             # Translation files: en.ts, pt.ts (de.ts, fr.ts planned)
 ```
@@ -51,6 +51,10 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 **ContentService** (`services/content.service.ts`)
 - Static data provider — typed readonly arrays, no HTTP calls
 - All site content (projects, experiences, etc.) defined inline
+
+**I18nService** (`services/i18n.service.ts`)
+- Signal-based language switching (`language` signal + computed `translations`)
+- SSR-safe, persists to `localStorage`, auto-detects browser language
 
 ## Component Patterns
 
@@ -78,8 +82,15 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 
 ## Internationalization (i18n)
 
-- **Type-safe translations** via the `Translations` interface in `models/i18n.ts`
-- Supported languages: `'en' | 'pt' | 'de' | 'fr'` (English and Portuguese implemented, German and French planned)
+**I18nService** (`services/i18n.service.ts`)
+- Signal-based language switching with computed `translations` signal
+- SSR-safe with `isPlatformBrowser` guard
+- Persists preference to `localStorage` (`zc-lang` key)
+- Auto-detects browser language on first visit
+- `language` signal holds current `Language`, `translations` signal holds current `Translations` object
+
+**Type-safe translations** via the `Translations` interface in `models/i18n.ts`
+- Supported languages: `'en' | 'pt' | 'de' | 'fr'` (English and Portuguese implemented, German and French fall back to English)
 - Translation files live in `src/app/i18n/` — one file per language exporting a `Translations` object
 - Covers all sections: nav, hero, about, research, work, paedagogik, running, contact, footer, common labels
 - Content arrays (`roleCards`, `projects`, `facharbeiten`) are also translated
