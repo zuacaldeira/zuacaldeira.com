@@ -3,12 +3,14 @@ import { isPlatformBrowser } from '@angular/common';
 import { Language, Translations } from '../models/i18n';
 import { en } from '../i18n/en';
 import { pt } from '../i18n/pt';
+import { de } from '../i18n/de';
+import { fr } from '../i18n/fr';
 
 const TRANSLATION_MAP: Record<Language, Translations> = {
   en,
   pt,
-  de: en, // fallback until de.ts is created
-  fr: en, // fallback until fr.ts is created
+  de,
+  fr,
 };
 
 @Injectable({
