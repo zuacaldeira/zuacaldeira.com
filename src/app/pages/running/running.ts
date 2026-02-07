@@ -5,6 +5,7 @@ import { SectionHeader } from '../../common/section-header/section-header';
 import { RaceCard } from './race-card/race-card';
 import { ContentService } from '../../services/content.service';
 import { Race } from '../../models/models';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-running',
@@ -14,6 +15,7 @@ import { Race } from '../../models/models';
 })
 export class Running {
   private contentService = inject(ContentService);
+  readonly t = inject(I18nService).translations;
 
   readonly upcomingRaces: readonly Race[] = this.contentService.races.filter((r) => r.upcoming);
   readonly completedRaces: readonly Race[] = this.contentService.races.filter((r) => !r.upcoming);

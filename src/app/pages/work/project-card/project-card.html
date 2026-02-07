@@ -14,13 +14,13 @@
     @if (project.repoUrl) {
       <a mat-button [href]="project.repoUrl" target="_blank" rel="noopener noreferrer">
         <mat-icon>code</mat-icon>
-        Source
+        {{ t().common.source }}
       </a>
     }
     @if (project.liveUrl) {
       <a mat-button [href]="project.liveUrl" target="_blank" rel="noopener noreferrer">
         <mat-icon>open_in_new</mat-icon>
-        Live
+        {{ t().common.live }}
       </a>
     }
   </mat-card-actions>

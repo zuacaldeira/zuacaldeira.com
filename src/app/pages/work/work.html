@@ -1,10 +1,10 @@
 <div class="work-page">
   <app-section-header
-    title="Work"
-    subtitle="Software projects — Angular, Spring Boot, and the Casa Azul ecosystem." />
+    [title]="t().work.title"
+    [subtitle]="t().work.subtitle" />
 
   <div class="projects-grid">
-    @for (project of projects; track project.title) {
+    @for (project of projects(); track project.title) {
       <app-project-card [project]="project" />
     }
   </div>

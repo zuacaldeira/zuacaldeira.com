@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { filter } from 'rxjs/operators';
 import { ZcSidenavMenuItems } from '../../menu-items/zc-sidenav-menu-items/zc-sidenav-menu-items';
 import { Footer } from '../../footer/footer';
 import { ThemeToggle } from '../../theme-toggle/theme-toggle';
+import { I18nService } from '../../../services/i18n.service';
 
 @Component({
   selector: 'app-zc-nav-mobile',
@@ -26,6 +27,7 @@ import { ThemeToggle } from '../../theme-toggle/theme-toggle';
   styleUrl: './zc-nav-mobile.css',
 })
 export class ZcNavMobile {
+  readonly t = inject(I18nService).translations;
   @ViewChild('drawer') drawer!: MatSidenav;
 
   constructor(private router: Router) {

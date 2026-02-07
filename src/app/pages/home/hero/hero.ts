@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { I18nService } from '../../../services/i18n.service';
 
 @Component({
   selector: 'app-hero',
@@ -9,4 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './hero.html',
   styleUrl: './hero.css',
 })
-export class Hero {}
+export class Hero {
+  readonly t = inject(I18nService).translations;
+}

@@ -1,4 +1,4 @@
-<a href="#main-content" class="skip-link">Skip to main content</a>
+<a href="#main-content" class="skip-link">{{ t().common.skipToContent }}</a>
 
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
@@ -6,9 +6,9 @@
     [mode]="'over'"
     [opened]="false">
     <mat-toolbar class="sidenav-header">
-      <span>Menu</span>
+      <span>{{ t().common.menu }}</span>
       <span class="spacer"></span>
-      <button mat-icon-button (click)="drawer.close()" aria-label="Close menu">
+      <button mat-icon-button (click)="drawer.close()" [attr.aria-label]="t().common.closeMenu">
         <mat-icon>close</mat-icon>
       </button>
     </mat-toolbar>
@@ -20,7 +20,7 @@
   <mat-sidenav-content>
     <header>
       <mat-toolbar class="mobile-toolbar">
-        <button type="button" aria-label="Open menu" mat-icon-button (click)="toggle(drawer)">
+        <button type="button" [attr.aria-label]="t().common.openMenu" mat-icon-button (click)="toggle(drawer)">
           <mat-icon>menu</mat-icon>
         </button>
         <a routerLink="/home" class="logo" aria-label="Home">

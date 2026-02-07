@@ -2,20 +2,20 @@
   <div class="footer-content">
     <div class="footer-brand">
       <span class="logo-text">zuacaldeira</span>
-      <p>Researcher. Developer. Educator. Runner.</p>
+      <p>{{ t().footer.tagline }}</p>
     </div>
 
     <div class="footer-nav">
-      <h4>Pages</h4>
+      <h4>{{ t().footer.pagesHeading }}</h4>
       <ul>
-        @for (item of navItems; track item.route) {
+        @for (item of navItems(); track item.route) {
           <li><a [routerLink]="item.route">{{ item.label }}</a></li>
         }
       </ul>
     </div>
 
     <div class="footer-social">
-      <h4>Connect</h4>
+      <h4>{{ t().footer.connectHeading }}</h4>
       <ul>
         @for (link of socialLinks; track link.platform) {
           <li><a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.platform }}</a></li>

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SectionHeader } from '../../common/section-header/section-header';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-about',
@@ -7,4 +8,6 @@ import { SectionHeader } from '../../common/section-header/section-header';
   templateUrl: './about.html',
   styleUrl: './about.css',
 })
-export class About {}
+export class About {
+  readonly t = inject(I18nService).translations;
+}

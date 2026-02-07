@@ -1,23 +1,19 @@
 <div class="paedagogik-page">
   <app-section-header
-    title="Pädagogik"
-    subtitle="Erzieher in Ausbildung at Freie Fachschule Berlin — academic work and presentations." />
+    [title]="t().paedagogik.title"
+    [subtitle]="t().paedagogik.subtitle" />
 
   <div class="intro">
-    <p>
-      I'm currently completing my training as a state-recognized educator (<em>Erzieher</em>)
-      at the <strong>Freie Fachschule für Sozialpädagogik Berlin</strong>. Below you'll find
-      my academic papers and presentations from the program.
-    </p>
+    <p [innerHTML]="t().paedagogik.intro"></p>
   </div>
 
   <mat-tab-group animationDuration="200ms">
-    <mat-tab label="Facharbeiten">
+    <mat-tab [label]="t().paedagogik.tabFacharbeiten">
       <div class="tab-content">
         <app-facharbeiten-list />
       </div>
     </mat-tab>
-    <mat-tab label="Präsentationen">
+    <mat-tab [label]="t().paedagogik.tabPraesentationen">
       <div class="tab-content">
         <app-praesentationen-list />
       </div>

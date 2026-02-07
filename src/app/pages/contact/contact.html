@@ -1,7 +1,7 @@
 <div class="contact-page">
   <app-section-header
-    title="Contact"
-    subtitle="Let's connect — reach out through any of these channels." />
+    [title]="t().contact.title"
+    [subtitle]="t().contact.subtitle" />
 
   <div class="social-grid">
     @for (link of socialLinks; track link.platform) {

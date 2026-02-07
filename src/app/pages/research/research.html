@@ -1,7 +1,7 @@
 <div class="research-page">
   <app-section-header
-    title="Research"
-    subtitle="Session Types for safe concurrent programming, under Vasco T. Vasconcelos." />
+    [title]="t().research.title"
+    [subtitle]="t().research.subtitle" />
 
   <div class="publications">
     @for (pub of publications; track pub.title) {
@@ -28,7 +28,7 @@
   </div>
 
   <div class="research-links">
-    <h2>Research Profiles</h2>
+    <h2>{{ t().research.profilesHeading }}</h2>
     <div class="link-buttons">
       <a mat-stroked-button href="https://www.researchgate.net/profile/Alexandre-Caldeira" target="_blank" rel="noopener noreferrer">
         ResearchGate

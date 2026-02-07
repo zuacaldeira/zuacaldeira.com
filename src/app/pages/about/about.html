@@ -1,48 +1,20 @@
 <div class="about-page">
   <app-section-header
-    title="About"
-    subtitle="From Lisbon to Berlin — a journey across research, code, education, and running." />
+    [title]="t().about.title"
+    [subtitle]="t().about.subtitle" />
 
   <div class="about-content">
     <div class="about-text">
-      <h2>The Journey</h2>
-      <p>
-        I grew up in Lisbon, Portugal, where I studied Computer Science and Informatics
-        Engineering at the University of Lisbon. Under the supervision of
-        <strong>Vasco T. Vasconcelos</strong>, I explored the world of
-        <strong>Session Types</strong> — a type discipline for concurrent and distributed systems
-        that guarantees communication safety by construction.
-      </p>
+      <h2>{{ t().about.journeyHeading }}</h2>
+      <p [innerHTML]="t().about.journeyP1"></p>
+      <p [innerHTML]="t().about.journeyP2"></p>
 
-      <p>
-        My research was presented at <strong>POPL</strong>, one of the premier venues in
-        programming language theory. This experience shaped how I think about software:
-        types as specifications, programs as proofs, correctness by design.
-      </p>
+      <h2>{{ t().about.berlinHeading }}</h2>
+      <p [innerHTML]="t().about.berlinP1"></p>
+      <p [innerHTML]="t().about.berlinP2"></p>
 
-      <h2>Berlin Chapter</h2>
-      <p>
-        In Berlin, I combined my software engineering background with a new calling:
-        <strong>early childhood education</strong>. I'm currently training as an
-        <em>Erzieher</em> (state-recognized educator) at the
-        <strong>Freie Fachschule Berlin</strong>, while building software for the
-        bilingual Portuguese-German kindergarten <strong>Kita Casa Azul</strong>.
-      </p>
-
-      <p>
-        On the technical side, I work with <strong>Angular</strong> and
-        <strong>Spring Boot</strong>, building everything from the
-        <strong>Casa Azul Website</strong> to the internal
-        <strong>Dienstplan</strong> (shift planning) application. I also developed the
-        web presence for the <strong>Embassy of Angola in Berlin</strong>.
-      </p>
-
-      <h2>Beyond Work</h2>
-      <p>
-        I'm an amateur runner, training through Berlin's seasons. From the
-        Silvesterlauf to the Berlin Marathon, running keeps me grounded and gives
-        structure to everything else.
-      </p>
+      <h2>{{ t().about.beyondHeading }}</h2>
+      <p [innerHTML]="t().about.beyondP1"></p>
     </div>
   </div>
 </div>

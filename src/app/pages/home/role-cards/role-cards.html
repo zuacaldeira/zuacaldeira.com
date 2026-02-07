@@ -1,6 +1,6 @@
 <section class="role-cards">
   <div class="cards-grid">
-    @for (role of roles; track role.title) {
+    @for (role of roles(); track role.route) {
       <a [routerLink]="role.route" class="card-link hover-lift">
         <mat-card appearance="outlined">
           <mat-card-header>
