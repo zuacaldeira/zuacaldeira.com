@@ -112,7 +112,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 26 test files, 147 tests covering all 3 services, all 22 components, and app routes.
+**Coverage:** 27 test files, 150 tests covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
