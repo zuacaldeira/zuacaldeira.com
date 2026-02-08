@@ -29,6 +29,7 @@ describe('FacharbeitenList', () => {
 
   it('should update descriptions when language changes', () => {
     const i18nService = TestBed.inject(I18nService);
+    i18nService.setLanguage('en');
     const enDescription = component.facharbeiten()[0].description;
     i18nService.setLanguage('pt');
     const ptDescription = component.facharbeiten()[0].description;
