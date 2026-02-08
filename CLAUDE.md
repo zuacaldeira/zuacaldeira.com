@@ -29,7 +29,7 @@ src/app/
   pages/            # Route components: home/, about/, research/, work/, paedagogik/, running/, contact/
   services/         # ThemeService, ContentService, I18nService
   models/           # TypeScript interfaces (including i18n.ts)
-  i18n/             # Translation files: en.ts, pt.ts (de.ts, fr.ts planned)
+  i18n/             # Translation files: en.ts, pt.ts, de.ts, fr.ts
 ```
 
 ## Routing
@@ -95,6 +95,25 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - Covers all sections: nav, hero, about, research, work, paedagogik, running, contact, footer, common labels
 - Content arrays (`roleCards`, `projects`, `facharbeiten`) are also translated
 
+## Testing
+
+**Vitest** via `@angular/build:unit-test` — run with `npm test`.
+
+- Test files use `*.spec.ts` convention, colocated with source files
+- Vitest globals enabled (`describe`, `it`, `expect`, `vi` available without imports)
+- `tsconfig.spec.json` extends base config with `vitest/globals` types
+- CI runs tests before build in `.github/workflows/deploy.yml`
+
+**Test patterns:**
+- Services: use `TestBed.inject()` with `PLATFORM_ID` override for SSR tests
+- Components with logic: use `TestBed.createComponent()` with `NO_ERRORS_SCHEMA` to skip template resolution of child components
+- Components with router: add `provideRouter([])` to providers
+- `window.matchMedia`: must be mocked in `beforeEach` (jsdom doesn't provide it)
+- `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
+- Input components (`@Input`): set inputs before `detectChanges()`
+
+**Coverage:** 26 test files, 147 tests covering all 3 services, all 22 components, and app routes.
+
 ## TypeScript
 
 Strict mode with all extra checks enabled (`tsconfig.json`):
@@ -112,6 +131,7 @@ Prettier config is in `package.json`:
 ## Deployment
 
 - **GitHub Actions** (`.github/workflows/deploy.yml`) triggers on push to `main`
+- Runs `npm test` before build — tests must pass for deploy to proceed
 - Builds with `ng build --configuration production`
 - Copies `home/index.html` → root `index.html` for GitHub Pages
 - Uploads `dist/zuacaldeira-com/browser/` as Pages artifact
