@@ -13,7 +13,7 @@ export const pt: Translations = {
   hero: {
     greeting: 'Olá, eu sou',
     tagline: 'Investigador. Programador. Educador. Corredor.',
-    location: 'Lisboa → Berlim',
+    location: 'Piri → Estremoz → Lisboa → Berlim',
     aboutCta: 'Sobre mim',
     contactCta: 'Entrar em contacto',
   },

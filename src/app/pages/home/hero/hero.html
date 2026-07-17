@@ -1,16 +1,29 @@
 <section class="hero">
-  <div class="hero-bg" aria-hidden="true">
-    <app-lattice-wall />
+  <picture class="hero__photo">
+    <source srcset="/assets/hero/hero-placeholder.webp" type="image/webp" />
+    <img
+      src="/assets/hero/hero-placeholder.jpg"
+      alt="Misty sunrise over a field near Berlin"
+      fetchpriority="high"
+    />
+  </picture>
+
+  <div class="hero__glass" aria-hidden="true"></div>
+  <div class="hero__lattice" aria-hidden="true"><app-lattice-wall /></div>
+
+  <div class="hero__content">
+    <p class="hero__eyebrow">{{ t().hero.location }}</p>
+    <h1 class="hero__name">Alexandre Zua Caldeira</h1>
+    <p class="hero__tagline">{{ t().hero.tagline }}</p>
+    <div class="hero__actions">
+      <a mat-flat-button routerLink="/about" class="hero__cta">{{ t().hero.aboutCta }}</a>
+      <a mat-stroked-button routerLink="/contact" class="hero__cta-ghost">
+        {{ t().hero.contactCta }}
+      </a>
+    </div>
   </div>
 
-  <div class="hero-cartouche">
-    <p class="hero-eyebrow">{{ t().hero.location }}</p>
-    <h1 class="hero-name">Alexandre Zua Caldeira</h1>
-    <p class="hero-tagline">{{ t().hero.tagline }}</p>
-  </div>
-
-  <p class="hero-caption">
-    Behind: 74 lattices from the <em>Session Type State Spaces Form Lattices</em> benchmark corpus
-    (ICE 2026, exit-closure) &mdash; 47 non-distributive.
+  <p class="hero__credit" aria-hidden="true">
+    behind: 74 benchmark lattices (R2&prime;), 47 non-distributive
   </p>
 </section>

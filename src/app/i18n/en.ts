@@ -13,7 +13,7 @@ export const en: Translations = {
   hero: {
     greeting: "Hi, I'm",
     tagline: 'Researcher. Developer. Educator. Runner.',
-    location: 'Lisbon → Berlin',
+    location: 'Piri → Estremoz → Lisbon → Berlin',
     aboutCta: 'About me',
     contactCta: 'Get in touch',
   },
