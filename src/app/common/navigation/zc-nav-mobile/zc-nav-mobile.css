@@ -14,12 +14,17 @@
   flex: 1 1 auto;
 }
 
-/* The same frosted azulejo glass as the desktop header and the hero's layer. */
-.mobile-toolbar {
-  --nav-fg: var(--zc-text-heading);
+/* Sticky on <header> (its parent, the sidenav content, spans the scroll length), not
+   on the toolbar whose parent is only header-tall. */
+header {
   position: sticky;
   top: 0;
   z-index: 1000;
+}
+
+/* The same frosted azulejo glass as the desktop header and the hero's layer. */
+.mobile-toolbar {
+  --nav-fg: var(--zc-text-heading);
   color: var(--nav-fg);
   background: color-mix(in srgb, var(--zc-bg-warm) 84%, var(--zc-azul) 5%);
   backdrop-filter: blur(12px);

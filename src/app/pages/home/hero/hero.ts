@@ -28,7 +28,9 @@ export class Hero {
         return;
       }
       const hero = this.host.nativeElement.querySelector('.hero') as HTMLElement | null;
-      if (!hero) {
+      const photo = hero?.querySelector('.hero__photo img') as HTMLElement | null;
+      const lattice = hero?.querySelector('.hero__lattice') as HTMLElement | null;
+      if (!hero || (!photo && !lattice)) {
         return;
       }
 
@@ -36,11 +38,18 @@ export class Hero {
       const apply = () => {
         // Rect-based, not window.scrollY: on mobile the content scrolls inside the
         // sidenav container, not the window, so scrollY would stay 0. The hero's top
-        // relative to the viewport works for any scroller.
+        // relative to the viewport works for any scroller. Transforms are set directly
+        // on the layers (no CSS var/calc in between) so nothing can swallow the update.
         const rect = hero.getBoundingClientRect();
         const height = rect.height || window.innerHeight;
-        const progress = Math.min(Math.max(-rect.top / (height * 0.9), 0), 1);
-        hero.style.setProperty('--hero-progress', progress.toFixed(4));
+        const progress = Math.min(Math.max(-rect.top / (height * 0.7), 0), 1);
+        // Magnitudes stay within the pre-scale headroom on the smallest (560px) hero.
+        if (photo) {
+          photo.style.transform = `translateY(${(progress * 54).toFixed(1)}px) scale(1.22)`;
+        }
+        if (lattice) {
+          lattice.style.transform = `translateY(${(progress * -36).toFixed(1)}px) scale(1.16)`;
+        }
         ticking = false;
       };
       const onScroll = () => {

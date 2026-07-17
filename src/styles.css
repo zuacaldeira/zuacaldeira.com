@@ -107,7 +107,9 @@ html.dark-theme {
 
 html,
 body {
-  overflow-x: hidden;
+  /* clip, not hidden: it stops horizontal scroll without creating a scroll container,
+     which is what "hidden" does and what breaks position: sticky on the header. */
+  overflow-x: clip;
   max-width: 100%;
 }
 

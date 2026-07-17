@@ -4,13 +4,23 @@
  * hero a blurred hint of the photo shows through and it reads as one material. The
  * --nav-* tokens carry the bar's colours so links, logo and toggle recolour together.
  */
+/* Block host so <header> gets a full-height containing block to stick within. */
+:host {
+  display: block;
+}
+
+/* Sticky lives on <header>, whose parent spans the whole page — a sticky element can
+   only stick within its parent's box, and the toolbar's own parent is just header. */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
 mat-toolbar {
   --nav-fg: var(--zc-text-heading);
   --nav-fg-muted: var(--zc-text-muted);
   --nav-line: var(--zc-border-light);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
   color: var(--nav-fg);
   background: color-mix(in srgb, var(--zc-bg-warm) 84%, var(--zc-azul) 5%);
   backdrop-filter: blur(12px);
