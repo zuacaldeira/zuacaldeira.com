@@ -122,6 +122,22 @@ export class ContentService {
         "We define a small class-based object-oriented language in which the availability of methods depends on an object's abstract state: objects' interfaces are dynamic. Each class has a session type which provides a global specification of the availability of methods in each state. A key feature is that the abstract state of an object may depend on the result of a method whose return type is an enumeration. Static typing guarantees that methods are only called when they are available.",
       url: 'https://eprints.gla.ac.uk/47911/',
     },
+    {
+      title: 'ConGu, Checking Java Classes Against Property-Driven Algebraic Specifications',
+      authors: [
+        'João Abreu',
+        'Alexandre Caldeira',
+        'Antónia Lopes',
+        'Isabel Nunes',
+        'Luís S. Reis',
+        'Vasco T. Vasconcelos',
+      ],
+      venue: 'Technical Report DI/FCUL TR-07-7 — Department of Informatics, University of Lisbon',
+      year: 2007,
+      abstract:
+        'ConGu is a tool that supports the checking of Java classes against property-driven algebraic specifications. This document presents the specification languages, the tool usage, and its implementation, version 1.32.',
+      url: 'https://repositorio.ulisboa.pt/handle/10451/14164',
+    },
   ];
 
   readonly races: readonly Race[] = [
@@ -178,7 +194,7 @@ export class ContentService {
       subject: 'LF3 — Lebenswelten und Diversität',
       year: 2024,
       description:
-        'SOL paper on Bronfenbrenner\'s ecological systems theory in the context of diverse living environments.',
+        "SOL paper on Bronfenbrenner's ecological systems theory in the context of diverse living environments.",
       pdfUrl: 'assets/pdfs/bronfenbrenner-lebenswelten.pdf',
     },
     {
