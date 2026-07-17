@@ -1,40 +1,56 @@
 # The lattice wall
 
 The hero's wall is one tile per distinct lattice realised by the benchmark corpus of
-**Session Type State Spaces Form Lattices** (ICE 2026, Urbino).
+**Session Type State Spaces Form Lattices** (ICE 2026, Urbino), at rung **R2′**.
 
 ```bash
-python3 scripts/lattice-wall/render.py
+python3 scripts/lattice-wall/render.py            # lattices.json -> component
 ```
 
 ## What the tiles mean
 
-- **108** benchmark protocols collapse to **41** distinct lattices up to isomorphism.
-  30 protocols share the trivial two-element chain (Java Iterator, Reentrant Lock,
-  DNS Resolver, Circuit Breaker…), so the wall shows each *shape* once rather than
-  repeating the same drawing thirty times.
+- The paper's 108 benchmark protocols are each turned into a lattice, then grouped by
+  isomorphism. At rung R2′ they realise **74 distinct lattices**.
 - Tiles are ordered by size, which reads as a gradient: chains, then lozenges, then
-  the dense product lattices that only appear once `‖` is involved.
-- **15 of the 41 are non-distributive** and are drawn in ochre. Every non-distributive
-  protocol has a unique shape — the repetition is entirely among the distributive ones.
+  dense product lattices.
+- **47 of the 74 are non-distributive** and are drawn in ochre. Under R2′ the
+  non-distributive lattices outnumber the distributive ones — the finer construction
+  reveals obstructions that R1 folds away.
 - Each tile's larger end dots are ⊤ (the protocol's initial state) and ⊥ (its terminal
-  state). Note the direction: in this work ⊤ is where a protocol *starts*.
+  state). In this work ⊤ is where a protocol *starts*.
+
+## Why R2′ and not R1
+
+R1 is the bare folded SCC-quotient: it collapses every recursive cycle to a single
+node, so 30 of the recursive protocols degenerate to the trivial two-element chain and
+the wall repeats one drawing thirty times. **R2′** (exit-closure / saturating unfold)
+cuts the recursion before building the state space, so those protocols keep their
+structure. Concretely, swapping R1 → R2′ takes the wall from 41 distinct lattices (30
+of them trivial chains) to 74 (one trivial), and from 15 non-distributive to 47.
 
 ## Regenerating lattices.json
 
-`lattices.json` is derived data, checked in so this repo builds without the research
-repo. It was produced from `reticulateP` in the ICE 2026 repository:
+`lattices.json` is derived data, checked in so the site builds without the research
+repo. To regenerate it you need `reticulateP` from the ICE 2026 repository:
 
-1. For each protocol in `reticulateP/tests/benchmarks/protocols.py`, `parse` the type
-   string and `build_statespace` it.
-2. Quotient by strongly connected components, then take the transitive reduction —
-   that is the lattice's Hasse diagram.
-3. Classify with `reticulatep.distributive_quotient.direct_distributivity_check`.
-   This reproduces the paper's split exactly: **93 distributive, 15 non-distributive**.
+```bash
+RESEARCH=/path/to/SessionTypesResearch-ice2026 python3 scripts/lattice-wall/generate.py
+```
+
+`generate.py` does, per protocol:
+
+1. `parse` the type string, then `build_statespace_rung2` — the exit-closure (R2′)
+   construction, which saturates recursion so the state space is acyclic.
+2. SCC-quotient (identity on the acyclic graph) then transitive reduction — the
+   lattice's Hasse diagram.
+3. Classify with `direct_distributivity_check`.
 4. Group by digraph isomorphism of the Hasse diagram (lattice isomorphism *is* order
    isomorphism). Colour refinement buckets candidates; an exact backtracking check
-   decides. Refinement alone is incomplete and merged one pair that the exact check
-   correctly separated, so it must not be used on its own.
+   decides — refinement alone is incomplete and must not decide on its own.
+
+**Four protocols are excluded** (Leader Replication, Ion Channel (Na+/K+ Parallel),
+Action Potential Full — exit-closure raises a `ValueError` obstruction; Polysome —
+saturation exceeds the 25 s bound). The wall therefore covers 104 of the 108 protocols.
 
 Sanity check worth repeating if you regenerate: no isomorphism class may disagree on
-distributivity, since distributivity is an order invariant.
+distributivity, since distributivity is an order invariant. `generate.py` asserts this.

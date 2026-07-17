@@ -3,10 +3,10 @@
 
     python3 scripts/lattice-wall/render.py
 
-`lattices.json` holds the 41 distinct lattices — up to isomorphism — realised by
-the 108 benchmark protocols of "Session Type State Spaces Form Lattices" (ICE
-2026). It is derived data, checked in so this repo does not need the research
-repo to build. To regenerate it, see README.md in this directory.
+`lattices.json` holds the distinct lattices — up to isomorphism — realised by the
+benchmark corpus of "Session Type State Spaces Form Lattices" (ICE 2026) at rung
+R2′. It is derived data, checked in so this repo does not need the research repo
+to build. To regenerate it, see README.md in this directory.
 
 Colours are CSS classes, never literals: the wall has to follow the site's
 light/dark theme, and the blue/ochre split carries meaning (ochre = the lattice
@@ -58,8 +58,8 @@ def render(lattices):
         f"The {nd} non-distributive ones are marked in a different colour.</title>",
     ]
     for r, row in enumerate(rows):
-        # 41 is prime, so no grid fits it exactly; centring the short row makes the
-        # remainder read as composition rather than a missing tile.
+        # The tile count rarely fills the last row; centring the remainder makes it
+        # read as composition rather than a missing tile.
         off = (COLS - len(row)) * TILE / 2
         for c, o in enumerate(row):
             cx, cy = off + c * TILE, r * TILE
