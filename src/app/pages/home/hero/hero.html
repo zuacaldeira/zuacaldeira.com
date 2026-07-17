@@ -1,15 +1,68 @@
 <section class="hero">
-  <div class="hero-content">
-    <p class="hero-greeting">{{ t().hero.greeting }}</p>
-    <h1 class="hero-name">Alexandre Caldeira</h1>
-    <p class="hero-tagline">{{ t().hero.tagline }}</p>
-    <p class="hero-location">{{ t().hero.location }}</p>
-    <div class="hero-actions">
-      <a mat-flat-button routerLink="/about" class="hero-cta">
-        {{ t().hero.aboutCta }}
-        <mat-icon>arrow_forward</mat-icon>
+  <div class="frieze" aria-hidden="true"></div>
+
+  <div class="hero-panel">
+    <h1 class="hero-name">Alexandre Zua Caldeira</h1>
+
+    <svg
+      class="lattice"
+      viewBox="0 0 760 310"
+      role="group"
+      aria-label="My work as a lattice: research, development, pedagogy and running, joined"
+    >
+      <g class="edges" aria-hidden="true">
+        @for (atom of atoms; track atom.route) {
+          <line
+            class="edge"
+            [attr.x1]="centreX"
+            [attr.y1]="topY"
+            [attr.x2]="atom.x"
+            [attr.y2]="tileTopY"
+          />
+          <line
+            class="edge"
+            [attr.x1]="atom.x"
+            [attr.y1]="tileBottomY"
+            [attr.x2]="centreX"
+            [attr.y2]="bottomY"
+          />
+        }
+      </g>
+
+      <circle class="node-top" [attr.cx]="centreX" cy="24" r="7" aria-hidden="true" />
+
+      @for (atom of atoms; track atom.route; let i = $index) {
+        <a
+          class="atom"
+          [attr.href]="atom.route"
+          [style.--atom-index]="i"
+          (click)="navigate($event, atom.route)"
+        >
+          <rect [attr.x]="atom.x - 76" [attr.y]="tileTopY" width="152" height="46" rx="1" />
+          <text [attr.x]="atom.x" y="146">{{ atom.label }}</text>
+        </a>
+      }
+
+      <a class="atom bottom" href="/contact" (click)="navigate($event, '/contact')">
+        <path class="node-bottom" d="M380 249 L391 260 L380 271 L369 260 Z" />
+        <text [attr.x]="centreX" y="297">⊥ say hello</text>
       </a>
-      <a mat-stroked-button routerLink="/contact">{{ t().hero.contactCta }}</a>
-    </div>
+    </svg>
+
+    <ul class="lattice-compact">
+      @for (atom of atoms; track atom.route) {
+        <li>
+          <a [routerLink]="atom.route">{{ atom.label }}</a>
+        </li>
+      }
+      <li><a routerLink="/contact">⊥ say hello</a></li>
+    </ul>
+
+    <p class="hero-caption"><span class="glyph">M₄</span> — modular, not distributive</p>
+    <p class="hero-place">
+      Lisboa <span aria-hidden="true">→</span><span class="sr-only">to</span> Berlin
+    </p>
   </div>
+
+  <div class="frieze" aria-hidden="true"></div>
 </section>
