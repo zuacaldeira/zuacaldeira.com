@@ -1,18 +1,16 @@
 <section class="hero">
-  <div class="frieze" aria-hidden="true"></div>
+  <div class="hero-bg" aria-hidden="true">
+    <app-lattice-wall />
+  </div>
 
-  <div class="hero-panel">
+  <div class="hero-cartouche">
     <p class="hero-eyebrow">{{ t().hero.location }}</p>
     <h1 class="hero-name">Alexandre Zua Caldeira</h1>
     <p class="hero-tagline">{{ t().hero.tagline }}</p>
-
-    <figure class="hero-wall">
-      <app-lattice-wall />
-      <figcaption>
-        The 108-protocol benchmark corpus under exit-closure (R2&prime;): 74 distinct lattices, 47
-        non-distributive, in <span class="ochre-key">ochre</span>. From
-        <em>Session Type State Spaces Form Lattices</em>, ICE 2026.
-      </figcaption>
-    </figure>
   </div>
+
+  <p class="hero-caption">
+    Behind: 74 lattices from the <em>Session Type State Spaces Form Lattices</em> benchmark corpus
+    (ICE 2026, exit-closure) &mdash; 47 non-distributive.
+  </p>
 </section>

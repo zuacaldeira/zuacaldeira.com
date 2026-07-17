@@ -1,30 +1,63 @@
 /*
- * The hero opens on the wall of benchmark lattices — the paper's result, drawn as
- * an azulejo panel. Name and tagline sit above it; the wall is the subject.
+ * A full-bleed hero: the wall of benchmark lattices is the ground, covering the
+ * whole viewport. The name sits in a cartouche — a clean azulejo tile amid the
+ * pattern, the way a tiled panel carries an inscription — so the text has its own
+ * ground and never fights the lattices behind it.
  */
 
 .hero {
+  position: relative;
+  /* ~70vh: immersive but not full-screen — the section below peeks to invite scroll,
+     and at this height the wall's ~2.3 aspect barely crops. */
+  min-height: 70vh;
+  min-height: 70svh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: var(--zc-space-12) var(--zc-space-6);
   background: var(--zc-bg-warm);
-  border-block-end: 1px solid var(--zc-border-light);
 }
 
-.frieze {
-  height: 44px;
-  background-color: var(--zc-azul);
-  opacity: 0.4;
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 8 L40 24 L24 40 L8 24 Z' fill='none' stroke='black' stroke-width='1.5'/%3E%3Ccircle cx='24' cy='24' r='2.5'/%3E%3Cpath d='M0 24 H8 M40 24 H48 M24 0 V8 M24 40 V48' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 8 L40 24 L24 40 L8 24 Z' fill='none' stroke='black' stroke-width='1.5'/%3E%3Ccircle cx='24' cy='24' r='2.5'/%3E%3Cpath d='M0 24 H8 M40 24 H48 M24 0 V8 M24 40 V48' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
-  -webkit-mask-size: 48px 48px;
-  mask-size: 48px 48px;
-  -webkit-mask-repeat: repeat;
-  mask-repeat: repeat;
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
-.hero-panel {
-  max-width: var(--zc-max-width);
-  margin-inline: auto;
-  padding: var(--zc-space-16) var(--zc-space-6) var(--zc-space-12);
+.hero-bg app-lattice-wall {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* A soft glaze vignette lets the pattern breathe at the edges and settle behind
+   the cartouche without a hard scrim. */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 50%,
+    color-mix(in srgb, var(--zc-bg-warm) 72%, transparent) 0%,
+    color-mix(in srgb, var(--zc-bg-warm) 20%, transparent) 55%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.hero-cartouche {
+  position: relative;
+  z-index: 2;
+  max-width: min(90vw, 40rem);
   text-align: center;
+  padding: clamp(var(--zc-space-8), 6vw, var(--zc-space-16))
+    clamp(var(--zc-space-6), 6vw, var(--zc-space-16));
+  background: color-mix(in srgb, var(--zc-tile) 94%, transparent);
+  border: 1px solid var(--zc-azul);
+  box-shadow: var(--zc-shadow-lg);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 
 .hero-eyebrow {
@@ -33,7 +66,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--zc-ochre-text);
-  margin: 0 0 var(--zc-space-3);
+  margin: 0 0 var(--zc-space-4);
 }
 
 .hero-name {
@@ -41,7 +74,7 @@
   font-optical-sizing: auto;
   font-weight: 600;
   font-size: clamp(2rem, 6vw, 4rem);
-  line-height: 1.05;
+  line-height: 1.04;
   letter-spacing: -0.025em;
   color: var(--zc-azul-deep);
   margin: 0;
@@ -50,59 +83,38 @@
 
 .hero-tagline {
   font-family: var(--zc-font-body);
-  font-size: clamp(1rem, 2.4vw, 1.35rem);
+  font-size: clamp(1rem, 2.4vw, 1.3rem);
   color: var(--zc-text-body);
   margin: var(--zc-space-4) 0 0;
+  text-wrap: balance;
 }
 
-/* ---- the wall ---- */
-
-.hero-wall {
-  margin: var(--zc-space-16) 0 0;
-}
-
-.hero-wall app-lattice-wall {
-  display: block;
-  border: 1px solid var(--zc-border-light);
-  animation: wallIn 0.7s ease-out both;
-}
-
-.hero-wall figcaption {
+.hero-caption {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: var(--zc-space-6);
+  transform: translateX(-50%);
+  width: min(90vw, 44ch);
+  text-align: center;
   font-family: var(--zc-font-mono);
-  font-size: 0.72rem;
-  line-height: 1.6;
+  font-size: 0.68rem;
+  line-height: 1.5;
   color: var(--zc-text-muted);
-  margin: var(--zc-space-4) auto 0;
-  max-width: 52ch;
+  margin: 0;
 }
 
-.hero-wall figcaption em {
+.hero-caption em {
   font-style: italic;
   color: var(--zc-text-body);
 }
 
-.ochre-key {
-  color: var(--zc-ochre-text);
-  font-weight: 500;
-}
-
-@keyframes wallIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 @media (max-width: 768px) {
-  .hero-panel {
-    padding: var(--zc-space-12) var(--zc-space-4) var(--zc-space-8);
+  .hero {
+    padding: var(--zc-space-12) var(--zc-space-4);
   }
 
-  .hero-wall {
-    margin-top: var(--zc-space-12);
+  .hero-caption {
+    font-size: 0.62rem;
   }
 }

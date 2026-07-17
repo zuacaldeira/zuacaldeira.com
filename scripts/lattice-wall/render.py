@@ -50,9 +50,11 @@ def render(lattices):
     total = sum(o["count"] for o in lattices)
     nd = sum(1 for o in lattices if not o["dist"])
 
+    # slice = cover-crop: the wall fills its box in any aspect (it is a full-bleed
+    # background), rather than letterboxing.
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" class="wall" role="img" '
-        f'aria-labelledby="wall-title">',
+        f'preserveAspectRatio="xMidYMid slice" aria-labelledby="wall-title">',
         f'<title id="wall-title">The {len(lattices)} distinct lattices realised by the {total} '
         f"benchmark protocols of Session Type State Spaces Form Lattices, ordered by size. "
         f"The {nd} non-distributive ones are marked in a different colour.</title>",
