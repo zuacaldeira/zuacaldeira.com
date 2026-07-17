@@ -38,8 +38,8 @@ export const de: Translations = {
     title: 'Forschung',
     subtitle: 'Session Types für sichere nebenläufige Programmierung, unter Vasco T. Vasconcelos.',
     profilesHeading: 'Forschungsprofile',
-    abstract:
-      'Wir präsentieren ein Typsystem für eine funktionale Sprache mit Multithreading und Session-typisierten Kommunikationskanälen, das Kommunikationssicherheit und Deadlock-Freiheit gewährleistet.',
+    publicationsHeading: 'Publikationen',
+    paperLink: 'Paper',
   },
   work: {
     title: 'Arbeit',

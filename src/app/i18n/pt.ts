@@ -38,8 +38,8 @@ export const pt: Translations = {
     title: 'Investigação',
     subtitle: 'Session Types para programação concorrente segura, com Vasco T. Vasconcelos.',
     profilesHeading: 'Perfis de Investigação',
-    abstract:
-      'Apresentamos um sistema de tipos para uma linguagem funcional com multithreading e canais de comunicação com session types, garantindo segurança na comunicação e ausência de deadlocks.',
+    publicationsHeading: 'Publicações',
+    paperLink: 'Artigo',
   },
   work: {
     title: 'Trabalho',

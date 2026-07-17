@@ -38,8 +38,8 @@ export const en: Translations = {
     title: 'Research',
     subtitle: 'Session Types for safe concurrent programming, under Vasco T. Vasconcelos.',
     profilesHeading: 'Research Profiles',
-    abstract:
-      'We present a type system for a functional language with multithreading and session-typed communication channels, ensuring communication safety and deadlock freedom.',
+    publicationsHeading: 'Publications',
+    paperLink: 'Paper',
   },
   work: {
     title: 'Work',

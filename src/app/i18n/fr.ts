@@ -39,8 +39,8 @@ export const fr: Translations = {
     subtitle:
       'Session Types pour la programmation concurrente sûre, sous la direction de Vasco T. Vasconcelos.',
     profilesHeading: 'Profils de recherche',
-    abstract:
-      'Nous présentons un système de types pour un langage fonctionnel avec multithreading et canaux de communication typés par sessions, garantissant la sécurité des communications et l\'absence de deadlocks.',
+    publicationsHeading: 'Publications',
+    paperLink: 'Article',
   },
   work: {
     title: 'Travail',

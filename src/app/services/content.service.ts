@@ -84,13 +84,34 @@ export class ContentService {
 
   readonly publications: readonly Publication[] = [
     {
-      title: 'Session Types for Functional Multithreading',
-      authors: ['Alexandre Caldeira', 'Vasco T. Vasconcelos'],
+      title: 'Modular Session Types for Distributed Object-Oriented Programming',
+      authors: [
+        'Simon J. Gay',
+        'Vasco T. Vasconcelos',
+        'António Ravara',
+        'Nils Gesbert',
+        'Alexandre Z. Caldeira',
+      ],
       venue: 'POPL — ACM SIGPLAN Symposium on Principles of Programming Languages',
-      year: 2020,
+      year: 2010,
       abstract:
-        'We present a type system for a functional language with multithreading and session-typed communication channels, ensuring communication safety and deadlock freedom.',
-      doi: '10.1145/example',
+        'Session types allow communication protocols to be specified type-theoretically so that protocol implementations can be verified by static type-checking. We extend previous work on session types for distributed object-oriented languages in three ways. (1) We attach a session type to a class definition, to specify the possible sequences of method calls. (2) We allow a session type (protocol) implementation to be modularized, i.e. partitioned into separately-callable methods. (3) We treat session-typed communication channels as objects, integrating their session types with the session types of classes.',
+      doi: '10.1145/1706299.1706335',
+    },
+    {
+      title: 'Dynamic Interfaces',
+      authors: [
+        'Vasco T. Vasconcelos',
+        'Simon J. Gay',
+        'António Ravara',
+        'Nils Gesbert',
+        'Alexandre Z. Caldeira',
+      ],
+      venue: 'FOOL — International Workshop on Foundations of Object-Oriented Languages',
+      year: 2009,
+      abstract:
+        "We define a small class-based object-oriented language in which the availability of methods depends on an object's abstract state: objects' interfaces are dynamic. Each class has a session type which provides a global specification of the availability of methods in each state. A key feature is that the abstract state of an object may depend on the result of a method whose return type is an enumeration. Static typing guarantees that methods are only called when they are available.",
+      url: 'https://eprints.gla.ac.uk/47911/',
     },
   ];
 

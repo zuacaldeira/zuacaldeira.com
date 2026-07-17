@@ -4,10 +4,11 @@
     [subtitle]="t().research.subtitle" />
 
   <div class="publications">
+    <h2>{{ t().research.publicationsHeading }}</h2>
     @for (pub of publications; track pub.title) {
       <mat-card appearance="outlined" class="publication-card">
         <mat-card-header>
-          <mat-card-title>{{ pub.title }}</mat-card-title>
+          <mat-card-title><h3>{{ pub.title }}</h3></mat-card-title>
           <mat-card-subtitle>
             {{ pub.authors.join(', ') }} &mdash; {{ pub.venue }}, {{ pub.year }}
           </mat-card-subtitle>
@@ -21,6 +22,11 @@
               <mat-icon>open_in_new</mat-icon>
               DOI
             </a>
+          } @else if (pub.url) {
+            <a mat-button [href]="pub.url" target="_blank" rel="noopener noreferrer">
+              <mat-icon>open_in_new</mat-icon>
+              {{ t().research.paperLink }}
+            </a>
           }
         </mat-card-actions>
       </mat-card>
@@ -32,10 +38,6 @@
     <div class="link-buttons">
       <a mat-stroked-button href="https://www.researchgate.net/profile/Alexandre-Caldeira" target="_blank" rel="noopener noreferrer">
         ResearchGate
-        <mat-icon>open_in_new</mat-icon>
-      </a>
-      <a mat-stroked-button href="https://scholar.google.com" target="_blank" rel="noopener noreferrer">
-        Google Scholar
         <mat-icon>open_in_new</mat-icon>
       </a>
     </div>

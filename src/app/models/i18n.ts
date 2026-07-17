@@ -35,7 +35,8 @@ export interface Translations {
     title: string;
     subtitle: string;
     profilesHeading: string;
-    abstract: string;
+    publicationsHeading: string;
+    paperLink: string;
   };
   work: {
     title: string;
