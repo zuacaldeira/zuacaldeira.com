@@ -34,8 +34,12 @@ export class Hero {
 
       let ticking = false;
       const apply = () => {
-        const height = hero.offsetHeight || window.innerHeight;
-        const progress = Math.min(Math.max(window.scrollY / (height * 0.9), 0), 1);
+        // Rect-based, not window.scrollY: on mobile the content scrolls inside the
+        // sidenav container, not the window, so scrollY would stay 0. The hero's top
+        // relative to the viewport works for any scroller.
+        const rect = hero.getBoundingClientRect();
+        const height = rect.height || window.innerHeight;
+        const progress = Math.min(Math.max(-rect.top / (height * 0.9), 0), 1);
         hero.style.setProperty('--hero-progress', progress.toFixed(4));
         ticking = false;
       };
@@ -47,13 +51,15 @@ export class Hero {
       };
 
       this.zone.runOutsideAngular(() => {
-        window.addEventListener('scroll', onScroll, { passive: true });
+        // Capture phase so scroll from an inner container (the mobile sidenav) is seen
+        // too — scroll events don't bubble, but they can be caught on the way down.
+        document.addEventListener('scroll', onScroll, { capture: true, passive: true });
         window.addEventListener('resize', onScroll, { passive: true });
       });
       apply();
 
       this.destroyRef.onDestroy(() => {
-        window.removeEventListener('scroll', onScroll);
+        document.removeEventListener('scroll', onScroll, { capture: true });
         window.removeEventListener('resize', onScroll);
       });
     });

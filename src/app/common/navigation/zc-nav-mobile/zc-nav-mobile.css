@@ -14,18 +14,22 @@
   flex: 1 1 auto;
 }
 
+/* The same frosted azulejo glass as the desktop header and the hero's layer. */
 .mobile-toolbar {
+  --nav-fg: var(--zc-text-heading);
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.85);
+  color: var(--nav-fg);
+  background: color-mix(in srgb, var(--zc-bg-warm) 84%, var(--zc-azul) 5%);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--zc-border-light);
 }
 
-:host-context(html.dark-theme) .mobile-toolbar {
-  background: rgba(25, 23, 22, 0.85);
+.mobile-toolbar app-theme-toggle {
+  color: var(--nav-fg);
+  --mdc-icon-button-icon-color: var(--nav-fg);
 }
 
 .logo {
@@ -36,6 +40,6 @@
 .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--zc-text-heading);
+  color: var(--nav-fg);
   letter-spacing: -0.02em;
 }

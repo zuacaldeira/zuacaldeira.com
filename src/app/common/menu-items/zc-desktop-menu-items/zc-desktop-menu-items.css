@@ -4,21 +4,23 @@
   align-items: center;
 }
 
+/* Colours come from the header's --nav-* tokens so the links stay in step with the
+   rest of the bar; the fallbacks keep them right if used outside that context. */
 a {
   text-decoration: none;
-  color: var(--zc-text-muted);
+  color: var(--nav-fg-muted, var(--zc-text-muted));
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   padding: var(--zc-space-2) 0;
   border-bottom: 2px solid transparent;
   transition:
-    color var(--zc-transition-fast),
-    border-color var(--zc-transition-fast);
+    color var(--zc-transition-base),
+    border-color var(--zc-transition-base);
 }
 
 a:hover,
 a.active-link {
-  color: var(--zc-text-heading);
-  border-bottom-color: var(--zc-accent);
+  color: var(--nav-fg, var(--zc-text-heading));
+  border-bottom-color: var(--nav-fg, var(--zc-accent));
 }

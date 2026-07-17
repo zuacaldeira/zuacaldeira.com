@@ -1,11 +1,21 @@
+/*
+ * Sticky "azulejo glass" header — the same frosted glass as the hero's transparent
+ * layer, stuck to the top: a cobalt-tinted glaze with backdrop-blur, so over the
+ * hero a blurred hint of the photo shows through and it reads as one material. The
+ * --nav-* tokens carry the bar's colours so links, logo and toggle recolour together.
+ */
 mat-toolbar {
+  --nav-fg: var(--zc-text-heading);
+  --nav-fg-muted: var(--zc-text-muted);
+  --nav-line: var(--zc-border-light);
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: color-mix(in srgb, var(--zc-bg-warm) 85%, transparent);
+  color: var(--nav-fg);
+  background: color-mix(in srgb, var(--zc-bg-warm) 84%, var(--zc-azul) 5%);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--zc-border-light);
+  border-bottom: 1px solid var(--nav-line);
   padding: 0;
 }
 
@@ -27,8 +37,9 @@ mat-toolbar {
 .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--zc-text-heading);
+  color: var(--nav-fg);
   letter-spacing: -0.02em;
+  transition: color var(--zc-transition-base);
 }
 
 nav {
@@ -41,10 +52,21 @@ nav {
   display: flex;
   align-items: center;
   gap: var(--zc-space-3);
+  color: var(--nav-fg);
 }
 
-.nav-cta {
+/* The contact CTA keeps the hero's ochre in both states — it reads on glaze and on
+   the photo, and matches the hero's own button. */
+.nav-cta.mat-mdc-unelevated-button {
+  --mdc-filled-button-container-color: var(--zc-ochre);
+  --mdc-filled-button-label-text-color: #1a1205;
   font-family: var(--zc-font-body);
   font-weight: 500;
   letter-spacing: 0.01em;
+}
+
+app-theme-toggle {
+  color: var(--nav-fg);
+  --mdc-icon-button-icon-color: var(--nav-fg);
+  transition: color var(--zc-transition-base);
 }
