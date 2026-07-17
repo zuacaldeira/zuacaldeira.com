@@ -55,14 +55,6 @@
   margin: var(--zc-space-4) 0 0;
 }
 
-.hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--zc-space-3);
-  justify-content: center;
-  margin: var(--zc-space-8) 0 0;
-}
-
 /* ---- the wall ---- */
 
 .hero-wall {

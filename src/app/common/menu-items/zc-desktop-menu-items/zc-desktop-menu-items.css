@@ -12,7 +12,9 @@ a {
   letter-spacing: 0.02em;
   padding: var(--zc-space-2) 0;
   border-bottom: 2px solid transparent;
-  transition: color var(--zc-transition-fast), border-color var(--zc-transition-fast);
+  transition:
+    color var(--zc-transition-fast),
+    border-color var(--zc-transition-fast);
 }
 
 a:hover,

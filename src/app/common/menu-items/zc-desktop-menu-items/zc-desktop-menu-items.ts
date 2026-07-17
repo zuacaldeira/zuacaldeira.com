@@ -13,10 +13,14 @@ import { Translations } from '../../../models/i18n';
 export class ZcDesktopMenuItems {
   private contentService = inject(ContentService);
   readonly t = inject(I18nService).translations;
+  // /contact is promoted to the toolbar's "Get in touch" button, so it is dropped
+  // here to avoid listing Contact twice in the same bar.
   readonly navItems = computed(() =>
-    this.contentService.navItems.map((item) => ({
-      ...item,
-      label: this.t().nav[item.route.substring(1) as keyof Translations['nav']],
-    }))
+    this.contentService.navItems
+      .filter((item) => item.route !== '/contact')
+      .map((item) => ({
+        ...item,
+        label: this.t().nav[item.route.substring(1) as keyof Translations['nav']],
+      })),
   );
 }

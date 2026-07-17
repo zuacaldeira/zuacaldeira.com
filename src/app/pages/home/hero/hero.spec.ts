@@ -27,15 +27,6 @@ describe('Hero', () => {
     expect(el.querySelector('.hero-tagline')?.textContent?.trim()).toBe(component.t().hero.tagline);
   });
 
-  it('should link to /about and /contact with the translated CTA labels', () => {
-    const hrefs = Array.from(el.querySelectorAll('.hero-actions a')).map((a) =>
-      a.getAttribute('href'),
-    );
-    expect(hrefs).toContain('/about');
-    expect(hrefs).toContain('/contact');
-    expect(el.querySelector('.hero-actions')?.textContent).toContain(component.t().hero.aboutCta);
-  });
-
   it('should present the lattice wall', () => {
     expect(el.querySelector('app-lattice-wall')).toBeTruthy();
   });

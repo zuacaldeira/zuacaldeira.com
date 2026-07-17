@@ -9,7 +9,10 @@
       <nav>
         <app-zc-desktop-menu-items />
       </nav>
-      <app-theme-toggle />
+      <div class="toolbar-actions">
+        <a mat-flat-button routerLink="/contact" class="nav-cta">{{ t().hero.contactCta }}</a>
+        <app-theme-toggle />
+      </div>
     </div>
   </mat-toolbar>
 </header>

@@ -2,15 +2,11 @@ mat-toolbar {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(255, 255, 255, 0.85);
+  background: color-mix(in srgb, var(--zc-bg-warm) 85%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--zc-border-light);
   padding: 0;
-}
-
-:host-context(html.dark-theme) mat-toolbar {
-  background: rgba(25, 23, 22, 0.85);
 }
 
 .toolbar-content {
@@ -39,4 +35,16 @@ nav {
   flex: 1;
   display: flex;
   justify-content: center;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--zc-space-3);
+}
+
+.nav-cta {
+  font-family: var(--zc-font-body);
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
