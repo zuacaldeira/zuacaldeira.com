@@ -36,7 +36,8 @@ export const pt: Translations = {
   },
   research: {
     title: 'Investigação',
-    subtitle: 'Session Types para programação concorrente segura, com Vasco T. Vasconcelos.',
+    subtitle:
+      'Session Types para programação concorrente segura — dos protocolos orientados a objetos à teoria dos reticulados.',
     profilesHeading: 'Perfis de Investigação',
     publicationsHeading: 'Publicações',
     paperLink: 'Artigo',
@@ -47,7 +48,8 @@ export const pt: Translations = {
   },
   paedagogik: {
     title: 'Pedagogia',
-    subtitle: 'Erzieher em formação na Freie Fachschule Berlin — trabalhos académicos e apresentações.',
+    subtitle:
+      'Erzieher em formação na Freie Fachschule Berlin — trabalhos académicos e apresentações.',
     intro:
       'Estou atualmente a completar a minha formação como educador reconhecido pelo estado (<em>Erzieher</em>) na <strong>Freie Fachschule für Sozialpädagogik Berlin</strong>. Abaixo encontram-se os meus trabalhos académicos e apresentações do programa.',
     tabFacharbeiten: 'Facharbeiten',
@@ -86,7 +88,8 @@ export const pt: Translations = {
     },
     {
       title: 'Programador',
-      description: 'Angular + Spring Boot. A construir aplicações web para o ecossistema Casa Azul.',
+      description:
+        'Angular + Spring Boot. A construir aplicações web para o ecossistema Casa Azul.',
     },
     {
       title: 'Educador',
@@ -117,17 +120,20 @@ export const pt: Translations = {
   ],
   facharbeiten: [
     {
-      description: 'Reflexão escrita sobre identidade profissional como parte do programa de formação de educadores.',
+      description:
+        'Reflexão escrita sobre identidade profissional como parte do programa de formação de educadores.',
     },
     {
       description:
         'Trabalho SOL sobre a teoria dos sistemas ecológicos de Bronfenbrenner no contexto de ambientes de vida diversos.',
     },
     {
-      description: 'Reflexão e resumo de filme sobre antroposofia no contexto da pedagogia Waldorf.',
+      description:
+        'Reflexão e resumo de filme sobre antroposofia no contexto da pedagogia Waldorf.',
     },
     {
-      description: 'Reflexão e resumo de filme revisado sobre antroposofia no contexto da pedagogia Waldorf.',
+      description:
+        'Reflexão e resumo de filme revisado sobre antroposofia no contexto da pedagogia Waldorf.',
     },
   ],
 };

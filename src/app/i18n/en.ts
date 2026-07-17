@@ -27,7 +27,7 @@ export const en: Translations = {
       'My research was presented at <strong>POPL</strong>, one of the premier venues in programming language theory. This experience shaped how I think about software: types as specifications, programs as proofs, correctness by design.',
     berlinHeading: 'Berlin Chapter',
     berlinP1:
-      'In Berlin, I combined my software engineering background with a new calling: <strong>early childhood education</strong>. I\'m currently training as an <em>Erzieher</em> (state-recognized educator) at the <strong>Freie Fachschule Berlin</strong>, while building software for the bilingual Portuguese-German kindergarten <strong>Kita Casa Azul</strong>.',
+      "In Berlin, I combined my software engineering background with a new calling: <strong>early childhood education</strong>. I'm currently training as an <em>Erzieher</em> (state-recognized educator) at the <strong>Freie Fachschule Berlin</strong>, while building software for the bilingual Portuguese-German kindergarten <strong>Kita Casa Azul</strong>.",
     berlinP2:
       'On the technical side, I work with <strong>Angular</strong> and <strong>Spring Boot</strong>, building everything from the <strong>Casa Azul Website</strong> to the internal <strong>Dienstplan</strong> (shift planning) application. I also developed the web presence for the <strong>Embassy of Angola in Berlin</strong>.',
     beyondHeading: 'Beyond Work',
@@ -36,7 +36,8 @@ export const en: Translations = {
   },
   research: {
     title: 'Research',
-    subtitle: 'Session Types for safe concurrent programming, under Vasco T. Vasconcelos.',
+    subtitle:
+      'Session Types for safe concurrent programming — from object-oriented protocols to lattice theory.',
     profilesHeading: 'Research Profiles',
     publicationsHeading: 'Publications',
     paperLink: 'Paper',
@@ -47,7 +48,8 @@ export const en: Translations = {
   },
   paedagogik: {
     title: 'Pädagogik',
-    subtitle: 'Erzieher in Ausbildung at Freie Fachschule Berlin — academic work and presentations.',
+    subtitle:
+      'Erzieher in Ausbildung at Freie Fachschule Berlin — academic work and presentations.',
     intro:
       "I'm currently completing my training as a state-recognized educator (<em>Erzieher</em>) at the <strong>Freie Fachschule für Sozialpädagogik Berlin</strong>. Below you'll find my academic papers and presentations from the program.",
     tabFacharbeiten: 'Facharbeiten',
@@ -117,17 +119,20 @@ export const en: Translations = {
   ],
   facharbeiten: [
     {
-      description: 'Written reflection on professional identity as part of the educator training program.',
+      description:
+        'Written reflection on professional identity as part of the educator training program.',
     },
     {
       description:
         "SOL paper on Bronfenbrenner's ecological systems theory in the context of diverse living environments.",
     },
     {
-      description: 'Film reflection and summary on anthroposophy in the context of Waldorf pedagogy.',
+      description:
+        'Film reflection and summary on anthroposophy in the context of Waldorf pedagogy.',
     },
     {
-      description: 'Revised film reflection and summary on anthroposophy in the context of Waldorf pedagogy.',
+      description:
+        'Revised film reflection and summary on anthroposophy in the context of Waldorf pedagogy.',
     },
   ],
 };

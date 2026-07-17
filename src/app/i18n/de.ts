@@ -36,7 +36,8 @@ export const de: Translations = {
   },
   research: {
     title: 'Forschung',
-    subtitle: 'Session Types für sichere nebenläufige Programmierung, unter Vasco T. Vasconcelos.',
+    subtitle:
+      'Session Types für sichere nebenläufige Programmierung — von objektorientierten Protokollen zur Verbandstheorie.',
     profilesHeading: 'Forschungsprofile',
     publicationsHeading: 'Publikationen',
     paperLink: 'Paper',

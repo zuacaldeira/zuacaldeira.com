@@ -32,12 +32,12 @@ export const fr: Translations = {
       "Sur le plan technique, je travaille avec <strong>Angular</strong> et <strong>Spring Boot</strong>, développant tout, du <strong>site web Casa Azul</strong> à l'application interne de <strong>Dienstplan</strong> (planification des équipes). J'ai également développé la présence web de <strong>l'Ambassade d'Angola à Berlin</strong>.",
     beyondHeading: 'Au-delà du travail',
     beyondP1:
-      'Je suis coureur amateur, m\'entraînant au fil des saisons berlinoises. Du Silvesterlauf au Marathon de Berlin, la course me garde ancré et donne une structure à tout le reste.',
+      "Je suis coureur amateur, m'entraînant au fil des saisons berlinoises. Du Silvesterlauf au Marathon de Berlin, la course me garde ancré et donne une structure à tout le reste.",
   },
   research: {
     title: 'Recherche',
     subtitle:
-      'Session Types pour la programmation concurrente sûre, sous la direction de Vasco T. Vasconcelos.',
+      'Session Types pour la programmation concurrente sûre — des protocoles orientés objet à la théorie des treillis.',
     profilesHeading: 'Profils de recherche',
     publicationsHeading: 'Publications',
     paperLink: 'Article',
@@ -51,7 +51,7 @@ export const fr: Translations = {
     subtitle:
       'Erzieher en formation à la Freie Fachschule Berlin — travaux académiques et présentations.',
     intro:
-      'Je suis actuellement en formation d\'éducateur reconnu par l\'État (<em>Erzieher</em>) à la <strong>Freie Fachschule für Sozialpädagogik Berlin</strong>. Ci-dessous, vous trouverez mes travaux académiques et présentations du programme.',
+      "Je suis actuellement en formation d'éducateur reconnu par l'État (<em>Erzieher</em>) à la <strong>Freie Fachschule für Sozialpädagogik Berlin</strong>. Ci-dessous, vous trouverez mes travaux académiques et présentations du programme.",
     tabFacharbeiten: 'Facharbeiten',
     tabPraesentationen: 'Präsentationen',
   },
@@ -65,7 +65,7 @@ export const fr: Translations = {
   },
   contact: {
     title: 'Contact',
-    subtitle: 'Restons en contact — contactez-moi via l\'un de ces canaux.',
+    subtitle: "Restons en contact — contactez-moi via l'un de ces canaux.",
   },
   footer: {
     tagline: 'Chercheur. Développeur. Éducateur. Coureur.',
