@@ -22,6 +22,8 @@
 
   --zc-ochre: #b07a22;
   --zc-ochre-text: #8a5e15;
+  --zc-ochre-wash: #faf5ec;
+  --zc-tile: #f7fafc;
 
   --zc-accent: #14417a;
   --zc-accent-light: #7fa5ce;
@@ -29,6 +31,9 @@
 
   --zc-border-light: #c9d8e6;
   --zc-grout: rgba(20, 65, 122, 0.16);
+  /* Lattice edges carry the diagram's meaning, so they are held at >=3:1 (WCAG 1.4.11)
+     rather than reusing the decorative grout hairline, which resolves to 1.31:1. */
+  --zc-edge: #6987ab;
 
   --zc-font-heading: 'Fraunces', Georgia, 'Times New Roman', serif;
   --zc-font-body: 'Archivo', system-ui, -apple-system, sans-serif;
@@ -77,6 +82,8 @@ html.dark-theme {
 
   --zc-ochre: #d9a94a;
   --zc-ochre-text: #d9a94a;
+  --zc-ochre-wash: #221a0e;
+  --zc-tile: #12203a;
 
   --zc-accent: #7fa5ce;
   --zc-accent-light: #a8c4de;
@@ -84,6 +91,7 @@ html.dark-theme {
 
   --zc-border-light: #2a3f63;
   --zc-grout: rgba(127, 165, 206, 0.22);
+  --zc-edge: #516b8b;
 
   --zc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
   --zc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -135,7 +143,7 @@ a {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
-  text-decoration-color: var(--zc-grout);
+  text-decoration-color: color-mix(in srgb, currentColor 60%, transparent);
   transition:
     color var(--zc-transition-fast),
     text-decoration-color var(--zc-transition-fast);

@@ -1,0 +1,44 @@
+/*
+ * Theme-following colours for the generated wall. The blue/ochre split is meaning,
+ * not decoration: .nd tiles are the non-distributive lattices, so they cannot share
+ * a single mask colour with the rest.
+ */
+.wall {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wall .t rect {
+  fill: var(--zc-tile, var(--zc-bg-white));
+  stroke: var(--zc-border-light);
+  stroke-width: 0.8;
+}
+
+.wall .t line {
+  stroke: var(--zc-azul);
+  stroke-width: 1.1;
+  stroke-opacity: 0.62;
+}
+
+.wall .t circle {
+  fill: var(--zc-azul);
+  fill-opacity: 0.8;
+}
+
+.wall .t circle.e {
+  fill-opacity: 1;
+}
+
+/* Non-distributive lattices — the 15 that make the theorem interesting. */
+.wall .nd rect {
+  fill: var(--zc-ochre-wash, #faf5ec);
+}
+
+.wall .nd line {
+  stroke: var(--zc-ochre);
+}
+
+.wall .nd circle {
+  fill: var(--zc-ochre);
+}

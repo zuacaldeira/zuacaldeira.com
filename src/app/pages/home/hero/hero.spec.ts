@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { Hero } from './hero';
-import { I18nService } from '../../../services/i18n.service';
 
 describe('Hero', () => {
   let component: Hero;
+  let el: HTMLElement;
 
   beforeEach(() => {
     const fixture = TestBed.configureTestingModule({
@@ -15,19 +15,28 @@ describe('Hero', () => {
       .createComponent(Hero);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    el = fixture.nativeElement as HTMLElement;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have translations signal', () => {
-    expect(component.t().hero.greeting).toBeTruthy();
+  it('should render the name and the translated tagline', () => {
+    expect(el.querySelector('.hero-name')?.textContent).toContain('Alexandre');
+    expect(el.querySelector('.hero-tagline')?.textContent?.trim()).toBe(component.t().hero.tagline);
   });
 
-  it('should update translations when language changes', () => {
-    const i18nService = TestBed.inject(I18nService);
-    i18nService.setLanguage('pt');
-    expect(component.t().hero.greeting).toBe('Olá, eu sou');
+  it('should link to /about and /contact with the translated CTA labels', () => {
+    const hrefs = Array.from(el.querySelectorAll('.hero-actions a')).map((a) =>
+      a.getAttribute('href'),
+    );
+    expect(hrefs).toContain('/about');
+    expect(hrefs).toContain('/contact');
+    expect(el.querySelector('.hero-actions')?.textContent).toContain(component.t().hero.aboutCta);
+  });
+
+  it('should present the lattice wall', () => {
+    expect(el.querySelector('app-lattice-wall')).toBeTruthy();
   });
 });
