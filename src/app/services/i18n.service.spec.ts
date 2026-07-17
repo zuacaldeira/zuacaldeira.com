@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID } from '@angular/core';
-import { I18nService } from './i18n.service';
+import { I18nService, TRANSLATIONS_ENABLED } from './i18n.service';
 import { Language, LANGUAGES, Translations } from '../models/i18n';
 import { en } from '../i18n/en';
 import { pt } from '../i18n/pt';
@@ -46,7 +46,7 @@ describe('I18nService', () => {
         service.setLanguage(lang);
         expect(service.language()).toBe(lang);
         expect(service.translations()).toBe(expectedTranslations);
-      }
+      },
     );
   });
 
@@ -106,7 +106,10 @@ describe('I18nService', () => {
     });
   });
 
-  describe('localStorage restore', () => {
+  // The site is English-only while TRANSLATIONS_ENABLED is false, so init ignores any
+  // saved or browser preference. These suites describe the behaviour that returns when
+  // it is flipped back on; they reactivate automatically with the flag.
+  describe.skipIf(!TRANSLATIONS_ENABLED)('localStorage restore', () => {
     it('should restore saved language from localStorage on init', () => {
       localStorage.setItem('zc-lang', 'pt');
       const service = createService();
@@ -121,7 +124,7 @@ describe('I18nService', () => {
     });
   });
 
-  describe('browser language detection', () => {
+  describe.skipIf(!TRANSLATIONS_ENABLED)('browser language detection', () => {
     it('should detect browser language when no saved preference', () => {
       const originalLanguage = navigator.language;
       Object.defineProperty(navigator, 'language', { value: 'pt-BR', configurable: true });
@@ -149,6 +152,25 @@ describe('I18nService', () => {
 
       const service = createService();
       expect(service.language()).toBe('de');
+
+      Object.defineProperty(navigator, 'language', { value: originalLanguage, configurable: true });
+    });
+  });
+
+  describe.runIf(!TRANSLATIONS_ENABLED)('English-only mode', () => {
+    it('should ignore a saved language preference', () => {
+      localStorage.setItem('zc-lang', 'pt');
+      const service = createService();
+      expect(service.language()).toBe('en');
+      expect(service.translations()).toBe(en);
+    });
+
+    it('should ignore the browser language', () => {
+      const originalLanguage = navigator.language;
+      Object.defineProperty(navigator, 'language', { value: 'de-DE', configurable: true });
+
+      const service = createService();
+      expect(service.language()).toBe('en');
 
       Object.defineProperty(navigator, 'language', { value: originalLanguage, configurable: true });
     });

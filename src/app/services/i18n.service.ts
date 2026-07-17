@@ -13,6 +13,13 @@ const TRANSLATION_MAP: Record<Language, Translations> = {
   fr,
 };
 
+/**
+ * While false, the site is English-only: the language switcher is not rendered and
+ * saved/browser language preferences are ignored. The pt/de/fr translations are kept
+ * in place so this can be flipped back on without redoing them.
+ */
+export const TRANSLATIONS_ENABLED = false;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,7 +35,7 @@ export class I18nService {
   }
 
   private initializeLanguage(): void {
-    if (!isPlatformBrowser(this.platformId)) {
+    if (!TRANSLATIONS_ENABLED || !isPlatformBrowser(this.platformId)) {
       return;
     }
 

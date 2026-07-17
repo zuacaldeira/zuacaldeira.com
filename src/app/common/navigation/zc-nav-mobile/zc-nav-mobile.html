@@ -1,10 +1,14 @@
 <a href="#main-content" class="skip-link">{{ t().common.skipToContent }}</a>
 
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport
     [attr.role]="'dialog'"
     [mode]="'over'"
-    [opened]="false">
+    [opened]="false"
+  >
     <mat-toolbar class="sidenav-header">
       <span>{{ t().common.menu }}</span>
       <span class="spacer"></span>
@@ -20,14 +24,18 @@
   <mat-sidenav-content>
     <header>
       <mat-toolbar class="mobile-toolbar">
-        <button type="button" [attr.aria-label]="t().common.openMenu" mat-icon-button (click)="toggle(drawer)">
+        <button
+          type="button"
+          [attr.aria-label]="t().common.openMenu"
+          mat-icon-button
+          (click)="toggle(drawer)"
+        >
           <mat-icon>menu</mat-icon>
         </button>
         <a routerLink="/home" class="logo" aria-label="Home">
           <span class="logo-text">zc</span>
         </a>
         <span class="spacer"></span>
-        <app-language-switcher />
         <app-theme-toggle />
       </mat-toolbar>
     </header>

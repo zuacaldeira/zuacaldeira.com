@@ -8,7 +8,6 @@ import { filter } from 'rxjs/operators';
 import { ZcSidenavMenuItems } from '../../menu-items/zc-sidenav-menu-items/zc-sidenav-menu-items';
 import { Footer } from '../../footer/footer';
 import { ThemeToggle } from '../../theme-toggle/theme-toggle';
-import { LanguageSwitcher } from '../../language-switcher/language-switcher';
 import { I18nService } from '../../../services/i18n.service';
 
 @Component({
@@ -23,7 +22,6 @@ import { I18nService } from '../../../services/i18n.service';
     ZcSidenavMenuItems,
     Footer,
     ThemeToggle,
-    LanguageSwitcher,
   ],
   templateUrl: './zc-nav-mobile.html',
   styleUrl: './zc-nav-mobile.css',
@@ -33,13 +31,11 @@ export class ZcNavMobile {
   @ViewChild('drawer') drawer!: MatSidenav;
 
   constructor(private router: Router) {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        if (this.drawer) {
-          this.drawer.close();
-        }
-      });
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      if (this.drawer) {
+        this.drawer.close();
+      }
+    });
   }
 
   toggle(drawer: MatSidenav): void {
