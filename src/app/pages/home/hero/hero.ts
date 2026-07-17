@@ -43,10 +43,14 @@ export class Hero {
         const rect = hero.getBoundingClientRect();
         const height = rect.height || window.innerHeight;
         const progress = Math.min(Math.max(-rect.top / (height * 0.7), 0), 1);
-        // Magnitudes stay within the pre-scale headroom on the smallest (560px) hero.
+        // Photo zooms out (1.22 → 1.04) and drifts down a little as the hero leaves —
+        // it recedes as you move into the page. The drift stays within the headroom the
+        // shrinking scale still provides on the smallest (560px) hero (min ~11px > 10px).
         if (photo) {
-          photo.style.transform = `translateY(${(progress * 54).toFixed(1)}px) scale(1.22)`;
+          const scale = (1.22 - progress * 0.18).toFixed(3);
+          photo.style.transform = `translateY(${(progress * 10).toFixed(1)}px) scale(${scale})`;
         }
+        // Lattice floats up (opposite velocity), staying inside its own scale headroom.
         if (lattice) {
           lattice.style.transform = `translateY(${(progress * -36).toFixed(1)}px) scale(1.16)`;
         }
