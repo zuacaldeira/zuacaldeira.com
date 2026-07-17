@@ -29,10 +29,10 @@ describe('Hero', () => {
     );
   });
 
-  it('should present the hero photo with an accessible label', () => {
-    const photo = el.querySelector('.hero__photo');
-    expect(photo?.getAttribute('role')).toBe('img');
-    expect(photo?.getAttribute('aria-label')?.length).toBeGreaterThan(0);
+  it('should show the hero photo with alt text', () => {
+    const img = el.querySelector('.hero__photo img');
+    expect(img?.getAttribute('src')).toContain('/assets/hero/');
+    expect(img?.getAttribute('alt')?.length).toBeGreaterThan(0);
   });
 
   it('should link to /about and /contact', () => {

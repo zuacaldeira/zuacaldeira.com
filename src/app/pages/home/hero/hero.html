@@ -1,5 +1,12 @@
 <section class="hero">
-  <div class="hero__photo" role="img" aria-label="Misty sunrise over a field near Berlin"></div>
+  <picture class="hero__photo">
+    <source srcset="/assets/hero/hero-placeholder.webp" type="image/webp" />
+    <img
+      src="/assets/hero/hero-placeholder.jpg"
+      alt="Misty sunrise over a field near Berlin"
+      fetchpriority="high"
+    />
+  </picture>
 
   <div class="hero__glass" aria-hidden="true"></div>
   <div class="hero__lattice" aria-hidden="true"><app-lattice-wall /></div>
