@@ -81,25 +81,6 @@ export const fr: Translations = {
     closeMenu: 'Fermer le menu',
     openMenu: 'Ouvrir le menu',
   },
-  roleCards: [
-    {
-      title: 'Chercheur',
-      description: "Session Types, POPL, avec Vasco Vasconcelos à l'Université de Lisbonne.",
-    },
-    {
-      title: 'Développeur',
-      description:
-        "Angular + Spring Boot. Développement d'applications web pour l'écosystème Casa Azul.",
-    },
-    {
-      title: 'Éducateur',
-      description: 'Erzieher en formation à la Freie Fachschule Berlin.',
-    },
-    {
-      title: 'Coureur',
-      description: "Coureur amateur s'entraînant pour des courses et marathons à Berlin.",
-    },
-  ],
   projects: [
     {
       description:

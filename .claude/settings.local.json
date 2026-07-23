@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx ng build:*)"
+      "Bash(npx ng build:*)",
+      "Bash(gh run watch:*)",
+      "Bash(npm test:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(gh run:*)"
     ]
   }
 }

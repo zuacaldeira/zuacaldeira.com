@@ -81,24 +81,6 @@ export const en: Translations = {
     closeMenu: 'Close menu',
     openMenu: 'Open menu',
   },
-  roleCards: [
-    {
-      title: 'Researcher',
-      description: 'Session Types, POPL, with Vasco Vasconcelos at University of Lisbon.',
-    },
-    {
-      title: 'Developer',
-      description: 'Angular + Spring Boot. Building web apps for the Casa Azul ecosystem.',
-    },
-    {
-      title: 'Educator',
-      description: 'Erzieher in Ausbildung at Freie Fachschule Berlin.',
-    },
-    {
-      title: 'Runner',
-      description: 'Amateur runner training for Berlin races and marathons.',
-    },
-  ],
   projects: [
     {
       description:

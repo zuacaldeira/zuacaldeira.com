@@ -80,10 +80,9 @@ describe('I18nService', () => {
       }
     });
 
-    it('should have the same number of roleCards, projects, and facharbeiten across languages', () => {
+    it('should have the same number of projects and facharbeiten across languages', () => {
       for (const lang of LANGUAGES) {
         const t = ALL_TRANSLATIONS[lang];
-        expect(t.roleCards.length, `${lang}.roleCards`).toBe(en.roleCards.length);
         expect(t.projects.length, `${lang}.projects`).toBe(en.projects.length);
         expect(t.facharbeiten.length, `${lang}.facharbeiten`).toBe(en.facharbeiten.length);
       }

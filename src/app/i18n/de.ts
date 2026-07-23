@@ -81,25 +81,6 @@ export const de: Translations = {
     closeMenu: 'Menü schließen',
     openMenu: 'Menü öffnen',
   },
-  roleCards: [
-    {
-      title: 'Forscher',
-      description: 'Session Types, POPL, mit Vasco Vasconcelos an der Universität Lissabon.',
-    },
-    {
-      title: 'Entwickler',
-      description:
-        'Angular + Spring Boot. Entwicklung von Webanwendungen für das Casa-Azul-Ökosystem.',
-    },
-    {
-      title: 'Erzieher',
-      description: 'Erzieher in Ausbildung an der Freien Fachschule Berlin.',
-    },
-    {
-      title: 'Läufer',
-      description: 'Hobbyläufer, der für Berliner Rennen und Marathons trainiert.',
-    },
-  ],
   projects: [
     {
       description:

@@ -75,7 +75,6 @@ export interface Translations {
     closeMenu: string;
     openMenu: string;
   };
-  roleCards: { title: string; description: string }[];
   projects: { description: string }[];
   facharbeiten: { description: string }[];
 }

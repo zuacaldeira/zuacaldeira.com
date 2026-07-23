@@ -93,7 +93,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - Supported languages: `'en' | 'pt' | 'de' | 'fr'` (English and Portuguese implemented, German and French fall back to English)
 - Translation files live in `src/app/i18n/` — one file per language exporting a `Translations` object
 - Covers all sections: nav, hero, about, research, work, paedagogik, running, contact, footer, common labels
-- Content arrays (`roleCards`, `projects`, `facharbeiten`) are also translated
+- Content arrays (`projects`, `facharbeiten`) are also translated
 
 ## Testing
 
@@ -112,7 +112,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 27 test files, 150 tests covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 27 test files, 148 tests covering App component, all 3 services, all 21 components, and app routes.
 
 ## TypeScript
 
