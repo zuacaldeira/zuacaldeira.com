@@ -1,0 +1,48 @@
+<section class="paper" aria-labelledby="paper-eyebrow">
+  <p class="paper__eyebrow" id="paper-eyebrow">
+    {{ t().paper.eyebrow }} — {{ pub.title }} · ICE {{ pub.year }}
+  </p>
+
+  <blockquote class="paper__theorem">
+    <p class="paper__kind">{{ t().paper.kinds.theorem }} 15 · Reticulate Theorem</p>
+    <p class="paper__statement paper__statement--display">
+      For every well-formed session type <span class="m">S</span>, including equation systems,
+      <span class="m">ℒ(S)/≡</span> is a bounded lattice.
+    </p>
+  </blockquote>
+
+  <div class="paper__grid">
+    <blockquote class="paper__card">
+      <p class="paper__kind">{{ t().paper.kinds.definition }} 6 · SCC quotient</p>
+      <p class="paper__statement">
+        The SCC quotient <span class="m">ℒ(S)/≡</span> identifies mutually reachable states,
+        ordered <span class="m">[s₁] ≤ [s₂]</span> iff <span class="m">s₂ ↠ s₁</span>: a state is
+        smaller when less protocol remains, so execution descends from <span class="m">⊤</span> to
+        <span class="m">⊥</span>.
+      </p>
+    </blockquote>
+
+    <blockquote class="paper__card">
+      <p class="paper__kind">{{ t().paper.kinds.lemma }} 8 · End</p>
+      <p class="paper__statement"><span class="m">ℒ(end)/≡</span> is a bounded lattice.</p>
+    </blockquote>
+
+    <blockquote class="paper__card">
+      <p class="paper__kind">{{ t().paper.kinds.proposition }} 18 · Duality isomorphism</p>
+      <p class="paper__statement">
+        For every well-formed session type <span class="m">S</span>, there is a bounded-lattice
+        isomorphism <span class="m">ℒ(S)/≡ ≅ ℒ(dual(S))/≡</span>.
+      </p>
+    </blockquote>
+  </div>
+
+  <a
+    mat-stroked-button
+    class="paper__link"
+    [href]="pub.url"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    {{ t().paper.read }}
+  </a>
+</section>

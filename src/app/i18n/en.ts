@@ -81,6 +81,11 @@ export const en: Translations = {
     closeMenu: 'Close menu',
     openMenu: 'Open menu',
   },
+  paper: {
+    eyebrow: 'From the paper',
+    kinds: { definition: 'Definition', lemma: 'Lemma', theorem: 'Theorem', proposition: 'Proposition' },
+    read: 'Read the paper (PDF)',
+  },
   projects: [
     {
       description:

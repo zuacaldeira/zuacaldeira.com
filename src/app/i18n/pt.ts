@@ -81,6 +81,11 @@ export const pt: Translations = {
     closeMenu: 'Fechar menu',
     openMenu: 'Abrir menu',
   },
+  paper: {
+    eyebrow: 'Do artigo',
+    kinds: { definition: 'Definição', lemma: 'Lema', theorem: 'Teorema', proposition: 'Proposição' },
+    read: 'Ler o artigo (PDF)',
+  },
   projects: [
     {
       description:

@@ -75,6 +75,11 @@ export interface Translations {
     closeMenu: string;
     openMenu: string;
   };
+  paper: {
+    eyebrow: string;
+    kinds: { definition: string; lemma: string; theorem: string; proposition: string };
+    read: string;
+  };
   projects: { description: string }[];
   facharbeiten: { description: string }[];
 }
