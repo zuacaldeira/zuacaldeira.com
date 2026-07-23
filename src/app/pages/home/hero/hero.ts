@@ -50,9 +50,11 @@ export class Hero {
           const scale = (1.22 - progress * 0.18).toFixed(3);
           photo.style.transform = `translateY(${(progress * 10).toFixed(1)}px) scale(${scale})`;
         }
-        // Lattice floats up (opposite velocity), staying inside its own scale headroom.
+        // Lattice floats up (opposite velocity), staying inside its own scale headroom,
+        // and brightens (0.16 → 0.5) — the embossed tiles glow as the photo recedes.
         if (lattice) {
           lattice.style.transform = `translateY(${(progress * -36).toFixed(1)}px) scale(1.16)`;
+          lattice.style.opacity = (0.16 + progress * 0.34).toFixed(3);
         }
         ticking = false;
       };
