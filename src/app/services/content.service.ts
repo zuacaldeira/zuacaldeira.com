@@ -90,7 +90,8 @@ export class ContentService {
       year: 2026,
       abstract:
         'We prove that the state space of every well-formed session type, quotiented by strongly connected components, forms a bounded lattice; n-ary parallel composition yields product lattices. Two consequences follow: duality preserves the lattice up to isomorphism, and Gay–Hole width subtyping corresponds to lattice embedding for non-recursive types. We validate this on 108 benchmark protocols across networking, databases, distributed systems, AI, and fault tolerance: all form lattices, 93 distributive, 15 non-distributive. Mechanised in Lean 4 with two independently developed tool implementations.',
-      url: 'https://www.discotec.org/2026/satellite/ice_preproceedings/Session_Type_State_Spaces_Form_Lattices.pdf',
+      // Camera-ready (to appear in EPTCS), self-hosted until the proceedings are out.
+      url: 'assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf',
     },
     {
       title: 'Modular Session Types for Distributed Object-Oriented Programming',
