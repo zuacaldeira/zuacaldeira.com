@@ -30,6 +30,73 @@
   fill-opacity: 1;
 }
 
+/*
+ * The waking tile: an irregular stutter, dense at first, thinning out until the
+ * tile holds steady. steps(1, end) gives hard cuts between keyframes — a faulty
+ * fluorescent, not a fade. The class is removed by the component after 3s.
+ */
+.wall .t.flicker {
+  animation: zc-tile-flicker 3s steps(1, end) both;
+}
+
+@keyframes zc-tile-flicker {
+  0% {
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  8% {
+    opacity: 0.15;
+  }
+  11% {
+    opacity: 1;
+  }
+  16% {
+    opacity: 0.3;
+  }
+  19% {
+    opacity: 1;
+  }
+  28% {
+    opacity: 0.1;
+  }
+  32% {
+    opacity: 1;
+  }
+  43% {
+    opacity: 0.25;
+  }
+  47% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.4;
+  }
+  64% {
+    opacity: 1;
+  }
+  78% {
+    opacity: 0.55;
+  }
+  82% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 0.75;
+  }
+  95%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall .t.flicker {
+    animation: none;
+  }
+}
+
 /* Non-distributive lattices — the 15 that make the theorem interesting. */
 .wall .nd rect {
   fill: var(--zc-ochre-wash, #faf5ec);
