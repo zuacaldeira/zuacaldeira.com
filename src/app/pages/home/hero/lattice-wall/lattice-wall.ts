@@ -13,32 +13,39 @@ import { Component, DestroyRef, ElementRef, afterNextRender, inject } from '@ang
 })
 export class LatticeWall {
   private readonly host = inject(ElementRef);
-  private readonly destroyRef = inject(DestroyRef);
+  private tile?: SVGGElement;
+  private timer?: ReturnType<typeof setTimeout>;
 
   constructor() {
     // One randomly chosen tile wakes up flickering like a loose neon sign, then
     // settles into the pattern. Browser-only (the prerendered markup is untouched)
     // and skipped entirely under reduced motion.
     afterNextRender(() => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        return;
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        this.flickerRandomTile();
       }
-      this.flickerRandomTile();
     });
+    inject(DestroyRef).onDestroy(() => this.settle());
   }
 
-  /** Adds .flicker to one random tile and removes it once the stutter has played. */
+  /**
+   * Flickers one random tile and settles it once the stutter has played. Only one
+   * tile wakes at a time — starting a new flicker settles the previous one.
+   */
   flickerRandomTile(): void {
     const tiles = this.host.nativeElement.querySelectorAll('svg.wall > g.t');
     if (!tiles.length) {
       return;
     }
-    const tile = tiles[Math.floor(Math.random() * tiles.length)] as SVGGElement;
-    tile.classList.add('flicker');
-    const timer = setTimeout(() => tile.classList.remove('flicker'), 3000);
-    this.destroyRef.onDestroy(() => {
-      clearTimeout(timer);
-      tile.classList.remove('flicker');
-    });
+    this.settle();
+    this.tile = tiles[Math.floor(Math.random() * tiles.length)] as SVGGElement;
+    this.tile.classList.add('flicker');
+    this.timer = setTimeout(() => this.settle(), 3000);
+  }
+
+  private settle(): void {
+    clearTimeout(this.timer);
+    this.tile?.classList.remove('flicker');
+    this.tile = undefined;
   }
 }
