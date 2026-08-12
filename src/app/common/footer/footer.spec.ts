@@ -25,7 +25,7 @@ describe('Footer', () => {
     const i18nService = TestBed.inject(I18nService);
     i18nService.setLanguage('en');
     const items = component.navItems();
-    expect(items).toHaveLength(7);
+    expect(items).toHaveLength(5);
     expect(items[0].label).toBe('Home');
     expect(items[0].route).toBe('/home');
   });

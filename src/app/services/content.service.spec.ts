@@ -9,8 +9,14 @@ describe('ContentService', () => {
   });
 
   describe('navItems', () => {
-    it('should have 7 navigation items', () => {
-      expect(service.navItems).toHaveLength(7);
+    it('should have 5 navigation items', () => {
+      expect(service.navItems).toHaveLength(5);
+    });
+
+    it('should not link to the hidden work and paedagogik pages', () => {
+      const routes = service.navItems.map((item) => item.route);
+      expect(routes).not.toContain('/work');
+      expect(routes).not.toContain('/paedagogik');
     });
 
     it('should have valid route paths starting with /', () => {

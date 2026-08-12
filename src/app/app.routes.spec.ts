@@ -12,8 +12,8 @@ class DummyComponent {}
 
 describe('App Routes', () => {
   describe('route definitions', () => {
-    it('should have 8 routes defined', () => {
-      expect(routes).toHaveLength(8);
+    it('should have 6 routes defined', () => {
+      expect(routes).toHaveLength(6);
     });
 
     it('should redirect empty path to home', () => {
@@ -25,16 +25,13 @@ describe('App Routes', () => {
 
     it('should have all expected route paths', () => {
       const paths = routes.map((r) => r.path);
-      expect(paths).toEqual([
-        '',
-        'home',
-        'about',
-        'research',
-        'work',
-        'paedagogik',
-        'running',
-        'contact',
-      ]);
+      expect(paths).toEqual(['', 'home', 'about', 'research', 'running', 'contact']);
+    });
+
+    it('should not expose the hidden work and paedagogik routes', () => {
+      const paths = routes.map((r) => r.path);
+      expect(paths).not.toContain('work');
+      expect(paths).not.toContain('paedagogik');
     });
 
     it('should lazy-load all page routes', () => {
@@ -50,8 +47,6 @@ describe('App Routes', () => {
       ['home', 'Home'],
       ['about', 'About'],
       ['research', 'Research'],
-      ['work', 'Work'],
-      ['paedagogik', 'Paedagogik'],
       ['running', 'Running'],
       ['contact', 'Contact'],
     ])('%s should resolve to %s component', async (path, componentName) => {

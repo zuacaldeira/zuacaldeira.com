@@ -36,7 +36,11 @@ src/app/
 
 Routes defined in `src/app/app.routes.ts`. All lazy-loaded:
 - `/` redirects to `/home`
-- `/home`, `/about`, `/research`, `/work`, `/paedagogik`, `/running`, `/contact`
+- `/home`, `/about`, `/research`, `/running`, `/contact`
+
+`/work` and `/paedagogik` are **hidden** — their page components still live in `pages/work/` and
+`pages/paedagogik/` (with tests), but the routes and the `ContentService.navItems` entries are
+removed until the content is fine-tuned. Restore both to bring the pages back.
 
 Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for all paths (`**`).
 

@@ -21,9 +21,9 @@ describe('ZcDesktopMenuItems', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have 6 translated nav items (contact is the toolbar button, not a text link)', () => {
+  it('should have 4 translated nav items (contact is the toolbar button, not a text link)', () => {
     const items = component.navItems();
-    expect(items).toHaveLength(6);
+    expect(items).toHaveLength(4);
     expect(items.map((i) => i.route)).not.toContain('/contact');
   });
 

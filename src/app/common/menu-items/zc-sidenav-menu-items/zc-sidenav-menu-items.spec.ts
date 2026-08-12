@@ -21,9 +21,9 @@ describe('ZcSidenavMenuItems', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have 7 translated nav items', () => {
+  it('should have 5 translated nav items', () => {
     const items = component.navItems();
-    expect(items).toHaveLength(7);
+    expect(items).toHaveLength(5);
   });
 
   it('should translate labels based on current language', () => {

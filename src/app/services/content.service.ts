@@ -17,8 +17,7 @@ export class ContentService {
     { label: 'Home', route: '/home', icon: 'home' },
     { label: 'About', route: '/about', icon: 'person' },
     { label: 'Research', route: '/research', icon: 'science' },
-    { label: 'Work', route: '/work', icon: 'code' },
-    { label: 'Pädagogik', route: '/paedagogik', icon: 'school' },
+    // Work and Pädagogik are hidden until their content is fine-tuned; see app.routes.ts.
     { label: 'Running', route: '/running', icon: 'directions_run' },
     { label: 'Contact', route: '/contact', icon: 'mail' },
   ];
