@@ -111,6 +111,17 @@ describe('ContentService', () => {
         expect(pub.year).toBeLessThanOrEqual(new Date().getFullYear());
       }
     });
+
+    // A self-hosted URL must be root-absolute. Relative to /home/ it would resolve
+    // to /home/assets/..., which the server answers with the SPA shell — a 200 of
+    // text/html where a PDF was expected, so the failure is silent.
+    it('should reference self-hosted PDFs from the site root', () => {
+      for (const pub of service.publications) {
+        if (pub.url && !/^https?:\/\//.test(pub.url)) {
+          expect(pub.url, `${pub.title} should start with /assets/`).toMatch(/^\/assets\//);
+        }
+      }
+    });
   });
 
   describe('races', () => {
@@ -160,7 +171,7 @@ describe('ContentService', () => {
     it('should have PDF URLs pointing to assets directory', () => {
       for (const fa of service.facharbeiten) {
         if (fa.pdfUrl) {
-          expect(fa.pdfUrl).toMatch(/^assets\/pdfs\//);
+          expect(fa.pdfUrl).toMatch(/^\/assets\/pdfs\//);
         }
       }
     });
