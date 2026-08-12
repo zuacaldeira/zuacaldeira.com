@@ -1,8 +1,11 @@
 import { Component, DestroyRef, ElementRef, afterNextRender, inject } from '@angular/core';
 
 /**
- * The 41 distinct lattices realised by the 108 benchmark protocols of the ICE 2026
- * paper, tiled as an azulejo wall. The SVG body is generated — never hand-edit
+ * The 74 distinct lattices realised at rung R2′ by 104 of the ICE 2026 paper's 108
+ * benchmark protocols (four are excluded — see scripts/lattice-wall/README.md), tiled
+ * as an azulejo wall. R2′ is not the paper's own construction: under the paper's R1 the
+ * same corpus gives 41 lattices, 15 non-distributive, so don't cite the paper's census
+ * for what is drawn here. The SVG body is generated — never hand-edit
  * lattice-wall.html; run scripts/lattice-wall/render.py.
  */
 @Component({

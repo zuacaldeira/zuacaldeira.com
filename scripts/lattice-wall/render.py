@@ -55,8 +55,12 @@ def render(lattices):
     out = [
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" class="wall" role="img" '
         f'preserveAspectRatio="xMidYMid slice" aria-labelledby="wall-title">',
-        f'<title id="wall-title">The {len(lattices)} distinct lattices realised by the {total} '
-        f"benchmark protocols of Session Type State Spaces Form Lattices, ordered by size. "
+        # Name the rung: R2′ is not the paper's own construction, and its census
+        # (74/47) differs from the paper's R1 census (41/15). Attributing these
+        # counts to the paper without the qualifier misreads them as its results.
+        f'<title id="wall-title">The {len(lattices)} distinct lattices realised at rung '
+        f"R2′ by {total} benchmark protocols of Session Type State Spaces Form "
+        f"Lattices (ICE 2026), ordered by size. "
         f"The {nd} non-distributive ones are marked in a different colour.</title>",
     ]
     for r, row in enumerate(rows):

@@ -28,6 +28,15 @@ describe('PaperStatements', () => {
     expect(el.querySelector('.paper__theorem .paper__kind')?.textContent).toContain('Theorem 15');
   });
 
+  it('should quote Theorem 15 exactly as the camera-ready states it', () => {
+    const text = el.querySelector('.paper__statement--display')?.textContent?.replace(/\s+/g, ' ');
+    expect(text?.trim()).toBe('For every well-formed session type S, ℒ(S)/≡ is a bounded lattice.');
+    // An earlier draft over-claimed the scope; the camera-ready dropped the qualifier
+    // because named equations yield only a bounded *partial* lattice in general.
+    expect(text).not.toContain('six constructors');
+    expect(text).not.toContain('mutual recursion');
+  });
+
   it('should show the definition, lemma, and proposition cards', () => {
     const kinds = Array.from(el.querySelectorAll('.paper__card .paper__kind')).map(
       (k) => k.textContent ?? '',
