@@ -1,6 +1,6 @@
 # CLAUDE.md — zuacaldeira.com
 
-This is a personal website for Zu Caldeira, built with Angular 21 and deployed to GitHub Pages.
+This is a personal website for Zu Caldeira, built with Angular 21 and deployed to a VPS.
 
 ## Build & Dev Commands
 
@@ -134,10 +134,13 @@ Prettier config is in `package.json`:
 
 ## Deployment
 
-- **GitHub Actions** (`.github/workflows/deploy.yml`) triggers on push to `main`
+- **GitHub Actions** (`.github/workflows/deploy.yml`) triggers on push to `main` (or manually via `workflow_dispatch`)
 - Runs `npm test` before build — tests must pass for deploy to proceed
 - Builds with `ng build --configuration production`
-- Copies `home/index.html` → root `index.html` for GitHub Pages
-- Uploads `dist/zuacaldeira-com/browser/` as Pages artifact
-- **CNAME**: `zuacaldeira.com`
+- Copies `home/index.html` → root `index.html` and `404/index.html` → `404.html`
+- Rsyncs `dist/zuacaldeira-com/browser/` (with `--delete`) over SSH to the VPS at
+  `/var/www/zuacaldeira.com/` as user `deploy-zuacaldeira`
+- Secrets: `DEPLOY_SSH_KEY`, `DEPLOY_HOST`
+- Finishes with a `curl` check that `https://zuacaldeira.com` responds
+- `public/CNAME` is a leftover from GitHub Pages; the rsync excludes it
 - Node 22 in CI
