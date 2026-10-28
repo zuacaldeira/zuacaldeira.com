@@ -1,3 +1,6 @@
 {
-  "agent": "tdd-peer"
+  "agent": "tdd-peer",
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  }
 }

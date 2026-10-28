@@ -6,7 +6,9 @@ differ, this file wins.
 
 Every new session in this repo starts as `tdd-peer` in pair mode (`"agent": "tdd-peer"` in
 `.claude/settings.json`, agreed 2026-10-28). For work that is not test-first (server setup,
-design mock-ups), start a session with `claude --agent claude`. For batch mode, agree the
+design mock-ups), start a session with `claude --agent claude`. For both peers in one
+session, start `claude --agent a-team`: it adds `ui-design-peer` and `tdd-peer` as teammates
+(agent teams, experimental, enabled in `.claude/settings.json`) and routes the work. For batch mode, agree the
 test list and diagram with the developer, then spawn the agent with "Mode: batch".
 
 ## Architecture (agreed 2026-10-28)

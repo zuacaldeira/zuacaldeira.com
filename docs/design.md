@@ -9,7 +9,8 @@ below is assumed and marked so.
 
 New sessions in this repo start as `tdd-peer` (`.claude/settings.json`). For design work,
 start a session with `claude --agent ui-design-peer`, or let the main session spawn it
-with "Mode: mock-up", "Mode: review" or "Mode: batch".
+with "Mode: mock-up", "Mode: review" or "Mode: batch". `claude --agent a-team` starts a
+session with both peers as teammates.
 
 ## The site
 The personal website of Alexandre Zua Caldeira: research (session types, the ICE 2026
