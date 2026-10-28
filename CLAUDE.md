@@ -148,6 +148,8 @@ Prettier config is in `package.json`:
 - Secrets: `DEPLOY_SSH_KEY`, `DEPLOY_HOST`
 - Finishes with a `curl` check that `https://zuacaldeira.com` responds
 - `public/CNAME` is a leftover from GitHub Pages; the rsync excludes it
+- The live nginx site is kept in `infra/live/nginx-site.conf` (installed by hand as
+  `/etc/nginx/sites-available/zuacaldeira.com`; all `add_header` at server level)
 - **Preview site:** on push to `next`, `.github/workflows/deploy-next.yml` tests, builds the web
   image (`frontend/Dockerfile`, `PREVIEW=true` writes `robots.txt` with `Disallow: /`), pushes it to
   `ghcr.io/zuacaldeira/zuacaldeira.com-web`, and has the VPS pull and restart it on `127.0.0.1:3130`
