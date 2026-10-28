@@ -4,9 +4,10 @@ The project profile for the shared `tdd-peer` agent (`~/.claude/agents/tdd-peer.
 which reads this file at the start of every session. Where this file and the agent
 differ, this file wins.
 
-Sessions do not start as the agent by default. Use `claude --agent tdd-peer` for pair
-mode. For batch mode, the main session agrees the test list and diagram with the
-developer, then spawns the agent with "Mode: batch".
+Every new session in this repo starts as `tdd-peer` in pair mode (`"agent": "tdd-peer"` in
+`.claude/settings.json`, agreed 2026-10-28). For work that is not test-first (server setup,
+design mock-ups), start a session with `claude --agent claude`. For batch mode, agree the
+test list and diagram with the developer, then spawn the agent with "Mode: batch".
 
 ## Architecture (agreed 2026-10-28)
 The new site gets a backend. Until the repo is restructured, `CLAUDE.md` still
