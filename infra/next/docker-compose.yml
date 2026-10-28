@@ -1,0 +1,11 @@
+# next.zuacaldeira.com on the shared VPS. Installed as /opt/zuacaldeira-next/docker-compose.yml.
+# Bound to localhost only: the host nginx (nginx-site.conf) terminates TLS and proxies here.
+# Never publish :80/:443 from a container on this host.
+name: zuacaldeira-next
+
+services:
+  web:
+    image: ghcr.io/zuacaldeira/zuacaldeira.com-web:next
+    ports:
+      - "127.0.0.1:3130:8080"
+    restart: unless-stopped

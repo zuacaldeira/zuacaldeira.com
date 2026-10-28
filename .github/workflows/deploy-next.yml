@@ -1,5 +1,8 @@
 name: Deploy next to VPS
 
+# The preview of the redesign: next.zuacaldeira.com, a web container on the shared VPS
+# behind the host nginx. Setup and the server-side files: docs/deploy-next.md, infra/next/.
+
 on:
   push:
     branches: [next]
@@ -12,8 +15,11 @@ concurrency:
   group: deploy-next
   cancel-in-progress: false
 
+env:
+  IMAGE: ghcr.io/zuacaldeira/zuacaldeira.com-web
+
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,15 +37,44 @@ jobs:
 
       - run: npm test
 
-      - run: npx ng build --configuration production
+  image:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Prepare static output
-        run: |
-          cp dist/zuacaldeira-com/browser/home/index.html dist/zuacaldeira-com/browser/index.html
-          cp dist/zuacaldeira-com/browser/404/index.html dist/zuacaldeira-com/browser/404.html || true
-          # Work in progress: keep search engines off the preview site.
-          printf 'User-agent: *\nDisallow: /\n' > dist/zuacaldeira-com/browser/robots.txt
+      - uses: docker/setup-buildx-action@v3
 
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: frontend
+          build-args: PREVIEW=true
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:next
+            ${{ env.IMAGE }}:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/zuacaldeira/zuacaldeira.com
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -47,13 +82,13 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Rsync to VPS
+      # The token on stdin lets the server pull the image; it expires with this job.
+      - name: Pull and restart the container
         run: |
-          rsync -az --delete --exclude CNAME \
-            -e "ssh -i ~/.ssh/deploy_key" \
-            dist/zuacaldeira-com/browser/ \
-            deploy-zuacaldeira@${{ secrets.DEPLOY_HOST }}:/var/www/next.zuacaldeira.com/
+          echo "${{ secrets.GITHUB_TOKEN }}" | ssh -i ~/.ssh/deploy_key \
+            deploy-zuacaldeira@${{ secrets.DEPLOY_HOST }} sudo /usr/local/bin/zc-next-deploy
 
       - name: Verify deployment
         run: |
+          sleep 3
           curl -sf -o /dev/null -w "https://next.zuacaldeira.com -> %{http_code}\n" https://next.zuacaldeira.com

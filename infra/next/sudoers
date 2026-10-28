@@ -1,0 +1,2 @@
+# Installed as /etc/sudoers.d/zc-next-deploy (mode 0440, check with visudo -cf).
+deploy-zuacaldeira ALL=(root) NOPASSWD: /usr/local/bin/zc-next-deploy

@@ -1,0 +1,13 @@
+#!/bin/sh
+# Pull and restart next.zuacaldeira.com. Installed root-owned as /usr/local/bin/zc-next-deploy;
+# deploy-zuacaldeira may run exactly this through sudo (infra/next/sudoers), so it needs no
+# docker group (which would be root on this shared host).
+#
+# Reads a GitHub token with packages:read on stdin, used for this pull only.
+set -eu
+cd /opt/zuacaldeira-next
+docker login ghcr.io -u zuacaldeira --password-stdin >/dev/null
+trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
+docker compose pull --quiet
+docker compose up -d --remove-orphans
+docker image prune -f --filter "label=org.opencontainers.image.source=https://github.com/zuacaldeira/zuacaldeira.com" >/dev/null

@@ -148,8 +148,9 @@ Prettier config is in `package.json`:
 - Secrets: `DEPLOY_SSH_KEY`, `DEPLOY_HOST`
 - Finishes with a `curl` check that `https://zuacaldeira.com` responds
 - `public/CNAME` is a leftover from GitHub Pages; the rsync excludes it
-- **Preview site** (setup in `docs/deploy-next.md`, nginx config in `infra/nginx/`): `.github/workflows/deploy-next.yml` does the same on push to the `next` branch,
-  rsyncing to `/var/www/next.zuacaldeira.com/` and verifying https://next.zuacaldeira.com. It overwrites
-  `robots.txt` with `Disallow: /` so the preview is not indexed. Work in progress lands on `next`;
-  merge `next` into `main` to ship it.
+- **Preview site:** on push to `next`, `.github/workflows/deploy-next.yml` tests, builds the web
+  image (`frontend/Dockerfile`, `PREVIEW=true` writes `robots.txt` with `Disallow: /`), pushes it to
+  `ghcr.io/zuacaldeira/zuacaldeira.com-web`, and has the VPS pull and restart it on `127.0.0.1:3130`
+  behind the host nginx (https://next.zuacaldeira.com). Server files in `infra/next/`, setup and
+  rollback in `docs/deploy-next.md`. Merge `next` into `main` to ship.
 - Node 22 in CI

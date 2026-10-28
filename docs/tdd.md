@@ -154,9 +154,9 @@ in this repo. Everything up to it is the baseline: no type, no recorded red step
 the next element on, `tdd-peer` works to this profile; no session type is enforced. The
 assessment monitor in `~/Development/projects/tdd-lab` is not built yet. When it is, it
 can mine this repo's log from this boundary on.
-- **Deploying the backend** (a service and a database on the VPS, for `next` and later
-  for the live site) is not designed yet. It is the developer's decision; until then
-  the preview deploys only the prerendered frontend.
+- **Deploying:** the preview runs as a web container on the VPS (`docs/deploy-next.md`). The
+  backend and MySQL join the same compose file later, bound to `127.0.0.1`; how is still the
+  developer's decision.
 
 ## Time logging
 None for this project.
