@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { inject } from '@angular/core';
-import { Routes } from '@angular/router';
+import { CanActivateChildFn, Routes } from '@angular/router';
 import { Language } from './models/i18n';
 import { I18nService } from './services/i18n.service';
 
@@ -15,20 +15,37 @@ const pages: Routes = [
   { path: 'contact', loadComponent: () => import('./pages/contact/contact').then((m) => m.Contact) },
 ];
 
-/** The URL prefix decides the language: it sets the translations and `<html lang>`. */
-function inLanguage(lang: Language) {
-  return () => {
+const SITE_LANGUAGES = ['en', 'de', 'pt'] as const;
+const SITE_URL = 'https://zuacaldeira.com';
+
+/**
+ * The URL prefix decides the language: it sets the translations and `<html lang>`, and
+ * links the page to its version in every language (`hreflang`, English as x-default).
+ */
+function inLanguage(lang: Language): CanActivateChildFn {
+  return (_route, state) => {
     inject(I18nService).setLanguage(lang);
-    inject(DOCUMENT).documentElement.lang = lang;
+    const document = inject(DOCUMENT);
+    document.documentElement.lang = lang;
+
+    const page = state.url.slice(lang.length + 1);
+    document.head.querySelectorAll('link[rel="alternate"]').forEach((link) => link.remove());
+    for (const [hreflang, prefix] of [...SITE_LANGUAGES.map((l) => [l, l]), ['x-default', 'en']]) {
+      const link = document.createElement('link');
+      link.rel = 'alternate';
+      link.hreflang = hreflang;
+      link.href = `${SITE_URL}/${prefix}${page}`;
+      document.head.appendChild(link);
+    }
     return true;
   };
 }
 
 export const routes: Routes = [
   { path: '', redirectTo: 'en/home', pathMatch: 'full' },
-  ...(['en', 'de', 'pt'] as const).map((lang) => ({
+  ...SITE_LANGUAGES.map((lang) => ({
     path: lang,
-    canActivate: [inLanguage(lang)],
+    canActivateChild: [inLanguage(lang)],
     children: pages,
   })),
 ];

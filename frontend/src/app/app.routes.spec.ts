@@ -70,6 +70,35 @@ describe('App Routes', () => {
     });
   });
 
+  describe('page head', () => {
+    beforeEach(() => {
+      window.matchMedia = vi.fn().mockReturnValue({ matches: false } as MediaQueryList);
+      TestBed.configureTestingModule({ providers: [provideRouter(routes)] });
+    });
+
+    const alternates = () =>
+      [...TestBed.inject(DOCUMENT).head.querySelectorAll('link[rel="alternate"]')].map(
+        (l) => `${l.getAttribute('hreflang')} ${l.getAttribute('href')}`,
+      );
+
+    it('HOME-PAGE-02: should link /de/home to its versions in every language', async () => {
+      await RouterTestingHarness.create('/de/home');
+      expect(alternates()).toEqual([
+        'en https://zuacaldeira.com/en/home',
+        'de https://zuacaldeira.com/de/home',
+        'pt https://zuacaldeira.com/pt/home',
+        'x-default https://zuacaldeira.com/en/home',
+      ]);
+    });
+
+    it('should replace the alternates when the page changes', async () => {
+      const harness = await RouterTestingHarness.create('/de/home');
+      await harness.navigateByUrl('/pt/about');
+      expect(alternates()[0]).toBe('en https://zuacaldeira.com/en/about');
+      expect(alternates()).toHaveLength(4);
+    });
+  });
+
   describe('server routes', () => {
     it('should have a catch-all prerender route', () => {
       expect(serverRoutes).toHaveLength(1);

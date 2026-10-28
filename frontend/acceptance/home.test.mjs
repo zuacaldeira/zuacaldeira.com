@@ -13,3 +13,18 @@ test('HOME-PAGE-01: each language has its own home page with its lang attribute'
     assert.match(page(`${lang}/home`), new RegExp(`<html lang="${lang}"`));
   }
 });
+
+test('HOME-PAGE-02: the German home links to every language version', () => {
+  const html = page('de/home');
+  for (const [hreflang, path] of [
+    ['en', 'en/home'],
+    ['de', 'de/home'],
+    ['pt', 'pt/home'],
+    ['x-default', 'en/home'],
+  ]) {
+    assert.match(
+      html,
+      new RegExp(`<link rel="alternate" hreflang="${hreflang}" href="https://zuacaldeira.com/${path}">`),
+    );
+  }
+});
