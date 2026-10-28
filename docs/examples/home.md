@@ -1,7 +1,7 @@
 # Examples: Home page
 
-Status: **draft, not yet agreed with the developer.** Batch mode may not start from this
-file until this line reads "agreed with the developer on <date>".
+Status: **agreed with the developer on 2026-10-28** (decisions D1–D7 below). One wording
+is still to confirm: the German and Portuguese SVG titles in HOME-HERO-09.
 
 The home page in three languages, at `/en/home`, `/de/home` and `/pt/home`. It is the
 first page of the new site, and its hero is the walking skeleton: the first section
@@ -29,8 +29,8 @@ Texts below are copied from today's `src/app/i18n/{en,de,pt}.ts`. Texts marked
 | HOME-PAGE-01 | the home page content exists in en, de and pt | the site is built | `/en/home/index.html`, `/de/home/index.html` and `/pt/home/index.html` exist, with `<html lang="en">`, `lang="de"` and `lang="pt"` | |
 | HOME-PAGE-02 | the built `/de/home` | it is read | it has `<link rel="alternate" hreflang="en" href="https://zuacaldeira.com/en/home">`, the same for `de` and `pt`, and `hreflang="x-default"` pointing to `/en/home` | |
 | HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Investigador. Programador. Educador. Corredor." (en: "Alexandre Caldeira — Researcher. Developer. Educator. Runner.", de: "Alexandre Caldeira — Forscher. Entwickler. Erzieher. Läufer.") | |
-| HOME-PAGE-04 | a visitor opens `/` | the page loads | ⚠ question Q1 | |
-| HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | ⚠ question Q2 | |
+| HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with links to `/de/home` and `/pt/home`; no redirect (D1) | |
+| HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about` → `/en/about`, ...) (D2) | |
 | HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | |
 
 ## 2. Hero
@@ -41,11 +41,11 @@ Texts below are copied from today's `src/app/i18n/{en,de,pt}.ts`. Texts marked
 | HOME-HERO-02 | the hero content stored in pt | the site is built | `/pt/home` shows "Piri → Estremoz → Lisboa → Berlim", "Investigador. Programador. Educador. Corredor.", "Sobre mim" to `/pt/about`, "Entrar em contacto" to `/pt/contact` | |
 | HOME-HERO-03 | the hero content stored in en | the site is built | `/en/home` shows "Piri → Estremoz → Lisbon → Berlin", "Researcher. Developer. Educator. Runner.", "About me" to `/en/about`, "Get in touch" to `/en/contact` | |
 | HOME-HERO-04 | any language | the site is built | the `<h1>` is "Alexandre Zua Caldeira" in all three; a name is not translated | |
-| HOME-HERO-05 | the hero content stored in pt | `GET /api/content/home/hero?lang=pt` | 200 with the pt texts of HOME-HERO-02 (response shape: ⚠ question Q3) | |
-| HOME-HERO-06 | no hero content stored for de | the site is built | ⚠ question Q4 | |
-| HOME-HERO-07 | any language | `GET /api/content/home/hero?lang=fr` | ⚠ question Q5 | |
-| HOME-HERO-08 | the built `/de/home` | it is read | the photo's alt text is German: "Nebliger Sonnenaufgang über einem Feld bei Berlin" *(proposed)*; pt: "Nascer do sol com nevoeiro sobre um campo perto de Berlim" *(proposed)*; en: "Misty sunrise over a field near Berlin" | |
-| HOME-HERO-09 | the lattice wall behind the hero | the site is built in de | ⚠ question Q6 | |
+| HOME-HERO-05 | the hero content stored in pt | `GET /api/content/home/hero?lang=pt` | 200 with `{"eyebrow": "Piri → Estremoz → Lisboa → Berlim", "tagline": "Investigador. Programador. Educador. Corredor.", "aboutCta": "Sobre mim", "contactCta": "Entrar em contacto", "photoAlt": "Nascer do sol com nevoeiro sobre um campo perto de Berlim"}` (D3) | |
+| HOME-HERO-06 | no hero content stored for de | the site is built | the build fails with a message naming page `home`, section `hero`, language `de`; nothing is deployed (D4) | |
+| HOME-HERO-07 | any language | `GET /api/content/home/hero?lang=fr` | 404 (D5) | |
+| HOME-HERO-08 | the built `/de/home` | it is read | the photo's alt text is German: "Nebliger Sonnenaufgang über einem Feld bei Berlin"; pt: "Nascer do sol com nevoeiro sobre um campo perto de Berlim"; en: "Misty sunrise over a field near Berlin" | |
+| HOME-HERO-09 | the lattice wall behind the hero | the site is built in de and in pt | the SVG `<title>` is translated: de "Die 74 verschiedenen Verbände, die 104 Benchmark-Protokolle aus Session Type State Spaces Form Lattices (ICE 2026) auf Stufe R2′ bilden, nach Größe geordnet. Die 47 nicht-distributiven sind in einer anderen Farbe markiert." *(wording to confirm)*; pt "Os 74 reticulados distintos que 104 protocolos de referência de Session Type State Spaces Form Lattices (ICE 2026) formam no degrau R2′, ordenados por tamanho. Os 47 não distributivos estão marcados com outra cor." *(wording to confirm)*. The visible credit "behind: 74 distinct lattices from 104 benchmark protocols at rung R2′, 47 non-distributive" stays English in every language (D6) | |
 | HOME-HERO-10 | the build ran on `next` | https://next.zuacaldeira.com/de/home is opened | it shows the German hero of HOME-HERO-01 (system test, after the server is set up) | |
 
 ### Diagram: HOME-HERO-01 (acceptance, at build time)
@@ -108,32 +108,19 @@ flowchart LR
     Q[(statements:<br/>one text, no lang)] --> B["four quotations,<br/>same in en/de/pt"]
 ```
 
-## Questions for the developer
-
-- **Q1. What does `/` show?** (a) the English home, prerendered, with links to de and pt
-  (recommended: crawlers and link previews get a real page); (b) a redirect to the
-  visitor's browser language, which needs a script or nginx rule and gives crawlers no
-  content at `/`.
-- **Q2. Old URLs** (`/home`, `/about`, `/research`, ...) from CVs and papers: (a) a
-  301 redirect to `/en/...` in nginx (recommended); (b) a prerendered page that forwards
-  in the browser; (c) let them 404.
-- **Q3. Content API shape.** Proposed: `GET /api/content/{page}/{section}?lang=xx`
-  returning a flat JSON object of the section's texts, e.g.
-  `{"eyebrow": "...", "tagline": "...", "aboutCta": "...", "contactCta": "...", "photoAlt": "..."}`.
-  Alternatives: one call per page with all sections; or one call per language with the
-  whole site.
-- **Q4. A missing translation at build time:** (a) the build fails and names the missing
-  page, section and language (recommended: nothing half-translated reaches the preview);
-  (b) fall back to English and log a warning.
-- **Q5. An unsupported language in the API** (`lang=fr`): 404 or 400?
-- **Q6. The lattice wall's texts.** The visible credit "behind: 74 distinct lattices from
-  104 benchmark protocols at rung R2′, 47 non-distributive" and the SVG's accessible
-  title. Notation (stays English) or prose (translated)? The SVG title is what screen
-  readers announce, so translating it helps German and Portuguese visitors.
-- **Q7. German and Portuguese wording.** The de and pt texts above come from translation
-  files written before July 2026. Are they still the wording you want, and is "Erzieher"
-  right for the tagline now that the training is in progress?
-
 ## Decisions
 
-None yet.
+Agreed with the developer on 2026-10-28.
+
+- **D1. `/`** is the prerendered English home, with links to de and pt. No redirect by
+  browser language.
+- **D2. Old URLs** (`/home`, `/about`, `/research`, ...) get a `301` to `/en/...` in nginx.
+- **D3. Content API: one call per section.** `GET /api/content/{page}/{section}?lang=xx`
+  returns a flat JSON object of that section's texts.
+- **D4. A missing translation fails the build**, naming page, section and language.
+  No fallback to English.
+- **D5. An unsupported language** (`lang=fr`) gets `404`.
+- **D6. Lattice wall:** the SVG title (what screen readers announce) is translated; the
+  visible credit stays English as research notation.
+- **D7. Hero wording:** the German and Portuguese texts from the existing translation
+  files are kept as they are, including "Erzieher" and "Educador".
