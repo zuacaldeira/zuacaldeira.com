@@ -148,7 +148,7 @@ Prettier config is in `package.json`:
 - Secrets: `DEPLOY_SSH_KEY`, `DEPLOY_HOST`
 - Finishes with a `curl` check that `https://zuacaldeira.com` responds
 - `public/CNAME` is a leftover from GitHub Pages; the rsync excludes it
-- **Preview site:** `.github/workflows/deploy-next.yml` does the same on push to the `next` branch,
+- **Preview site** (setup in `docs/deploy-next.md`, nginx config in `infra/nginx/`): `.github/workflows/deploy-next.yml` does the same on push to the `next` branch,
   rsyncing to `/var/www/next.zuacaldeira.com/` and verifying https://next.zuacaldeira.com. It overwrites
   `robots.txt` with `Disallow: /` so the preview is not indexed. Work in progress lands on `next`;
   merge `next` into `main` to ship it.
