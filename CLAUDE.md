@@ -2,6 +2,10 @@
 
 This is a personal website for Zu Caldeira, built with Angular 21 and deployed to a VPS.
 
+The Angular app lives in `frontend/`; a Spring Boot `backend/` is coming (see `docs/tdd.md`).
+Run the commands below in `frontend/`. Paths in this file (`src/...`, `public/...`, `dist/...`)
+are relative to `frontend/`.
+
 ## Build & Dev Commands
 
 ```bash
@@ -135,6 +139,7 @@ Prettier config is in `package.json`:
 ## Deployment
 
 - **GitHub Actions** (`.github/workflows/deploy.yml`) triggers on push to `main` (or manually via `workflow_dispatch`)
+- Runs every step in `frontend/` (`defaults.run.working-directory`)
 - Runs `npm test` before build — tests must pass for deploy to proceed
 - Builds with `ng build --configuration production`
 - Copies `home/index.html` → root `index.html` and `404/index.html` → `404.html`

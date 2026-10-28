@@ -12,8 +12,8 @@ developer, then spawns the agent with "Mode: batch".
 The new site gets a backend. Until the repo is restructured, `CLAUDE.md` still
 describes the old frontend-only site.
 - **Layout:** one repo with `frontend/` (the Angular app, moved from the root) and
-  `backend/` (Spring Boot, Java 21, Maven wrapper). Until the move is done, the
-  frontend lives at the repo root and its commands run there.
+  `backend/` (Spring Boot, Java 21, Maven wrapper). The frontend moved on
+  2026-10-28; `backend/` does not exist yet.
 - **Backend jobs:** serve the content (pages, papers, races and the rest, in EN/DE/PT),
   receive the contact form and send mail, an authenticated admin area to edit content
   and translations, and live data (e.g. Strava) fetched and cached on the server.
@@ -94,15 +94,17 @@ lists its sections in order.
   never call the real service; record its responses as fixtures.
 
 **Frontend:** Angular 21, standalone components, **zoneless** (no zone.js), prerendered at
-build time. Vitest through `@angular/build:unit-test`, with globals.
+build time. Vitest through `@angular/build:unit-test`, with globals. Run every frontend
+command in `frontend/`.
 
 - **One spec while iterating:** `npx ng test --no-watch --include='<path>'` (about 8 s).
 - **Whole suite:** `npx ng test --no-watch` (about 14 s, 159 tests on 2026-10-28). Run
   it before every commit.
 - **Prerender check:** `npm run build`, then read the HTML in
-  `dist/zuacaldeira-com/browser/<route>/index.html`. This is the system-level test for
+  `frontend/dist/zuacaldeira-com/browser/<route>/index.html`. This is the system-level test for
   routing, `lang` attributes and translated text in static output. It takes longer than
-  the suite; run it at the end of an element that touches routes or prerendering, not
+  the suite, and right after a suite run it has crashed once inside esbuild on this machine
+  (a second run passed); run it at the end of an element that touches routes or prerendering, not
   after every step.
 - **No end-to-end tool yet.** Adding one (e.g. Playwright) is a new dependency, so the
   developer decides.
