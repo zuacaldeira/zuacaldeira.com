@@ -8,9 +8,14 @@ import { join } from 'node:path';
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
 const page = (route) => readFileSync(join(browser, route, 'index.html'), 'utf8');
 
+// A failure names the missing fragment, not the whole page (fonts are inlined, ~270 kB).
+function contains(html, fragment, route) {
+  assert.ok(html.includes(fragment), `${route} lacks ${fragment}`);
+}
+
 test('HOME-PAGE-01: each language has its own home page with its lang attribute', () => {
   for (const lang of ['en', 'de', 'pt']) {
-    assert.match(page(`${lang}/home`), new RegExp(`<html lang="${lang}"`));
+    contains(page(`${lang}/home`), `<html lang="${lang}"`, `${lang}/home`);
   }
 });
 
@@ -22,9 +27,20 @@ test('HOME-PAGE-02: the German home links to every language version', () => {
     ['pt', 'pt/home'],
     ['x-default', 'en/home'],
   ]) {
-    assert.match(
+    contains(
       html,
-      new RegExp(`<link rel="alternate" hreflang="${hreflang}" href="https://zuacaldeira.com/${path}">`),
+      `<link rel="alternate" hreflang="${hreflang}" href="https://zuacaldeira.com/${path}">`,
+      'de/home',
     );
+  }
+});
+
+test('HOME-PAGE-03: the home page title is the name and the tagline in its language', () => {
+  for (const [lang, title] of [
+    ['pt', 'Alexandre Caldeira — Investigador. Programador. Educador. Corredor.'],
+    ['en', 'Alexandre Caldeira — Researcher. Developer. Educator. Runner.'],
+    ['de', 'Alexandre Caldeira — Forscher. Entwickler. Erzieher. Läufer.'],
+  ]) {
+    contains(page(`${lang}/home`), `<title>${title}</title>`, `${lang}/home`);
   }
 });
