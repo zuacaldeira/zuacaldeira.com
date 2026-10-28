@@ -134,7 +134,23 @@ Patterns that already hold in the specs (see `CLAUDE.md`, "Testing"):
   as in the existing `git log` (e.g. "Say whether the wall's counts are classes or
   protocols"). A short body explains why. End with the attribution lines given in the
   brief.
+- **Record the red step** in the commit body of every element, one line each, so the git
+  log alone gives a trace of the cycle:
+  - `red: <test name> — <the failing assertion, one line>`
+  - `green: <fake it | obvious | triangulated>`
+  - and for a bug fix, `bites: reverted the fix, <test name> went red`.
+
+  Example body lines:
+  `red: shows the German tagline on /de/home — expected "Forscher. Entwickler. Erzieher. Läufer." but got ""`
+  and `green: fake it`.
 - **Do not push** unless the brief says so. Never push to `main`.
+
+## TDD baseline boundary
+Commit `c963461` (2026-10-28) is the last commit before test-first work with `tdd-peer`
+in this repo. Everything up to it is the baseline: no type, no recorded red steps. From
+the next element on, `tdd-peer` works to this profile; no session type is enforced. The
+assessment monitor in `~/Development/projects/tdd-lab` is not built yet. When it is, it
+can mine this repo's log from this boundary on.
 - **Deploying the backend** (a service and a database on the VPS, for `next` and later
   for the live site) is not designed yet. It is the developer's decision; until then
   the preview deploys only the prerendered frontend.
