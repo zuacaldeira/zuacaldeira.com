@@ -1,0 +1,55 @@
+name: Deploy next to VPS
+
+on:
+  push:
+    branches: [next]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-next
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm test
+
+      - run: npx ng build --configuration production
+
+      - name: Prepare static output
+        run: |
+          cp dist/zuacaldeira-com/browser/home/index.html dist/zuacaldeira-com/browser/index.html
+          cp dist/zuacaldeira-com/browser/404/index.html dist/zuacaldeira-com/browser/404.html || true
+          # Work in progress: keep search engines off the preview site.
+          printf 'User-agent: *\nDisallow: /\n' > dist/zuacaldeira-com/browser/robots.txt
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Rsync to VPS
+        run: |
+          rsync -az --delete --exclude CNAME \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            dist/zuacaldeira-com/browser/ \
+            deploy-zuacaldeira@${{ secrets.DEPLOY_HOST }}:/var/www/next.zuacaldeira.com/
+
+      - name: Verify deployment
+        run: |
+          curl -sf -o /dev/null -w "https://next.zuacaldeira.com -> %{http_code}\n" https://next.zuacaldeira.com
