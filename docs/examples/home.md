@@ -1,7 +1,6 @@
 # Examples: Home page
 
-Status: **agreed with the developer on 2026-10-28** (decisions D1–D7 below). One wording
-is still to confirm: the German and Portuguese SVG titles in HOME-HERO-09.
+Status: **agreed with the developer on 2026-10-28** (decisions D1–D8 below).
 
 The home page in three languages, at `/en/home`, `/de/home` and `/pt/home`. It is the
 first page of the new site, and its hero is the walking skeleton: the first section
@@ -26,7 +25,7 @@ Texts below are copied from today's `src/app/i18n/{en,de,pt}.ts`. Texts marked
 
 | ID | Given | When | Then | Covered |
 |----|-------|------|------|---------|
-| HOME-PAGE-01 | the home page content exists in en, de and pt | the site is built | `/en/home/index.html`, `/de/home/index.html` and `/pt/home/index.html` exist, with `<html lang="en">`, `lang="de"` and `lang="pt"` | |
+| HOME-PAGE-01 | the home page content exists in en, de and pt | the site is built | `/en/home/index.html`, `/de/home/index.html` and `/pt/home/index.html` exist, with `<html lang="en">`, `lang="de"` and `lang="pt"` | yes |
 | HOME-PAGE-02 | the built `/de/home` | it is read | it has `<link rel="alternate" hreflang="en" href="https://zuacaldeira.com/en/home">`, the same for `de` and `pt`, and `hreflang="x-default"` pointing to `/en/home` | |
 | HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Investigador. Programador. Educador. Corredor." (en: "Alexandre Caldeira — Researcher. Developer. Educator. Runner.", de: "Alexandre Caldeira — Forscher. Entwickler. Erzieher. Läufer.") | |
 | HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with links to `/de/home` and `/pt/home`; no redirect (D1) | |
@@ -45,7 +44,7 @@ Texts below are copied from today's `src/app/i18n/{en,de,pt}.ts`. Texts marked
 | HOME-HERO-06 | no hero content stored for de | the site is built | the build fails with a message naming page `home`, section `hero`, language `de`; nothing is deployed (D4) | |
 | HOME-HERO-07 | any language | `GET /api/content/home/hero?lang=fr` | 404 (D5) | |
 | HOME-HERO-08 | the built `/de/home` | it is read | the photo's alt text is German: "Nebliger Sonnenaufgang über einem Feld bei Berlin"; pt: "Nascer do sol com nevoeiro sobre um campo perto de Berlim"; en: "Misty sunrise over a field near Berlin" | |
-| HOME-HERO-09 | the lattice wall behind the hero | the site is built in de and in pt | the SVG `<title>` is translated: de "Die 74 verschiedenen Verbände, die 104 Benchmark-Protokolle aus Session Type State Spaces Form Lattices (ICE 2026) auf Stufe R2′ bilden, nach Größe geordnet. Die 47 nicht-distributiven sind in einer anderen Farbe markiert." *(wording to confirm)*; pt "Os 74 reticulados distintos que 104 protocolos de referência de Session Type State Spaces Form Lattices (ICE 2026) formam no degrau R2′, ordenados por tamanho. Os 47 não distributivos estão marcados com outra cor." *(wording to confirm)*. The visible credit "behind: 74 distinct lattices from 104 benchmark protocols at rung R2′, 47 non-distributive" stays English in every language (D6) | |
+| HOME-HERO-09 | the lattice wall behind the hero | the site is built in de and in pt | the SVG `<title>` is translated: de "Die 74 verschiedenen Verbände, die 104 Benchmark-Protokolle aus Session Type State Spaces Form Lattices (ICE 2026) auf Stufe R2′ bilden, nach Größe geordnet. Die 47 nicht-distributiven sind in einer anderen Farbe markiert."; pt "Os 74 reticulados distintos que 104 protocolos de referência de Session Type State Spaces Form Lattices (ICE 2026) formam no degrau R2′, ordenados por tamanho. Os 47 não distributivos estão marcados com outra cor.". The visible credit "behind: 74 distinct lattices from 104 benchmark protocols at rung R2′, 47 non-distributive" stays English in every language (D6) | |
 | HOME-HERO-10 | the build ran on `next` | https://next.zuacaldeira.com/de/home is opened | it shows the German hero of HOME-HERO-01 (system test, after the server is set up) | |
 
 ### Diagram: HOME-HERO-01 (acceptance, at build time)
@@ -124,3 +123,5 @@ Agreed with the developer on 2026-10-28.
   visible credit stays English as research notation.
 - **D7. Hero wording:** the German and Portuguese texts from the existing translation
   files are kept as they are, including "Erzieher" and "Educador".
+- **D8. Lattice wall titles** (2026-10-28): the German and Portuguese SVG titles in
+  HOME-HERO-09 are agreed as drafted.

@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:zuacaldeira-com": "node dist/zuacaldeira-com/server/server.mjs"
+    "serve:ssr:zuacaldeira-com": "node dist/zuacaldeira-com/server/server.mjs",
+    "acceptance": "node --test acceptance/*.test.mjs"
   },
   "prettier": {
     "printWidth": 100,

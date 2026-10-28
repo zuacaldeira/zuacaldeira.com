@@ -1,41 +1,32 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { routes } from './app.routes';
 import { serverRoutes } from './app.routes.server';
 import { RenderMode } from '@angular/ssr';
+import { I18nService } from './services/i18n.service';
 
 @Component({ template: '' })
 class DummyComponent {}
 
 describe('App Routes', () => {
   describe('route definitions', () => {
-    it('should have 6 routes defined', () => {
-      expect(routes).toHaveLength(6);
-    });
-
-    it('should redirect empty path to home', () => {
-      const root = routes.find((r) => r.path === '');
-      expect(root).toBeTruthy();
-      expect(root!.redirectTo).toBe('home');
-      expect(root!.pathMatch).toBe('full');
-    });
-
-    it('should have all expected route paths', () => {
-      const paths = routes.map((r) => r.path);
-      expect(paths).toEqual(['', 'home', 'about', 'research', 'running', 'contact']);
+    it.each(['en', 'de', 'pt'])('should give %s its own route tree', (lang) => {
+      const tree = routes.find((r) => r.path === lang);
+      const paths = tree?.children?.map((r) => r.path);
+      expect(paths).toEqual(['home', 'about', 'research', 'running', 'contact']);
     });
 
     it('should not expose the hidden work and paedagogik routes', () => {
-      const paths = routes.map((r) => r.path);
+      const paths = routes.flatMap((r) => (r.children ?? []).map((c) => c.path));
       expect(paths).not.toContain('work');
       expect(paths).not.toContain('paedagogik');
     });
 
     it('should lazy-load all page routes', () => {
-      const pageRoutes = routes.filter((r) => r.path !== '');
+      const pageRoutes = routes.flatMap((r) => r.children ?? []);
       for (const route of pageRoutes) {
         expect(route.loadComponent, `${route.path} should use loadComponent`).toBeDefined();
       }
@@ -50,7 +41,7 @@ describe('App Routes', () => {
       ['running', 'Running'],
       ['contact', 'Contact'],
     ])('%s should resolve to %s component', async (path, componentName) => {
-      const route = routes.find((r) => r.path === path);
+      const route = routes.find((r) => r.path === 'en')?.children?.find((r) => r.path === path);
       expect(route?.loadComponent).toBeDefined();
       const component = await (route!.loadComponent as () => Promise<unknown>)();
       expect(component).toBeTruthy();
@@ -65,22 +56,17 @@ describe('App Routes', () => {
       });
     });
 
-    it('should redirect / to /home', async () => {
-      await RouterTestingHarness.create('/');
+    it('should navigate to /en/about', async () => {
+      await RouterTestingHarness.create('/en/about');
       const location = TestBed.inject(Location);
-      expect(location.path()).toBe('/home');
+      expect(location.path()).toBe('/en/about');
     });
 
-    it('should navigate to /about', async () => {
-      await RouterTestingHarness.create('/about');
-      const location = TestBed.inject(Location);
-      expect(location.path()).toBe('/about');
-    });
-
-    it('should navigate to /contact', async () => {
-      await RouterTestingHarness.create('/contact');
-      const location = TestBed.inject(Location);
-      expect(location.path()).toBe('/contact');
+    it.each(['de', 'pt'])('HOME-PAGE-01: should set the language from the /%s prefix', async (lang) => {
+      TestBed.inject(I18nService).setLanguage('en');
+      await RouterTestingHarness.create(`/${lang}/home`);
+      expect(TestBed.inject(I18nService).language()).toBe(lang);
+      expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe(lang);
     });
   });
 
