@@ -8,10 +8,24 @@ Sessions do not start as the agent by default. Use `claude --agent tdd-peer` for
 mode. For batch mode, the main session agrees the test list and diagram with the
 developer, then spawns the agent with "Mode: batch".
 
+## Architecture (agreed 2026-10-28)
+The new site gets a backend. Until the repo is restructured, `CLAUDE.md` still
+describes the old frontend-only site.
+- **Layout:** one repo with `frontend/` (the Angular app, moved from the root) and
+  `backend/` (Spring Boot, Java 21, Maven wrapper). Until the move is done, the
+  frontend lives at the repo root and its commands run there.
+- **Backend jobs:** serve the content (pages, papers, races and the rest, in EN/DE/PT),
+  receive the contact form and send mail, an authenticated admin area to edit content
+  and translations, and live data (e.g. Strava) fetched and cached on the server.
+- **Database:** MySQL 8 with Flyway migrations.
+- **Rendering:** pages stay prerendered. The Angular build fetches the content from the
+  backend at build time. At runtime the browser calls the backend only for the contact
+  form, the admin area and live data.
+
 ## Sources of truth
-- `CLAUDE.md`: architecture, folder layout, build and deploy. Parts are out of date:
-  the fonts are Fraunces, Archivo and IBM Plex Mono (not Inter), and the test counts
-  change with every feature.
+- `CLAUDE.md`: architecture, folder layout, build and deploy of the frontend. Parts are
+  out of date: it says there is no backend; the fonts are Fraunces, Archivo and IBM Plex
+  Mono (not Inter); and the test counts change with every feature.
 - `src/app/i18n/en.ts` and `ContentService`: the English text. It is the source for
   `de.ts` and `pt.ts`. Never invent content; ask.
 - `src/styles.css`: the `--zc-*` design tokens, each contrast-checked against its
@@ -40,6 +54,12 @@ developer, then spawns the agent with "Mode: batch".
 Open questions go to the developer. Do not write them into the code. Agreed answers go
 in the feature's examples file under "Decisions", with the date.
 
+## How the work is cut
+Page by page, section by section (agreed 2026-10-28). One element is one section of one
+page (e.g. the home hero, the research paper list). Finish a section in all three
+languages, with its tests, before starting the next one. The examples file of a page
+lists its sections in order.
+
 ## Where examples and diagrams live
 - **New features:** examples with IDs and their diagrams go in
   `docs/examples/<feature>.md` (create the file on first use). Prefixes so far:
@@ -51,8 +71,30 @@ in the feature's examples file under "Decisions", with the date.
   `docs/architecture/`.
 
 ## Test stack and commands
-Angular 21, standalone components, **zoneless** (no zone.js), SSR prerender only (no
-runtime server). Vitest through `@angular/build:unit-test`, with globals.
+**Backend** (`backend/`): Java 21, Spring Boot, MySQL 8, Flyway.
+- **Java 21 comes from a Maven toolchain.** The machine default is Java 25, and on 25
+  Mockito cannot mock our classes. Configure `maven-toolchains-plugin` to pick JDK 21
+  from `~/.m2/toolchains.xml` (it exists), and check the build log says so.
+- **Unit tests:** JUnit 5 and Mockito, for the domain core. Run
+  `cd backend && ./mvnw test -Dtest=ClassName`; the whole unit suite with `./mvnw test`.
+- **Integration:** Testcontainers against a real MySQL 8 (`*IntegrationTest`), for
+  persistence, Flyway migrations and the content API. No in-memory database stand-ins.
+  Per element, run only the touched classes with `-Dtest=...`; run the whole set once at
+  the end of a section.
+- **Role boundaries:** the admin area is a security boundary. Each admin endpoint gets a
+  table of endpoint × role (anonymous, admin) and a security slice test per row. The
+  public content endpoints are read-only for anonymous visitors.
+- **Security side effects of refused requests** (failed login counts, lockouts, audit
+  entries) must survive the exception that follows: `noRollbackFor` on the outermost
+  transaction, or `REQUIRES_NEW` in a separate bean. Each gets a Testcontainers test that
+  goes red without the protection (remove it once, see red, restore).
+- **Contact form:** the mail sender is an adapter. Unit tests use a fake; one
+  integration test uses a local SMTP container. Never send real mail from a test.
+- **Live data:** the external API (e.g. Strava) is an adapter behind an interface. Tests
+  never call the real service; record its responses as fixtures.
+
+**Frontend:** Angular 21, standalone components, **zoneless** (no zone.js), prerendered at
+build time. Vitest through `@angular/build:unit-test`, with globals.
 
 - **One spec while iterating:** `npx ng test --no-watch --include='<path>'` (about 8 s).
 - **Whole suite:** `npx ng test --no-watch` (about 14 s, 159 tests on 2026-10-28). Run
@@ -77,6 +119,11 @@ Patterns that already hold in the specs (see `CLAUDE.md`, "Testing"):
 
 ## Machine limits
 - About 6 GB RAM, 8 cores. Never run two suites, or a suite and `npm run build`, at once.
+  The Testcontainers MySQL takes its share too: never run backend integration tests
+  next to the frontend suite.
+- One Maven process at a time in `backend/`; two runs corrupt `target/`.
+- Testcontainers needs Docker (installed). If it cannot find the API version, set
+  `DOCKER_API_VERSION=1.44`, as in the Kita Casa Azul project on this machine.
 
 ## Commits, branches and deploys
 - **Branch:** work in progress goes on `next`. A push to `next` deploys the preview
@@ -88,6 +135,9 @@ Patterns that already hold in the specs (see `CLAUDE.md`, "Testing"):
   protocols"). A short body explains why. End with the attribution lines given in the
   brief.
 - **Do not push** unless the brief says so. Never push to `main`.
+- **Deploying the backend** (a service and a database on the VPS, for `next` and later
+  for the live site) is not designed yet. It is the developer's decision; until then
+  the preview deploys only the prerendered frontend.
 
 ## Time logging
 None for this project.
