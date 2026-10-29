@@ -149,6 +149,20 @@ Patterns that already hold in the specs (see `CLAUDE.md`, "Testing"):
   `red: shows the German tagline on /de/home — expected "Forscher. Entwickler. Erzieher. Läufer." but got ""`
   and `green: fake it`.
 - **Do not push** unless the brief says so. Never push to `main`.
+- **When to push, merge and deploy** (decided by the developer, 2026-10-29):
+  - **Push `next` after every element,** once its commit passes the whole suite, the acceptance tests
+    and, where the element touches routes, the prerender check. In pair mode the main session pushes and
+    says so; an agent in batch mode pushes only when its brief says so.
+  - **Merge `next` into `main` page by page:** when a page is done (all three languages, its examples
+    covered, reviewed on the preview), the developer merges and the live site gets it. A merge takes all
+    of `next`, so a page that is not done stays out of reach on `next` (no route or no navigation link,
+    as `/work` and `/paedagogik`). Before the first merge, the live nginx config
+    (`infra/live/nginx-site.conf`) is applied on the server, because the language routes need it.
+  - **Bugs on the live site, until its pages come from `next`:** a hotfix branch from `main`, test-first,
+    merged and deployed after the developer's OK, then `main` merged into `next` so the fix is not lost.
+    For pages already merged, the fix goes on `next` and is merged at once.
+  - **Experiment branches** of the tdd-lab (`monitor/<condition>-<n>`) are never pushed or merged. An
+    element built in the experiment is built once more on `next`, in pair mode, after its runs are read.
 
 ## TDD baseline boundary
 Commit `c963461` (2026-10-28) is the last commit before test-first work with `tdd-peer`
