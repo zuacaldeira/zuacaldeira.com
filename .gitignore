@@ -17,3 +17,6 @@
 .DS_Store
 Thumbs.db
 __pycache__/
+
+# Claude Code: local settings (per machine, e.g. the lab's monitor hooks)
+.claude/settings.local.json
