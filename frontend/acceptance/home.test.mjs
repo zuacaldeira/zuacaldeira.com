@@ -2,7 +2,7 @@
 // Run `npm run build` first, then `npm run acceptance`. Examples: docs/examples/home.md.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
@@ -56,5 +56,12 @@ test('HOME-PAGE-04: the site root is the English home, linked to the German and 
       `<link rel="alternate" hreflang="${lang}" href="https://zuacaldeira.com/${lang}/home">`,
       'index.html',
     );
+  }
+});
+
+test('HOME-PAGE-04: the live deploy copies only files the build has', () => {
+  const workflow = readFileSync(join(import.meta.dirname, '../../.github/workflows/deploy.yml'), 'utf8');
+  for (const [, from] of workflow.matchAll(/^\s*cp (dist\/\S+) \S+\s*$/gm)) {
+    assert.ok(existsSync(join(import.meta.dirname, '..', from)), `deploy.yml copies ${from}, which the build lacks`);
   }
 });

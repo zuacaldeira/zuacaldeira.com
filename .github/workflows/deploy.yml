@@ -35,7 +35,6 @@ jobs:
 
       - name: Prepare static output
         run: |
-          cp dist/zuacaldeira-com/browser/home/index.html dist/zuacaldeira-com/browser/index.html
           cp dist/zuacaldeira-com/browser/404/index.html dist/zuacaldeira-com/browser/404.html || true
 
       - name: Set up SSH
