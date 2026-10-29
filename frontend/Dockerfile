@@ -8,9 +8,9 @@ RUN npm ci
 COPY . .
 RUN npx ng build --configuration production
 
-# The site root is the prerendered home page; 404.html is the prerendered 404 route.
+# The build prerenders the site root (the English home) itself; 404.html is the
+# prerendered 404 route.
 RUN cd dist/zuacaldeira-com/browser \
- && cp home/index.html index.html \
  && (cp 404/index.html 404.html || true) \
  && rm -f CNAME
 

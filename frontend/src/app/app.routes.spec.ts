@@ -56,6 +56,15 @@ describe('App Routes', () => {
       });
     });
 
+    it('HOME-PAGE-04: should show the English home at / without a redirect', async () => {
+      TestBed.inject(I18nService).setLanguage('de');
+      const harness = await RouterTestingHarness.create('/');
+      expect(TestBed.inject(Location).path()).toBe('');
+      expect(harness.routeNativeElement?.tagName).toBe('APP-HOME');
+      expect(TestBed.inject(I18nService).language()).toBe('en');
+      expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe('en');
+    });
+
     it('should navigate to /en/about', async () => {
       await RouterTestingHarness.create('/en/about');
       const location = TestBed.inject(Location);
@@ -83,6 +92,16 @@ describe('App Routes', () => {
 
     it('HOME-PAGE-02: should link /de/home to its versions in every language', async () => {
       await RouterTestingHarness.create('/de/home');
+      expect(alternates()).toEqual([
+        'en https://zuacaldeira.com/en/home',
+        'de https://zuacaldeira.com/de/home',
+        'pt https://zuacaldeira.com/pt/home',
+        'x-default https://zuacaldeira.com/en/home',
+      ]);
+    });
+
+    it('HOME-PAGE-04: should link the site root to the home in every language', async () => {
+      await RouterTestingHarness.create('/');
       expect(alternates()).toEqual([
         'en https://zuacaldeira.com/en/home',
         'de https://zuacaldeira.com/de/home',

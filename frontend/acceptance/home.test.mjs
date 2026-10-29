@@ -44,3 +44,17 @@ test('HOME-PAGE-03: the home page title is the name and the tagline in its langu
     contains(page(`${lang}/home`), `<title>${title}</title>`, `${lang}/home`);
   }
 });
+
+test('HOME-PAGE-04: the site root is the English home, linked to the German and Portuguese', () => {
+  const html = page('.');
+  contains(html, '<html lang="en"', 'index.html');
+  contains(html, '<title>Alexandre Caldeira — Researcher. Developer. Educator. Runner.</title>', 'index.html');
+  contains(html, 'Researcher. Developer. Educator. Runner.</p>', 'index.html');
+  for (const lang of ['de', 'pt']) {
+    contains(
+      html,
+      `<link rel="alternate" hreflang="${lang}" href="https://zuacaldeira.com/${lang}/home">`,
+      'index.html',
+    );
+  }
+});
