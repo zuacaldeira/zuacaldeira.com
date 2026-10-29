@@ -125,3 +125,13 @@ Agreed with the developer on 2026-10-28.
   files are kept as they are, including "Erzieher" and "Educador".
 - **D8. Lattice wall titles** (2026-10-28): the German and Portuguese SVG titles in
   HOME-HERO-09 are agreed as drafted.
+- **D9. The 404 page** (2026-10-29, for HOME-PAGE-06): one English page, prerendered at
+  `/404` (`lang="en"`), shown for every unknown path, `/fr/home` included. Both nginx configs
+  answer unknown paths with status `404` and that page (`error_page 404 /404.html`), not
+  `index.csr.html` with `200`; the live config is applied on the server by the developer.
+  Wording (en is shown; de and pt fill the translation files; `⊥` is notation, never
+  translated): en "⊥ Page not found" / "This path ends at the bottom: there is no page
+  here." / "Back to the home page" → `/en/home`; de "⊥ Seite nicht gefunden" / "Dieser Weg
+  endet ganz unten: Hier gibt es keine Seite." / "Zur Startseite" → `/de/home`; pt "⊥ Página
+  não encontrada" / "Este caminho acaba no fundo: aqui não há nenhuma página." / "Voltar ao
+  início" → `/pt/home`.
