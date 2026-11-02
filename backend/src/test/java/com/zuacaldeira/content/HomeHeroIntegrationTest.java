@@ -111,6 +111,14 @@ class HomeHeroIntegrationTest {
         assertMissing(get("/api/content/home/hero?lang=fr"));
     }
 
+    @Test
+    @DisplayName("HOME-HERO-14 answers 400 when no language is asked for")
+    void refusesARequestWithNoLanguage() throws Exception {
+        storeHero("en", EN_HERO);
+
+        assertThat(get("/api/content/home/hero").statusCode()).isEqualTo(400);
+    }
+
     private static void assertMissing(HttpResponse<String> response) {
         assertThat(response.statusCode()).isEqualTo(404);
         assertThat(response.body()).isEmpty();
