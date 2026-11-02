@@ -14,6 +14,9 @@ class ContentService {
     }
 
     Optional<HomeHero> find(String page, String section, String lang) {
+        if (!"hero".equals(section)) {
+            return Optional.empty();
+        }
         return heroes.find(lang);
     }
 }
