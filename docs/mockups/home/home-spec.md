@@ -13,8 +13,8 @@ and the Living Glaze study (https://claude.ai/artifact/LGHSasJRc4DXdBmk95CGyD).
 
 ## Layout per width
 One column for everything: `max-width: 1200px`, centred, gutter 24 px (16 px under the
-`Handset` query). Header, hero text, band and footer all start on its left edge. Measured at
-1440: 120 px for each.
+`Handset` query). Header, hero text, band and footer all start on its left edge. Measured for
+each of them: 16 px at 390, 24 at 768, 64 at 1280, 144 at 1440.
 
 | Part | 390 | 768 | 1280, 1440 |
 |------|-----|-----|-----------|
