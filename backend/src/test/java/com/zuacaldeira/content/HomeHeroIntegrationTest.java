@@ -94,6 +94,14 @@ class HomeHeroIntegrationTest {
         assertMissing(get("/api/content/home/nope?lang=en"));
     }
 
+    @Test
+    @DisplayName("HOME-HERO-13 answers 404 for an unknown page")
+    void treatsAnUnknownPageAsMissing() throws Exception {
+        storeHero("en", EN_HERO);
+
+        assertMissing(get("/api/content/nope/hero?lang=en"));
+    }
+
     private static void assertMissing(HttpResponse<String> response) {
         assertThat(response.statusCode()).isEqualTo(404);
         assertThat(response.body()).isEmpty();
