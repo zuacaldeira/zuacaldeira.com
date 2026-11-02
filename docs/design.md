@@ -67,9 +67,20 @@ Open, for the developer:
 - **Hidden pages:** `/work` and `/paedagogik` stay out of the navigation until the
   developer brings them back.
 
-Proposed, not settled: the **living glaze** theme mode (five azulejo glazes following the
-time of day), mock-up at https://claude.ai/artifact/LGHSasJRc4DXdBmk95CGyD. It comes after
-the first deploy to `next`.
+- **Living glaze** (agreed 2026-11-02, as the study has it, unchanged):
+  https://claude.ai/artifact/LGHSasJRc4DXdBmk95CGyD. Five azulejo glazes follow the visitor's
+  local time: Manganês, Cobalto (today's light theme), Amarelo e verde, Manganês nocturno,
+  Vidrado nocturno (today's night glaze). The study holds the values, the times, the fast
+  light/dark crossing, the contrast guard and the reduced-motion rule. The toggle has three
+  states: light, dark, living. Every new screen is checked under all five glazes.
+
+Not yet agreed:
+- **Reacting to events** (a new post, a social event): wanted, not designed.
+- **Which theme state is the default.**
+- **Website v2**, the row of boards on the Visual Identity canvas
+  (https://claude.ai/artifact/V4BY3xCveYFdkCky8kFXXa): pages, sections, message and the 2³
+  lattice hero. It may replace the hero line above and "researchers first". Its cream and
+  white grounds and its per-page Rota glaze do not apply: colours come from the living glaze.
 
 ## Rules every screen follows
 - **Three languages:** EN, DE and PT, at `/en/...`, `/de/...` and `/pt/...`, each with
