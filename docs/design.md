@@ -4,8 +4,8 @@ The project profile for the shared `ui-design-peer` agent (`~/.claude/agents/ui-
 which reads this file before its first step. Where this file and the agent differ, this
 file wins.
 
-Status: **draft, written 2026-10-28, not yet agreed with the developer.** "The users"
-below is assumed and marked so.
+Status: **agreed with the developer on 2026-11-02.** Written 2026-10-28, corrected against
+the rendered site on 2026-11-02. Questions still open are listed at the end of "The users".
 
 New sessions in this repo start as `tdd-peer` (`.claude/settings.json`). For design work,
 start a session with `claude --agent ui-design-peer`, or let the main session spawn it
@@ -19,19 +19,25 @@ redesign is in progress on the `next` branch, previewed at https://next.zuacalde
 three languages (EN, DE, PT), content served by a Spring Boot backend and prerendered at
 build time. See `docs/tdd.md` for the architecture.
 
-## The users (assumed, to confirm with the developer)
+## The users (agreed 2026-11-02)
+The repo has no analytics, so this list is the developer's decision, not a measurement.
 - **Researchers and reviewers** in concurrency and type theory (ICE, POPL audience). They
   come from a paper or a talk, read on a laptop, and judge the notation. English.
 - **Employers and recruiters** reading a CV link. They skim on a phone or laptop for a
   minute. English or German.
-- **Colleagues in Berlin education**: the Fachschule, Kitas, Casa Azul. German, mostly on
-  a phone.
-- **Family and the Portuguese-speaking community** (Portugal, Angola). Portuguese, mostly
-  on a phone.
-- **Runners**, for the running page. Any language, phone.
+
+**The home page serves researchers first.** The theorem stays the page's main content
+(hero, then paper statements, as `docs/examples/home.md` has it). An employer still learns
+who this is and where to go next within the first screen.
 
 No one signs in on the public site. The admin area (content and translations) comes later
 and gets its own section here when it exists.
+
+Open, for the developer:
+- **Portuguese** stays a site language (decided 2026-10-28), but the Portuguese-speaking
+  audience was not confirmed as a target. Keep the language anyway?
+- **Runners and Berlin education colleagues** were not confirmed either, so screens are
+  not designed around them. The running page stays.
 
 ## Settled: do not propose replacing these
 - **Direction: azulejo and lattice** (settled 2026-07-17). The Hasse diagram of the
@@ -49,7 +55,9 @@ and gets its own section here when it exists.
 - **Type:** Fraunces for display, Archivo for body text, IBM Plex Mono for notation, venue
   names and data. Loaded from Google Fonts in `frontend/src/index.html`.
 - **Hero:** the photographic hero with the azulejo-glass layer and the lattice wall of 74
-  lattices behind it. The header is sticky frosted azulejo glass.
+  lattices behind it. The header is sticky frosted azulejo glass. The hero stays dark in
+  both themes, so it keeps fixed colours in `hero.css` (cobalt `#0a2a55`, gold `#ffd68a`,
+  `#dbe7f4`). That is the one named exception to "colours come from the tokens".
 - **Notation is never translated, and it must parse.** Session types, `⊤`, `⊥`, `‖`, atom
   labels, venue names, paper titles and the statements quoted from the paper stay as they
   are in every language. Every session type shown on a page is checked with reticulateP
@@ -75,7 +83,18 @@ the first deploy to `next`.
 - **No horizontal scroll** at 390 px.
 - **Running text stays near 65 characters** wide (`.prose`, `max-width: 65ch`).
 
+## Page anatomy
+Every page: sticky header, `<main>` with the page's sections, footer. Header and footer
+are the shared shell (`docs/examples/shell.md`, to be written). The shared content column
+and the place of the language links are being agreed in the home page's frame mock-up
+(`docs/mockups/home/`).
+
 ## Known traps
+- **Teal is a bug, not a decision.** `frontend/src/material-theme.scss` still sets the
+  cyan and violet palettes and Inter, and the ochre button overrides in the components use
+  `--mdc-*` variables that have no visible effect. Every Material button renders `#006a6a`
+  (night `#00dddd`), on the live site too (measured 2026-11-02). Mock-ups use the intended
+  ochre and gold, never the teal.
 - The layout wrapper `ZcPage` switches between mobile and desktop navigation with the
   CDK `Breakpoints.Handset` query, not a CSS width. Check both sides of it.
 - The lattice wall is generated (`frontend/scripts/lattice-wall/render.py`); do not
@@ -85,15 +104,16 @@ the first deploy to `next`.
   fails instead.
 
 ## Where to look
-- **Local:** `npm start` in `frontend/`, then http://localhost:4200. Until the
-  language routes exist, pages are at `/home`, `/about`, `/research`, `/running`,
-  `/contact`, in English only.
-- **Preview:** https://next.zuacaldeira.com, once its server is set up.
-- **Live:** https://zuacaldeira.com (the current site, English only).
+- **Local:** `npm start` in `frontend/`, then http://localhost:4200/en/home (also `/de/`,
+  `/pt/`).
+- **Preview:** https://next.zuacaldeira.com/en/home (also `/de/`, `/pt/`).
+- **Live:** https://zuacaldeira.com.
 - **Widths:** 390 (phone), 768 (tablet), 1280 and 1440 (laptop). Light and dark theme.
 - **No logins** on the public site.
-- **Screenshots:** Playwright's Chromium is in `~/.cache/ms-playwright`, but Playwright is
-  not a dependency of this repo. Adding it is the developer's decision.
+- **Screenshots:** `node ~/design-library/tools/shot.cjs <url> <dir> <name> --full`, or a
+  script requiring `playwright-core` from `~/design-library/tools/node_modules` for other
+  widths and measurements. Playwright is not a dependency of this repo, and does not need
+  to be for design work.
 
 ## Where results go
 - **Mock-ups:** published as an artifact page for the developer to open and share, and
