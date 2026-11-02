@@ -1,7 +1,6 @@
 # Examples: Theme
 
-Status: **drafted on 2026-11-02, waiting for the developer's agreement,** with
-`docs/examples/home.md`.
+Status: **agreed with the developer on 2026-11-02.**
 
 The living glaze and the theme settings. Design: the Living Glaze study,
 https://claude.ai/artifact/LGHSasJRc4DXdBmk95CGyD, agreed unchanged on 2026-11-02. Its engine
@@ -17,7 +16,7 @@ time; none reads a real clock (`docs/tdd.md`).
 | THEME-03 | the times 07:30, 19:00 and 21:00 | the glaze is computed | they are Manganês (background `#f0ebf2`), Amarelo e verde (`#f2eedf`) and Manganês nocturno (`#160f1f`) | |
 | THEME-04 | every minute of the day | the glaze is computed | text is at least 4.5:1 and lattice edges and ochre at least 3:1, against both the background and the surface; the button label is at least 4.5:1 against the accent | |
 | THEME-05 | a first visit, nothing stored | the page loads | the state is living, and the colours follow the visitor's local time | |
-| THEME-06 | the state is living | the theme button is pressed repeatedly | the state goes light, dark, living, and its accessible name says which ("Farbschema: hell" in German *(proposed)*); the choice is stored | |
+| THEME-06 | the state is living | the theme button is pressed repeatedly | the state goes light, dark, living, and its accessible name says which (de "Farbschema: hell", "dunkel", "lebendige Glasur"; pt "Tema: claro", "escuro", "vidrado vivo"; en "Theme: light", "dark", "living glaze"); the choice is stored | |
 | THEME-07 | light or dark is stored | the page loads at any time | the colours do not follow the clock: light is Cobalto, dark is Vidrado nocturno, as today's two themes | |
 | THEME-08 | the visitor asks for reduced motion and the state is living | time passes | the page keeps the glaze it loaded with until the next load | |
 | THEME-09 | the built `/de/home` | it is read | `<html>` carries `data-hero="b"` and `data-band="c"` in the prerendered HTML, before any script runs | |

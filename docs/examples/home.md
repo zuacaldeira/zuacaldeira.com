@@ -1,8 +1,7 @@
 # Examples: Home page
 
-Status: **rewritten for Website v2 on 2026-11-02, waiting for the developer's agreement.**
-The first version was agreed on 2026-10-28 (D1–D9). Open questions are at the end and are
-answered before the build.
+Status: **agreed with the developer on 2026-11-02** (decisions D1–D17), rewritten for Website
+v2. The first version was agreed on 2026-10-28. One file is still to come: the CV (D16).
 
 The home page in three languages, at `/en/home`, `/de/home` and `/pt/home`. Design:
 `docs/mockups/home/home-spec.md`, with the mock-up beside it. Its hero is the walking
@@ -23,8 +22,7 @@ work (before the theorem band on the page); how I work, writing, about teaser (a
 Not in this file: the header, language links and footer (`docs/examples/shell.md`), and the
 colours and theme settings (`docs/examples/theme.md`).
 
-Texts marked *(proposed)* are drafts and need the developer's wording. Other German and
-Portuguese labels come from today's `src/app/i18n/{de,pt}.ts`.
+German and Portuguese labels not listed here come from today's `src/app/i18n/{de,pt}.ts`.
 
 ## 1. Page frame
 
@@ -32,7 +30,7 @@ Portuguese labels come from today's `src/app/i18n/{de,pt}.ts`.
 |----|-------|------|------|---------|
 | HOME-PAGE-01 | the home page content exists in en, de and pt | the site is built | `/en/home/index.html`, `/de/home/index.html` and `/pt/home/index.html` exist, with `<html lang="en">`, `lang="de"` and `lang="pt"` | yes |
 | HOME-PAGE-02 | the built `/de/home` | it is read | it has `<link rel="alternate" hreflang="en" href="https://zuacaldeira.com/en/home">`, the same for `de` and `pt`, and `hreflang="x-default"` pointing to `/en/home` | yes |
-| HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Construo software e provo que os seus protocolos se cumprem." *(proposed)*; en: "Alexandre Caldeira — I build software, and prove its protocols hold."; de: "Alexandre Caldeira — Ich baue Software und beweise, dass ihre Protokolle halten." *(proposed)* | reopened: the test holds the old tagline |
+| HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Construo software e provo que os seus protocolos se cumprem."; en: "Alexandre Caldeira — I build software, and prove its protocols hold."; de: "Alexandre Caldeira — Ich baue Software und beweise, dass ihre Protokolle halten." | reopened: the test holds the old tagline |
 | HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with visible links to `/de/home` and `/pt/home` (SHELL-01); no redirect (D1) | reopened: the test reads `<link rel="alternate">`, and no visible link exists yet |
 | HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about` → `/en/about`, ...) (D2) | |
 | HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | |
@@ -44,14 +42,14 @@ cases went with the old hero (D10, D11).
 
 | ID | Given | When | Then | Covered |
 |----|-------|------|------|---------|
-| HOME-HERO-01 | the hero content stored in de | the site is built | `/de/home` shows "Ich baue Software und beweise, dass ihre Protokolle halten." *(proposed)*, the text "Alexandre Zua Caldeira. Softwareentwickler in Berlin seit 2011 und Forscher im Bereich Programmiersprachen (POPL 2010, ICE 2026). Java-Backends, Verifikationswerkzeuge und KI-Agenten, die an ein geprüftes Protokoll gebunden sind." *(proposed)*, and the links "Ausgewählte Arbeiten" → `/de/software`, "Lebenslauf herunterladen" → the CV (Q3), "ICE-2026-Paper lesen →" → `#band` *(proposed)* | |
-| HOME-HERO-02 | the hero content stored in pt | the site is built | `/pt/home` shows "Construo software e provo que os seus protocolos se cumprem." *(proposed)*, "Alexandre Zua Caldeira. Engenheiro de software em Berlim desde 2011 e investigador em linguagens de programação (POPL 2010, ICE 2026). Backends Java, ferramentas de verificação e agentes de IA sujeitos a um protocolo verificado." *(proposed)*, "Ver trabalhos selecionados" → `/pt/software`, "Descarregar CV", "Ler o artigo ICE 2026 →" *(proposed)* | |
+| HOME-HERO-01 | the hero content stored in de | the site is built | `/de/home` shows "Ich baue Software und beweise, dass ihre Protokolle halten.", the text "Alexandre Zua Caldeira. Softwareentwickler in Berlin seit 2011 und Forscher im Bereich Programmiersprachen (POPL 2010, ICE 2026). Java-Backends, Verifikationswerkzeuge und KI-Agenten, die an ein geprüftes Protokoll gebunden sind.", and the links "Ausgewählte Arbeiten" → `/de/software`, "Lebenslauf herunterladen" → the CV (D16), "ICE-2026-Paper lesen →" → `#band` | |
+| HOME-HERO-02 | the hero content stored in pt | the site is built | `/pt/home` shows "Construo software e provo que os seus protocolos se cumprem.", "Alexandre Zua Caldeira. Engenheiro de software em Berlim desde 2011 e investigador em linguagens de programação (POPL 2010, ICE 2026). Backends Java, ferramentas de verificação e agentes de IA sujeitos a um protocolo verificado.", "Ver trabalhos selecionados" → `/pt/software`, "Descarregar CV", "Ler o artigo ICE 2026 →" | |
 | HOME-HERO-03 | the hero content stored in en | the site is built | `/en/home` shows "I build software, and prove its protocols hold.", "Alexandre Zua Caldeira. Software engineer in Berlin since 2011 and programming-languages researcher (POPL 2010, ICE 2026). Java backends, verification tooling, and AI agents held to a checked protocol.", "See selected work" → `/en/software`, "Download CV", "Read the ICE 2026 paper →" | |
 | HOME-HERO-04 | any language | the site is built | the `<h1>` is the sentence; the text starts with "Alexandre Zua Caldeira" in all three, because a name is not translated; the line above the `<h1>` is `Zu = software ∥ research ∥ running` in all three (notation, D13) | |
 | HOME-HERO-05 | the hero content stored in pt | `GET /api/content/home/hero?lang=pt` | 200 with `{"headline": "Construo software e provo que os seus protocolos se cumprem.", "lede": "Alexandre Zua Caldeira. Engenheiro de software…", "workCta": "Ver trabalhos selecionados", "cvCta": "Descarregar CV", "paperCta": "Ler o artigo ICE 2026 →", "latticeLabel": "O reticulado 2 ao cubo: software, investigação e corrida em paralelo.", "latticeCaption": "2³ · três fios em paralelo · os átomos são ligações"}` (D3) | |
 | HOME-HERO-06 | no hero content stored for de | the site is built | the build fails with a message naming page `home`, section `hero`, language `de`; nothing is deployed (D4) | |
 | HOME-HERO-07 | any language | `GET /api/content/home/hero?lang=fr` | 404 (D5) | |
-| HOME-HERO-08 | the built `/de/home` | it is read | the lattice figure is a group labelled "Der Verband 2 hoch 3: Software, Forschung und Laufen parallel." with the caption "2³ · drei Fäden parallel · die Atome sind Links" *(proposed)*; the lattice's labels `software`, `research`, `running`, `⊥ end · contact` are the same in every language (D13) | |
+| HOME-HERO-08 | the built `/de/home` | it is read | the lattice figure is a group labelled "Der Verband 2 hoch 3: Software, Forschung und Laufen parallel." with the caption "2³ · drei Fäden parallel · die Atome sind Links"; the lattice's labels `software`, `research`, `running`, `⊥ end · contact` are the same in every language (D13) | |
 | HOME-HERO-09 | the built `/de/home` | the lattice is read | its links are `software` → `/de/software`, `research` → `/de/research`, `running` → `/de/about#running`, `⊥ end · contact` → `/de/contact`; the same with `/en/` and `/pt/` | |
 | HOME-HERO-10 | the build ran on `next` | https://next.zuacaldeira.com/de/home/ is opened | it shows the German hero of HOME-HERO-01 (system test) | |
 
@@ -106,9 +104,9 @@ labels around them are translated. HOME-PAPER-01 to 05 are unchanged from the fi
 | HOME-PAPER-03 | the same | the site is built in de | "Satz 15 · Reticulate Theorem", "Definition 6", "Lemma 8", "Proposition 18", "Paper lesen (PDF)" | |
 | HOME-PAPER-04 | any language | the site is built | the statement texts are identical in en, de and pt, e.g. "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice." | |
 | HOME-PAPER-05 | any language | the site is built | the PDF link points to `/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf` from the site root, not relative to `/de/home` | |
-| HOME-PAPER-06 | the band in en, de and pt | the site is built | under the theorem it reads en "Checked on 108 benchmark protocols from networking, databases, distributed systems and AI. Mechanised in Lean 4, with two independent tool implementations."; de "Geprüft an 108 Benchmark-Protokollen aus Netzwerken, Datenbanken, verteilten Systemen und KI. In Lean 4 mechanisiert, mit zwei unabhängigen Werkzeug-Implementierungen." *(proposed)*; pt "Verificado em 108 protocolos de referência de redes, bases de dados, sistemas distribuídos e IA. Mecanizado em Lean 4, com duas implementações independentes." *(proposed)* | |
+| HOME-PAPER-06 | the band in en, de and pt | the site is built | under the theorem it reads en "Checked on 108 benchmark protocols from networking, databases, distributed systems and AI. Mechanised in Lean 4, with two independent tool implementations."; de "Geprüft an 108 Benchmark-Protokollen aus Netzwerken, Datenbanken, verteilten Systemen und KI. In Lean 4 mechanisiert, mit zwei unabhängigen Werkzeug-Implementierungen."; pt "Verificado em 108 protocolos de referência de redes, bases de dados, sistemas distribuídos e IA. Mecanizado em Lean 4, com duas implementações independentes." | |
 | HOME-PAPER-07 | the built `/de/home` with the band setting at its default (THEME-09) | it is read | Definition 6, Lemma 8 and Proposition 18 are in the HTML, inside a closed `<details>` whose summary reads "Definition 6, Lemma 8, Proposition 18"; pt "Definição 6, Lema 8, Proposição 18" | |
-| HOME-PAPER-08 | any language | the site is built | a second link "All research" / "Zur Forschung" *(proposed)* / "Toda a investigação" *(proposed)* leads to `/xx/research` | |
+| HOME-PAPER-08 | any language | the site is built | a second link "All research" / "Zur Forschung" / "Toda a investigação" leads to `/xx/research` | |
 | HOME-PAPER-09 | the paper labels stored in de | `GET /api/content/home/paper?lang=de` | 200 with `{"eyebrow": "Aus dem Paper", "paperTitle": "Session Type State Spaces Form Lattices", "year": 2026, "theorem": "Satz", "definition": "Definition", "lemma": "Lemma", "proposition": "Proposition", "evidence": "Geprüft an 108…", "read": "Paper lesen (PDF)", "allResearch": "Zur Forschung", "more": "Definition 6, Lemma 8, Proposition 18", "pdfUrl": "/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf", "statements": [four objects: kind, number, name, text]}`; `statements` is the same for every `lang` (D3, D12) | |
 
 ```mermaid
@@ -155,20 +153,16 @@ Agreed with the developer on 2026-11-02:
   pattern; the wall leaves the home page. Hero and band are theme settings with these as
   defaults, and only the defaults are built now (`docs/examples/theme.md`).
 
-Drafted here, for agreement with this file:
-
 - **D12. Statements stay in the page's HTML,** so a reader without JavaScript, a search engine
   and a screen reader can reach them.
 - **D13. The lattice's labels and the `Zu = …` line are notation:** never translated. Checked
   with reticulateP on 2026-11-02 as `Zu = Software || Research || Running`, with
   `Software = &{build: end}`, `Research = &{prove: end}`, `Running = &{run: end}`: 8 states,
   12 transitions, a lattice.
-
-## Open questions
-
-- **Q1. German and Portuguese wording:** every text marked *(proposed)*.
-- **Q2. Links to pages that do not exist yet:** `/software` and `/writing`. Recommended: the
-  links stay and `next` shows the 404 page until those pages are built; `main` gets the new
-  home only once they exist.
-- **Q3. The CV:** which PDF, in which languages? The site's assets have none.
-- **Q4. The availability line** in the footer (SHELL-07).
+- **D14. German and Portuguese wording:** the drafts in this file and in `shell.md` are agreed.
+- **D15. Links to pages that do not exist yet** (`/software`, `/writing`) stay. `next` shows the
+  404 page until those pages are built; `main` gets the new home only once they exist.
+- **D16. The CV link** works the same way: it stays, and `main` waits for the file. The
+  developer names the PDF and its languages. A public CV carries no phone number or street
+  address.
+- **D17. The availability line** in the footer is agreed as drafted (SHELL-07).
