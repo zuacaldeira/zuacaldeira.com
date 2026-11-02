@@ -102,6 +102,15 @@ class HomeHeroIntegrationTest {
         assertMissing(get("/api/content/nope/hero?lang=en"));
     }
 
+    @Test
+    @DisplayName("HOME-HERO-07 answers 404 for an unsupported language, even with a stray row for it")
+    void refusesAnUnsupportedLanguageEvenWithAStrayRow() throws Exception {
+        storeHero("en", EN_HERO);
+        storeHero("fr", EN_HERO);
+
+        assertMissing(get("/api/content/home/hero?lang=fr"));
+    }
+
     private static void assertMissing(HttpResponse<String> response) {
         assertThat(response.statusCode()).isEqualTo(404);
         assertThat(response.body()).isEmpty();
