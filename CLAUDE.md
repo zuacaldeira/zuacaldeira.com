@@ -1,6 +1,6 @@
 # CLAUDE.md — zuacaldeira.com
 
-This is a personal website for Zu Caldeira, built with Angular 21 and deployed to a VPS.
+This is a personal website for Zua Caldeira, built with Angular 21 and deployed to a VPS.
 
 The Angular app lives in `frontend/`; a Spring Boot `backend/` is coming (see `docs/tdd.md`).
 Run the commands below in `frontend/`. Paths in this file (`src/...`, `public/...`, `dist/...`)

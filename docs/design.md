@@ -57,7 +57,7 @@ Open, for the developer:
 - **Type:** Fraunces for display, Archivo for body text, IBM Plex Mono for notation, venue
   names and data. Loaded from Google Fonts in `frontend/src/index.html`.
 - **Hero:** the Website v2 hero: the sentence "I build software, and prove its protocols
-  hold." with the 2³ lattice of `Zu = software ∥ research ∥ running`. It replaces the
+  hold." with the 2³ lattice of `Zua = software ∥ research ∥ running`. It replaces the
   photographic hero, follows the glaze, and has no fixed colours. It sits on the study's
   lozenge tile pattern (hero option B). The header stays sticky.
 - **Notation is never translated, and it must parse.** Session types, `⊤`, `⊥`, `‖`, atom
