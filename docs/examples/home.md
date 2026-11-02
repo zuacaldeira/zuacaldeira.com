@@ -1,6 +1,6 @@
 # Examples: Home page
 
-Status: **agreed with the developer on 2026-11-02** (decisions D1–D20), rewritten for Website
+Status: **agreed with the developer on 2026-11-02** (decisions D1–D22), rewritten for Website
 v2. The first version was agreed on 2026-10-28. One file is still to come: the CV (D16).
 
 The home page in three languages, at `/en/home`, `/de/home` and `/pt/home`. Design:
@@ -53,6 +53,9 @@ cases went with the old hero (D10, D11).
 | HOME-HERO-09 | the built `/de/home` | the lattice is read | its links are `software` → `/de/software`, `research` → `/de/research`, `running` → `/de/about#running`, `⊥ end · contact` → `/de/contact`; the same with `/en/` and `/pt/` | |
 | HOME-HERO-10 | the build ran on `next` | https://next.zuacaldeira.com/de/home/ is opened | it shows the German hero of HOME-HERO-01 (system test) | |
 | HOME-HERO-11 | no hero content stored for de | `GET /api/content/home/hero?lang=de` | 404: MISSING, with no fallback to another language (D4, D18) | |
+| HOME-HERO-12 | the hero content stored in en | `GET /api/content/home/nope?lang=en` | 404: an unknown section is MISSING (D19) | |
+| HOME-HERO-13 | the hero content stored in en | `GET /api/content/nope/hero?lang=en` | 404: an unknown page is MISSING (D19) | |
+| HOME-HERO-14 | any stored content | `GET /api/content/home/hero` with no `lang` | 400 (D22) | |
 
 ### Diagram: HOME-HERO-01 (acceptance, at build time)
 
@@ -92,6 +95,25 @@ flowchart LR
     C -->|200: headline, lede, workCta, cvCta, paperCta, latticeLabel, latticeCaption| T
 ```
 
+### Diagram: the content API's answers (HOME-HERO-05, 07, 11, 12, 13, 14)
+
+The test writes its own rows, then calls over real HTTP on a random port.
+
+```mermaid
+flowchart LR
+    T[HomeHeroIntegrationTest<br/>writes its own rows] -->|real HTTP, random port| C
+    subgraph Boundary under test
+        C[Content controller] --> S[Content service] --> R[Repository]
+        R --> M[(MySQL 8 in Testcontainers<br/>schema from Flyway)]
+    end
+    C -->|"pt stored: 200, the seven fields"| A1[HOME-HERO-05]
+    C -->|"de not stored: 404, no fallback"| A2[HOME-HERO-11]
+    C -->|"section nope: 404"| A3[HOME-HERO-12]
+    C -->|"page nope: 404"| A4[HOME-HERO-13]
+    C -->|"fr, even with a stray row: 404"| A5[HOME-HERO-07]
+    C -->|"no lang: 400"| A6[HOME-HERO-14]
+```
+
 ## 3. Theorem band
 
 The four statements are quotations from the paper (Theorem 15, Definition 6, Lemma 8,
@@ -127,7 +149,7 @@ Agreed with the developer on 2026-10-28:
   browser language.
 - **D2. Old URLs** (`/home`, `/about`, `/research`, ...) get a `301` to `/en/...` in nginx.
 - **D3. Content API: one call per section.** `GET /api/content/{page}/{section}?lang=xx`
-  returns a flat JSON object of that section's texts.
+  returns one JSON object per section (changed from "a flat JSON object" by D21).
 - **D4. A missing translation fails the build**, naming page, section and language.
   No fallback to English.
 - **D5. An unsupported language** (`lang=fr`) gets `404`.
@@ -171,3 +193,8 @@ Agreed with the developer on 2026-11-02:
 - **D19. An unknown page or section** is MISSING too: `404`.
 - **D20. The build's backend:** when the site is built, the backend and MySQL run in containers
   started for the build, seeded by Flyway, so a build does not depend on the live server.
+- **D21. D3 changed: one JSON object per section,** not a flat object in every case. The hero is
+  flat; a section may nest, as HOME-PAPER-09 does with its `statements`. HOME-PAPER-09 is built
+  with the theorem band.
+- **D22. The API's error answers:** a `404` has an empty body. A request with no `lang` answers
+  `400`.
