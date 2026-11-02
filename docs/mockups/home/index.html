@@ -1,0 +1,186 @@
+<meta charset="utf-8">
+<title>Home Mock-up</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Comparison page: the controls, the page at two widths, the five glazes, then the choices. */
+:root{--bg:#e9eff4;--bg-2:#f7fafc;--line:#c9d8e6;--ink:#0b1526;--text:#12203a;--muted:#556476;--azul:#14417a;--ochre-text:#8a5e15;--on-azul:#f7fafc;
+  --display:'Fraunces',Georgia,'Times New Roman',serif;--body:'Archivo',system-ui,-apple-system,sans-serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1526;--bg-2:#12203a;--line:#2a3f63;--ink:#e9eff4;--text:#d3e0ec;--muted:#8496ab;--azul:#7fa5ce;--ochre-text:#d9a94a;--on-azul:#0b1526;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1526;--bg-2:#12203a;--line:#2a3f63;--ink:#e9eff4;--text:#d3e0ec;--muted:#8496ab;--azul:#7fa5ce;--ochre-text:#d9a94a;--on-azul:#0b1526;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:1560px;margin-inline:auto;padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px;grid-template-columns:minmax(0,1fr)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,3vw,2.25rem);line-height:1.15;letter-spacing:-.015em;color:var(--ink);margin:0;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:1.25rem;line-height:1.2;color:var(--ink);margin:0 0 8px;text-wrap:balance}
+h3{font-family:var(--display);font-weight:600;font-size:1.05rem;line-height:1.25;color:var(--ink);margin:0 0 4px}
+p{margin:0}
+.lede{margin-top:8px;max-width:65ch}
+.kicker{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ochre-text);margin:0 0 6px}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px;border-bottom:1px solid var(--line)}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0;margin-bottom:4px}
+.seg{display:flex;flex-wrap:wrap}
+.seg label{position:relative;display:inline-flex;align-items:center;min-height:44px;padding-inline:11px;border:1px solid var(--line);margin-inline-start:-1px;background:var(--bg-2);cursor:pointer;font-size:.875rem;white-space:nowrap}
+.seg label:first-of-type{margin-inline-start:0;border-radius:2px 0 0 2px}
+.seg label:last-of-type{border-radius:0 2px 2px 0}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg label:has(input:checked){background:var(--azul);border-color:var(--azul);color:var(--on-azul);font-weight:600;z-index:1}
+.seg label:has(input:focus-visible){outline:2px solid var(--azul);outline-offset:2px;z-index:2}
+.clock{min-width:min(100%,320px);flex:1 1 280px}
+.clock label{display:flex;align-items:center;gap:10px;min-height:44px;font-family:var(--mono);font-size:.875rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.clock input{flex:1;min-width:0;accent-color:var(--azul);height:44px}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:start}
+.pane{min-width:0}
+.cap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-bottom:6px;overflow-wrap:anywhere}
+.cap b{font-weight:500;color:var(--ink)}
+.view{overflow:hidden;border:1px solid var(--line);max-width:100%}
+iframe{display:block;border:0;transform-origin:0 0}
+.five{overflow-x:auto}
+.five__row{display:grid;grid-template-columns:repeat(5,minmax(200px,1fr));gap:12px;min-width:1040px}
+.five .cap{margin-bottom:4px}
+.steps{display:grid;gap:32px;grid-template-columns:minmax(0,1fr)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px;margin-top:8px}
+.card{padding:14px 16px;background:var(--bg-2);border:1px solid var(--line);min-width:0}
+.card[data-active="true"]{border-color:var(--azul);box-shadow:inset 0 0 0 1px var(--azul)}
+.card p{margin-top:6px;font-size:.95rem}
+.card b{font-weight:600;color:var(--ink)}
+.rec{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ochre-text);min-height:1.2em;margin-bottom:4px}
+.why{max-width:70ch;margin-top:8px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:32px}
+ul{margin:8px 0 0;padding-inline-start:1.2em;display:grid;gap:8px}
+code{font-family:var(--mono);font-size:.9em}
+a{color:var(--azul);text-underline-offset:3px}
+@media (max-width:1000px){.stage{grid-template-columns:minmax(0,1fr)}.controls{position:static}}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="kicker">Home page · frame, hero, theorem band · mock-up</p>
+    <h1>Website v2, in the living glaze</h1>
+    <p class="lede">The v2 home page, in the colours of the Living Glaze study, with the study's engine unchanged. Choose one option in each of the three steps. Everything is clickable: the language links, the phone menu, the theme button. It opens at your own time of day, the way a visitor would see it.</p>
+  </header>
+
+  <form class="controls" id="controls" aria-label="What to show">
+    <fieldset><legend>1 Frame</legend><div class="seg">
+      <label><input type="radio" name="frame" value="a" checked>A Bar</label><label><input type="radio" name="frame" value="b">B Strip</label><label><input type="radio" name="frame" value="c">C Menu</label>
+    </div></fieldset>
+    <fieldset><legend>2 Hero</legend><div class="seg">
+      <label><input type="radio" name="hero" value="a">A Plain</label><label><input type="radio" name="hero" value="b" checked>B Tile</label><label><input type="radio" name="hero" value="c">C Wall</label>
+    </div></fieldset>
+    <fieldset><legend>3 Theorem</legend><div class="seg">
+      <label><input type="radio" name="band" value="a">A Alone</label><label><input type="radio" name="band" value="b">B All four</label><label><input type="radio" name="band" value="c" checked>C Unfold</label>
+    </div></fieldset>
+    <fieldset><legend>Language</legend><div class="seg">
+      <label><input type="radio" name="lang" value="en">EN</label><label><input type="radio" name="lang" value="de">DE</label><label><input type="radio" name="lang" value="pt">PT</label>
+    </div></fieldset>
+    <fieldset><legend>Wide</legend><div class="seg">
+      <label><input type="radio" name="w" value="768">768</label><label><input type="radio" name="w" value="1280" checked>1280</label><label><input type="radio" name="w" value="1440">1440</label>
+    </div></fieldset>
+    <fieldset><legend>Theme</legend><div class="seg">
+      <label><input type="radio" name="state" value="living" checked>Living</label><label><input type="radio" name="state" value="light">Light</label><label><input type="radio" name="state" value="dark">Dark</label>
+    </div></fieldset>
+    <fieldset><legend>Page</legend><div class="seg">
+      <label><input type="radio" name="page" value="home" checked>Home</label><label><input type="radio" name="page" value="404">404</label>
+    </div></fieldset>
+    <fieldset class="clock"><legend>Time of day</legend><label><span id="clock">12:00</span><input type="range" id="t" min="0" max="1439" step="1" aria-label="Time of day"></label></fieldset>
+  </form>
+
+  <div class="stage">
+    <div class="pane" id="pane-wide"><div class="cap"><b class="url"></b><span class="size"></span></div><div class="view"><iframe title="The page at the wide width" id="f-wide"></iframe></div></div>
+    <div class="pane" id="pane-phone"><div class="cap"><b class="url"></b><span class="size"></span></div><div class="view"><iframe title="The page at phone width" id="f-phone"></iframe></div></div>
+  </div>
+
+  <section>
+    <h2>The same choices in all five glazes</h2>
+    <div class="five"><div class="five__row" id="five"></div></div>
+  </section>
+
+  <section class="steps">
+    <div>
+      <p class="kicker">Step 1</p><h2>Frame: where the languages go</h2>
+      <div class="cards">
+        <article class="card" data-group="frame" data-opt="a"><p class="rec">Recommended</p><h3>A · In the bar</h3><p><b>For:</b> one tap to German from anywhere, on a phone too, with no extra height.</p><p><b>Costs:</b> codes instead of names, and your name in the header gives way to the mark on phones and tablets. The name stays in the first line of text.</p></article>
+        <article class="card" data-group="frame" data-opt="b"><p class="rec">&nbsp;</p><h3>B · Strip above</h3><p><b>For:</b> "Deutsch" needs no decoding, and the name stays in the header at every width.</p><p><b>Costs:</b> 45 px of the first screen on every visit, for something most English readers never use. It scrolls away.</p></article>
+        <article class="card" data-group="frame" data-opt="c"><p class="rec">&nbsp;</p><h3>C · Menu</h3><p><b>For:</b> the quietest header.</p><p><b>Costs:</b> on a phone, German is two taps away behind the menu. The footer list is the only visible sign of it on the page.</p></article>
+      </div>
+      <p class="why"><b>Why A:</b> a recruiter skimming for a minute must see German at once, and only A shows it at every scroll position on a phone.</p>
+    </div>
+    <div>
+      <p class="kicker">Step 2</p><h2>Hero: what sits behind the sentence</h2>
+      <div class="cards">
+        <article class="card" data-group="hero" data-opt="a"><p class="rec">&nbsp;</p><h3>A · Plain</h3><p><b>For:</b> v2 as drawn, the calmest and fastest.</p><p><b>Costs:</b> the azulejo idea is carried only by the small lattice. On cream that worked; on these glazes it looks more generic.</p></article>
+        <article class="card" data-group="hero" data-opt="b"><p class="rec">Recommended</p><h3>B · On the tile</h3><p><b>For:</b> the study's lozenge grout behind v2's hero, so the tile and the Hasse diagram are the same drawing, in every glaze.</p><p><b>Costs:</b> a faint pattern behind running text, though every glaze still passes contrast.</p></article>
+        <article class="card" data-group="hero" data-opt="c"><p class="rec">&nbsp;</p><h3>C · The wall</h3><p><b>For:</b> keeps the 74 real lattices and their credit, the most striking picture of the research.</p><p><b>Costs:</b> loses the 2³ lattice and its links, and the wall speaks to researchers, while software is meant to lead.</p></article>
+      </div>
+      <p class="why"><b>Why B:</b> it keeps v2's message and links and gets back the identity v2 relied on cream to carry. If you pick A or B, the wall leaves the home page; it could move to <code>/research</code>, and HOME-HERO-09 goes with it.</p>
+    </div>
+    <div>
+      <p class="kicker">Step 3</p><h2>Theorem band: how much of the paper</h2>
+      <div class="cards">
+        <article class="card" data-group="band" data-opt="a"><p class="rec">&nbsp;</p><h3>A · Theorem alone</h3><p><b>For:</b> v2 as drawn, one result and its evidence.</p><p><b>Costs:</b> Definition 6, Lemma 8 and Proposition 18 leave the home page, so HOME-PAPER-02 to 04 need rewriting.</p></article>
+        <article class="card" data-group="band" data-opt="b"><p class="rec">&nbsp;</p><h3>B · All four</h3><p><b>For:</b> keeps the agreed cases as they are, and a reviewer sees the definitions at once.</p><p><b>Costs:</b> a long, dense band in the middle of a page that sells software; about a phone screen more.</p></article>
+        <article class="card" data-group="band" data-opt="c"><p class="rec">Recommended</p><h3>C · Unfold</h3><p><b>For:</b> v2's short band, with the three statements one tap away and still in the page's HTML.</p><p><b>Costs:</b> a control to build and test, and the statements are hidden at first.</p></article>
+      </div>
+      <p class="why"><b>Why C:</b> software leads, and a researcher still gets the definitions without leaving the page.</p>
+    </div>
+  </section>
+
+  <section class="two">
+    <div>
+      <h2>Where this differs from the v2 boards</h2>
+      <ul>
+        <li><strong>Theorem wording:</strong> the agreed quotation, not v2's "its state space…". Quotations stay as they are.</li>
+        <li><strong>Band in the dark glazes:</strong> a raised dark surface, not the lifted accent, which made a glaring slab at night.</li>
+        <li><strong>Lattice links:</strong> each has a target of at least 44 px, and the labels stay readable over the edges.</li>
+        <li><strong>Header:</strong> stays sticky, as agreed, and gains the languages and the three-state theme button.</li>
+        <li><strong>Email:</strong> the site's <code>hello@zuacaldeira.com</code>, not the Gmail address on the boards.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>For you to check</h2>
+      <ul>
+        <li><strong>German and Portuguese are my drafts:</strong> the hero sentence, the text, the evidence line and the footer. Please correct them. Notation and quotations stay English.</li>
+        <li><strong>The footer's availability line</strong> is still marked "confirm wording", as on v2.</li>
+        <li><strong>The <code>&lt;h1&gt;</code> becomes the sentence,</strong> not your name, so HOME-HERO-04 changes. The name stays in the page title and the first line of text.</li>
+        <li><strong>Hero links lead to pages that do not exist yet:</strong> <code>/software</code>, <code>/writing</code>, the CV.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+const form=document.getElementById('controls');
+const frames={wide:document.getElementById('f-wide'),phone:document.getElementById('f-phone')};
+const panes={wide:document.getElementById('pane-wide'),phone:document.getElementById('pane-phone')};
+const HEIGHT={390:844,768:1024,1280:800,1440:900};
+const GLAZES=[['Manganês','dawn',450],['Cobalto','noon',750],['Amarelo e verde','afternoon',1140],['Manganês nocturno','evening',1260],['Vidrado nocturno','night',120]];
+const val=n=>form.elements[n].value;
+form.elements.lang.value='de';
+const tEl=document.getElementById('t');const d=new Date();tEl.value=d.getHours()*60+d.getMinutes();
+const fmt=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const cur=()=>({zcSet:true,frame:val('frame'),hero:val('hero'),band:val('band'),lang:val('lang'),page:val('page'),state:val('state')});
+const small=[];
+function send(){const m={...cur(),minutes:+tEl.value};for(const f of Object.values(frames))f.contentWindow?.postMessage(m,'*');
+  small.forEach(([f,mins])=>f.contentWindow?.postMessage({...cur(),state:'living',minutes:mins},'*'))}
+function size(f,view,w,h,avail){const s=Math.min(1,avail/w);f.style.width=w+'px';f.style.height=h+'px';f.style.transform=s<1?`scale(${s})`:'';view.style.width=Math.round(w*s+2)+'px';view.style.height=Math.round(h*s+2)+'px';return s}
+function layout(){
+  const w=+val('w'),pw=panes.wide,pp=panes.phone;
+  const sw=size(frames.wide,pw.querySelector('.view'),w,HEIGHT[w],pw.clientWidth-2);
+  pw.querySelector('.size').textContent=`${w} × ${HEIGHT[w]}${sw<1?` · shown at ${Math.round(sw*100)}%`:''}`;
+  const sp=size(frames.phone,pp.querySelector('.view'),390,844,Math.min(390,pp.parentElement.clientWidth)-2);
+  pp.querySelector('.size').textContent=`390 × 844${sp<1?` · shown at ${Math.round(sp*100)}%`:''}`;
+  small.forEach(([f,,view])=>size(f,view,390,1500,view.parentElement.clientWidth-2));
+}
+function caption(){const c=cur();const u=c.page==='404'?'zuacaldeira.com/fr/home (404, in English)':`zuacaldeira.com/${c.lang}/home`+(c.lang==='en'?' (and /)':'');document.querySelectorAll('.url').forEach(e=>e.textContent=u);document.getElementById('clock').textContent=fmt(+tEl.value);
+  document.querySelectorAll('.card').forEach(n=>n.dataset.active=String(val(n.dataset.group)===n.dataset.opt))}
+const five=document.getElementById('five');
+GLAZES.forEach(([name,when,mins])=>{const box=document.createElement('div');box.innerHTML=`<div class="cap"><b>${name}</b><span>${when}</span></div><div class="view"><iframe title="The page in the ${name} glaze" loading="lazy" tabindex="-1"></iframe></div>`;five.append(box);const f=box.querySelector('iframe');small.push([f,mins,box.querySelector('.view')]);f.onload=send;f.src=`home.html#t=${mins}`});
+for(const f of Object.values(frames)){f.onload=send;f.src='home.html'}
+form.addEventListener('input',()=>{layout();caption();send()});
+form.addEventListener('submit',e=>e.preventDefault());
+window.addEventListener('resize',layout);
+window.addEventListener('message',e=>{const m=e.data;if(!m||!m.zcHome)return;if(m.lang)form.elements.lang.value=m.lang;if(m.page)form.elements.page.value=m.page;if(m.state)form.elements.state.value=m.state;caption();send()});
+layout();caption();
+</script>
