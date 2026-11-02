@@ -58,7 +58,8 @@ Open, for the developer:
   names and data. Loaded from Google Fonts in `frontend/src/index.html`.
 - **Hero:** the Website v2 hero: the sentence "I build software, and prove its protocols
   hold." with the 2³ lattice of `Zu = software ∥ research ∥ running`. It replaces the
-  photographic hero, follows the glaze, and has no fixed colours. The header stays sticky.
+  photographic hero, follows the glaze, and has no fixed colours. It sits on the study's
+  lozenge tile pattern (hero option B). The header stays sticky.
 - **Notation is never translated, and it must parse.** Session types, `⊤`, `⊥`, `‖`, atom
   labels, venue names, paper titles and the statements quoted from the paper stay as they
   are in every language. Every session type shown on a page is checked with reticulateP
@@ -76,6 +77,9 @@ Open, for the developer:
   states: light, dark, living. Every new screen is checked under all five glazes.
 
 - **Living is the default theme state** (agreed 2026-11-02); light and dark are manual overrides.
+- **Theme settings** (agreed 2026-11-02): the hero and the theorem band are settings beside the
+  glaze, `{ hero: 'b', band: 'c' }`. Only these defaults are built; the other options stay in
+  the mock-up until first wanted. The frame is not a setting.
 - **Website v2** (agreed 2026-11-02): the row of boards on the Visual Identity canvas,
   https://claude.ai/artifact/V4BY3xCveYFdkCky8kFXXa, gives the pages, sections, message and
   the 2³ lattice hero. Its cream and white grounds and its per-page Rota glaze do not
@@ -97,10 +101,10 @@ Not yet agreed:
 - **Running text stays near 65 characters** wide (`.prose`, `max-width: 65ch`).
 
 ## Page anatomy
-Every page: sticky header, `<main>` with the page's sections, footer. Header and footer
-are the shared shell (`docs/examples/shell.md`, to be written). The shared content column
-and the place of the language links are being agreed in the home page's frame mock-up
-(`docs/mockups/home/`).
+Every page: sticky header, `<main>` with the page's sections, footer. Header and footer are
+the shared shell (`docs/examples/shell.md`). All of them share one column, 1200 px wide, and
+the language codes sit in the header at every width (frame option A, agreed 2026-11-02). Spec:
+`docs/mockups/home/home-spec.md`.
 
 ## Known traps
 - **Teal is a bug, not a decision.** `frontend/src/material-theme.scss` still sets the

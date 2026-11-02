@@ -1,25 +1,30 @@
 # Examples: Home page
 
-Status: **agreed with the developer on 2026-10-28** (decisions D1–D8 below).
+Status: **rewritten for Website v2 on 2026-11-02, waiting for the developer's agreement.**
+The first version was agreed on 2026-10-28 (D1–D9). Open questions are at the end and are
+answered before the build.
 
-The home page in three languages, at `/en/home`, `/de/home` and `/pt/home`. It is the
-first page of the new site, and its hero is the walking skeleton: the first section
-that goes through every layer (MySQL, Flyway, the Spring Boot content API, the Angular
-build, prerendering, the `next` preview).
+The home page in three languages, at `/en/home`, `/de/home` and `/pt/home`. Design:
+`docs/mockups/home/home-spec.md`, with the mock-up beside it. Its hero is the walking
+skeleton: the first section that goes through every layer (MySQL, Flyway, the Spring Boot
+content API, the Angular build, prerendering, the `next` preview).
 
 Sections, in build order:
 1. **Page frame** (`HOME-PAGE-nn`): what every language version of the page needs:
    `lang`, title, alternates, URLs. Built together with the hero, because the hero
    cannot be prerendered in three languages without it.
-2. **Hero** (`HOME-HERO-nn`): name, eyebrow, tagline, two buttons, photo, lattice wall.
-3. **Paper statements** (`HOME-PAPER-nn`): the Reticulate Theorem and three results
-   from the ICE 2026 paper, with a link to the PDF.
+2. **Hero** (`HOME-HERO-nn`): notation line, sentence, text, three links, the 2³ lattice.
+3. **Theorem band** (`HOME-PAPER-nn`): the Reticulate Theorem, its evidence, and three
+   more results from the ICE 2026 paper that unfold, with a link to the PDF.
 
-The navigation, language switcher and footer are shared by every page. They get their
-own file (`docs/examples/shell.md`) and are out of scope here.
+Later, each added here when its turn comes, in v2's order: proof strip, what I do, selected
+work (before the theorem band on the page); how I work, writing, about teaser (after it).
 
-Texts below are copied from today's `src/app/i18n/{en,de,pt}.ts`. Texts marked
-*(proposed)* do not exist yet and need the developer's wording.
+Not in this file: the header, language links and footer (`docs/examples/shell.md`), and the
+colours and theme settings (`docs/examples/theme.md`).
+
+Texts marked *(proposed)* are drafts and need the developer's wording. Other German and
+Portuguese labels come from today's `src/app/i18n/{de,pt}.ts`.
 
 ## 1. Page frame
 
@@ -27,25 +32,28 @@ Texts below are copied from today's `src/app/i18n/{en,de,pt}.ts`. Texts marked
 |----|-------|------|------|---------|
 | HOME-PAGE-01 | the home page content exists in en, de and pt | the site is built | `/en/home/index.html`, `/de/home/index.html` and `/pt/home/index.html` exist, with `<html lang="en">`, `lang="de"` and `lang="pt"` | yes |
 | HOME-PAGE-02 | the built `/de/home` | it is read | it has `<link rel="alternate" hreflang="en" href="https://zuacaldeira.com/en/home">`, the same for `de` and `pt`, and `hreflang="x-default"` pointing to `/en/home` | yes |
-| HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Investigador. Programador. Educador. Corredor." (en: "Alexandre Caldeira — Researcher. Developer. Educator. Runner.", de: "Alexandre Caldeira — Forscher. Entwickler. Erzieher. Läufer.") | yes |
-| HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with links to `/de/home` and `/pt/home`; no redirect (D1) | yes |
+| HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Construo software e provo que os seus protocolos se cumprem." *(proposed)*; en: "Alexandre Caldeira — I build software, and prove its protocols hold."; de: "Alexandre Caldeira — Ich baue Software und beweise, dass ihre Protokolle halten." *(proposed)* | reopened: the test holds the old tagline |
+| HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with visible links to `/de/home` and `/pt/home` (SHELL-01); no redirect (D1) | reopened: the test reads `<link rel="alternate">`, and no visible link exists yet |
 | HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about` → `/en/about`, ...) (D2) | |
 | HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | |
 
 ## 2. Hero
 
+None of these were covered, so their IDs were reused for the v2 hero. The photo and the wall
+cases went with the old hero (D10, D11).
+
 | ID | Given | When | Then | Covered |
 |----|-------|------|------|---------|
-| HOME-HERO-01 | the hero content stored in de | the site is built | `/de/home` shows the eyebrow "Piri → Estremoz → Lissabon → Berlin", the tagline "Forscher. Entwickler. Erzieher. Läufer.", a button "Über mich" to `/de/about` and a button "Kontakt aufnehmen" to `/de/contact` | |
-| HOME-HERO-02 | the hero content stored in pt | the site is built | `/pt/home` shows "Piri → Estremoz → Lisboa → Berlim", "Investigador. Programador. Educador. Corredor.", "Sobre mim" to `/pt/about`, "Entrar em contacto" to `/pt/contact` | |
-| HOME-HERO-03 | the hero content stored in en | the site is built | `/en/home` shows "Piri → Estremoz → Lisbon → Berlin", "Researcher. Developer. Educator. Runner.", "About me" to `/en/about`, "Get in touch" to `/en/contact` | |
-| HOME-HERO-04 | any language | the site is built | the `<h1>` is "Alexandre Zua Caldeira" in all three; a name is not translated | |
-| HOME-HERO-05 | the hero content stored in pt | `GET /api/content/home/hero?lang=pt` | 200 with `{"eyebrow": "Piri → Estremoz → Lisboa → Berlim", "tagline": "Investigador. Programador. Educador. Corredor.", "aboutCta": "Sobre mim", "contactCta": "Entrar em contacto", "photoAlt": "Nascer do sol com nevoeiro sobre um campo perto de Berlim"}` (D3) | |
+| HOME-HERO-01 | the hero content stored in de | the site is built | `/de/home` shows "Ich baue Software und beweise, dass ihre Protokolle halten." *(proposed)*, the text "Alexandre Zua Caldeira. Softwareentwickler in Berlin seit 2011 und Forscher im Bereich Programmiersprachen (POPL 2010, ICE 2026). Java-Backends, Verifikationswerkzeuge und KI-Agenten, die an ein geprüftes Protokoll gebunden sind." *(proposed)*, and the links "Ausgewählte Arbeiten" → `/de/software`, "Lebenslauf herunterladen" → the CV (Q3), "ICE-2026-Paper lesen →" → `#band` *(proposed)* | |
+| HOME-HERO-02 | the hero content stored in pt | the site is built | `/pt/home` shows "Construo software e provo que os seus protocolos se cumprem." *(proposed)*, "Alexandre Zua Caldeira. Engenheiro de software em Berlim desde 2011 e investigador em linguagens de programação (POPL 2010, ICE 2026). Backends Java, ferramentas de verificação e agentes de IA sujeitos a um protocolo verificado." *(proposed)*, "Ver trabalhos selecionados" → `/pt/software`, "Descarregar CV", "Ler o artigo ICE 2026 →" *(proposed)* | |
+| HOME-HERO-03 | the hero content stored in en | the site is built | `/en/home` shows "I build software, and prove its protocols hold.", "Alexandre Zua Caldeira. Software engineer in Berlin since 2011 and programming-languages researcher (POPL 2010, ICE 2026). Java backends, verification tooling, and AI agents held to a checked protocol.", "See selected work" → `/en/software`, "Download CV", "Read the ICE 2026 paper →" | |
+| HOME-HERO-04 | any language | the site is built | the `<h1>` is the sentence; the text starts with "Alexandre Zua Caldeira" in all three, because a name is not translated; the line above the `<h1>` is `Zu = software ∥ research ∥ running` in all three (notation, D13) | |
+| HOME-HERO-05 | the hero content stored in pt | `GET /api/content/home/hero?lang=pt` | 200 with `{"headline": "Construo software e provo que os seus protocolos se cumprem.", "lede": "Alexandre Zua Caldeira. Engenheiro de software…", "workCta": "Ver trabalhos selecionados", "cvCta": "Descarregar CV", "paperCta": "Ler o artigo ICE 2026 →", "latticeLabel": "O reticulado 2 ao cubo: software, investigação e corrida em paralelo.", "latticeCaption": "2³ · três fios em paralelo · os átomos são ligações"}` (D3) | |
 | HOME-HERO-06 | no hero content stored for de | the site is built | the build fails with a message naming page `home`, section `hero`, language `de`; nothing is deployed (D4) | |
 | HOME-HERO-07 | any language | `GET /api/content/home/hero?lang=fr` | 404 (D5) | |
-| HOME-HERO-08 | the built `/de/home` | it is read | the photo's alt text is German: "Nebliger Sonnenaufgang über einem Feld bei Berlin"; pt: "Nascer do sol com nevoeiro sobre um campo perto de Berlim"; en: "Misty sunrise over a field near Berlin" | |
-| HOME-HERO-09 | the lattice wall behind the hero | the site is built in de and in pt | the SVG `<title>` is translated: de "Die 74 verschiedenen Verbände, die 104 Benchmark-Protokolle aus Session Type State Spaces Form Lattices (ICE 2026) auf Stufe R2′ bilden, nach Größe geordnet. Die 47 nicht-distributiven sind in einer anderen Farbe markiert."; pt "Os 74 reticulados distintos que 104 protocolos de referência de Session Type State Spaces Form Lattices (ICE 2026) formam no degrau R2′, ordenados por tamanho. Os 47 não distributivos estão marcados com outra cor.". The visible credit "behind: 74 distinct lattices from 104 benchmark protocols at rung R2′, 47 non-distributive" stays English in every language (D6) | |
-| HOME-HERO-10 | the build ran on `next` | https://next.zuacaldeira.com/de/home is opened | it shows the German hero of HOME-HERO-01 (system test, after the server is set up) | |
+| HOME-HERO-08 | the built `/de/home` | it is read | the lattice figure is a group labelled "Der Verband 2 hoch 3: Software, Forschung und Laufen parallel." with the caption "2³ · drei Fäden parallel · die Atome sind Links" *(proposed)*; the lattice's labels `software`, `research`, `running`, `⊥ end · contact` are the same in every language (D13) | |
+| HOME-HERO-09 | the built `/de/home` | the lattice is read | its links are `software` → `/de/software`, `research` → `/de/research`, `running` → `/de/about#running`, `⊥ end · contact` → `/de/contact`; the same with `/en/` and `/pt/` | |
+| HOME-HERO-10 | the build ran on `next` | https://next.zuacaldeira.com/de/home/ is opened | it shows the German hero of HOME-HERO-01 (system test) | |
 
 ### Diagram: HOME-HERO-01 (acceptance, at build time)
 
@@ -66,10 +74,10 @@ sequenceDiagram
     Test->>Build: When the site is built
     Build->>API: GET /api/content/home/hero?lang=de
     API->>DB: select hero texts where lang = 'de'
-    DB-->>API: eyebrow, tagline, aboutCta, contactCta, photoAlt
+    DB-->>API: headline, lede, workCta, cvCta, paperCta, latticeLabel, latticeCaption
     API-->>Build: 200 JSON
     Build->>HTML: prerender /de/home
-    Test->>HTML: Then lang="de", tagline "Forscher. Entwickler. Erzieher. Läufer.",<br/>"Über mich" → /de/about, "Kontakt aufnehmen" → /de/contact
+    Test->>HTML: Then lang="de", the sentence as h1,<br/>"Ausgewählte Arbeiten" → /de/software
 ```
 
 ### Diagram: HOME-HERO-05 (backend integration)
@@ -82,34 +90,39 @@ flowchart LR
         R --> M[(MySQL 8 in Testcontainers<br/>schema from Flyway)]
     end
     M -.->|pt row| R
-    C -->|200: Investigador. Programador. Educador. Corredor.| T
+    C -->|200: headline, lede, workCta, cvCta, paperCta, latticeLabel, latticeCaption| T
 ```
 
-## 3. Paper statements
+## 3. Theorem band
 
 The four statements are quotations from the paper (Theorem 15, Definition 6, Lemma 8,
 Proposition 18). They are notation and stay in English in every language. Only the
-labels around them are translated.
+labels around them are translated. HOME-PAPER-01 to 05 are unchanged from the first version.
 
 | ID | Given | When | Then | Covered |
 |----|-------|------|------|---------|
-| HOME-PAPER-01 | the paper stored with title "Session Type State Spaces Form Lattices", year 2026 | the site is built in de | the eyebrow reads "Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026"; the title is not translated | |
+| HOME-PAPER-01 | the paper stored with title "Session Type State Spaces Form Lattices", year 2026 | the site is built in de | the first line reads "Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026"; the title is not translated | |
 | HOME-PAPER-02 | the same | the site is built in pt | the labels read "Do artigo", "Teorema 15 · Reticulate Theorem", "Definição 6", "Lema 8", "Proposição 18", and the link reads "Ler o artigo (PDF)" | |
 | HOME-PAPER-03 | the same | the site is built in de | "Satz 15 · Reticulate Theorem", "Definition 6", "Lemma 8", "Proposition 18", "Paper lesen (PDF)" | |
 | HOME-PAPER-04 | any language | the site is built | the statement texts are identical in en, de and pt, e.g. "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice." | |
 | HOME-PAPER-05 | any language | the site is built | the PDF link points to `/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf` from the site root, not relative to `/de/home` | |
+| HOME-PAPER-06 | the band in en, de and pt | the site is built | under the theorem it reads en "Checked on 108 benchmark protocols from networking, databases, distributed systems and AI. Mechanised in Lean 4, with two independent tool implementations."; de "Geprüft an 108 Benchmark-Protokollen aus Netzwerken, Datenbanken, verteilten Systemen und KI. In Lean 4 mechanisiert, mit zwei unabhängigen Werkzeug-Implementierungen." *(proposed)*; pt "Verificado em 108 protocolos de referência de redes, bases de dados, sistemas distribuídos e IA. Mecanizado em Lean 4, com duas implementações independentes." *(proposed)* | |
+| HOME-PAPER-07 | the built `/de/home` with the band setting at its default (THEME-09) | it is read | Definition 6, Lemma 8 and Proposition 18 are in the HTML, inside a closed `<details>` whose summary reads "Definition 6, Lemma 8, Proposition 18"; pt "Definição 6, Lema 8, Proposição 18" | |
+| HOME-PAPER-08 | any language | the site is built | a second link "All research" / "Zur Forschung" *(proposed)* / "Toda a investigação" *(proposed)* leads to `/xx/research` | |
+| HOME-PAPER-09 | the paper labels stored in de | `GET /api/content/home/paper?lang=de` | 200 with `{"eyebrow": "Aus dem Paper", "paperTitle": "Session Type State Spaces Form Lattices", "year": 2026, "theorem": "Satz", "definition": "Definition", "lemma": "Lemma", "proposition": "Proposition", "evidence": "Geprüft an 108…", "read": "Paper lesen (PDF)", "allResearch": "Zur Forschung", "more": "Definition 6, Lemma 8, Proposition 18", "pdfUrl": "/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf", "statements": [four objects: kind, number, name, text]}`; `statements` is the same for every `lang` (D3, D12) | |
 
 ```mermaid
 flowchart LR
-    P[(paper row:<br/>title, year 2026, PDF url)] --> E["eyebrow:<br/>label(lang) — title · ICE year"]
-    L[(labels per lang:<br/>eyebrow, kinds, read)] --> E
+    P[(paper row:<br/>title, year 2026, PDF url)] --> E["first line:<br/>eyebrow(lang) — title · ICE year"]
+    L[(labels per lang:<br/>eyebrow, kinds, evidence,<br/>read, allResearch, more)] --> E
     L --> K["kind labels:<br/>Satz 15 · Reticulate Theorem"]
-    Q[(statements:<br/>one text, no lang)] --> B["four quotations,<br/>same in en/de/pt"]
+    L --> V["evidence line, links, summary"]
+    Q[(statements:<br/>one text, no lang)] --> B["theorem shown,<br/>three in details,<br/>same in en/de/pt"]
 ```
 
 ## Decisions
 
-Agreed with the developer on 2026-10-28.
+Agreed with the developer on 2026-10-28:
 
 - **D1. `/`** is the prerendered English home, with links to de and pt. No redirect by
   browser language.
@@ -119,12 +132,10 @@ Agreed with the developer on 2026-10-28.
 - **D4. A missing translation fails the build**, naming page, section and language.
   No fallback to English.
 - **D5. An unsupported language** (`lang=fr`) gets `404`.
-- **D6. Lattice wall:** the SVG title (what screen readers announce) is translated; the
-  visible credit stays English as research notation.
-- **D7. Hero wording:** the German and Portuguese texts from the existing translation
-  files are kept as they are, including "Erzieher" and "Educador".
-- **D8. Lattice wall titles** (2026-10-28): the German and Portuguese SVG titles in
-  HOME-HERO-09 are agreed as drafted.
+- **D6, D8. Lattice wall:** parked with the wall itself (D11). If it returns, its SVG title
+  is translated as drafted in the first version of this file, and its visible credit stays
+  English. Note that a wrapper with `aria-hidden="true"` would hide that title from screen readers.
+- **D7. Hero wording:** replaced by Website v2 (D10).
 - **D9. The 404 page** (2026-10-29, for HOME-PAGE-06): one English page, prerendered at
   `/404` (`lang="en"`), shown for every unknown path, `/fr/home` included. Both nginx configs
   answer unknown paths with status `404` and that page (`error_page 404 /404.html`), not
@@ -135,3 +146,29 @@ Agreed with the developer on 2026-10-28.
   endet ganz unten: Hier gibt es keine Seite." / "Zur Startseite" → `/de/home`; pt "⊥ Página
   não encontrada" / "Este caminho acaba no fundo: aqui não há nenhuma página." / "Voltar ao
   início" → `/pt/home`.
+
+Agreed with the developer on 2026-11-02:
+
+- **D10. Website v2 stands, and software leads** the home page. The hero is the sentence and
+  the 2³ lattice. The photo and "Researcher. Developer. Educator. Runner." are gone.
+- **D11. Hero option B, band option C, frame option A.** The hero sits on the lozenge tile
+  pattern; the wall leaves the home page. Hero and band are theme settings with these as
+  defaults, and only the defaults are built now (`docs/examples/theme.md`).
+
+Drafted here, for agreement with this file:
+
+- **D12. Statements stay in the page's HTML,** so a reader without JavaScript, a search engine
+  and a screen reader can reach them.
+- **D13. The lattice's labels and the `Zu = …` line are notation:** never translated. Checked
+  with reticulateP on 2026-11-02 as `Zu = Software || Research || Running`, with
+  `Software = &{build: end}`, `Research = &{prove: end}`, `Running = &{run: end}`: 8 states,
+  12 transitions, a lattice.
+
+## Open questions
+
+- **Q1. German and Portuguese wording:** every text marked *(proposed)*.
+- **Q2. Links to pages that do not exist yet:** `/software` and `/writing`. Recommended: the
+  links stay and `next` shows the 404 page until those pages are built; `main` gets the new
+  home only once they exist.
+- **Q3. The CV:** which PDF, in which languages? The site's assets have none.
+- **Q4. The availability line** in the footer (SHELL-07).
