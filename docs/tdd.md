@@ -16,7 +16,7 @@ The new site gets a backend. Until the repo is restructured, `CLAUDE.md` still
 describes the old frontend-only site.
 - **Layout:** one repo with `frontend/` (the Angular app, moved from the root) and
   `backend/` (Spring Boot, Java 21, Maven wrapper). The frontend moved on
-  2026-10-28; `backend/` does not exist yet.
+  2026-10-28; `backend/` was set up on 2026-11-02 (Spring Boot 4.1.2).
 - **Backend jobs:** serve the content (pages, papers, races and the rest, in EN/DE/PT),
   receive the contact form and send mail, an authenticated admin area to edit content
   and translations, and live data (e.g. Strava) fetched and cached on the server.
@@ -82,8 +82,9 @@ lists its sections in order.
   `cd backend && ./mvnw test -Dtest=ClassName`; the whole unit suite with `./mvnw test`.
 - **Integration:** Testcontainers against a real MySQL 8 (`*IntegrationTest`), for
   persistence, Flyway migrations and the content API. No in-memory database stand-ins.
-  Per element, run only the touched classes with `-Dtest=...`; run the whole set once at
-  the end of a section.
+  They run under Failsafe, not Surefire. Per element, run only the touched classes with
+  `./mvnw verify -Dit.test=ClassName`; run the whole set once with `./mvnw verify` at the end
+  of a section.
 - **Example IDs:** backend tests cite the example they cover with
   `@DisplayName("HOME-HERO-05 …")`, the ID in the display name.
 - **Role boundaries:** the admin area is a security boundary. Each admin endpoint gets a
