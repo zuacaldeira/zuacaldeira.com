@@ -1,6 +1,6 @@
 # Examples: Home page
 
-Status: **agreed with the developer on 2026-11-02** (decisions D1–D17), rewritten for Website
+Status: **agreed with the developer on 2026-11-02** (decisions D1–D20), rewritten for Website
 v2. The first version was agreed on 2026-10-28. One file is still to come: the CV (D16).
 
 The home page in three languages, at `/en/home`, `/de/home` and `/pt/home`. Design:
@@ -52,6 +52,7 @@ cases went with the old hero (D10, D11).
 | HOME-HERO-08 | the built `/de/home` | it is read | the lattice figure is a group labelled "Der Verband 2 hoch 3: Software, Forschung und Laufen parallel." with the caption "2³ · drei Fäden parallel · die Atome sind Links"; the lattice's labels `software`, `research`, `running`, `⊥ end · contact` are the same in every language (D13) | |
 | HOME-HERO-09 | the built `/de/home` | the lattice is read | its links are `software` → `/de/software`, `research` → `/de/research`, `running` → `/de/about#running`, `⊥ end · contact` → `/de/contact`; the same with `/en/` and `/pt/` | |
 | HOME-HERO-10 | the build ran on `next` | https://next.zuacaldeira.com/de/home/ is opened | it shows the German hero of HOME-HERO-01 (system test) | |
+| HOME-HERO-11 | no hero content stored for de | `GET /api/content/home/hero?lang=de` | 404: MISSING, with no fallback to another language (D4, D18) | |
 
 ### Diagram: HOME-HERO-01 (acceptance, at build time)
 
@@ -166,3 +167,7 @@ Agreed with the developer on 2026-11-02:
   developer names the PDF and its languages. A public CV carries no phone number or street
   address.
 - **D17. The availability line** in the footer is agreed as drafted (SHELL-07).
+- **D18. D3's MISSING answer:** missing content answers `404`.
+- **D19. An unknown page or section** is MISSING too: `404`.
+- **D20. The build's backend:** when the site is built, the backend and MySQL run in containers
+  started for the build, seeded by Flyway, so a build does not depend on the live server.

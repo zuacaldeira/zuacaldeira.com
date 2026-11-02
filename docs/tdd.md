@@ -84,6 +84,8 @@ lists its sections in order.
   persistence, Flyway migrations and the content API. No in-memory database stand-ins.
   Per element, run only the touched classes with `-Dtest=...`; run the whole set once at
   the end of a section.
+- **Example IDs:** backend tests cite the example they cover with
+  `@DisplayName("HOME-HERO-05 …")`, the ID in the display name.
 - **Role boundaries:** the admin area is a security boundary. Each admin endpoint gets a
   table of endpoint × role (anonymous, admin) and a security slice test per row. The
   public content endpoints are read-only for anonymous visitors.
