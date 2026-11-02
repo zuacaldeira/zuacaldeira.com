@@ -1,5 +1,6 @@
 package com.zuacaldeira.content;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +16,8 @@ class ContentController {
     }
 
     @GetMapping("/api/content/{page}/{section}")
-    HomeHero section(@PathVariable String page, @PathVariable String section, @RequestParam String lang) {
-        return content.find(page, section, lang);
+    ResponseEntity<HomeHero> section(
+            @PathVariable String page, @PathVariable String section, @RequestParam String lang) {
+        return ResponseEntity.of(content.find(page, section, lang));
     }
 }

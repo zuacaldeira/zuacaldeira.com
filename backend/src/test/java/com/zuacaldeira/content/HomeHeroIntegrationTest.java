@@ -43,6 +43,17 @@ class HomeHeroIntegrationTest {
             "latticeLabel", "O reticulado 2 ao cubo: software, investigação e corrida em paralelo.",
             "latticeCaption", "2³ · três fios em paralelo · os átomos são ligações");
 
+    private static final Map<String, String> EN_HERO = Map.of(
+            "headline", "I build software, and prove its protocols hold.",
+            "lede", "Alexandre Zua Caldeira. Software engineer in Berlin since 2011 and programming-languages"
+                    + " researcher (POPL 2010, ICE 2026). Java backends, verification tooling, and AI agents"
+                    + " held to a checked protocol.",
+            "workCta", "See selected work",
+            "cvCta", "Download CV",
+            "paperCta", "Read the ICE 2026 paper →",
+            "latticeLabel", "The lattice 2 to the third: software, research and running in parallel.",
+            "latticeCaption", "2³ · three threads in parallel · the atoms are links");
+
     @LocalServerPort
     int port;
 
@@ -64,6 +75,20 @@ class HomeHeroIntegrationTest {
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(JsonMapper.builder().build().readValue(response.body(),
                 new TypeReference<Map<String, String>>() {})).isEqualTo(PT_HERO);
+    }
+
+    @Test
+    @DisplayName("HOME-HERO-11 answers 404 for a language not stored, with no fallback to another")
+    void doesNotFallBackToAnotherLanguage() throws Exception {
+        storeHero("en", EN_HERO);
+        storeHero("pt", PT_HERO);
+
+        assertMissing(get("/api/content/home/hero?lang=de"));
+    }
+
+    private static void assertMissing(HttpResponse<String> response) {
+        assertThat(response.statusCode()).isEqualTo(404);
+        assertThat(response.body()).isEmpty();
     }
 
     private void storeHero(String lang, Map<String, String> hero) {

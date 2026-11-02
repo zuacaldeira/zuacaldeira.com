@@ -1,5 +1,7 @@
 package com.zuacaldeira.content;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,7 +13,7 @@ class ContentService {
         this.heroes = heroes;
     }
 
-    HomeHero find(String page, String section, String lang) {
+    Optional<HomeHero> find(String page, String section, String lang) {
         return heroes.find(lang);
     }
 }
