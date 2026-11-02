@@ -21,14 +21,16 @@ build time. See `docs/tdd.md` for the architecture.
 
 ## The users (agreed 2026-11-02)
 The repo has no analytics, so this list is the developer's decision, not a measurement.
+The boards name the same groups, plus the third.
+- **Hiring managers, tech leads and recruiters** reading a CV link. They skim on a phone or
+  laptop for a minute and ask: can he ship, in what stack, where is the CV? English or German.
 - **Researchers and reviewers** in concurrency and type theory (ICE, POPL audience). They
   come from a paper or a talk, read on a laptop, and judge the notation. English.
-- **Employers and recruiters** reading a CV link. They skim on a phone or laptop for a
-  minute. English or German.
+- **Teams building AI agents.** They ask whether he can make their agents safe, and look
+  for the case studies and the contact.
 
-**The home page serves researchers first.** The theorem stays the page's main content
-(hero, then paper statements, as `docs/examples/home.md` has it). An employer still learns
-who this is and where to go next within the first screen.
+**Software leads the home page,** and the research is the proof that the engineering is
+sound. A researcher still reaches the theorem and the paper without hunting.
 
 No one signs in on the public site. The admin area (content and translations) comes later
 and gets its own section here when it exists.
@@ -54,10 +56,9 @@ Open, for the developer:
   - Lattice edges use `--zc-edge` (held at 3:1 or more), not the decorative grout.
 - **Type:** Fraunces for display, Archivo for body text, IBM Plex Mono for notation, venue
   names and data. Loaded from Google Fonts in `frontend/src/index.html`.
-- **Hero:** the photographic hero with the azulejo-glass layer and the lattice wall of 74
-  lattices behind it. The header is sticky frosted azulejo glass. The hero stays dark in
-  both themes, so it keeps fixed colours in `hero.css` (cobalt `#0a2a55`, gold `#ffd68a`,
-  `#dbe7f4`). That is the one named exception to "colours come from the tokens".
+- **Hero:** the Website v2 hero: the sentence "I build software, and prove its protocols
+  hold." with the 2³ lattice of `Zu = software ∥ research ∥ running`. It replaces the
+  photographic hero, follows the glaze, and has no fixed colours. The header stays sticky.
 - **Notation is never translated, and it must parse.** Session types, `⊤`, `⊥`, `‖`, atom
   labels, venue names, paper titles and the statements quoted from the paper stay as they
   are in every language. Every session type shown on a page is checked with reticulateP
@@ -74,13 +75,14 @@ Open, for the developer:
   light/dark crossing, the contrast guard and the reduced-motion rule. The toggle has three
   states: light, dark, living. Every new screen is checked under all five glazes.
 
+- **Living is the default theme state** (agreed 2026-11-02); light and dark are manual overrides.
+- **Website v2** (agreed 2026-11-02): the row of boards on the Visual Identity canvas,
+  https://claude.ai/artifact/V4BY3xCveYFdkCky8kFXXa, gives the pages, sections, message and
+  the 2³ lattice hero. Its cream and white grounds and its per-page Rota glaze do not
+  apply: colours come from the living glaze.
+
 Not yet agreed:
 - **Reacting to events** (a new post, a social event): wanted, not designed.
-- **Which theme state is the default.**
-- **Website v2**, the row of boards on the Visual Identity canvas
-  (https://claude.ai/artifact/V4BY3xCveYFdkCky8kFXXa): pages, sections, message and the 2³
-  lattice hero. It may replace the hero line above and "researchers first". Its cream and
-  white grounds and its per-page Rota glaze do not apply: colours come from the living glaze.
 
 ## Rules every screen follows
 - **Three languages:** EN, DE and PT, at `/en/...`, `/de/...` and `/pt/...`, each with
