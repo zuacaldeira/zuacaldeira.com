@@ -9,7 +9,8 @@
     "test": "ng test",
     "serve:ssr:zuacaldeira-com": "node dist/zuacaldeira-com/server/server.mjs",
     "acceptance": "node --test acceptance/*.test.mjs",
-    "test:scripts": "node --test scripts/*.test.mjs"
+    "test:scripts": "node --test scripts/*.test.mjs",
+    "content": "node scripts/fetch-content.mjs"
   },
   "prettier": {
     "printWidth": 100,

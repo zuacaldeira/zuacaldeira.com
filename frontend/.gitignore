@@ -6,6 +6,9 @@
 /out-tsc
 /bazel-out
 
+# The build's content snapshot (scripts/fetch-content.mjs, D25)
+/src/app/content/content.generated.json
+
 # Node
 /node_modules
 npm-debug.log

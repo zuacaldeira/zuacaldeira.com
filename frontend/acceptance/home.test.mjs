@@ -49,7 +49,7 @@ test('HOME-PAGE-04: the site root is the English home, linked to the German and 
   const html = page('.');
   contains(html, '<html lang="en"', 'index.html');
   contains(html, '<title>Alexandre Caldeira — Researcher. Developer. Educator. Runner.</title>', 'index.html');
-  contains(html, 'Researcher. Developer. Educator. Runner.</p>', 'index.html');
+  contains(html, 'I build software, and prove its protocols hold.</h1>', 'index.html');
   for (const lang of ['de', 'pt']) {
     contains(
       html,
@@ -58,6 +58,21 @@ test('HOME-PAGE-04: the site root is the English home, linked to the German and 
     );
   }
 });
+
+// The build's own backend seeded these (compose.build.yml, db/seed); the page got them from the
+// API through the snapshot (D25). The rest of HOME-HERO-01 to 03 comes with the v2 hero (D27).
+const SEEDED_SENTENCES = [
+  ['de', 'HOME-HERO-01', 'Ich baue Software und beweise, dass ihre Protokolle halten.'],
+  ['pt', 'HOME-HERO-02', 'Construo software e provo que os seus protocolos se cumprem.'],
+  ['en', 'HOME-HERO-03', 'I build software, and prove its protocols hold.'],
+];
+
+for (const [lang, id, sentence] of SEEDED_SENTENCES) {
+  test(`${id} (sentence): /${lang}/home has the seeded sentence as its h1`, () => {
+    const h1 = page(`${lang}/home`).match(/<h1[^>]*>([^<]*)<\/h1>/)?.[1].trim();
+    assert.equal(h1, sentence);
+  });
+}
 
 test('HOME-PAGE-04: the live deploy copies only files the build has', () => {
   const workflow = readFileSync(join(import.meta.dirname, '../../.github/workflows/deploy.yml'), 'utf8');
