@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { I18nService } from '../../services/i18n.service';
@@ -13,5 +14,11 @@ import { I18nService } from '../../services/i18n.service';
   `,
 })
 export class NotFound {
-  readonly t = inject(I18nService).translations;
+  private readonly i18n = inject(I18nService);
+  readonly t = this.i18n.translations;
+
+  constructor() {
+    this.i18n.setLanguage('en');
+    inject(DOCUMENT).documentElement.lang = 'en';
+  }
 }
