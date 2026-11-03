@@ -153,10 +153,9 @@ Prettier config is in `package.json`:
 - **One build for both sites:** `.github/workflows/build-site.yml` (a reusable workflow) runs the
   backend's tests (`./mvnw verify`), the frontend's (`npm test`, `npm run test:scripts`), starts
   `compose.build.yml`, takes the snapshot (`npm run content`), builds with
-  `ng build --configuration production`, removes `CNAME`, writes the preview's `robots.txt` when
+  `ng build --configuration production`, removes `CNAME`, copies the prerendered 404 page
+  (`404/index.html`) to `404.html` for nginx (HOME-PAGE-06), writes the preview's `robots.txt` when
   asked, runs `npm run acceptance`, and uploads the site as the artifact `site`
-- The 404 page (HOME-PAGE-06) is not built yet, so no `404.html` is copied; its element adds the
-  copy to `build-site.yml`
 - **Live site:** `.github/workflows/deploy.yml` triggers on push to `main` (or `workflow_dispatch`),
   calls the build, then rsyncs the `site` artifact (with `--delete`) over SSH to the VPS at
   `/var/www/zuacaldeira.com/` as user `deploy-zuacaldeira`

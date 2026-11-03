@@ -89,12 +89,21 @@ for (const [lang, id, sentence] of SEEDED_SENTENCES) {
 }
 
 // Both deploys take the site from build-site.yml (D26). Each cp line there must have a source
-// the build made. Zero cp lines is allowed for now: the 404 page's copy waits for HOME-PAGE-06,
-// whose element adds the line back. A cp line ending in `|| true` does not match the pattern
-// and is not checked, so write none.
+// the build made. A cp line ending in `|| true` does not match the pattern and is not checked,
+// so write none; HOME-PAGE-06's copy must be there, as a plain line.
+const buildSite = () =>
+  readFileSync(join(import.meta.dirname, '../../.github/workflows/build-site.yml'), 'utf8');
+
+test('HOME-PAGE-06: the site build copies the 404 page to 404.html, which nginx serves (D31)', () => {
+  assert.match(
+    buildSite(),
+    /^\s*cp dist\/zuacaldeira-com\/browser\/404\/index\.html dist\/zuacaldeira-com\/browser\/404\.html\s*$/m,
+    'build-site.yml lacks the plain copy of 404/index.html to 404.html',
+  );
+});
+
 test('HOME-PAGE-04: the site build copies only files the build has', () => {
-  const workflow = readFileSync(join(import.meta.dirname, '../../.github/workflows/build-site.yml'), 'utf8');
-  const sources = [...workflow.matchAll(/^\s*cp (dist\/\S+) \S+\s*$/gm)].map(([, from]) => from);
+  const sources = [...buildSite().matchAll(/^\s*cp (dist\/\S+) \S+\s*$/gm)].map(([, from]) => from);
   for (const from of sources) {
     assert.ok(existsSync(join(import.meta.dirname, '..', from)), `build-site.yml copies ${from}, which the build lacks`);
   }

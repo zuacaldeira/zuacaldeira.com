@@ -81,12 +81,13 @@ jobs:
 
       - run: npx ng build --configuration production
 
-      # The build prerenders the site root (the English home) itself. The 404 page (HOME-PAGE-06,
-      # D9) is not built yet; when it is, copy its 404/index.html to 404.html here, without
-      # `|| true`, so a build without it fails (acceptance: HOME-PAGE-04's cp check).
+      # The build prerenders the site root (the English home) itself. nginx answers unknown paths
+      # with 404.html (HOME-PAGE-06, D9, D31): a copy of the prerendered 404 page. No `|| true`:
+      # a build without the page fails here (acceptance: HOME-PAGE-04's cp check).
       - name: Prepare static output
         run: |
           rm -f dist/zuacaldeira-com/browser/CNAME
+          cp dist/zuacaldeira-com/browser/404/index.html dist/zuacaldeira-com/browser/404.html
 
       - name: Keep the preview out of search results
         if: inputs.preview
