@@ -5,6 +5,7 @@ import { Language } from './models/i18n';
 import { I18nService } from './services/i18n.service';
 
 const loadHome = () => import('./pages/home/home').then((m) => m.Home);
+const loadNotFound = () => import('./pages/not-found/not-found').then((m) => m.NotFound);
 
 const pages: Routes = [
   { path: 'home', loadComponent: loadHome },
@@ -57,4 +58,8 @@ export const routes: Routes = [
     canActivateChild: [inLanguage(lang)],
     children: pages,
   })),
+  // The 404 page (D9): prerendered at /404, and shown for every unknown path in the browser,
+  // which loads it from nginx's 404.html on such a path (D32).
+  { path: '404', loadComponent: loadNotFound },
+  { path: '**', loadComponent: loadNotFound },
 ];

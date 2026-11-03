@@ -72,6 +72,16 @@ describe('App Routes', () => {
       expect(location.path()).toBe('/en/about');
     });
 
+    it.each([
+      ['/404', 'APP-NOT-FOUND'],
+      ['/fr/home', 'APP-NOT-FOUND'],
+      ['/en/nope', 'APP-NOT-FOUND'],
+      ['/de/home', 'APP-HOME'],
+    ])('HOME-PAGE-06: should show %s as %s (D32)', async (url, tagName) => {
+      const harness = await RouterTestingHarness.create(url);
+      expect(harness.routeNativeElement?.tagName).toBe(tagName);
+    });
+
     it.each(['de', 'pt'])('HOME-PAGE-01: should set the language from the /%s prefix', async (lang) => {
       TestBed.inject(I18nService).setLanguage('en');
       await RouterTestingHarness.create(`/${lang}/home`);
