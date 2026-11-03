@@ -6,7 +6,10 @@ export async function fetchContent(api) {
   const snapshot = {};
   for (const [page, section] of SECTIONS) {
     for (const lang of LANGUAGES) {
-      const response = await fetch(`${api}/api/content/${page}/${section}?lang=${lang}`);
+      const url = `${api}/api/content/${page}/${section}?lang=${lang}`;
+      const response = await fetch(url).catch((cause) => {
+        throw new Error(`The content API cannot be reached at ${url}`, { cause });
+      });
       if (!response.ok) {
         throw new Error(
           `No content for page ${page}, section ${section}, language ${lang} (${response.status})`,

@@ -37,3 +37,12 @@ test('HOME-HERO-06: a hero missing in de stops the build, naming page, section a
     message: 'No content for page home, section hero, language de (404)',
   });
 });
+
+test('HOME-HERO-17: an API that cannot be reached stops the build, naming its URL', async () => {
+  const api = await fakeApi({});
+  api.close(); // the port is now free: nothing answers there
+
+  await assert.rejects(fetchContent(api.url), {
+    message: `The content API cannot be reached at ${api.url}/api/content/home/hero?lang=en`,
+  });
+});
