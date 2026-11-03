@@ -36,10 +36,38 @@ German and Portuguese labels not listed here come from today's `src/app/i18n/{de
 | HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | open: the 404 page is not built; `/404.html` is missing from every build so far (see below) |
 
 **Open note on HOME-PAGE-06 (2026-11-03).** The 404 page of D9 was never built: the build has no
-`404/index.html`. The deploys copied it with `cp … || true`, which failed without a word, so both
-nginx configs answer unknown paths with a `/404.html` that does not exist. The copy is removed from
+`404/index.html`. The deploys copied it with `cp … || true`, which failed without a word. Both
+nginx configs on `next` still answer unknown paths with `try_files … /index.csr.html` and status
+`200` (the `error_page` lines exist only on `monitor/*` branches). The copy is removed from
 `build-site.yml` until HOME-PAGE-06 is built (the next element); that element adds it back without
-`|| true`, and HOME-PAGE-04's cp check then guards it.
+`|| true`, changes both nginx configs, and HOME-PAGE-04's cp check then guards the copy.
+
+### Diagram: HOME-PAGE-06 (the 404 page, D9, D28 to D32)
+
+Each dotted line shows where a test enters. Tests 9 and 10 run the real nginx of the web image in
+Docker on the built site; the live config is only read as text (test 11).
+
+```mermaid
+flowchart LR
+    V["Visitor: /fr/home"] --> N{"nginx<br/>try_files $uri $uri/ =404"}
+    N -->|"no file"| E["error_page 404 /404.html<br/>status 404"]
+    N -->|"/en/home/ exists"| OK["200, prerendered page"]
+    E --> F["404.html"]
+    B["ng build: route '404'<br/>prerenders 404/index.html"] -->|"cp in build-site.yml (no || true)"| F
+    F --> H["the browser starts Angular on /fr/home<br/>router: '**' → NotFound<br/>(no match before: blank page)"]
+    H --> P["⊥ Page not found · lang=en<br/>Back to the home page → /en/home"]
+
+    T1(["tests 1–2 read 404/index.html"]) -.-> B
+    T3(["test 3 reads build-site.yml"]) -.-> F
+    T47(["tests 4–8: Vitest, component + router"]) -.-> H
+    T910(["tests 9–10: real nginx in Docker,<br/>frontend/docker/nginx.conf"]) -.-> N
+    T11(["test 11: live config text"]) -.-> N
+```
+
+Test list: 1–2 acceptance on `404/index.html` (wording, `lang`, title); 3 `build-site.yml` copies it
+to `404.html`; 4–6 the component (English wording and link, English after `de`, title); 7 the
+routes `/404` and `**`; 8 the `notFound` keys in en, de and pt; 9–10 `npm run acceptance:nginx`
+(`/fr/home` → 404 with the page, `/en/home` and `/` → 200); 11 the live config's lines.
 
 ## 2. Hero
 
@@ -259,3 +287,18 @@ Agreed with the developer on 2026-11-03:
   backend's tests first.
 - **D27. The hero's sentence comes first.** This element puts only the `<h1>` from the snapshot
   into the v1 hero; the rest of the v2 hero is the next element.
+
+Agreed with the developer on 2026-11-03, for HOME-PAGE-06:
+
+- **D28. The 404 page's text** comes from the i18n files (`notFound` in en, de and pt, D9's
+  wording), not from the content API. Only the English page is built.
+- **D29. Its title** is "Alexandre Caldeira — Page not found", with no `noindex`: the status `404`
+  keeps it out of search results.
+- **D30. nginx is tested for real:** `npm run acceptance:nginx` starts
+  `nginxinc/nginx-unprivileged:1.27-alpine` with `frontend/docker/nginx.conf` and the built site
+  mounted; `build-site.yml` runs it after the copy. The live config, applied by hand, gets a text
+  check of the same lines.
+- **D31. `404.html` stays** (`error_page 404 /404.html`), copied from `404/index.html` in
+  `build-site.yml`, without `|| true`.
+- **D32. A `**` route** shows the 404 page too, so the browser's router keeps it on an unknown path
+  such as `/fr/home` instead of a blank page.

@@ -11,7 +11,7 @@ flowchart LR
     P --> DE["/de/home/index.html<br/>html lang=de"]
     P --> PT["/pt/home/index.html<br/>html lang=pt"]
     P --> ROOT["/index.html<br/>English home, no redirect (D1)"]
-    FR["/fr/home"] -.->|no route| NF["404 page"]
+    FR["/fr/home"] -.->|"nginx: 404 + 404.html; router: ** (D32)"| NF["404 page, English (D9)"]
     OLD["/home, /about, ..."] -.->|nginx 301 (D2)| EN
 ```
 
