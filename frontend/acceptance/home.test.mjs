@@ -69,6 +69,10 @@ test('HOME-PAGE-06: the build has the English 404 page with the way back home', 
   assert.match(html, /<a [^>]*href="\/en\/home"[^>]*>\s*Back to the home page\s*<\/a>/, '404 lacks the link home');
 });
 
+test('HOME-PAGE-06: the 404 page is titled with the name and "Page not found" (D29)', () => {
+  assert.equal(page('404').match(/<title>(.*?)<\/title>/)?.[1], 'Alexandre Caldeira — Page not found');
+});
+
 // The build's own backend seeded these (compose.build.yml, db/seed); the page got them from the
 // API through the snapshot (D25). The rest of HOME-HERO-01 to 03 comes with the v2 hero (D27).
 const SEEDED_SENTENCES = [
