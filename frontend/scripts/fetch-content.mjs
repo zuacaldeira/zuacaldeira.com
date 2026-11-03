@@ -7,6 +7,11 @@ export async function fetchContent(api) {
   for (const [page, section] of SECTIONS) {
     for (const lang of LANGUAGES) {
       const response = await fetch(`${api}/api/content/${page}/${section}?lang=${lang}`);
+      if (!response.ok) {
+        throw new Error(
+          `No content for page ${page}, section ${section}, language ${lang} (${response.status})`,
+        );
+      }
       ((snapshot[page] ??= {})[section] ??= {})[lang] = await response.json();
     }
   }

@@ -28,3 +28,12 @@ test('the snapshot holds the hero of every language as the API answers it', asyn
 
   assert.deepEqual(await fetchContent(api.url), stored);
 });
+
+test('HOME-HERO-06: a hero missing in de stops the build, naming page, section and language', async (t) => {
+  const api = await fakeApi({ home: { hero: { en: heroIn('en'), pt: heroIn('pt') } } });
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'No content for page home, section hero, language de (404)',
+  });
+});
