@@ -75,6 +75,12 @@ export interface Translations {
     closeMenu: string;
     openMenu: string;
   };
+  /** The 404 page (D9). `⊥` is notation: the template adds it, the text never holds it. */
+  notFound: {
+    title: string;
+    text: string;
+    back: string;
+  };
   paper: {
     eyebrow: string;
     kinds: { definition: string; lemma: string; theorem: string; proposition: string };

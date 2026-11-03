@@ -81,6 +81,11 @@ export const de: Translations = {
     closeMenu: 'Menü schließen',
     openMenu: 'Menü öffnen',
   },
+  notFound: {
+    title: 'Seite nicht gefunden',
+    text: 'Dieser Weg endet ganz unten: Hier gibt es keine Seite.',
+    back: 'Zur Startseite',
+  },
   paper: {
     eyebrow: 'Aus dem Paper',
     kinds: { definition: 'Definition', lemma: 'Lemma', theorem: 'Satz', proposition: 'Proposition' },

@@ -81,6 +81,12 @@ export const fr: Translations = {
     closeMenu: 'Fermer le menu',
     openMenu: 'Ouvrir le menu',
   },
+  // French is not a language of the site and has no agreed 404 wording: English, as D9 shows.
+  notFound: {
+    title: 'Page not found',
+    text: 'This path ends at the bottom: there is no page here.',
+    back: 'Back to the home page',
+  },
   paper: {
     eyebrow: "Extrait de l'article",
     kinds: { definition: 'Définition', lemma: 'Lemme', theorem: 'Théorème', proposition: 'Proposition' },

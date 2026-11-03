@@ -81,6 +81,11 @@ export const pt: Translations = {
     closeMenu: 'Fechar menu',
     openMenu: 'Abrir menu',
   },
+  notFound: {
+    title: 'Página não encontrada',
+    text: 'Este caminho acaba no fundo: aqui não há nenhuma página.',
+    back: 'Voltar ao início',
+  },
   paper: {
     eyebrow: 'Do artigo',
     kinds: { definition: 'Definição', lemma: 'Lema', theorem: 'Teorema', proposition: 'Proposição' },

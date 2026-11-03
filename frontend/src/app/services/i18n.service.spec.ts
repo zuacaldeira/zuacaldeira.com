@@ -80,6 +80,17 @@ describe('I18nService', () => {
       }
     });
 
+    it.each([
+      ['en', 'Page not found', 'This path ends at the bottom: there is no page here.', 'Back to the home page'],
+      ['de', 'Seite nicht gefunden', 'Dieser Weg endet ganz unten: Hier gibt es keine Seite.', 'Zur Startseite'],
+      ['pt', 'Página não encontrada', 'Este caminho acaba no fundo: aqui não há nenhuma página.', 'Voltar ao início'],
+    ] as [Language, string, string, string][])(
+      'HOME-PAGE-06: %s should hold the agreed 404 wording of D9',
+      (lang, title, text, back) => {
+        expect(ALL_TRANSLATIONS[lang].notFound).toEqual({ title, text, back });
+      },
+    );
+
     it('should have the same number of projects and facharbeiten across languages', () => {
       for (const lang of LANGUAGES) {
         const t = ALL_TRANSLATIONS[lang];
