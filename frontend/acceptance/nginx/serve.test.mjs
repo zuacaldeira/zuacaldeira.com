@@ -48,3 +48,12 @@ test('HOME-PAGE-06: /fr/home answers 404 with the English 404 page', async () =>
   assert.ok(html.includes('<html lang="en"'), 'the answer lacks lang="en"');
   assert.ok(html.includes('Page not found</h1>'), 'the answer is not the 404 page');
 });
+
+test('HOME-PAGE-06: the prerendered pages, the site root included, still answer 200', async () => {
+  for (const path of ['/', '/en/home', '/de/home/']) {
+    const response = await fetch(`${origin}${path}`);
+    const html = await response.text();
+    assert.equal(response.status, 200, `${path} answers ${response.status}`);
+    assert.ok(!html.includes('Page not found</h1>'), `${path} shows the 404 page`);
+  }
+});
