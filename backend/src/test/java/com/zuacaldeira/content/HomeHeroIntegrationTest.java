@@ -119,6 +119,15 @@ class HomeHeroIntegrationTest {
         assertThat(get("/api/content/home/hero").statusCode()).isEqualTo(400);
     }
 
+    @Test
+    @DisplayName("HOME-HERO-16 the default profile never runs the seed")
+    void doesNotSeedWithoutTheSeedProfile() {
+        // Each test empties home_hero first, so ask Flyway what ran on this database instead.
+        assertThat(jdbc.sql("SELECT script FROM flyway_schema_history").query(String.class).list())
+                .contains("V1__create_home_hero.sql")
+                .doesNotContain("R__home_hero.sql");
+    }
+
     private static void assertMissing(HttpResponse<String> response) {
         assertThat(response.statusCode()).isEqualTo(404);
         assertThat(response.body()).isEmpty();
