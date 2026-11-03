@@ -1,5 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { I18nService } from '../../services/i18n.service';
 
@@ -20,5 +21,6 @@ export class NotFound {
   constructor() {
     this.i18n.setLanguage('en');
     inject(DOCUMENT).documentElement.lang = 'en';
+    inject(Title).setTitle(`Alexandre Caldeira — ${this.t().notFound.title}`);
   }
 }

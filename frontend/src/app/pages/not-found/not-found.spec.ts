@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import { NotFound } from './not-found';
 import { I18nService } from '../../services/i18n.service';
 
@@ -33,5 +34,10 @@ describe('NotFound', () => {
     const page = render();
     expect(page.querySelector('h1')?.textContent?.trim()).toBe('⊥ Page not found');
     expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe('en');
+  });
+
+  it('HOME-PAGE-06: should title the page with the name and "Page not found" (D29)', () => {
+    render();
+    expect(TestBed.inject(Title).getTitle()).toBe('Alexandre Caldeira — Page not found');
   });
 });
