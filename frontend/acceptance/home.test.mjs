@@ -102,6 +102,16 @@ test('HOME-PAGE-06: the site build copies the 404 page to 404.html, which nginx 
   );
 });
 
+// The live nginx is installed by hand (CLAUDE.md, "Deployment"), so its config is only read here;
+// the web image's config, with the same lines, runs for real in acceptance/nginx (D30).
+test('HOME-PAGE-06: the live nginx config answers unknown paths with 404 and 404.html', () => {
+  const live = readFileSync(join(import.meta.dirname, '../../infra/live/nginx-site.conf'), 'utf8');
+  for (const line of ['try_files $uri $uri/ =404;', 'error_page 404 /404.html;']) {
+    assert.ok(live.split('\n').some((l) => l.trim() === line), `the live config lacks: ${line}`);
+  }
+  assert.ok(!live.includes('index.csr.html'), 'the live config still falls back to index.csr.html');
+});
+
 test('HOME-PAGE-04: the site build copies only files the build has', () => {
   const sources = [...buildSite().matchAll(/^\s*cp (dist\/\S+) \S+\s*$/gm)].map(([, from]) => from);
   for (const from of sources) {
