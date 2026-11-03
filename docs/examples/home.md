@@ -56,6 +56,41 @@ cases went with the old hero (D10, D11).
 | HOME-HERO-12 | the hero content stored in en | `GET /api/content/home/nope?lang=en` | 404: an unknown section is MISSING (D19) | yes |
 | HOME-HERO-13 | the hero content stored in en | `GET /api/content/nope/hero?lang=en` | 404: an unknown page is MISSING (D19) | yes |
 | HOME-HERO-14 | any stored content | `GET /api/content/home/hero` with no `lang` | 400 (D22) | yes |
+| HOME-HERO-15 | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/home/hero?lang=en`, `de`, `pt` | 200 with the seven fields of HOME-HERO-03 (D23), HOME-HERO-01 with 08, and HOME-HERO-05; every field non-empty (D24) | |
+| HOME-HERO-16 | the default profile, with no `seed` | the backend starts | `home_hero` is empty, so the seed never reaches a database other than the build's (D24) | |
+| HOME-HERO-17 | the content API cannot be reached | the fetch script runs | the build fails with a message naming the API's URL; nothing is deployed (D25) | |
+
+### Diagram: the build's backend (HOME-HERO-06, 15, 16, 17)
+
+The build starts its own MySQL and backend (D20, D26), takes a snapshot of the content, then
+prerenders from the snapshot (D25). The unit tests of the script (06, 17) put a fake HTTP server
+in place of the API; the integration tests (15, 16) put Testcontainers in place of compose.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor CI as CI job / local build
+    box compose.build.yml (real, thrown away after the build)
+        participant DB as MySQL 8.4<br/>Flyway db/migration + db/seed
+        participant API as Spring Boot content API<br/>profile "seed"
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant HTML as dist/.../de/home/index.html
+
+    CI->>DB: up --wait (V1, then R__home_hero: en, de, pt)
+    CI->>API: up --wait
+    CI->>F: run
+    loop each page × section × lang
+        F->>API: GET /api/content/home/hero?lang=de
+        API-->>F: 200, seven fields (HOME-HERO-15)
+    end
+    Note over F: 404 → fail "home / hero / de" (HOME-HERO-06)<br/>no answer → fail naming the URL (HOME-HERO-17)
+    F->>NG: content snapshot (JSON, git-ignored)
+    NG->>HTML: prerender, h1 = "Ich baue Software und beweise, …"
+    CI->>HTML: npm run acceptance (the test enters here)
+    CI->>DB: down
+```
 
 ### Diagram: HOME-HERO-01 (acceptance, at build time)
 
@@ -204,3 +239,17 @@ Agreed with the developer on 2026-11-03:
 - **D23. The English lattice text** is the mock-up's own wording: the label "The lattice 2 to the
   third: software, research and running in parallel." and the caption "2³ · three threads in
   parallel · the atoms are links" (HOME-HERO-03). The seed uses it.
+- **D24. The seed** lives in its own Flyway location, `backend/src/main/resources/db/seed`, as a
+  repeatable script. Only the `seed` profile adds that location, so tests and any other database
+  stay empty (HOME-HERO-16).
+- **D25. The build takes a snapshot.** Before `ng build`, `frontend/scripts/fetch-content.mjs`
+  asks the API for every page, section and language and writes a git-ignored JSON file, which
+  Angular imports. No HTTP at prerender or at runtime, so router links between languages keep
+  their text. A missing answer or an unreachable API stops the build (HOME-HERO-06, 17).
+- **D26. The build's containers:** `backend/Dockerfile` and a root `compose.build.yml` (MySQL 8.4
+  and the backend with the `seed` profile). CI runs compose, the script, `ng build` and the
+  acceptance tests on the runner; `frontend/Dockerfile` only copies the built site into nginx.
+  Both `deploy-next.yml` and `deploy.yml` build this way, and `deploy-next.yml` runs the
+  backend's tests first.
+- **D27. The hero's sentence comes first.** This element puts only the `<h1>` from the snapshot
+  into the v1 hero; the rest of the v2 hero is the next element.
