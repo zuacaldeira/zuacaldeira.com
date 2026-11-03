@@ -96,6 +96,10 @@ jobs:
 
       - run: npm run acceptance
 
+      # The web image's nginx config, run for real on the prepared site (D30): unknown paths
+      # answer 404 with 404.html.
+      - run: npm run acceptance:nginx
+
       - name: Stop the build's backend
         if: always()
         working-directory: .

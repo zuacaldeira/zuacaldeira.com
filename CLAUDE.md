@@ -155,7 +155,8 @@ Prettier config is in `package.json`:
   `compose.build.yml`, takes the snapshot (`npm run content`), builds with
   `ng build --configuration production`, removes `CNAME`, copies the prerendered 404 page
   (`404/index.html`) to `404.html` for nginx (HOME-PAGE-06), writes the preview's `robots.txt` when
-  asked, runs `npm run acceptance`, and uploads the site as the artifact `site`
+  asked, runs `npm run acceptance` and `npm run acceptance:nginx` (the web image's nginx config in
+  Docker, on the prepared site), and uploads the site as the artifact `site`
 - **Live site:** `.github/workflows/deploy.yml` triggers on push to `main` (or `workflow_dispatch`),
   calls the build, then rsyncs the `site` artifact (with `--delete`) over SSH to the VPS at
   `/var/www/zuacaldeira.com/` as user `deploy-zuacaldeira`

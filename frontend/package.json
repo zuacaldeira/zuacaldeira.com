@@ -9,6 +9,7 @@
     "test": "ng test",
     "serve:ssr:zuacaldeira-com": "node dist/zuacaldeira-com/server/server.mjs",
     "acceptance": "node --test acceptance/*.test.mjs",
+    "acceptance:nginx": "node --test acceptance/nginx/*.test.mjs",
     "test:scripts": "node --test scripts/*.test.mjs",
     "content": "node scripts/fetch-content.mjs"
   },
