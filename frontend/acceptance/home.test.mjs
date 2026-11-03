@@ -59,6 +59,16 @@ test('HOME-PAGE-04: the site root is the English home, linked to the German and 
   }
 });
 
+// One English page for every unknown path (D9); nginx serves its copy, 404.html, with status 404.
+test('HOME-PAGE-06: the build has the English 404 page with the way back home', () => {
+  assert.ok(existsSync(join(browser, '404', 'index.html')), 'the build has no 404/index.html');
+  const html = page('404');
+  contains(html, '<html lang="en"', '404');
+  assert.equal(html.match(/<h1[^>]*>(.*?)<\/h1>/s)?.[1].replace(/<[^>]+>/g, '').trim(), '⊥ Page not found');
+  contains(html, 'This path ends at the bottom: there is no page here.', '404');
+  assert.match(html, /<a [^>]*href="\/en\/home"[^>]*>\s*Back to the home page\s*<\/a>/, '404 lacks the link home');
+});
+
 // The build's own backend seeded these (compose.build.yml, db/seed); the page got them from the
 // API through the snapshot (D25). The rest of HOME-HERO-01 to 03 comes with the v2 hero (D27).
 const SEEDED_SENTENCES = [
