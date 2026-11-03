@@ -33,14 +33,17 @@ German and Portuguese labels not listed here come from today's `src/app/i18n/{de
 | HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Construo software e provo que os seus protocolos se cumprem."; en: "Alexandre Caldeira — I build software, and prove its protocols hold."; de: "Alexandre Caldeira — Ich baue Software und beweise, dass ihre Protokolle halten." | reopened: the test holds the old tagline |
 | HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with visible links to `/de/home` and `/pt/home` (SHELL-01); no redirect (D1) | reopened: the test reads `<link rel="alternate">`, and no visible link exists yet |
 | HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about` → `/en/about`, ...) (D2) | |
-| HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | open: the 404 page is not built; `/404.html` is missing from every build so far (see below) |
+| HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | yes (build and web image; the live config waits to be applied on the server, and the check on `next` waits for DNS) |
 
-**Open note on HOME-PAGE-06 (2026-11-03).** The 404 page of D9 was never built: the build has no
-`404/index.html`. The deploys copied it with `cp … || true`, which failed without a word. Both
-nginx configs on `next` still answer unknown paths with `try_files … /index.csr.html` and status
-`200` (the `error_page` lines exist only on `monitor/*` branches). The copy is removed from
-`build-site.yml` until HOME-PAGE-06 is built (the next element); that element adds it back without
-`|| true`, changes both nginx configs, and HOME-PAGE-04's cp check then guards the copy.
+**HOME-PAGE-06, covered on 2026-11-03.** The 404 page of D9 is prerendered at `404/index.html`;
+`build-site.yml` copies it to `404.html` without `|| true` (D31), so a build without it fails, and
+HOME-PAGE-04's cp check guards the copy's source. Both nginx configs answer unknown paths with
+`try_files $uri $uri/ =404` and `error_page 404 /404.html`: the web image's is run for real
+(`npm run acceptance:nginx`, D30), the live one is read as text and still has to be applied on the
+server. The `**` route keeps the browser on the page (D32). Tests: `frontend/acceptance/home.test.mjs`
+(the page, its title, the copy, the live config), `frontend/acceptance/nginx/serve.test.mjs` (404 for
+`/fr/home`, 200 for `/`, `/en/home`, `/de/home/`), `pages/not-found/not-found.spec.ts`,
+`app.routes.spec.ts`, `i18n.service.spec.ts` (D9's wording in en, de and pt).
 
 ### Diagram: HOME-PAGE-06 (the 404 page, D9, D28 to D32)
 
