@@ -74,9 +74,14 @@ for (const [lang, id, sentence] of SEEDED_SENTENCES) {
   });
 }
 
-test('HOME-PAGE-04: the live deploy copies only files the build has', () => {
-  const workflow = readFileSync(join(import.meta.dirname, '../../.github/workflows/deploy.yml'), 'utf8');
-  for (const [, from] of workflow.matchAll(/^\s*cp (dist\/\S+) \S+\s*$/gm)) {
-    assert.ok(existsSync(join(import.meta.dirname, '..', from)), `deploy.yml copies ${from}, which the build lacks`);
+// Both deploys take the site from build-site.yml (D26). Each cp line there must have a source
+// the build made. Zero cp lines is allowed for now: the 404 page's copy waits for HOME-PAGE-06,
+// whose element adds the line back. A cp line ending in `|| true` does not match the pattern
+// and is not checked, so write none.
+test('HOME-PAGE-04: the site build copies only files the build has', () => {
+  const workflow = readFileSync(join(import.meta.dirname, '../../.github/workflows/build-site.yml'), 'utf8');
+  const sources = [...workflow.matchAll(/^\s*cp (dist\/\S+) \S+\s*$/gm)].map(([, from]) => from);
+  for (const from of sources) {
+    assert.ok(existsSync(join(import.meta.dirname, '..', from)), `build-site.yml copies ${from}, which the build lacks`);
   }
 });

@@ -3,15 +3,32 @@
 The redesign is previewed at https://next.zuacaldeira.com. A push to the `next` branch runs
 `.github/workflows/deploy-next.yml`:
 
-1. **test:** `npm ci` and `npm test` in `frontend/`.
-2. **image:** builds `frontend/Dockerfile` with `PREVIEW=true` (which writes a `robots.txt`
-   with `Disallow: /`) and pushes `ghcr.io/zuacaldeira/zuacaldeira.com-web:next` and
+1. **build:** calls `.github/workflows/build-site.yml`, the build shared with the live deploy
+   (D26 in `docs/examples/home.md`):
+   - the backend's tests (`./mvnw verify`, Testcontainers on the runner) and the frontend's
+     (`npm test`, `npm run test:scripts`);
+   - then the build's own MySQL and content API (`compose.build.yml`, seeded from
+     `backend/src/main/resources/db/seed`), `npm run content` for the snapshot, `ng build`,
+     with `preview: true` a `robots.txt` with `Disallow: /`, and `npm run acceptance`;
+   - the built site is the artifact `site`. A section missing in a language, or an API that
+     does not answer, stops the build here (HOME-HERO-06, 17).
+2. **image:** puts the `site` artifact into `frontend/Dockerfile` (nginx only; it no longer
+   builds anything) and pushes `ghcr.io/zuacaldeira/zuacaldeira.com-web:next` and
    `:<commit sha>` to GitHub's container registry.
 3. **deploy:** over SSH as `deploy-zuacaldeira`, runs `sudo /usr/local/bin/zc-next-deploy`,
    which pulls the image with the job's token (passed on stdin, expires with the job) and
    restarts the container. Then a `curl` check.
 
-The live site (`main` → zuacaldeira.com, rsync of static files) is not touched.
+The live site (`main` → zuacaldeira.com, rsync of static files) is not touched. Its workflow,
+`deploy.yml`, builds through the same `build-site.yml` (without `preview`) and rsyncs the
+`site` artifact.
+
+**Building locally** the way CI does, from the repo root:
+```bash
+docker compose -f compose.build.yml up --build --wait
+(cd frontend && npm run content && npm run build && npm run acceptance)
+docker compose -f compose.build.yml down -v
+```
 
 ## How it runs on the host
 The host is the shared VPS `217.154.2.230`: about 18 sites, Docker and Compose installed.
@@ -85,8 +102,9 @@ docker compose up -d
 ```
 
 ## Later
-- **Backend:** the Spring Boot and MySQL containers join this compose file, still bound to
-  `127.0.0.1`; the web container's nginx passes `/api` to the backend.
+- **Backend at runtime:** the Spring Boot and MySQL containers join this compose file, still
+  bound to `127.0.0.1`; the web container's nginx passes `/api` to the backend. (The build's
+  backend in `compose.build.yml` is separate and lives only for one build.)
 - **Old-URL redirects (D2 in `docs/examples/home.md`):** `301` from `/home`, `/about`, ... to
   `/en/...`, in the web container's nginx once the language routes exist.
 

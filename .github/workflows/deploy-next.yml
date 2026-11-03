@@ -19,32 +19,26 @@ env:
   IMAGE: ghcr.io/zuacaldeira/zuacaldeira.com-web
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-
-      - run: npm ci
-
-      - run: npm test
+  # Tests, the build's own backend, the snapshot, the prerender and the acceptance tests.
+  build:
+    uses: ./.github/workflows/build-site.yml
+    with:
+      preview: true
 
   image:
-    needs: test
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
       - uses: actions/checkout@v4
+
+      # The image only packs the built site; frontend/Dockerfile no longer builds it.
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: frontend/dist/zuacaldeira-com/browser
 
       - uses: docker/setup-buildx-action@v3
 
@@ -57,7 +51,6 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: frontend
-          build-args: PREVIEW=true
           push: true
           tags: |
             ${{ env.IMAGE }}:next

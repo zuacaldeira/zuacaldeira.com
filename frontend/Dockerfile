@@ -1,26 +1,11 @@
 # The prerendered site, served by an unprivileged nginx on :8080.
 # On the shared VPS the host nginx terminates TLS and proxies to it (infra/next/).
-
-FROM node:22-bookworm-slim AS build
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
-COPY . .
-RUN npx ng build --configuration production
-
-# The build prerenders the site root (the English home) itself; 404.html is the
-# prerendered 404 route.
-RUN cd dist/zuacaldeira-com/browser \
- && (cp 404/index.html 404.html || true) \
- && rm -f CNAME
-
-# PREVIEW=true keeps the build out of search results (next.zuacaldeira.com).
-ARG PREVIEW=false
-RUN if [ "$PREVIEW" = "true" ]; then \
-      printf 'User-agent: *\nDisallow: /\n' > dist/zuacaldeira-com/browser/robots.txt; \
-    fi
+#
+# The site is built before this image, with the build's own backend
+# (.github/workflows/build-site.yml, D26); the image only packs dist/zuacaldeira-com/browser.
+# Locally: compose.build.yml up, npm run content, npm run build, then docker build frontend.
 
 FROM nginxinc/nginx-unprivileged:1.27-alpine
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist/zuacaldeira-com/browser /usr/share/nginx/html
+COPY dist/zuacaldeira-com/browser /usr/share/nginx/html
 EXPOSE 8080

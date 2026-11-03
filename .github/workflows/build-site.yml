@@ -1,0 +1,108 @@
+name: Build the site
+
+# The one way the site is built, for next (deploy-next.yml) and main (deploy.yml): the backend's
+# tests and the frontend's, then the build's own MySQL and content API (compose.build.yml, D20,
+# D26), the content snapshot (D25), the prerender and the acceptance tests on its output.
+# The result is the artifact `site`: the contents of dist/zuacaldeira-com/browser.
+
+on:
+  workflow_call:
+    inputs:
+      preview:
+        description: Keep the build out of search results (robots.txt with Disallow), for next.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      # setup-java also writes ~/.m2/toolchains.xml, from which the pom picks JDK 21.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      # Unit tests under Surefire, the Testcontainers integration tests under Failsafe.
+      - run: ./mvnw -B verify
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - run: npm test
+
+      - run: npm run test:scripts
+
+  site:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Start the build's backend
+        working-directory: .
+        run: docker compose -f compose.build.yml up --build --wait
+
+      - run: npm ci
+
+      - name: Take the content snapshot
+        run: npm run content
+
+      - run: npx ng build --configuration production
+
+      # The build prerenders the site root (the English home) itself. The 404 page (HOME-PAGE-06,
+      # D9) is not built yet; when it is, copy its 404/index.html to 404.html here, without
+      # `|| true`, so a build without it fails (acceptance: HOME-PAGE-04's cp check).
+      - name: Prepare static output
+        run: |
+          rm -f dist/zuacaldeira-com/browser/CNAME
+
+      - name: Keep the preview out of search results
+        if: inputs.preview
+        run: |
+          printf 'User-agent: *\nDisallow: /\n' > dist/zuacaldeira-com/browser/robots.txt
+
+      - run: npm run acceptance
+
+      - name: Stop the build's backend
+        if: always()
+        working-directory: .
+        run: docker compose -f compose.build.yml down -v
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: frontend/dist/zuacaldeira-com/browser/
+          if-no-files-found: error
+          retention-days: 7

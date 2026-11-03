@@ -1,6 +1,4 @@
-node_modules
-dist
-.angular
-coverage
-scripts
-*.log
+# The image only packs the built site and its nginx config (Dockerfile).
+*
+!docker/nginx.conf
+!dist/zuacaldeira-com/browser
