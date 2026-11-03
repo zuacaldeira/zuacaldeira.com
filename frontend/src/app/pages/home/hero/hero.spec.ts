@@ -1,18 +1,22 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideTestContent } from '../../../content/content.testing';
+import { I18nService } from '../../../services/i18n.service';
 import { Hero } from './hero';
 
 describe('Hero', () => {
   let component: Hero;
   let el: HTMLElement;
 
+  let fixture: ComponentFixture<Hero>;
+
   beforeEach(() => {
-    const fixture = TestBed.configureTestingModule({
-      providers: [provideRouter([])],
-    })
-      .overrideComponent(Hero, { set: { schemas: [NO_ERRORS_SCHEMA] } })
-      .createComponent(Hero);
+    TestBed.configureTestingModule({
+      providers: [provideRouter([]), provideTestContent()],
+    }).overrideComponent(Hero, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('en');
+    fixture = TestBed.createComponent(Hero);
     component = fixture.componentInstance;
     fixture.detectChanges();
     el = fixture.nativeElement as HTMLElement;
@@ -22,11 +26,15 @@ describe('Hero', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render the name and the translated tagline', () => {
+  it('should render the name', () => {
     expect(el.querySelector('.hero__name')?.textContent).toContain('Alexandre');
-    expect(el.querySelector('.hero__tagline')?.textContent?.trim()).toBe(
-      component.t().hero.tagline,
-    );
+  });
+
+  it("shows the sentence of the page's language from the build's snapshot as the h1", async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+
+    expect(el.querySelector('h1')?.textContent?.trim()).toBe('headline de');
   });
 
   it('should show the hero photo with alt text', () => {

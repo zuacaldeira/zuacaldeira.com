@@ -1,3 +1,4 @@
+import { provideTestContent } from '../../content/content.testing';
 import { TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Title } from '@angular/platform-browser';
@@ -9,7 +10,7 @@ describe('Home', () => {
   beforeEach(() => {
     window.matchMedia = vi.fn().mockReturnValue({ matches: false } as MediaQueryList);
     TestBed.configureTestingModule({
-      providers: [provideRouter([])],
+      providers: [provideRouter([]), provideTestContent()],
     }).overrideComponent(Home, { set: { schemas: [NO_ERRORS_SCHEMA] } });
   });
 

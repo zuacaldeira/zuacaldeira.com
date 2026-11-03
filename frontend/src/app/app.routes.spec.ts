@@ -1,3 +1,4 @@
+import { provideTestContent } from './content/content.testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { DOCUMENT, Location } from '@angular/common';
@@ -52,7 +53,7 @@ describe('App Routes', () => {
     beforeEach(() => {
       window.matchMedia = vi.fn().mockReturnValue({ matches: false } as MediaQueryList);
       TestBed.configureTestingModule({
-        providers: [provideRouter(routes)],
+        providers: [provideRouter(routes), provideTestContent()],
       });
     });
 
@@ -82,7 +83,7 @@ describe('App Routes', () => {
   describe('page head', () => {
     beforeEach(() => {
       window.matchMedia = vi.fn().mockReturnValue({ matches: false } as MediaQueryList);
-      TestBed.configureTestingModule({ providers: [provideRouter(routes)] });
+      TestBed.configureTestingModule({ providers: [provideRouter(routes), provideTestContent()] });
     });
 
     const alternates = () =>
