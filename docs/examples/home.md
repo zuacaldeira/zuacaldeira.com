@@ -32,8 +32,8 @@ German and Portuguese labels not listed here come from today's `src/app/i18n/{de
 | HOME-PAGE-02 | the built `/de/home` | it is read | it has `<link rel="alternate" hreflang="en" href="https://zuacaldeira.com/en/home">`, the same for `de` and `pt`, and `hreflang="x-default"` pointing to `/en/home` | yes |
 | HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Construo software e provo que os seus protocolos se cumprem."; en: "Alexandre Caldeira — I build software, and prove its protocols hold."; de: "Alexandre Caldeira — Ich baue Software und beweise, dass ihre Protokolle halten." | reopened: the test holds the old tagline |
 | HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with visible links to `/de/home` and `/pt/home` (SHELL-01); no redirect (D1) | reopened: the test reads `<link rel="alternate">`, and no visible link exists yet |
-| HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about`, `/research`, `/running`, `/contact`), with the path kept exactly, so `/home/` → `/en/home/` (D2, D33, D34); the new location then opens the page | yes (web image and live config text; the check on `next` waits for the push, D35) |
-| HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | yes (build and web image; the live config waits to be applied on the server, and the check on `next` waits for DNS) |
+| HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about`, `/research`, `/running`, `/contact`), with the path kept exactly, so `/home/` → `/en/home/` (D2, D33, D34); the new location then opens the page | yes (web image, live config text, and on `next` on 2026-11-04, D35; the live config waits to be applied on the server, D36) |
+| HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | yes (build, web image, and on `next` on 2026-11-04: `/fr/home` answers `404`, see HOME-PAGE-05's test 7; the live config waits to be applied on the server) |
 
 **HOME-PAGE-06, covered on 2026-11-03.** The 404 page of D9 is prerendered at `404/index.html`;
 `build-site.yml` copies it to `404.html` without `|| true` (D31), so a build without it fails, and
@@ -100,13 +100,46 @@ string kept; 4 following the `Location` gives `200`, `lang="en"`, not the 404 pa
 and `/home/x` still `404`; 6 the live config has the same line; 7 after the push, `curl` on
 https://next.zuacaldeira.com (also HOME-PAGE-06's open check).
 
-**HOME-PAGE-05, covered on 2026-11-04** up to test 7, which waits for the push (D35). Tests 1 to 5
+**HOME-PAGE-05, covered on 2026-11-04.** Tests 1 to 5
 are in `frontend/acceptance/nginx/serve.test.mjs`, test 6 in `frontend/acceptance/home.test.mjs`.
 Tests 4 and 5 were green on their first run; each was shown to bite (the redirect pointed at `/de`
 once; the `$` anchor removed once). Found on the way: nginx answers `/en/home` (and `/de/home`) with
 its own directory redirect to `/en/home/`, as it did before this element, so an old link takes two
 hops, `/home` → `/en/home` → `/en/home/` → `200`, kept as it is (D39). Test 5 therefore does not expect `/en/home` to
 answer `200` directly; test 4 holds that the chain ends on the page with no loop.
+
+**Test 7 on `next` (D35),** run by hand from the developer's main session on 2026-11-04 around
+16:45 UTC, after the push of `fbc4228` and its deploy (run 41869439292). Output verbatim:
+
+```
+$ curl -sI https://next.zuacaldeira.com/home
+HTTP/2 301 
+location: /en/home
+$ curl -sI https://next.zuacaldeira.com/home/
+HTTP/2 301 
+location: /en/home/
+$ curl -sI https://next.zuacaldeira.com/about
+HTTP/2 301 
+location: /en/about
+$ curl -sI https://next.zuacaldeira.com/research?x=1
+HTTP/2 301 
+location: /en/research?x=1
+$ curl -sI https://next.zuacaldeira.com/fr/home
+HTTP/2 404 
+$ curl -sIL https://next.zuacaldeira.com/home
+HTTP/2 301 
+location: /en/home
+HTTP/2 301 
+location: /en/home/
+HTTP/2 200 
+$ curl -sL https://next.zuacaldeira.com/home | grep -o "<html[^>]*lang=..."
+<html lang="en"
+```
+
+The relative `Location` passes through the host nginx unchanged (no `:8080`), the two hops are D39's,
+and the chain ends on the English page. The `/fr/home` line closes HOME-PAGE-06's open check on
+`next`: it answers `404`. Only the status was checked there; that the body is the 404 page is held by
+the web image test (`acceptance/nginx`).
 
 ## 2. Hero
 
