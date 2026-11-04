@@ -4,7 +4,7 @@ export const LANGUAGES: Language[] = ['en', 'de', 'pt'];
 
 /** The path of a page in a language, `/de/about`: links inside the site never drop the prefix. */
 export function pagePath(lang: Language, page: string): string {
-  return '/de/about';
+  return `/${lang}/${page}`;
 }
 
 export interface Translations {

@@ -4,6 +4,10 @@ describe('pagePath', () => {
   it('SHELL-04: puts the language in front of the page, /de/about', () => {
     expect(pagePath('de', 'about')).toBe('/de/about');
   });
+
+  it('SHELL-04: does the same for any language and page, /pt/home', () => {
+    expect(pagePath('pt', 'home')).toBe('/pt/home');
+  });
 });
 
 describe('the languages of the site', () => {
