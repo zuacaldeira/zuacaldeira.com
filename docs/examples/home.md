@@ -32,12 +32,12 @@ German and Portuguese labels not listed here come from today's `src/app/i18n/{de
 | HOME-PAGE-02 | the built `/de/home` | it is read | it has `<link rel="alternate" hreflang="en" href="https://zuacaldeira.com/en/home">`, the same for `de` and `pt`, and `hreflang="x-default"` pointing to `/en/home` | yes |
 | HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Construo software e provo que os seus protocolos se cumprem."; en: "Alexandre Caldeira — I build software, and prove its protocols hold."; de: "Alexandre Caldeira — Ich baue Software und beweise, dass ihre Protokolle halten." | reopened: the test holds the old tagline |
 | HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with visible links to `/de/home` and `/pt/home` (SHELL-01); no redirect (D1) | reopened: the test reads `<link rel="alternate">`, and no visible link exists yet |
-| HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about`, `/research`, `/running`, `/contact`), the query string kept and a trailing slash dropped, so `/home/` → `/en/home` (D2, D33, D34′); the new location then answers `200`: one hop (D46) | yes (web image and live config text, 2026-11-04; the check on `next` follows the push; the live config waits to be applied on the server, D48) |
+| HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about`, `/research`, `/running`, `/contact`), the query string kept and a trailing slash dropped, so `/home/` → `/en/home` (D2, D33, D34′); the new location then answers `200`: one hop (D46) | yes (web image and live config text, 2026-11-04, and on `next` the same day, test 8; the live config waits to be applied on the server, D48) |
 | HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | yes (build, web image, and on `next` on 2026-11-04: `/fr/home` answers `404`, see HOME-PAGE-05's test 7; the live config waits to be applied on the server) |
 | HOME-PAGE-07 | the built site | `sitemap.xml` is read | it lists the 15 pages `https://zuacaldeira.com/{en,de,pt}/{home,about,research,running,contact}`, without a trailing slash, and no old path (`/home`, `/about`, `/research`, `/running`, `/contact`); `/` is not listed (D40, D41) | yes (build) |
 | HOME-PAGE-08 | the built site | each URL in `sitemap.xml` is checked | each is a prerendered page of the build (`<path>/index.html` exists), so the sitemap cannot name a page that is not there (D43) | yes (build) |
-| HOME-PAGE-09 | the built site in the web image's nginx | each canonical URL is requested: the 15 in the sitemap, and every `hreflang` target of the built pages | each answers `200` with no redirect, and is not the 404 page (D46) | yes (web image, 2026-11-04; the check on `next` follows the push) |
-| HOME-PAGE-10 | the same | `/en/home/` is requested | `301` with `Location: /en/home`; any path ending in `/` except `/` loses the slash, the query string kept, so `/de/about/?x=1` → `/de/about?x=1` (D47) | yes (web image and live config text, 2026-11-04; the check on `next` follows the push) |
+| HOME-PAGE-09 | the built site in the web image's nginx | each canonical URL is requested: the 15 in the sitemap, and every `hreflang` target of the built pages | each answers `200` with no redirect, and is not the 404 page (D46) | yes (web image, 2026-11-04, and `/en/home` on `next` the same day, test 8) |
+| HOME-PAGE-10 | the same | `/en/home/` is requested | `301` with `Location: /en/home`; any path ending in `/` except `/` loses the slash, the query string kept, so `/de/about/?x=1` → `/de/about?x=1` (D47) | yes (web image and live config text, 2026-11-04, and on `next` the same day, test 8) |
 
 **HOME-PAGE-06, covered on 2026-11-03.** The 404 page of D9 is prerendered at `404/index.html`;
 `build-site.yml` copies it to `404.html` without `|| true` (D31), so a build without it fails, and
@@ -209,8 +209,8 @@ the 15 built pages answers `200` directly; 4 HOME-PAGE-10, `/en/home/` → `301 
 config has the same lines (D48); 8 after the push, `curl` on https://next.zuacaldeira.com: `/en/home`
 `200`, `/en/home/` `301`, `/home` one `301` then `200`.
 
-**HOME-PAGE-09 and 10, and HOME-PAGE-05 with one hop, covered on 2026-11-04** up to the check on
-`next`. Tests 1 to 6 are in `frontend/acceptance/nginx/serve.test.mjs`, test 7 in
+**HOME-PAGE-09 and 10, and HOME-PAGE-05 with one hop, covered on 2026-11-04,** on `next`
+too (test 8, below). Tests 1 to 6 are in `frontend/acceptance/nginx/serve.test.mjs`, test 7 in
 `frontend/acceptance/home.test.mjs`. Red first: tests 1 (`/en/home` answered `301 /en/home/`), 4
 (`/en/home/` answered `200`), 5's slash test (`Location: /en/home/`) and 7 (the live config lacked
 the lines). Green on the first run, each shown to bite: tests 2 and 3 (the `try_files` fix taken out
@@ -219,6 +219,29 @@ loosened to `^(.*)/$` once: `/` looped, and the whole file went red in its start
 The slash rule sits inside `location /`, not at server level, so the old paths' own location still
 catches `/home/` and an old link takes one hop. The live config's `Location` is absolute
 (`https://zuacaldeira.com/en/home`), the same target (D36).
+
+**Test 8 on `next` (D35),** run by hand from the developer's main session on 2026-11-04 around
+17:40 UTC, after the push of `1b8344d` and its deploy (run 41876588483). Output verbatim:
+
+```
+$ curl -sI https://next.zuacaldeira.com/en/home
+HTTP/2 200 
+$ curl -sI https://next.zuacaldeira.com/en/home/
+HTTP/2 301 
+location: /en/home
+$ curl -sI https://next.zuacaldeira.com/home/
+HTTP/2 301 
+location: /en/home
+$ curl -sIL https://next.zuacaldeira.com/home
+HTTP/2 301 
+location: /en/home
+HTTP/2 200 
+```
+
+The canonical URL answers `200` with no redirect (HOME-PAGE-09), the slashed form answers `301`
+without the slash (HOME-PAGE-10), and an old link, with or without its slash, takes one hop to
+`200` (HOME-PAGE-05, D46). Only the status and `Location` were checked here; that the page is the
+English home is held by the web image tests.
 
 ## 2. Hero
 
