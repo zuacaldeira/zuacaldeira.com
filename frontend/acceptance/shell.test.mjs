@@ -73,6 +73,19 @@ test('SHELL-01: the header of /de/home has EN, DE and PT in a navigation labelle
   ]);
 });
 
+test('SHELL-03: the footer of /pt/home lists English, Deutsch and Português, Português current', () => {
+  const footer = page('pt/home').match(/<footer\b[^>]*>([\s\S]*?)<\/footer>/);
+  assert.ok(footer, 'a footer');
+  const languages = anchors(footer[1], ['hreflang', 'aria-current']).filter(
+    ([, hreflang]) => hreflang,
+  );
+  assert.deepEqual(languages, [
+    ['English', 'en', null],
+    ['Deutsch', 'de', null],
+    ['Português', 'pt', 'page'],
+  ]);
+});
+
 const htmlLang = (html) => html.match(/<html\b[^>]*\slang="([^"]*)"/)?.[1];
 
 test('SHELL-02: on every built page EN, DE and PT lead to the same page in their language, the current one marked', () => {
