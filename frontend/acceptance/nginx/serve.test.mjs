@@ -49,15 +49,6 @@ test('HOME-PAGE-06: /fr/home answers 404 with the English 404 page', async () =>
   assert.ok(html.includes('Page not found</h1>'), 'the answer is not the 404 page');
 });
 
-test('HOME-PAGE-06: the prerendered pages, the site root included, still answer 200', async () => {
-  for (const path of ['/', '/en/home', '/de/home/']) {
-    const response = await fetch(`${origin}${path}`);
-    const html = await response.text();
-    assert.equal(response.status, 200, `${path} answers ${response.status}`);
-    assert.ok(!html.includes('Page not found</h1>'), `${path} shows the 404 page`);
-  }
-});
-
 async function assertServedDirectly(path) {
   const response = await fetch(`${origin}${path}`, { redirect: 'manual' });
   const html = await response.text();
@@ -65,6 +56,10 @@ async function assertServedDirectly(path) {
   assert.ok(!html.includes('Page not found</h1>'), `${path} shows the 404 page`);
   return html;
 }
+
+test('HOME-PAGE-06: the prerendered pages, the site root included, still answer 200', async () => {
+  for (const path of ['/', '/en/home', '/de/home']) await assertServedDirectly(path);
+});
 
 test('HOME-PAGE-09: /en/home answers 200 with no redirect', async () => {
   const html = await assertServedDirectly('/en/home');
