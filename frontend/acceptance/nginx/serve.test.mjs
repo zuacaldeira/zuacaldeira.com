@@ -78,3 +78,14 @@ test('HOME-PAGE-05: an old path keeps its trailing slash and query string', asyn
   await assertMovedTo('/home/', '/en/home/');
   await assertMovedTo('/about?from=cv', '/en/about?from=cv');
 });
+
+test('HOME-PAGE-05: following an old link opens the English page', async () => {
+  for (const path of ['/home', '/home/', '/about', '/research', '/running', '/contact']) {
+    const response = await fetch(`${origin}${path}`);
+    const html = await response.text();
+    assert.ok(response.redirected, `${path} was not redirected`);
+    assert.equal(response.status, 200, `${path} ends with ${response.status}`);
+    assert.ok(html.includes('<html lang="en"'), `${path} does not end on an English page`);
+    assert.ok(!html.includes('Page not found</h1>'), `${path} ends on the 404 page`);
+  }
+});
