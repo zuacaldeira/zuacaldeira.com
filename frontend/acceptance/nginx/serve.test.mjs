@@ -100,6 +100,11 @@ async function assertMovedTo(path, location) {
   assert.equal(response.headers.get('location'), location);
 }
 
+test('HOME-PAGE-10: a page with a trailing slash answers 301 to its URL without it', async () => {
+  await assertMovedTo('/en/home/', '/en/home');
+  await assertMovedTo('/de/about/?x=1', '/de/about?x=1');
+});
+
 test('HOME-PAGE-05: the old /home answers 301 to /en/home', async () => {
   await assertMovedTo('/home', '/en/home');
 });
