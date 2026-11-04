@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { ZcSidenavMenuItems } from './zc-sidenav-menu-items';
@@ -6,9 +6,10 @@ import { I18nService } from '../../../services/i18n.service';
 
 describe('ZcSidenavMenuItems', () => {
   let component: ZcSidenavMenuItems;
+  let fixture: ComponentFixture<ZcSidenavMenuItems>;
 
   beforeEach(() => {
-    const fixture = TestBed.configureTestingModule({
+    fixture = TestBed.configureTestingModule({
       providers: [provideRouter([])],
     })
       .overrideComponent(ZcSidenavMenuItems, { set: { schemas: [NO_ERRORS_SCHEMA] } })
@@ -24,6 +25,15 @@ describe('ZcSidenavMenuItems', () => {
   it('should have 5 translated nav items', () => {
     const items = component.navItems();
     expect(items).toHaveLength(5);
+  });
+
+  it('SHELL-04: links to the pages in Portuguese on a Portuguese page, /pt/about', async () => {
+    TestBed.inject(I18nService).setLanguage('pt');
+    await fixture.whenStable();
+    const hrefs = [...(fixture.nativeElement as HTMLElement).querySelectorAll('a')].map((a) =>
+      a.getAttribute('href'),
+    );
+    expect(hrefs).toEqual(['/pt/home', '/pt/about', '/pt/research', '/pt/running', '/pt/contact']);
   });
 
   it('should translate labels based on current language', () => {

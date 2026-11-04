@@ -1,6 +1,6 @@
 <mat-nav-list>
   @for (item of navItems(); track item.page) {
-    <a mat-list-item [routerLink]="'/' + item.page" routerLinkActive="active-link">
+    <a mat-list-item [routerLink]="item.link" routerLinkActive="active-link">
       <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
       <span matListItemTitle>{{ item.label }}</span>
     </a>
