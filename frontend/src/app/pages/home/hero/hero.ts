@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { CONTENT, SiteLanguage } from '../../../content/content';
+import { CONTENT } from '../../../content/content';
 import { I18nService } from '../../../services/i18n.service';
 import { LatticeWall } from './lattice-wall/lattice-wall';
 
@@ -23,10 +23,7 @@ export class Hero {
   private readonly i18n = inject(I18nService);
   private readonly content = inject(CONTENT);
   readonly t = this.i18n.translations;
-  // The routes only ever set en, de or pt (app.routes.ts); fr is not a site language.
-  readonly headline = computed(
-    () => this.content.home.hero[this.i18n.language() as SiteLanguage].headline,
-  );
+  readonly headline = computed(() => this.content.home.hero[this.i18n.language()].headline);
 
   private readonly host = inject(ElementRef);
   private readonly zone = inject(NgZone);

@@ -1,7 +1,8 @@
 import { Provider } from '@angular/core';
-import { CONTENT, ContentSnapshot, HomeHero, SiteLanguage } from './content';
+import { Language } from '../models/i18n';
+import { CONTENT, ContentSnapshot, HomeHero } from './content';
 
-const heroIn = (lang: SiteLanguage): HomeHero => ({
+const heroIn = (lang: Language): HomeHero => ({
   headline: `headline ${lang}`,
   lede: `lede ${lang}`,
   workCta: `work ${lang}`,

@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import { Language } from '../models/i18n';
 
 /** One language's home hero, as `GET /api/content/home/hero?lang=xx` answers it (D3). */
 export interface HomeHero {
@@ -11,11 +12,9 @@ export interface HomeHero {
   readonly latticeCaption: string;
 }
 
-export type SiteLanguage = 'en' | 'de' | 'pt';
-
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
 export interface ContentSnapshot {
-  readonly home: { readonly hero: Readonly<Record<SiteLanguage, HomeHero>> };
+  readonly home: { readonly hero: Readonly<Record<Language, HomeHero>> };
 }
 
 /** Provided in app.config.ts from content.generated.json; specs provide their own. */

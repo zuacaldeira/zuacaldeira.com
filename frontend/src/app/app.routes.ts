@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { inject } from '@angular/core';
 import { CanActivateChildFn, Routes } from '@angular/router';
-import { Language } from './models/i18n';
+import { Language, LANGUAGES } from './models/i18n';
 import { I18nService } from './services/i18n.service';
 
 const loadHome = () => import('./pages/home/home').then((m) => m.Home);
@@ -18,7 +18,6 @@ const pages: Routes = [
   { path: 'contact', loadComponent: () => import('./pages/contact/contact').then((m) => m.Contact) },
 ];
 
-const SITE_LANGUAGES = ['en', 'de', 'pt'] as const;
 const SITE_URL = 'https://zuacaldeira.com';
 
 /**
@@ -35,7 +34,7 @@ function showInLanguage(lang: Language, page: string): true {
   document.documentElement.lang = lang;
 
   document.head.querySelectorAll('link[rel="alternate"]').forEach((link) => link.remove());
-  for (const [hreflang, prefix] of [...SITE_LANGUAGES.map((l) => [l, l]), ['x-default', 'en']]) {
+  for (const [hreflang, prefix] of [...LANGUAGES.map((l) => [l, l]), ['x-default', 'en']]) {
     const link = document.createElement('link');
     link.rel = 'alternate';
     link.hreflang = hreflang;
@@ -53,7 +52,7 @@ export const routes: Routes = [
     canActivate: [() => showInLanguage('en', '/home')],
     loadComponent: loadHome,
   },
-  ...SITE_LANGUAGES.map((lang) => ({
+  ...LANGUAGES.map((lang) => ({
     path: lang,
     canActivateChild: [inLanguage(lang)],
     children: pages,
