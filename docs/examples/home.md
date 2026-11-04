@@ -72,7 +72,7 @@ to `404.html`; 4–6 the component (English wording and link, English after `de`
 routes `/404` and `**`; 8 the `notFound` keys in en, de and pt; 9–10 `npm run acceptance:nginx`
 (`/fr/home` → 404 with the page, `/en/home` and `/` → 200); 11 the live config's lines.
 
-### Diagram: HOME-PAGE-05 (old links, D2, D33 to D37)
+### Diagram: HOME-PAGE-05 (old links, D2, D33 to D39)
 
 Tests 1 to 5 run the real nginx of the web image in Docker on the built site
 (`frontend/acceptance/nginx/serve.test.mjs`); the live config is only read as text (test 6); test 7
@@ -82,7 +82,7 @@ is a manual check on `next` after the push (D35).
 flowchart LR
     V["Visitor: old link /home or /home/"] --> R{"nginx: location ~ ^/(home|about|research|running|contact)/?$"}
     R -->|"301 Location: /en/home"| V2["Browser: /en/home"]
-    V2 --> N{"nginx: try_files $uri $uri/ =404"}
+    V2 -->|"nginx's directory redirect, 301 /en/home/ (D39)"| N{"nginx: try_files $uri $uri/ =404"}
     N -->|"/en/home/index.html"| OK["200, English home, lang=en"]
     G["/homepage, /home/x, /fr/home"] --> N
     N -->|"no file"| E["404 + 404.html (HOME-PAGE-06)"]
@@ -105,7 +105,7 @@ are in `frontend/acceptance/nginx/serve.test.mjs`, test 6 in `frontend/acceptanc
 Tests 4 and 5 were green on their first run; each was shown to bite (the redirect pointed at `/de`
 once; the `$` anchor removed once). Found on the way: nginx answers `/en/home` (and `/de/home`) with
 its own directory redirect to `/en/home/`, as it did before this element, so an old link takes two
-hops, `/home` → `/en/home` → `/en/home/` → `200`. Test 5 therefore does not expect `/en/home` to
+hops, `/home` → `/en/home` → `/en/home/` → `200`, kept as it is (D39). Test 5 therefore does not expect `/en/home` to
 answer `200` directly; test 4 holds that the chain ends on the page with no loop.
 
 ## 2. Hero
@@ -360,3 +360,7 @@ Agreed with the developer on 2026-11-04, for HOME-PAGE-05:
 - **D38. The next element** is the leftovers of HOME-PAGE-05, not built in it: the sitemap's old
   URLs (`frontend/public/sitemap.xml` still lists `/home`, `/about`, ...) and the Routing section of
   `CLAUDE.md` ("`/` redirects to `/home`").
+- **D39. An old link takes two hops** (agreed 2026-11-04): `/home` → `/en/home` (our `301`) →
+  `/en/home/` (nginx's own directory redirect) → `200`. D34 and HOME-PAGE-05's `Location: /en/home`
+  stay as they are, matching the form without a slash that the `hreflang` links use. Test 4 holds
+  that the chain ends on the English page with no loop.
