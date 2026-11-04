@@ -39,6 +39,15 @@ describe('ZcDesktopMenuItems', () => {
     expect(hrefs()).toEqual(['/de/home', '/de/about', '/de/research', '/de/running']);
   });
 
+  it('SHELL-04: follows a change of language without a reload, /pt/about', async () => {
+    const i18n = TestBed.inject(I18nService);
+    i18n.setLanguage('de');
+    await fixture.whenStable();
+    i18n.setLanguage('pt');
+    await fixture.whenStable();
+    expect(hrefs()).toEqual(['/pt/home', '/pt/about', '/pt/research', '/pt/running']);
+  });
+
   it('should translate labels based on current language', () => {
     const i18nService = TestBed.inject(I18nService);
     i18nService.setLanguage('de');
