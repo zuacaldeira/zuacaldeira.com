@@ -4,7 +4,7 @@
 import { after, before, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const frontend = join(import.meta.dirname, '../..');
@@ -69,6 +69,13 @@ async function assertServedDirectly(path) {
 test('HOME-PAGE-09: /en/home answers 200 with no redirect', async () => {
   const html = await assertServedDirectly('/en/home');
   assert.ok(html.includes('<html lang="en"'), '/en/home is not the English page');
+});
+
+test('HOME-PAGE-09: every URL in the sitemap answers 200 with no redirect', async () => {
+  const sitemap = readFileSync(join(site, 'sitemap.xml'), 'utf8');
+  const paths = [...sitemap.matchAll(/<loc>https:\/\/zuacaldeira\.com(\/[^<]*)<\/loc>/g)].map(([, p]) => p);
+  assert.equal(paths.length, 15, 'the sitemap does not list the 15 pages');
+  for (const path of paths) await assertServedDirectly(path);
 });
 
 async function assertMovedTo(path, location) {
