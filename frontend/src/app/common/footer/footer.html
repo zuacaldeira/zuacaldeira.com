@@ -9,7 +9,7 @@
       <h4>{{ t().footer.pagesHeading }}</h4>
       <ul>
         @for (item of navItems(); track item.page) {
-          <li><a [routerLink]="'/' + item.page">{{ item.label }}</a></li>
+          <li><a [routerLink]="item.link">{{ item.label }}</a></li>
         }
       </ul>
     </div>

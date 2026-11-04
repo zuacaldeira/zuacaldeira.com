@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { Footer } from './footer';
@@ -6,9 +6,10 @@ import { I18nService } from '../../services/i18n.service';
 
 describe('Footer', () => {
   let component: Footer;
+  let fixture: ComponentFixture<Footer>;
 
   beforeEach(() => {
-    const fixture = TestBed.configureTestingModule({
+    fixture = TestBed.configureTestingModule({
       providers: [provideRouter([])],
     })
       .overrideComponent(Footer, { set: { schemas: [NO_ERRORS_SCHEMA] } })
@@ -28,6 +29,15 @@ describe('Footer', () => {
     expect(items).toHaveLength(5);
     expect(items[0].label).toBe('Home');
     expect(items[0].page).toBe('home');
+  });
+
+  it('SHELL-04: links its menu to the pages in German on a German page, /de/about', async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+    const hrefs = [...(fixture.nativeElement as HTMLElement).querySelectorAll('a[href^="/"]')].map(
+      (a) => a.getAttribute('href'),
+    );
+    expect(hrefs).toEqual(['/de/home', '/de/about', '/de/research', '/de/running', '/de/contact']);
   });
 
   it('should update nav labels when language changes', () => {
