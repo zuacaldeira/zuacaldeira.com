@@ -18,10 +18,12 @@ export interface LanguageLink {
 export function languageLinks(url: string): LanguageLink[] {
   // The site root is the English home itself (D1 in home.md).
   const [, here, page] = (url === '/' ? '/en/home' : url).split('/');
+  // Not a page of the site: the 404 page leads to the home pages (SHELL-09).
+  const found = (LANGUAGES as string[]).includes(here);
   return LANGUAGES.map((lang) => ({
     lang,
-    href: pagePath(lang, page),
-    current: lang === here,
+    href: pagePath(lang, found ? page : 'home'),
+    current: found && lang === here,
   }));
 }
 

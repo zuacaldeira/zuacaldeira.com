@@ -16,6 +16,14 @@ describe('languageLinks', () => {
       { lang: 'pt', href: '/pt/home', current: false },
     ]);
   });
+
+  it('SHELL-09: leads the 404 page to the three home pages, none current, /404', () => {
+    expect(languageLinks('/404')).toEqual([
+      { lang: 'en', href: '/en/home', current: false },
+      { lang: 'de', href: '/de/home', current: false },
+      { lang: 'pt', href: '/pt/home', current: false },
+    ]);
+  });
 });
 
 describe('pagePath', () => {
