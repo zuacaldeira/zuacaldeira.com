@@ -32,10 +32,12 @@ German and Portuguese labels not listed here come from today's `src/app/i18n/{de
 | HOME-PAGE-02 | the built `/de/home` | it is read | it has `<link rel="alternate" hreflang="en" href="https://zuacaldeira.com/en/home">`, the same for `de` and `pt`, and `hreflang="x-default"` pointing to `/en/home` | yes |
 | HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Construo software e provo que os seus protocolos se cumprem."; en: "Alexandre Caldeira — I build software, and prove its protocols hold."; de: "Alexandre Caldeira — Ich baue Software und beweise, dass ihre Protokolle halten." | reopened: the test holds the old tagline |
 | HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with visible links to `/de/home` and `/pt/home` (SHELL-01); no redirect (D1) | reopened: the test reads `<link rel="alternate">`, and no visible link exists yet |
-| HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about`, `/research`, `/running`, `/contact`), with the path kept exactly, so `/home/` → `/en/home/` (D2, D33, D34); the new location then opens the page | yes (web image, live config text, and on `next` on 2026-11-04, D35; the live config waits to be applied on the server, D36) |
+| HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about`, `/research`, `/running`, `/contact`), the query string kept and a trailing slash dropped, so `/home/` → `/en/home` (D2, D33, D34′); the new location then answers `200`: one hop (D46) | reopened by D46: the tests hold `/home/` → `/en/home/` and two hops |
 | HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | yes (build, web image, and on `next` on 2026-11-04: `/fr/home` answers `404`, see HOME-PAGE-05's test 7; the live config waits to be applied on the server) |
 | HOME-PAGE-07 | the built site | `sitemap.xml` is read | it lists the 15 pages `https://zuacaldeira.com/{en,de,pt}/{home,about,research,running,contact}`, without a trailing slash, and no old path (`/home`, `/about`, `/research`, `/running`, `/contact`); `/` is not listed (D40, D41) | yes (build) |
 | HOME-PAGE-08 | the built site | each URL in `sitemap.xml` is checked | each is a prerendered page of the build (`<path>/index.html` exists), so the sitemap cannot name a page that is not there (D43) | yes (build) |
+| HOME-PAGE-09 | the built site in the web image's nginx | each canonical URL is requested: the 15 in the sitemap, and every `hreflang` target of the built pages | each answers `200` with no redirect, and is not the 404 page (D46) | |
+| HOME-PAGE-10 | the same | `/en/home/` is requested | `301` with `Location: /en/home`; any path ending in `/` except `/` loses the slash, the query string kept, so `/de/about/?x=1` → `/de/about?x=1` (D47) | |
 
 **HOME-PAGE-06, covered on 2026-11-03.** The 404 page of D9 is prerendered at `404/index.html`;
 `build-site.yml` copies it to `404.html` without `|| true` (D31), so a build without it fails, and
@@ -169,6 +171,40 @@ list and kept because it names the old paths. Each URL still answers `301` to it
 until D42's element is built. Found on the way, not built: the `Language` type, `LANGUAGES` and
 `TRANSLATION_MAP` still have `fr`, with `src/app/i18n/fr.ts`, and the comment on
 `TRANSLATIONS_ENABLED` in `i18n.service.ts` still speaks of pt/de/fr and an English-only site.
+
+### Diagram: HOME-PAGE-09 and 10, and HOME-PAGE-05 with one hop (D46 to D48)
+
+Tests 1 to 6 run the real nginx of the web image in Docker on the built site
+(`frontend/acceptance/nginx/serve.test.mjs`), with redirects not followed; the live config is only
+read as text (test 7); test 8 is by hand on `next` after the push (D35).
+
+```mermaid
+flowchart LR
+    V1["/en/home (sitemap, hreflang)"] --> N{"nginx: try_files $uri<br/>$uri/index.html $uri/ =404"}
+    N -->|"en/home/index.html"| OK["200, no redirect (HOME-PAGE-09)"]
+    V2["/en/home/"] --> S{"slash rule:<br/>rewrite ^(/.+)/$ $1 permanent (D47)"}
+    S -->|"301 /en/home (HOME-PAGE-10)"| V1
+    V3["old link /home or /home/"] --> R{"old-path location (D34′)"}
+    R -->|"301 /en/home: one hop (HOME-PAGE-05)"| V1
+    G["/fr/home, /homepage, /home/x"] --> N
+    N -->|"no file"| E["404 + 404.html (HOME-PAGE-06)"]
+
+    T13(["tests 1–3: real nginx, manual redirect"]) -.-> N
+    T4(["test 4"]) -.-> S
+    T5(["test 5: exactly one hop"]) -.-> R
+    T6(["test 6: guards"]) -.-> G
+    T7(["test 7: live config text"]) -.-> N
+    T8(["test 8: curl on next, by hand"]) -.-> V1
+```
+
+Test list: 1 HOME-PAGE-09, `/en/home` answers `200` with no redirect, `lang="en"`; 2 HOME-PAGE-09,
+every `loc` of the built sitemap answers `200` directly; 3 HOME-PAGE-09, every `hreflang` target of
+the 15 built pages answers `200` directly; 4 HOME-PAGE-10, `/en/home/` → `301 /en/home`,
+`/de/about/?x=1` → `/de/about?x=1`; 5 HOME-PAGE-05, `/home` and `/home/` each take exactly one hop
+(the existing test "keeps its trailing slash" changes with D34′); 6 the guards stay: `/` `200`,
+`/fr/home`, `/homepage`, `/home/x` `404` (the `200` test's `/de/home/` becomes `/de/home`); 7 the live
+config has the same lines (D48); 8 after the push, `curl` on https://next.zuacaldeira.com: `/en/home`
+`200`, `/en/home/` `301`, `/home` one `301` then `200`.
 
 ## 2. Hero
 
@@ -422,7 +458,7 @@ Agreed with the developer on 2026-11-04, for HOME-PAGE-05:
 - **D38. The next element** is the leftovers of HOME-PAGE-05, not built in it: the sitemap's old
   URLs (`frontend/public/sitemap.xml` still lists `/home`, `/about`, ...) and the Routing section of
   `CLAUDE.md` ("`/` redirects to `/home`").
-- **D39. An old link takes two hops** (agreed 2026-11-04): `/home` → `/en/home` (our `301`) →
+- **D39. An old link takes two hops** (agreed 2026-11-04; replaced by D46 the same day): `/home` → `/en/home` (our `301`) →
   `/en/home/` (nginx's own directory redirect) → `200`. D34 and HOME-PAGE-05's `Location: /en/home`
   stay as they are, matching the form without a slash that the `hreflang` links use. Test 4 holds
   that the chain ends on the English page with no loop.
@@ -441,3 +477,25 @@ Agreed with the developer on 2026-11-04, for D38 (HOME-PAGE-07 and 08):
 - **D44. No `<priority>`** in the sitemap.
 - **D45. `CLAUDE.md`** gets a Routing section for the language prefixes, and its i18n section drops
   `'fr'` (French is not supported at the start) and the English fallback for German; one doc commit.
+
+Agreed with the developer on 2026-11-04, for D42 (HOME-PAGE-09 and 10):
+
+- **D46. D39 is replaced:** a canonical URL (`/en/home`, the sitemap's and the `hreflang` links'
+  form) answers `200` directly, from `<path>/index.html`; an old link takes one hop.
+- **D47. A path ending in `/`** answers `301` to the same path without it, the query string kept;
+  `/` itself is left alone. One rule for every path, `rewrite ^(/.+)/$ $1 permanent;`, so new pages
+  need no nginx change.
+- **D34′. D34 changed for the slash only:** the old-path line drops a trailing slash, `/home/` →
+  `/en/home`, so a slashed old link takes one hop too. The query string is still kept.
+- **D48. The live config** gets the same lines, checked as text, and is applied on the server at
+  the first merge of `next` into `main`, as D36.
+
+## Backlog
+
+Found while building, agreed to wait (2026-11-04):
+
+- **`/en`, `/de`, `/pt`** are prerendered as a blank page with the old title
+  (`en/index.html`, no content) and answer `200`. Whether they redirect to `/xx/home` is open.
+- **`/404`** answers `200` with the 404 page (a soft 404); before D47 it answered `301`, then `200`.
+- The built pages' navigation still links to the old paths (`/home`, `/about`, ...), so each click
+  takes a `301`. Covered by SHELL-04, not a new item.
