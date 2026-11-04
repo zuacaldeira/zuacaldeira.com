@@ -89,3 +89,10 @@ test('HOME-PAGE-05: following an old link opens the English page', async () => {
     assert.ok(!html.includes('Page not found</h1>'), `${path} ends on the 404 page`);
   }
 });
+
+test('HOME-PAGE-05: only the old paths themselves are redirected', async () => {
+  for (const path of ['/homepage', '/home/x']) {
+    const response = await fetch(`${origin}${path}`, { redirect: 'manual' });
+    assert.equal(response.status, 404, `${path} answers ${response.status}`);
+  }
+});
