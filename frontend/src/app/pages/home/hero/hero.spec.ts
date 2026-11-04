@@ -37,18 +37,18 @@ describe('Hero', () => {
     expect(el.querySelector('h1')?.textContent?.trim()).toBe('headline de');
   });
 
+  it('SHELL-04: links its buttons to /de/about and /de/contact on a German page', async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+
+    const hrefs = [...el.querySelectorAll('.hero__actions a')].map((a) => a.getAttribute('href'));
+    expect(hrefs).toEqual(['/de/about', '/de/contact']);
+  });
+
   it('should show the hero photo with alt text', () => {
     const img = el.querySelector('.hero__photo img');
     expect(img?.getAttribute('src')).toContain('/assets/hero/');
     expect(img?.getAttribute('alt')?.length).toBeGreaterThan(0);
-  });
-
-  it('should link to /about and /contact', () => {
-    const hrefs = Array.from(el.querySelectorAll('.hero__actions a')).map((a) =>
-      a.getAttribute('href'),
-    );
-    expect(hrefs).toContain('/about');
-    expect(hrefs).toContain('/contact');
   });
 
   it('should emboss the lattice into the glass layer', () => {

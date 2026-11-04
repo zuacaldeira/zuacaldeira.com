@@ -16,8 +16,8 @@
     <p class="hero__name">Alexandre Zua Caldeira</p>
     <h1 class="hero__tagline">{{ headline() }}</h1>
     <div class="hero__actions">
-      <a mat-flat-button routerLink="/about" class="hero__cta">{{ t().hero.aboutCta }}</a>
-      <a mat-stroked-button routerLink="/contact" class="hero__cta-ghost">
+      <a mat-flat-button [routerLink]="link('about')" class="hero__cta">{{ t().hero.aboutCta }}</a>
+      <a mat-stroked-button [routerLink]="link('contact')" class="hero__cta-ghost">
         {{ t().hero.contactCta }}
       </a>
     </div>
