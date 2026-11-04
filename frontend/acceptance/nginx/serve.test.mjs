@@ -58,16 +58,23 @@ test('HOME-PAGE-06: the prerendered pages, the site root included, still answer 
   }
 });
 
+async function assertMovedTo(path, location) {
+  const response = await fetch(`${origin}${path}`, { redirect: 'manual' });
+  assert.equal(response.status, 301, `${path} answers ${response.status}`);
+  assert.equal(response.headers.get('location'), location);
+}
+
 test('HOME-PAGE-05: the old /home answers 301 to /en/home', async () => {
-  const response = await fetch(`${origin}/home`, { redirect: 'manual' });
-  assert.equal(response.status, 301);
-  assert.equal(response.headers.get('location'), '/en/home');
+  await assertMovedTo('/home', '/en/home');
 });
 
 test('HOME-PAGE-05: every other old path answers 301 to its English page', async () => {
   for (const page of ['about', 'research', 'running', 'contact']) {
-    const response = await fetch(`${origin}/${page}`, { redirect: 'manual' });
-    assert.equal(response.status, 301, `/${page} answers ${response.status}`);
-    assert.equal(response.headers.get('location'), `/en/${page}`);
+    await assertMovedTo(`/${page}`, `/en/${page}`);
   }
+});
+
+test('HOME-PAGE-05: an old path keeps its trailing slash and query string', async () => {
+  await assertMovedTo('/home/', '/en/home/');
+  await assertMovedTo('/about?from=cv', '/en/about?from=cv');
 });
