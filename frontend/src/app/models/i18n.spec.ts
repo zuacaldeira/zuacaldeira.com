@@ -1,4 +1,10 @@
-import { Language, LANGUAGES } from './i18n';
+import { Language, LANGUAGES, pagePath } from './i18n';
+
+describe('pagePath', () => {
+  it('SHELL-04: puts the language in front of the page, /de/about', () => {
+    expect(pagePath('de', 'about')).toBe('/de/about');
+  });
+});
 
 describe('the languages of the site', () => {
   it('I18N-02: are English, German and Portuguese, in that order', () => {
