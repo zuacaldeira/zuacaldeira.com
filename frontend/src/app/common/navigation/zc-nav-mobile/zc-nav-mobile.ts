@@ -8,6 +8,7 @@ import { filter } from 'rxjs/operators';
 import { ZcSidenavMenuItems } from '../../menu-items/zc-sidenav-menu-items/zc-sidenav-menu-items';
 import { Footer } from '../../footer/footer';
 import { ThemeToggle } from '../../theme-toggle/theme-toggle';
+import { LanguageLinks } from '../../language-links/language-links';
 import { I18nService } from '../../../services/i18n.service';
 import { NavItem } from '../../../models/models';
 import { pagePath } from '../../../models/i18n';
@@ -24,6 +25,7 @@ import { pagePath } from '../../../models/i18n';
     ZcSidenavMenuItems,
     Footer,
     ThemeToggle,
+    LanguageLinks,
   ],
   templateUrl: './zc-nav-mobile.html',
   styleUrl: './zc-nav-mobile.css',

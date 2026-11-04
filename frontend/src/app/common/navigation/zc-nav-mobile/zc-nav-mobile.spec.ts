@@ -21,6 +21,18 @@ describe('ZcNavMobile', () => {
     expect(logo?.getAttribute('href')).toBe('/de/home');
   });
 
+  it('SHELL-01: shows EN, DE and PT in the phone bar', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    await fixture.whenStable();
+    const codes = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll('header app-language-links a'),
+    ].map((a) => a.textContent?.trim());
+    expect(codes).toEqual(['EN', 'DE', 'PT']);
+  });
+
   it('should create', () => {
     const fixture = TestBed.configureTestingModule({
       providers: [provideRouter([])],
