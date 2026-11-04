@@ -40,7 +40,7 @@ URL. Specs never read the file: they use `provideTestContent()` from `content/co
 
 ```
 src/app/
-  common/           # Shared UI: navigation/, footer/, theme-toggle/, section-header/
+  common/           # Shared UI: navigation/, footer/, language-links/, theme-toggle/, section-header/
   pages/            # Route components: home/, about/, research/, work/, paedagogik/, running/, contact/
   services/         # ThemeService, ContentService, I18nService
   models/           # TypeScript interfaces (including i18n.ts)
@@ -63,6 +63,10 @@ Routes defined in `src/app/app.routes.ts`. All lazy-loaded:
   makes `/de/about` from the current language and a page name (`NavItem.page`, `about`). Never
   write `routerLink="/about"`; the old path answers `301`. `/` and the 404 page are English, so
   their links go to `/en/...`. The acceptance tests check every built page's links (SHELL-04)
+- The language links are the one exception: `LanguageLinks` (`common/language-links/`, `EN DE PT`
+  in both bars, the names in the footer) leads to the same page in each language, with `hreflang`;
+  `languageLinks(url)` in `models/i18n.ts` makes them from the router's URL, and the 404 page's lead
+  to the three home pages (SHELL-01 to 03, SHELL-09)
 
 `/work` and `/paedagogik` are **hidden** — their page components still live in `pages/work/` and
 `pages/paedagogik/` (with tests), but the routes and the `ContentService.navItems` entries are
@@ -147,7 +151,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 30 test files, 185 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-04) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 30 test files, 194 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-04) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 

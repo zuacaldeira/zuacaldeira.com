@@ -10,22 +10,22 @@ the home hero, because the hero's page needs them.
 
 | ID | Given | When | Then | Covered |
 |----|-------|------|------|---------|
-| SHELL-01 | the built `/de/home` | the header is read | a navigation labelled "Sprache" has three links, `EN`, `DE`, `PT`, to `/en/home`, `/de/home`, `/pt/home`; each has `hreflang`, `lang` and an accessible name that gives the language's name in that language and its code, "English (EN)", "Deutsch (DE)", "Português (PT)" (WCAG 2.5.3); `DE` has `aria-current` and is underlined | |
-| SHELL-02 | a visitor on `/de/research` | they follow `PT` | they reach `/pt/research`: the same page in the other language | |
-| SHELL-03 | the built `/pt/home` | the footer is read | it lists English, Deutsch, Português as links, Português with `aria-current` | |
+| SHELL-01 | the built `/de/home` | the header is read | a navigation labelled "Sprache" has three links, `EN`, `DE`, `PT`, to `/en/home`, `/de/home`, `/pt/home`; each has `hreflang`, `lang` and an accessible name that gives the language's name in that language and its code, "English (EN)", "Deutsch (DE)", "Português (PT)" (WCAG 2.5.3); `DE` has `aria-current` and is underlined | yes (build and unit, 2026-11-04; the underline not yet seen in a browser) |
+| SHELL-02 | a visitor on `/de/research` | they follow `PT` | they reach `/pt/research`: the same page in the other language | yes (build, every page, and unit, 2026-11-04) |
+| SHELL-03 | the built `/pt/home` | the footer is read | it lists English, Deutsch, Português as links, Português with `aria-current` | yes (build and unit, 2026-11-04) |
 | SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read; the language links (they carry `hreflang`) go to the same page in their own language instead (SHELL-02) | yes (build, 2026-11-04; P-01 to P-04) |
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | |
 | SHELL-06 | a phone (the CDK `Handset` query) | the page loads | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | |
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
 | SHELL-08 | the phone's menu is open | it is read | it lists the four navigation links and the contact link, each at least 44 px high, translated; Escape or the close button closes it and focus returns to the menu button | |
-| SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | |
+| SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04) |
 | SHELL-10 | a keyboard user on `/de/home` | they press Tab once | focus lands on "Zum Hauptinhalt springen", visibly, and following it moves to `<main>` | |
 | SHELL-11 | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`; no link drops the language prefix (waits for the Software and Texte pages) | |
-| SHELL-01-P-01 | a language page in the build | its language links are read | exactly one is `aria-current`, the page's own language; none, or two, is refused | |
-| SHELL-02-P-01 | `/de/research` | its language links are read | a language link to another page (`PT` → `/pt/home`) is refused | |
-| SHELL-02-P-02 | any built page | its language links are read | a link whose `hreflang` and `href` disagree (`hreflang="pt"`, `/en/research`) is refused, here and by SHELL-04 | |
-| SHELL-02-P-03 | any built page | its language links are read | a language the site does not offer (a fourth link, `/fr/research`) is refused | |
-| SHELL-02-P-04 | a visitor in the browser on `/de/research` | they move to `/de/about` | `PT` follows at once to `/pt/about`; links left at `/pt/research` are refused | |
+| SHELL-01-P-01 | a language page in the build | its language links are read | exactly one is `aria-current`, the page's own language; none, or two, is refused | yes (break in the build) |
+| SHELL-02-P-01 | `/de/research` | its language links are read | a language link to another page (`PT` → `/pt/home`) is refused | yes (break in the build) |
+| SHELL-02-P-02 | any built page | its language links are read | a link whose `hreflang` and `href` disagree (`hreflang="pt"`, `/en/research`) is refused, here and by SHELL-04 | yes (break in the build, both) |
+| SHELL-02-P-03 | any built page | its language links are read | a language the site does not offer (a fourth link, `/fr/research`) is refused | yes (break in the build) |
+| SHELL-02-P-04 | a visitor in the browser on `/de/research` | they move to `/de/about` | `PT` follows at once to `/pt/about`; links left at `/pt/research` are refused | yes (unit) |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -156,6 +156,34 @@ SHELL-02-P-04, the links follow a navigation. Then the key `common.language` in 
 `LanguageSwitcher` deleted (D2 in `i18n.md`). Breaks in the built files for SHELL-02-P-01 to P-03
 and SHELL-01-P-01, each declared and restored. The underline of the current link is styling,
 reviewed visually.
+
+**Done 2026-11-04.** A2 (SHELL-02) went red with `en/home: expected [ 'de /de/home', 'en /en/home
+current', 'pt /pt/home' ] but got []`, and green after the unit tests 1 to 12. SHELL-04 then went red as
+foreseen (`de/home → /en/home` on every page) and green with its exception. A1 and A3 were green on
+their first run and shown to bite, each by a declared break in the built file, restored with md5
+checked. SHELL-01-P-01 (`aria-current` moved from DE to PT on `de/home`) turned A1 and A2 red. The
+footer's `aria-current` taken off Português on `pt/home` turned A3 and A2 red. The other breaks were in
+`de/research`. P-01 (`PT` → `/pt/home`) and P-03 (a fourth link, `/fr/research`) turned A2 red. P-02
+(`hreflang="pt"` with `/en/research`) at first turned only A2 red, because SHELL-04 skipped every
+`hreflang` link. SHELL-04 now checks a language link against the language its `hreflang` names, and went
+red too (`de/research → /en/research`).
+
+Unit 5's example is `/fr/research`, not `/fr/home`. On `/fr/home`, a break that takes any two letters
+for a language gave the same links, so the test did not bite. Unit 12 (P-04) was red first
+(`/xx/research` after moving to `/de/about`). `SITE_PAGES` (in `models/i18n.ts`) names the pages each
+language has; a route spec ties it to the routes. The footer's SHELL-04 unit test now reads its menu only.
+
+Leftovers, not built:
+- **Not seen in a browser.** The styles are the mock-up's, with the tokens, but no screenshot could be
+  taken in the session. Review the header and footer on the preview at 390, 768 and 1280
+  (`docs/design.md`).
+- **The initial bundle is over its warning budget:** 509.92 kB against 500 kB (the error budget is
+  1 MB). Not checked whether it was over before this element.
+- **The footer's list** sits in its bottom row, without a heading, until SHELL-07 rebuilds the footer.
+- **The bars' order** (mark, `EN DE PT`, theme, menu on the phone) and the 44 px check belong to
+  SHELL-06.
+- `app.routes.spec.ts` and `i18n/de.ts`, `en.ts`, `pt.ts` were not Prettier-clean before this element;
+  left as they were.
 
 ## Width of the header
 
