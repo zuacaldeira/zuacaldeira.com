@@ -63,3 +63,11 @@ test('HOME-PAGE-05: the old /home answers 301 to /en/home', async () => {
   assert.equal(response.status, 301);
   assert.equal(response.headers.get('location'), '/en/home');
 });
+
+test('HOME-PAGE-05: every other old path answers 301 to its English page', async () => {
+  for (const page of ['about', 'research', 'running', 'contact']) {
+    const response = await fetch(`${origin}/${page}`, { redirect: 'manual' });
+    assert.equal(response.status, 301, `/${page} answers ${response.status}`);
+    assert.equal(response.headers.get('location'), `/en/${page}`);
+  }
+});
