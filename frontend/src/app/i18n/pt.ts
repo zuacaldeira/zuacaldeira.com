@@ -80,6 +80,7 @@ export const pt: Translations = {
     menu: 'Menu',
     closeMenu: 'Fechar menu',
     openMenu: 'Abrir menu',
+    language: 'Língua',
   },
   notFound: {
     title: 'Página não encontrada',

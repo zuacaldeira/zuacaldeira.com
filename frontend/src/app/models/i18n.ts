@@ -2,6 +2,13 @@ export type Language = 'en' | 'de' | 'pt';
 
 export const LANGUAGES: Language[] = ['en', 'de', 'pt'];
 
+/** Each language's name in that language; the same in every translation. */
+export const LANGUAGE_NAMES: Record<Language, string> = {
+  en: 'English',
+  de: 'Deutsch',
+  pt: 'Português',
+};
+
 /** The pages each language has, as the routes name them (`app.routes.ts`). */
 export const SITE_PAGES: readonly string[] = ['home', 'about', 'research', 'running', 'contact'];
 
@@ -103,6 +110,8 @@ export interface Translations {
     menu: string;
     closeMenu: string;
     openMenu: string;
+    /** The label of the language links' navigation (SHELL-01). */
+    language: string;
   };
   /** The 404 page (D9). `⊥` is notation: the template adds it, the text never holds it. */
   notFound: {
