@@ -50,8 +50,15 @@ src/app/
 ## Routing
 
 Routes defined in `src/app/app.routes.ts`. All lazy-loaded:
-- `/` redirects to `/home`
-- `/home`, `/about`, `/research`, `/running`, `/contact`
+- `/` is the prerendered English home itself, not a redirect (D1 in `docs/examples/home.md`)
+- `/en/...`, `/de/...`, `/pt/...`: `home`, `about`, `research`, `running`, `contact` under each
+  language prefix. The prefix sets the language, `<html lang>` and the `hreflang` alternates.
+- `/404` and `**`: the English 404 page; nginx serves its copy `404.html` with status 404
+  (HOME-PAGE-06)
+- The old paths (`/home`, `/about`, `/research`, `/running`, `/contact`) answer `301` to their
+  English pages in nginx, not in Angular (HOME-PAGE-05)
+- `public/sitemap.xml` is written by hand and lists every page in en, de and pt; the acceptance
+  tests check it against the build (HOME-PAGE-07, 08)
 
 `/work` and `/paedagogik` are **hidden** — their page components still live in `pages/work/` and
 `pages/paedagogik/` (with tests), but the routes and the `ContentService.navItems` entries are
@@ -105,11 +112,14 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - Signal-based language switching with computed `translations` signal
 - SSR-safe with `isPlatformBrowser` guard
 - Persists preference to `localStorage` (`zc-lang` key)
-- Auto-detects browser language on first visit
+- The route's language prefix sets the language (`setLanguage`); browser detection and the saved
+  preference are off while `TRANSLATIONS_ENABLED` is `false`
 - `language` signal holds current `Language`, `translations` signal holds current `Translations` object
 
 **Type-safe translations** via the `Translations` interface in `models/i18n.ts`
-- Supported languages: `'en' | 'pt' | 'de' | 'fr'` (English and Portuguese implemented, German and French fall back to English)
+- The site's languages are English, German and Portuguese (`en`, `de`, `pt`), each a full
+  translation with its own URL prefix; there is no fallback to English. French is not supported.
+  (The `Language` type and `src/app/i18n/fr.ts` still have `fr`, a leftover.)
 - Translation files live in `src/app/i18n/` — one file per language exporting a `Translations` object
 - Covers all sections: nav, hero, about, research, work, paedagogik, running, contact, footer, common labels
 - Content arrays (`projects`, `facharbeiten`) are also translated
