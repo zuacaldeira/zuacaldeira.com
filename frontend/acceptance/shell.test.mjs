@@ -18,24 +18,25 @@ const PAGES = [
 ];
 
 // Links inside the site: an `<a href>` that starts with `/`. Links to files (with an extension,
-// such as the paper's PDF) are not pages. The language links (with `hreflang`) lead to the other
-// languages on purpose; SHELL-02 reads them.
-const siteLinks = (html) =>
+// such as the paper's PDF) are not pages. Each comes with the language it must keep: the page's,
+// or for a language link (SHELL-02) the one its `hreflang` names (SHELL-02-P-02).
+const siteLinks = (html, pageLang) =>
   [...html.matchAll(/<a\b[^>]*>/g)]
-    .map(([tag]) => tag)
-    .filter((tag) => !/\shreflang="/.test(tag))
-    .map((tag) => tag.match(/\shref="(\/[^"#?]*)[^"]*"/)?.[1])
-    .filter((href) => href && !/\.[a-z0-9]+$/i.test(href));
+    .map(([tag]) => ({
+      href: tag.match(/\shref="(\/[^"#?]*)[^"]*"/)?.[1],
+      lang: tag.match(/\shreflang="([^"]*)"/)?.[1] ?? pageLang,
+    }))
+    .filter(({ href }) => href && !/\.[a-z0-9]+$/i.test(href));
 
 test('SHELL-04: every link inside the site on every built page keeps its language and is a page of the build', () => {
-  const wrong = PAGES.flatMap(([route, lang]) =>
-    siteLinks(page(route))
+  const wrong = PAGES.flatMap(([route, pageLang]) =>
+    siteLinks(page(route), pageLang)
       .filter(
-        (href) =>
+        ({ href, lang }) =>
           !new RegExp(`^/${lang}/[a-z-]+$`).test(href) ||
           !existsSync(join(browser, href, 'index.html')),
       )
-      .map((href) => `${route} → ${href}`),
+      .map(({ href }) => `${route} → ${href}`),
   );
   assert.deepEqual([...new Set(wrong)], []);
 });
