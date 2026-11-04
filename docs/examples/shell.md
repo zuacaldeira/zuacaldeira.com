@@ -13,7 +13,7 @@ the home hero, because the hero's page needs them.
 | SHELL-01 | the built `/de/home` | the header is read | a navigation labelled "Sprache" has three links, `EN`, `DE`, `PT`, to `/en/home`, `/de/home`, `/pt/home`; each has `hreflang`, `lang` and the accessible name of its language in that language (English, Deutsch, Português); `DE` has `aria-current` and is underlined | |
 | SHELL-02 | a visitor on `/de/research` | they follow `PT` | they reach `/pt/research`: the same page in the other language | |
 | SHELL-03 | the built `/pt/home` | the footer is read | it lists English, Deutsch, Português as links, Português with `aria-current` | |
-| SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read | |
+| SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read | yes (build, 2026-11-04; P-01 to P-04) |
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | |
 | SHELL-06 | a phone (the CDK `Handset` query) | the page loads | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | |
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
@@ -84,6 +84,21 @@ logo → `/de/home`; 9 the footer's menu → `/de/…`; 10 the hero's buttons �
 P-02 another language `/en/about` on a German page, P-03 a trailing slash `/de/about/`, P-04 a page
 not built `/de/software`; P-02 to P-04 each by a declared break in the built
 `de/home/index.html`, then restored.
+
+**Done 2026-11-04.** A went red with `en/home → /home`, `en/home → /about`, … on every page
+(P-01) and green after the unit tests 1 to 10. The breaks in the built `de/home/index.html`, each
+restored to the same file (md5 checked), turned A red with: P-02 `de/home → /en/about`, P-03
+`de/home → /de/about/`, P-04 `de/home → /de/software`. Tests 4 and 5 were green on their first
+run and shown to bite: test 4 by reading the language once when the menu is made, test 5 by
+removing `routerLinkActive`.
+
+Leftovers, not built:
+- The desktop menu's `routerLinkActiveOptions` (`exact` for Home) no longer changes anything: with
+  it removed, test 5 stayed green, because `/de/home` is no prefix of another page. It can go.
+- The phone menu and the footer build the same list (label and link per nav item); a third copy
+  would be the moment to share it.
+- `zc-sidenav-menu-items.ts` and `footer.ts` were not Prettier-clean before this element (a
+  missing trailing comma); left as they were.
 
 ## Width of the header
 

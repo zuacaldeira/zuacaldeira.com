@@ -578,4 +578,5 @@ Found while building, agreed to wait (2026-11-04):
   (`en/index.html`, no content) and answer `200`. Whether they redirect to `/xx/home` is open.
 - **`/404`** answers `200` with the 404 page (a soft 404); before D47 it answered `301`, then `200`.
 - The built pages' navigation still links to the old paths (`/home`, `/about`, ...), so each click
-  takes a `301`. Covered by SHELL-04, not a new item.
+  takes a `301`. Covered by SHELL-04, not a new item. (Done 2026-11-04: every link inside the
+  site keeps its language, see `shell.md`.)

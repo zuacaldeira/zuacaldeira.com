@@ -59,6 +59,10 @@ Routes defined in `src/app/app.routes.ts`. All lazy-loaded:
   English pages in nginx, not in Angular (HOME-PAGE-05)
 - `public/sitemap.xml` is written by hand and lists every page in en, de and pt; the acceptance
   tests check it against the build (HOME-PAGE-07, 08)
+- Links inside the site keep the page's language: `pagePath(lang, page)` in `models/i18n.ts`
+  makes `/de/about` from the current language and a page name (`NavItem.page`, `about`). Never
+  write `routerLink="/about"`; the old path answers `301`. `/` and the 404 page are English, so
+  their links go to `/en/...`. The acceptance tests check every built page's links (SHELL-04)
 
 `/work` and `/paedagogik` are **hidden** — their page components still live in `pages/work/` and
 `pages/paedagogik/` (with tests), but the routes and the `ContentService.navItems` entries are
@@ -143,7 +147,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 30 test files, 176 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-04) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 30 test files, 185 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-04) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
