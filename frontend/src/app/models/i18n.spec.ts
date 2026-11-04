@@ -17,6 +17,14 @@ describe('languageLinks', () => {
     ]);
   });
 
+  it('SHELL-02: drops the fragment the skip link adds, /de/research#main-content', () => {
+    expect(languageLinks('/de/research#main-content').map((link) => link.href)).toEqual([
+      '/en/research',
+      '/de/research',
+      '/pt/research',
+    ]);
+  });
+
   it('SHELL-09: leads the 404 page to the three home pages, none current, /404', () => {
     expect(languageLinks('/404')).toEqual([
       { lang: 'en', href: '/en/home', current: false },
