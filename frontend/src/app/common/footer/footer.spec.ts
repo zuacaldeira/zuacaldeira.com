@@ -27,7 +27,7 @@ describe('Footer', () => {
     const items = component.navItems();
     expect(items).toHaveLength(5);
     expect(items[0].label).toBe('Home');
-    expect(items[0].route).toBe('/home');
+    expect(items[0].page).toBe('home');
   });
 
   it('should update nav labels when language changes', () => {

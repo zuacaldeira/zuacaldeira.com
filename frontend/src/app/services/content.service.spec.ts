@@ -14,14 +14,14 @@ describe('ContentService', () => {
     });
 
     it('should not link to the hidden work and paedagogik pages', () => {
-      const routes = service.navItems.map((item) => item.route);
-      expect(routes).not.toContain('/work');
-      expect(routes).not.toContain('/paedagogik');
+      const pages = service.navItems.map((item) => item.page);
+      expect(pages).not.toContain('work');
+      expect(pages).not.toContain('paedagogik');
     });
 
-    it('should have valid route paths starting with /', () => {
+    it('should name pages without a slash or a language, which pagePath adds', () => {
       for (const item of service.navItems) {
-        expect(item.route).toMatch(/^\//);
+        expect(item.page).toMatch(/^[a-z]+$/);
       }
     });
 
@@ -32,12 +32,12 @@ describe('ContentService', () => {
       }
     });
 
-    it('should include Home as first item routing to /home', () => {
-      expect(service.navItems[0]).toEqual({ label: 'Home', route: '/home', icon: 'home' });
+    it('should include Home as first item, the home page', () => {
+      expect(service.navItems[0]).toEqual({ label: 'Home', page: 'home', icon: 'home' });
     });
 
     it('should include Contact as last item', () => {
-      expect(service.navItems[service.navItems.length - 1].route).toBe('/contact');
+      expect(service.navItems[service.navItems.length - 1].page).toBe('contact');
     });
   });
 

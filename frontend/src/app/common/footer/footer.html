@@ -8,8 +8,8 @@
     <div class="footer-nav">
       <h4>{{ t().footer.pagesHeading }}</h4>
       <ul>
-        @for (item of navItems(); track item.route) {
-          <li><a [routerLink]="item.route">{{ item.label }}</a></li>
+        @for (item of navItems(); track item.page) {
+          <li><a [routerLink]="'/' + item.page">{{ item.label }}</a></li>
         }
       </ul>
     </div>

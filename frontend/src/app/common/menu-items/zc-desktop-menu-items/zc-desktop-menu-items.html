@@ -1,9 +1,9 @@
 <div class="desktop-menu-items" role="navigation" aria-label="Main navigation">
-  @for (item of navItems(); track item.route) {
+  @for (item of navItems(); track item.page) {
     <a
       [routerLink]="item.link"
       routerLinkActive="active-link"
-      [routerLinkActiveOptions]="{ exact: item.route === '/home' }"
+      [routerLinkActiveOptions]="{ exact: item.page === 'home' }"
     >
       {{ item.label }}
     </a>

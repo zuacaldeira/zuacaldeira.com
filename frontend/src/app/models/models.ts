@@ -1,6 +1,9 @@
+import { Translations } from './i18n';
+
 export interface NavItem {
   label: string;
-  route: string;
+  /** The page's path without its language, `about`; links get it from `pagePath`. */
+  page: keyof Translations['nav'];
   icon: string;
 }
 

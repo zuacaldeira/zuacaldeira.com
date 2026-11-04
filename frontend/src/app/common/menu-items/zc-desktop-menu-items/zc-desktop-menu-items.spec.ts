@@ -30,7 +30,7 @@ describe('ZcDesktopMenuItems', () => {
   it('should have 4 translated nav items (contact is the toolbar button, not a text link)', () => {
     const items = component.navItems();
     expect(items).toHaveLength(4);
-    expect(items.map((i) => i.route)).not.toContain('/contact');
+    expect(items.map((i) => i.page)).not.toContain('contact');
   });
 
   it('SHELL-04: links to the pages in German on a German page, without contact', async () => {

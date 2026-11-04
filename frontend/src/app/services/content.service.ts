@@ -14,12 +14,12 @@ import {
 })
 export class ContentService {
   readonly navItems: readonly NavItem[] = [
-    { label: 'Home', route: '/home', icon: 'home' },
-    { label: 'About', route: '/about', icon: 'person' },
-    { label: 'Research', route: '/research', icon: 'science' },
+    { label: 'Home', page: 'home', icon: 'home' },
+    { label: 'About', page: 'about', icon: 'person' },
+    { label: 'Research', page: 'research', icon: 'science' },
     // Work and Pädagogik are hidden until their content is fine-tuned; see app.routes.ts.
-    { label: 'Running', route: '/running', icon: 'directions_run' },
-    { label: 'Contact', route: '/contact', icon: 'mail' },
+    { label: 'Running', page: 'running', icon: 'directions_run' },
+    { label: 'Contact', page: 'contact', icon: 'mail' },
   ];
 
   readonly socialLinks: readonly SocialLink[] = [
