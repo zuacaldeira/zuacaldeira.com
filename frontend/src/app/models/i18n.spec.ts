@@ -1,4 +1,14 @@
-import { Language, LANGUAGES, pagePath } from './i18n';
+import { Language, LANGUAGES, languageLinks, pagePath } from './i18n';
+
+describe('languageLinks', () => {
+  it('SHELL-02: leads to the same page in each language, the page’s own current, /de/research', () => {
+    expect(languageLinks('/de/research')).toEqual([
+      { lang: 'en', href: '/en/research', current: false },
+      { lang: 'de', href: '/de/research', current: true },
+      { lang: 'pt', href: '/pt/research', current: false },
+    ]);
+  });
+});
 
 describe('pagePath', () => {
   it('SHELL-04: puts the language in front of the page, /de/about', () => {

@@ -7,6 +7,23 @@ export function pagePath(lang: Language, page: string): string {
   return `/${lang}/${page}`;
 }
 
+/** A link to the page in another language; `current` marks the page's own language. */
+export interface LanguageLink {
+  lang: Language;
+  href: string;
+  current: boolean;
+}
+
+/** The language links of the page at `url`: the same page in every language (SHELL-02). */
+export function languageLinks(url: string): LanguageLink[] {
+  const [, here, page] = url.split('/');
+  return LANGUAGES.map((lang) => ({
+    lang,
+    href: pagePath(lang, page),
+    current: lang === here,
+  }));
+}
+
 export interface Translations {
   nav: {
     home: string;
