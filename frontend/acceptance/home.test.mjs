@@ -83,6 +83,14 @@ test('HOME-PAGE-07: the sitemap lists none of the old paths, which answer 301 (D
   assert.deepEqual(sitemapUrls().filter((url) => old.includes(url.replace(/\/$/, ''))), []);
 });
 
+// Without the trailing slash, as the hreflang links (D41); `/` is the same page as /en/home (D40).
+test('HOME-PAGE-07: the sitemap lists every page in en, de and pt, and nothing else (D40, D41)', () => {
+  const expected = ['en', 'de', 'pt'].flatMap((lang) =>
+    ['home', 'about', 'research', 'running', 'contact'].map((page) => `${SITE}/${lang}/${page}`),
+  );
+  assert.deepEqual(sitemapUrls().toSorted(), expected.toSorted());
+});
+
 // The build's own backend seeded these (compose.build.yml, db/seed); the page got them from the
 // API through the snapshot (D25). The rest of HOME-HERO-01 to 03 comes with the v2 hero (D27).
 const SEEDED_SENTENCES = [
