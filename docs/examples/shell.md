@@ -10,10 +10,10 @@ the home hero, because the hero's page needs them.
 
 | ID | Given | When | Then | Covered |
 |----|-------|------|------|---------|
-| SHELL-01 | the built `/de/home` | the header is read | a navigation labelled "Sprache" has three links, `EN`, `DE`, `PT`, to `/en/home`, `/de/home`, `/pt/home`; each has `hreflang`, `lang` and the accessible name of its language in that language (English, Deutsch, Português); `DE` has `aria-current` and is underlined | |
+| SHELL-01 | the built `/de/home` | the header is read | a navigation labelled "Sprache" has three links, `EN`, `DE`, `PT`, to `/en/home`, `/de/home`, `/pt/home`; each has `hreflang`, `lang` and an accessible name that gives the language's name in that language and its code, "English (EN)", "Deutsch (DE)", "Português (PT)" (WCAG 2.5.3); `DE` has `aria-current` and is underlined | |
 | SHELL-02 | a visitor on `/de/research` | they follow `PT` | they reach `/pt/research`: the same page in the other language | |
 | SHELL-03 | the built `/pt/home` | the footer is read | it lists English, Deutsch, Português as links, Português with `aria-current` | |
-| SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read | yes (build, 2026-11-04; P-01 to P-04) |
+| SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read; the language links (they carry `hreflang`) go to the same page in their own language instead (SHELL-02) | yes (build, 2026-11-04; P-01 to P-04) |
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | |
 | SHELL-06 | a phone (the CDK `Handset` query) | the page loads | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | |
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
@@ -21,6 +21,11 @@ the home hero, because the hero's page needs them.
 | SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | |
 | SHELL-10 | a keyboard user on `/de/home` | they press Tab once | focus lands on "Zum Hauptinhalt springen", visibly, and following it moves to `<main>` | |
 | SHELL-11 | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`; no link drops the language prefix (waits for the Software and Texte pages) | |
+| SHELL-01-P-01 | a language page in the build | its language links are read | exactly one is `aria-current`, the page's own language; none, or two, is refused | |
+| SHELL-02-P-01 | `/de/research` | its language links are read | a language link to another page (`PT` → `/pt/home`) is refused | |
+| SHELL-02-P-02 | any built page | its language links are read | a link whose `hreflang` and `href` disagree (`hreflang="pt"`, `/en/research`) is refused, here and by SHELL-04 | |
+| SHELL-02-P-03 | any built page | its language links are read | a language the site does not offer (a fourth link, `/fr/research`) is refused | |
+| SHELL-02-P-04 | a visitor in the browser on `/de/research` | they move to `/de/about` | `PT` follows at once to `/pt/about`; links left at `/pt/research` are refused | |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -100,6 +105,58 @@ Leftovers, not built:
 - `zc-sidenav-menu-items.ts` and `footer.ts` were not Prettier-clean before this element (a
   missing trailing comma); left as they were.
 
+## Diagram: SHELL-01, 02, 03 and the language links of SHELL-09
+
+```mermaid
+flowchart LR
+    U["router URL<br/>/de/research#main-content"] --> F["languageLinks(url)<br/>(pure, models/i18n.ts)"]
+    F -->|"page(de, research)"| L["EN → /en/research<br/>DE → /de/research ✓current<br/>PT → /pt/research"]
+    F -.->|"notFound: /404, /fr/home, /de/xyz"| H["EN DE PT → /xx/home<br/>none current"]
+    L & H --> C["LanguageLinks<br/>form: codes | names"]
+    C --> D["desktop bar (prerendered)"] & M["phone bar (unit only)"] & FT["footer: English, Deutsch, Português"]
+    D & FT --> B[("dist/…/de/research/index.html")]
+    B -->|"A2: hreflang links = /L/research,<br/>file exists, lang=L"| OK["green"]
+    B -.->|"breaks P-01..03, SHELL-01-P-01"| R["red"]
+    C -->|"routerLink PT"| G["route guard: setLanguage(pt),<br/>html lang=pt"]
+```
+
+Session type. Convention: a role that a branch never calls just ends there (I18n and Links on
+`leave`).
+
+```
+G = μX . Router → Links : at(url) .
+         Links → Visitor : { page(l, p) : links{ L ↦ /L/p | L ∈ {en,de,pt} }, current = l ,
+                             notFound   : links{ L ↦ /L/home | L ∈ {en,de,pt} }, current = none } .
+         Visitor → Router : { follow(L) . Router → I18n : setLanguage(L) . X ,
+                              leave . end }
+
+Visitor ↾ = μX . Links ? { page(l,p) , notFound } . Router ! { follow(L) . X , leave . end }
+Links ↾   = μX . Router ? at(url) . Visitor ! { page(l,p) , notFound } . X
+```
+
+| Diagram arrow | Step in G | Rows |
+|---|---|---|
+| URL → `languageLinks` | `Router → Links : at(url)` | unit 1–6 |
+| `page(de, research)` → three links, DE current | `Links → Visitor : page(l,p)` | unit 1, 2, 4; A1, A2 |
+| notFound → home pages, none current | `Links → Visitor : notFound` | unit 3, 5, 6; A2 (404) |
+| `LanguageLinks` → bars, footer | links reach the Visitor | unit 7–11; A1, A3 |
+| `routerLink` PT → guard | `follow(L) . setLanguage(L) . X` | unit 12 (P-04); A2 (target has `lang=L`) |
+| forbidden links | outside `links{…}` | SHELL-02-P-01 to P-03, SHELL-01-P-01 |
+
+Test list. Acceptance (`frontend/acceptance/shell.test.mjs`): A2 SHELL-02 on every built page (the
+15, `/`, `/404`), the `hreflang` links are exactly en, de, pt to `/L/<same page>` (`/L/home` on the
+404 page), each target built with `<html lang="L">`, exactly one `aria-current` (none on the 404
+page); A1 SHELL-01 on `/de/home`; A3 SHELL-03 on `/pt/home`; SHELL-04 skips the `hreflang` links.
+Unit: 1 `/de/research` → en, de, pt to `/x/research`, de current; 2 `/` → home, en current;
+3 `/404` → homes, none current; 4 `/de/research#main-content` drops the fragment; 5 `/fr/home` →
+notFound; 6 `/de/xyz` → notFound; 7 `LanguageLinks` codes: nav labelled from the translations, three
+links with href, `hreflang`, `lang`, accessible name; 8 only the current link has `aria-current`;
+9 names form; 10 desktop and phone bars show the codes; 11 the footer shows the names; 12
+SHELL-02-P-04, the links follow a navigation. Then the key `common.language` in en, de, pt, and
+`LanguageSwitcher` deleted (D2 in `i18n.md`). Breaks in the built files for SHELL-02-P-01 to P-03
+and SHELL-01-P-01, each declared and restored. The underline of the current link is styling,
+reviewed visually.
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
@@ -118,7 +175,7 @@ languages. The real header needs a check at both sides of the CDK `Handset` quer
 | SHELL-01 | At the top, EN, DE and PT switch the language; screen readers say each full name, and the current one is underlined. | Oben wechseln EN, DE und PT die Sprache; Vorleseprogramme nennen den vollen Namen, die aktuelle ist unterstrichen. | No topo, EN, DE e PT mudam a língua; os leitores de ecrã dizem o nome completo, e a atual está sublinhada. |
 | SHELL-02 | Switching language keeps the visitor on the same page, only in the other language. | Beim Sprachwechsel bleibt man auf derselben Seite, nur in der anderen Sprache. | Ao mudar de língua, o visitante fica na mesma página, só que na outra língua. |
 | SHELL-03 | The footer offers the three languages again, written out in full, with the current one marked. | Die Fußzeile bietet die drei Sprachen noch einmal ausgeschrieben an, die aktuelle ist markiert. | O rodapé volta a oferecer as três línguas, escritas por extenso, com a atual assinalada. |
-| SHELL-04 | Every link inside the site keeps the visitor in their language and opens the page straight away, with no detour. | Jeder Link innerhalb der Website bleibt in der Sprache des Besuchers und öffnet die Seite direkt, ohne Umweg. | Cada link dentro do site mantém o visitante na sua língua e abre a página logo, sem desvios. |
+| SHELL-04 | Every link inside the site keeps the visitor in their language, except the language links, and opens the page straight away, with no detour. | Jeder Link innerhalb der Website bleibt in der Sprache des Besuchers, außer den Sprachlinks, und öffnet die Seite direkt, ohne Umweg. | Cada link dentro do site mantém o visitante na sua língua, exceto os links de língua, e abre a página logo, sem desvios. |
 | SHELL-05 | The contact button at the top is in the page's language and leads to the contact page. | Der Kontakt-Knopf oben steht in der Sprache der Seite und führt zur Kontaktseite. | O botão de contacto no topo está na língua da página e leva à página de contacto. |
 | SHELL-06 | On a phone the top bar fits without sideways scrolling, and every button is big enough for a thumb. | Auf dem Handy passt die obere Leiste ohne seitliches Scrollen, und jeder Knopf ist groß genug für den Daumen. | No telemóvel, a barra de cima cabe sem deslizar para o lado, e cada botão tem tamanho para o polegar. |
 | SHELL-07 | The footer ends with an invitation to talk, the work Zua is open to, an email address and profile links. | Die Fußzeile endet mit einer Einladung zum Gespräch, der Arbeit, für die Zua offen ist, E-Mail und Profil-Links. | O rodapé termina com um convite para conversar, o trabalho a que o Zua está aberto, um e-mail e links de perfil. |
@@ -126,6 +183,11 @@ languages. The real header needs a check at both sides of the CDK `Handset` quer
 | SHELL-09 | On the "page not found" page, the top and bottom are in English, and the language links lead home. | Auf der Seite „Seite nicht gefunden“ sind Kopf- und Fußzeile englisch, und die Sprachlinks führen zur Startseite. | Na página «página não encontrada», o topo e o rodapé estão em inglês, e os links de língua levam ao início. |
 | SHELL-10 | A keyboard user's first press of Tab shows a visible link that jumps straight to the main content. | Beim ersten Druck auf Tab erscheint sichtbar ein Link, der direkt zum Hauptinhalt springt. | Ao premir Tab pela primeira vez, aparece um link visível que salta diretamente para o conteúdo principal. |
 | SHELL-11 | The main menu has four translated links, and none of them takes the visitor into another language. | Das Hauptmenü hat vier übersetzte Links, und keiner führt in eine andere Sprache. | O menu principal tem quatro links traduzidos, e nenhum leva o visitante para outra língua. |
+| SHELL-01-P-01 | Exactly one language is marked as current. | Genau eine Sprache ist als aktuell markiert. | Exatamente uma língua está assinalada como atual. |
+| SHELL-02-P-01 | A language link never moves the visitor to a different page. | Ein Sprachlink führt nie auf eine andere Seite. | Um link de língua nunca leva o visitante a outra página. |
+| SHELL-02-P-02 | A language link always goes to the language it names. | Ein Sprachlink führt immer in die Sprache, die er nennt. | Um link de língua leva sempre à língua que indica. |
+| SHELL-02-P-03 | The language links offer exactly English, German and Portuguese. | Die Sprachlinks bieten genau Englisch, Deutsch und Portugiesisch an. | Os links de língua oferecem exatamente inglês, alemão e português. |
+| SHELL-02-P-04 | After moving to another page, the language links follow at once. | Nach einem Seitenwechsel folgen die Sprachlinks sofort. | Depois de mudar de página, os links de língua acompanham logo. |
 
 ## Decisions
 
@@ -144,3 +206,18 @@ Agreed with the developer on 2026-11-04, for SHELL-04:
 - **`/` and the 404 page are English,** so their links go to `/en/…` (D1 in `home.md`, SHELL-09).
 - **No nginx run for this element:** test A shows each link has the form HOME-PAGE-09 already
   answers `200`.
+
+Agreed with the developer on 2026-11-04, for SHELL-01, 02 and 03:
+
+- **Scope:** SHELL-01, 02 and 03 together, with the language links of SHELL-09 (on the 404 page
+  they lead to the three home pages, none current).
+- **`languageLinks(url)`,** a pure function next to `pagePath` in `models/i18n.ts`, fed by the
+  router's URL as a signal, decides the links and the current one.
+- **Accessible names "English (EN)", "Deutsch (DE)", "Português (PT)"**, so the visible code is in
+  the name (WCAG 2.5.3, Label in Name); "Português" alone does not contain "PT".
+- **`common.language`:** en "Language", de "Sprache", pt "Língua", the label of the bar's nav.
+- **The footer's list** is a plain list, not a second `<nav>`.
+- **`LanguageLinks`** in `common/language-links/`, input `form: 'codes' | 'names'`.
+- **`routerLink`,** so the route guard sets the language and `<html lang>` without a reload.
+- **SHELL-04's exception:** the language links, recognised by `hreflang`; SHELL-02-P-02 keeps the
+  exception honest.
