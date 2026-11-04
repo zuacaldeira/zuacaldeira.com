@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { provideRouter, Router } from '@angular/router';
 import { ZcDesktopMenuItems } from './zc-desktop-menu-items';
 import { I18nService } from '../../../services/i18n.service';
 
@@ -53,5 +53,30 @@ describe('ZcDesktopMenuItems', () => {
     i18nService.setLanguage('de');
     const items = component.navItems();
     expect(items[0].label).toBe('Startseite');
+  });
+});
+
+@Component({ template: '' })
+class AnyPage {}
+
+describe('ZcDesktopMenuItems on a page of the site', () => {
+  it('SHELL-04: marks About as current on /de/about, and not Home', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter(
+          ['home', 'about', 'research', 'running'].map((page) => ({
+            path: `de/${page}`,
+            component: AnyPage,
+          })),
+        ),
+      ],
+    }).overrideComponent(ZcDesktopMenuItems, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('de');
+    const fixture = TestBed.createComponent(ZcDesktopMenuItems);
+    await TestBed.inject(Router).navigateByUrl('/de/about');
+    await fixture.whenStable();
+
+    const current = [...(fixture.nativeElement as HTMLElement).querySelectorAll('a.active-link')];
+    expect(current.map((a) => a.getAttribute('href'))).toEqual(['/de/about']);
   });
 });
