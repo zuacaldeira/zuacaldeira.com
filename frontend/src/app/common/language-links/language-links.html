@@ -1,6 +1,6 @@
 @if (form() === 'names') {
   <ul>
-    @for (link of links; track link.lang) {
+    @for (link of links(); track link.lang) {
       <li>
         <a
           [routerLink]="link.href"
@@ -14,7 +14,7 @@
   </ul>
 } @else {
   <nav [attr.aria-label]="t().common.language">
-    @for (link of links; track link.lang) {
+    @for (link of links(); track link.lang) {
       @let code = link.lang.toUpperCase();
       <a
         [routerLink]="link.href"

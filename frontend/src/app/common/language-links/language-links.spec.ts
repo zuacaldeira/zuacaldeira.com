@@ -48,6 +48,17 @@ describe('LanguageLinks', () => {
     expect(links().map((a) => a.getAttribute('aria-current'))).toEqual([null, 'page', null]);
   });
 
+  it('SHELL-02-P-04: follows the visitor to another page, /de/research then /de/about', async () => {
+    await showAt('/de/research', 'de');
+    await TestBed.inject(Router).navigateByUrl('/de/about');
+    await fixture.whenStable();
+    expect(links().map((a) => a.getAttribute('href'))).toEqual([
+      '/en/about',
+      '/de/about',
+      '/pt/about',
+    ]);
+  });
+
   it('SHELL-03: writes the names out in a plain list for the footer, Português current', async () => {
     await showAt('/pt/home', 'pt', 'names');
     const host = fixture.nativeElement as HTMLElement;
