@@ -141,14 +141,18 @@ const assertLiveConfigHas = (...lines) => {
 };
 
 test('HOME-PAGE-06: the live nginx config answers unknown paths with 404 and 404.html', () => {
-  assertLiveConfigHas('try_files $uri $uri/ =404;', 'error_page 404 /404.html;');
+  assertLiveConfigHas('try_files $uri $uri/index.html $uri/ =404;', 'error_page 404 /404.html;');
   assert.ok(!liveConfig().includes('index.csr.html'), 'the live config still falls back to index.csr.html');
 });
 
-test('HOME-PAGE-05: the live nginx config sends the old paths to their English pages (D36)', () => {
+test('HOME-PAGE-10: the live nginx config drops a trailing slash with a 301 (D48)', () => {
+  assertLiveConfigHas('rewrite ^(/.+)/$ $1 permanent;');
+});
+
+test('HOME-PAGE-05: the live nginx config sends the old paths to their English pages (D36, D48)', () => {
   assertLiveConfigHas(
     'location ~ ^/(home|about|research|running|contact)/?$ {',
-    'return 301 /en$request_uri;',
+    'return 301 /en/$1$is_args$args;',
   );
 });
 
