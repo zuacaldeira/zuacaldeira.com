@@ -6,6 +6,8 @@ import { ZcDesktopMenuItems } from '../../menu-items/zc-desktop-menu-items/zc-de
 import { Footer } from '../../footer/footer';
 import { ThemeToggle } from '../../theme-toggle/theme-toggle';
 import { I18nService } from '../../../services/i18n.service';
+import { NavItem } from '../../../models/models';
+import { pagePath } from '../../../models/i18n';
 
 @Component({
   selector: 'app-zc-nav-desktop',
@@ -22,5 +24,7 @@ import { I18nService } from '../../../services/i18n.service';
   styleUrl: './zc-nav-desktop.css',
 })
 export class ZcNavDesktop {
-  readonly t = inject(I18nService).translations;
+  private i18n = inject(I18nService);
+  readonly t = this.i18n.translations;
+  readonly link = (page: NavItem['page']) => pagePath(this.i18n.language(), page);
 }
