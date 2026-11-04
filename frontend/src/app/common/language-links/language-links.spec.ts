@@ -41,4 +41,9 @@ describe('LanguageLinks', () => {
       ['PT', '/pt/home', 'pt', 'pt', 'Português (PT)'],
     ]);
   });
+
+  it('SHELL-01-P-01: marks only the page’s own language as current, DE on /de/home', async () => {
+    await showAt('/de/home', 'de');
+    expect(links().map((a) => a.getAttribute('aria-current'))).toEqual([null, 'page', null]);
+  });
 });

@@ -6,6 +6,7 @@
       [attr.hreflang]="link.lang"
       [attr.lang]="link.lang"
       [attr.aria-label]="names[link.lang] + ' (' + code + ')'"
+      [attr.aria-current]="link.current ? 'page' : null"
       >{{ code }}</a
     >
   }
