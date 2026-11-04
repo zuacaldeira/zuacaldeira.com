@@ -1,13 +1,29 @@
-<nav [attr.aria-label]="t().common.language">
-  @for (link of links; track link.lang) {
-    @let code = link.lang.toUpperCase();
-    <a
-      [routerLink]="link.href"
-      [attr.hreflang]="link.lang"
-      [attr.lang]="link.lang"
-      [attr.aria-label]="names[link.lang] + ' (' + code + ')'"
-      [attr.aria-current]="link.current ? 'page' : null"
-      >{{ code }}</a
-    >
-  }
-</nav>
+@if (form() === 'names') {
+  <ul>
+    @for (link of links; track link.lang) {
+      <li>
+        <a
+          [routerLink]="link.href"
+          [attr.hreflang]="link.lang"
+          [attr.lang]="link.lang"
+          [attr.aria-current]="link.current ? 'page' : null"
+          >{{ names[link.lang] }}</a
+        >
+      </li>
+    }
+  </ul>
+} @else {
+  <nav [attr.aria-label]="t().common.language">
+    @for (link of links; track link.lang) {
+      @let code = link.lang.toUpperCase();
+      <a
+        [routerLink]="link.href"
+        [attr.hreflang]="link.lang"
+        [attr.lang]="link.lang"
+        [attr.aria-label]="names[link.lang] + ' (' + code + ')'"
+        [attr.aria-current]="link.current ? 'page' : null"
+        >{{ code }}</a
+      >
+    }
+  </nav>
+}
