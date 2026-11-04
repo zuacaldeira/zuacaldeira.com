@@ -16,9 +16,8 @@ export class LanguageSwitcher {
 
   readonly languages: readonly { code: Language; label: string }[] = [
     { code: 'en', label: 'English' },
-    { code: 'pt', label: 'Português' },
     { code: 'de', label: 'Deutsch' },
-    { code: 'fr', label: 'Français' },
+    { code: 'pt', label: 'Português' },
   ];
 
   setLanguage(lang: Language): void {

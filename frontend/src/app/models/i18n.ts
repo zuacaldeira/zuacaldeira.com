@@ -1,6 +1,6 @@
-export type Language = 'en' | 'pt' | 'de' | 'fr';
+export type Language = 'en' | 'de' | 'pt';
 
-export const LANGUAGES: Language[] = ['en', 'pt', 'de', 'fr'];
+export const LANGUAGES: Language[] = ['en', 'de', 'pt'];
 
 export interface Translations {
   nav: {

@@ -5,9 +5,8 @@ import { Language, LANGUAGES, Translations } from '../models/i18n';
 import { en } from '../i18n/en';
 import { pt } from '../i18n/pt';
 import { de } from '../i18n/de';
-import { fr } from '../i18n/fr';
 
-const ALL_TRANSLATIONS: Record<Language, Translations> = { en, pt, de, fr };
+const ALL_TRANSLATIONS: Record<Language, Translations> = { en, de, pt };
 
 function createService(platformId: string = 'browser'): I18nService {
   TestBed.configureTestingModule({
@@ -37,7 +36,6 @@ describe('I18nService', () => {
     it.each([
       ['pt', pt],
       ['de', de],
-      ['fr', fr],
       ['en', en],
     ] as [Language, Translations][])(
       'should switch to %s and return correct translations',
@@ -109,8 +107,8 @@ describe('I18nService', () => {
 
     it('should update localStorage when switching languages multiple times', () => {
       const service = createService();
-      service.setLanguage('fr');
-      expect(localStorage.getItem('zc-lang')).toBe('fr');
+      service.setLanguage('pt');
+      expect(localStorage.getItem('zc-lang')).toBe('pt');
       service.setLanguage('de');
       expect(localStorage.getItem('zc-lang')).toBe('de');
     });
@@ -157,13 +155,23 @@ describe('I18nService', () => {
 
     it('should prefer saved language over browser language', () => {
       const originalLanguage = navigator.language;
-      Object.defineProperty(navigator, 'language', { value: 'fr-FR', configurable: true });
+      Object.defineProperty(navigator, 'language', { value: 'pt-PT', configurable: true });
       localStorage.setItem('zc-lang', 'de');
 
       const service = createService();
       expect(service.language()).toBe('de');
 
       Object.defineProperty(navigator, 'language', { value: originalLanguage, configurable: true });
+    });
+  });
+
+  describe('a French preference saved on the old site', () => {
+    it('I18N-02-P-01: starts in English without an error and leaves the saved value alone', () => {
+      localStorage.setItem('zc-lang', 'fr');
+      const service = createService();
+      expect(service.language()).toBe('en');
+      expect(service.translations()).toBe(en);
+      expect(localStorage.getItem('zc-lang')).toBe('fr');
     });
   });
 

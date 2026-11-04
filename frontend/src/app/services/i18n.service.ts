@@ -4,19 +4,16 @@ import { Language, Translations } from '../models/i18n';
 import { en } from '../i18n/en';
 import { pt } from '../i18n/pt';
 import { de } from '../i18n/de';
-import { fr } from '../i18n/fr';
 
 const TRANSLATION_MAP: Record<Language, Translations> = {
   en,
-  pt,
   de,
-  fr,
+  pt,
 };
 
 /**
- * While false, the site is English-only: the language switcher is not rendered and
- * saved/browser language preferences are ignored. The pt/de/fr translations are kept
- * in place so this can be flipped back on without redoing them.
+ * While false, the route's language prefix (`/en`, `/de`, `/pt`, app.routes.ts) alone sets the
+ * language: saved and browser language preferences are ignored at start.
  */
 export const TRANSLATIONS_ENABLED = false;
 

@@ -28,8 +28,8 @@ describe('ZcSidenavMenuItems', () => {
 
   it('should translate labels based on current language', () => {
     const i18nService = TestBed.inject(I18nService);
-    i18nService.setLanguage('fr');
+    i18nService.setLanguage('pt');
     const items = component.navItems();
-    expect(items[0].label).toBe('Accueil');
+    expect(items[0].label).toBe('Início');
   });
 });

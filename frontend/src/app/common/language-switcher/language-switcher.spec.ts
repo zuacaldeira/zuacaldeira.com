@@ -18,13 +18,13 @@ describe('LanguageSwitcher', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have 4 languages', () => {
-    expect(component.languages).toHaveLength(4);
+  it('should have 3 languages', () => {
+    expect(component.languages).toHaveLength(3);
   });
 
   it('should include all supported language codes', () => {
     const codes = component.languages.map((l) => l.code);
-    expect(codes).toEqual(['en', 'pt', 'de', 'fr']);
+    expect(codes).toEqual(['en', 'de', 'pt']);
   });
 
   it('should have non-empty labels for all languages', () => {
