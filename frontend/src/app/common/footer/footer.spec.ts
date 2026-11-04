@@ -34,9 +34,8 @@ describe('Footer', () => {
   it('SHELL-04: links its menu to the pages in German on a German page, /de/about', async () => {
     TestBed.inject(I18nService).setLanguage('de');
     await fixture.whenStable();
-    const hrefs = [...(fixture.nativeElement as HTMLElement).querySelectorAll('a[href^="/"]')].map(
-      (a) => a.getAttribute('href'),
-    );
+    const menu = (fixture.nativeElement as HTMLElement).querySelectorAll('.footer-nav a');
+    const hrefs = [...menu].map((a) => a.getAttribute('href'));
     expect(hrefs).toEqual(['/de/home', '/de/about', '/de/research', '/de/running', '/de/contact']);
   });
 
@@ -53,5 +52,13 @@ describe('Footer', () => {
 
   it('should have the current year', () => {
     expect(component.currentYear).toBe(new Date().getFullYear());
+  });
+
+  it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
+    await fixture.whenStable();
+    const names = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll('footer app-language-links a'),
+    ].map((a) => a.textContent?.trim());
+    expect(names).toEqual(['English', 'Deutsch', 'Português']);
   });
 });

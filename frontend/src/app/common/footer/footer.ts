@@ -3,10 +3,11 @@ import { RouterModule } from '@angular/router';
 import { ContentService } from '../../services/content.service';
 import { I18nService } from '../../services/i18n.service';
 import { pagePath } from '../../models/i18n';
+import { LanguageLinks } from '../language-links/language-links';
 
 @Component({
   selector: 'app-footer',
-  imports: [RouterModule],
+  imports: [RouterModule, LanguageLinks],
   templateUrl: './footer.html',
   styleUrl: './footer.css',
 })
