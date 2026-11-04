@@ -32,7 +32,7 @@ German and Portuguese labels not listed here come from today's `src/app/i18n/{de
 | HOME-PAGE-02 | the built `/de/home` | it is read | it has `<link rel="alternate" hreflang="en" href="https://zuacaldeira.com/en/home">`, the same for `de` and `pt`, and `hreflang="x-default"` pointing to `/en/home` | yes |
 | HOME-PAGE-03 | the built `/pt/home` | it is read | `<title>` is "Alexandre Caldeira — Construo software e provo que os seus protocolos se cumprem."; en: "Alexandre Caldeira — I build software, and prove its protocols hold."; de: "Alexandre Caldeira — Ich baue Software und beweise, dass ihre Protokolle halten." | reopened: the test holds the old tagline |
 | HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with visible links to `/de/home` and `/pt/home` (SHELL-01); no redirect (D1) | reopened: the test reads `<link rel="alternate">`, and no visible link exists yet |
-| HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about` → `/en/about`, ...) (D2) | |
+| HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about`, `/research`, `/running`, `/contact`), with the path kept exactly, so `/home/` → `/en/home/` (D2, D33, D34); the new location then opens the page | |
 | HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | yes (build and web image; the live config waits to be applied on the server, and the check on `next` waits for DNS) |
 
 **HOME-PAGE-06, covered on 2026-11-03.** The 404 page of D9 is prerendered at `404/index.html`;
@@ -71,6 +71,34 @@ Test list: 1–2 acceptance on `404/index.html` (wording, `lang`, title); 3 `bui
 to `404.html`; 4–6 the component (English wording and link, English after `de`, title); 7 the
 routes `/404` and `**`; 8 the `notFound` keys in en, de and pt; 9–10 `npm run acceptance:nginx`
 (`/fr/home` → 404 with the page, `/en/home` and `/` → 200); 11 the live config's lines.
+
+### Diagram: HOME-PAGE-05 (old links, D2, D33 to D37)
+
+Tests 1 to 5 run the real nginx of the web image in Docker on the built site
+(`frontend/acceptance/nginx/serve.test.mjs`); the live config is only read as text (test 6); test 7
+is a manual check on `next` after the push (D35).
+
+```mermaid
+flowchart LR
+    V["Visitor: old link /home or /home/"] --> R{"nginx: location ~ ^/(home|about|research|running|contact)/?$"}
+    R -->|"301 Location: /en/home"| V2["Browser: /en/home"]
+    V2 --> N{"nginx: try_files $uri $uri/ =404"}
+    N -->|"/en/home/index.html"| OK["200, English home, lang=en"]
+    G["/homepage, /home/x, /fr/home"] --> N
+    N -->|"no file"| E["404 + 404.html (HOME-PAGE-06)"]
+
+    T13(["tests 1–3: real nginx, status + Location"]) -.-> R
+    T4(["test 4: follow Location → 200, lang=en"]) -.-> N
+    T5(["test 5: guards still 404 / 200"]) -.-> G
+    T6(["test 6: live config text"]) -.-> R
+    T7(["test 7: next.zuacaldeira.com, by hand (D35)"]) -.-> V
+```
+
+Test list (every test name cites HOME-PAGE-05, D37): 1 `/home` → `301`, `Location: /en/home`;
+2 the same for `/about`, `/research`, `/running`, `/contact`; 3 `/home/` → `/en/home/`, a query
+string kept; 4 following the `Location` gives `200`, `lang="en"`, not the 404 page; 5 `/homepage`
+and `/home/x` still `404`, `/en/home` still `200` with no redirect; 6 the live config has the same
+line; 7 after the push, `curl` on https://next.zuacaldeira.com (also HOME-PAGE-06's open check).
 
 ## 2. Hero
 
@@ -305,3 +333,22 @@ Agreed with the developer on 2026-11-03, for HOME-PAGE-06:
   `build-site.yml`, without `|| true`.
 - **D32. A `**` route** shows the 404 page too, so the browser's router keeps it on an unknown path
   such as `/fr/home` instead of a blank page.
+
+Agreed with the developer on 2026-11-04, for HOME-PAGE-05:
+
+- **D33. The old paths** are the live site's routes and sitemap entries: `/home`, `/about`,
+  `/research`, `/running`, `/contact`. `/` stays the English home (D1). `/work` and `/paedagogik`
+  (live from 2026-02-07 to 2026-08-12) keep answering `404`; their redirect comes with their routes.
+- **D34. One line, the path kept exactly:** `return 301 /en$request_uri;`, so `/home` → `/en/home`,
+  `/home/` → `/en/home/`, and a query string is kept.
+- **D35. The check on `next`** is by hand after the developer's push: `curl` on
+  https://next.zuacaldeira.com, its output recorded here. It also closes HOME-PAGE-06's open check
+  on `next`.
+- **D36. The live config** gets the same line, checked as text; it is not applied on the server
+  before the first merge of `next` into `main` (`main` has no `/en/home` yet). There nginx answers
+  with an absolute `Location: https://zuacaldeira.com/en/home`, the same target.
+- **D37. Every test of HOME-PAGE-05 cites the ID in its name,** the one that follows the `Location`
+  included.
+- **D38. The next element** is the leftovers of HOME-PAGE-05, not built in it: the sitemap's old
+  URLs (`frontend/public/sitemap.xml` still lists `/home`, `/about`, ...) and the Routing section of
+  `CLAUDE.md` ("`/` redirects to `/home`").
