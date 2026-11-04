@@ -57,3 +57,9 @@ test('HOME-PAGE-06: the prerendered pages, the site root included, still answer 
     assert.ok(!html.includes('Page not found</h1>'), `${path} shows the 404 page`);
   }
 });
+
+test('HOME-PAGE-05: the old /home answers 301 to /en/home', async () => {
+  const response = await fetch(`${origin}/home`, { redirect: 'manual' });
+  assert.equal(response.status, 301);
+  assert.equal(response.headers.get('location'), '/en/home');
+});
