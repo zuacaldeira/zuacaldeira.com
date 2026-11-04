@@ -174,6 +174,7 @@ list and kept because it names the old paths. Each URL still answers `301` to it
 until D42's element is built. Found on the way, not built: the `Language` type, `LANGUAGES` and
 `TRANSLATION_MAP` still have `fr`, with `src/app/i18n/fr.ts`, and the comment on
 `TRANSLATIONS_ENABLED` in `i18n.service.ts` still speaks of pt/de/fr and an English-only site.
+(Done on 2026-11-04: I18N-01 and I18N-02 in `docs/examples/i18n.md`.)
 
 ### Diagram: HOME-PAGE-09 and 10, and HOME-PAGE-05 with one hop (D46 to D48)
 

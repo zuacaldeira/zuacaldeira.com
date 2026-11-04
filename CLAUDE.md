@@ -44,7 +44,7 @@ src/app/
   pages/            # Route components: home/, about/, research/, work/, paedagogik/, running/, contact/
   services/         # ThemeService, ContentService, I18nService
   models/           # TypeScript interfaces (including i18n.ts)
-  i18n/             # Translation files: en.ts, pt.ts, de.ts, fr.ts
+  i18n/             # Translation files: en.ts, de.ts, pt.ts
 ```
 
 ## Routing
@@ -119,7 +119,8 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 **Type-safe translations** via the `Translations` interface in `models/i18n.ts`
 - The site's languages are English, German and Portuguese (`en`, `de`, `pt`), each a full
   translation with its own URL prefix; there is no fallback to English. French is not supported.
-  (The `Language` type and `src/app/i18n/fr.ts` still have `fr`, a leftover.)
+  `Language` and `LANGUAGES` (`models/i18n.ts`) are the one list, used by the routes and the
+  content snapshot too (I18N-02 in `docs/examples/i18n.md`)
 - Translation files live in `src/app/i18n/` — one file per language exporting a `Translations` object
 - Covers all sections: nav, hero, about, research, work, paedagogik, running, contact, footer, common labels
 - Content arrays (`projects`, `facharbeiten`) are also translated
@@ -142,7 +143,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 28 test files, 165 tests (2026-11-03) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 30 test files, 176 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-04) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
