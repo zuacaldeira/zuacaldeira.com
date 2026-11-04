@@ -2,6 +2,9 @@ export type Language = 'en' | 'de' | 'pt';
 
 export const LANGUAGES: Language[] = ['en', 'de', 'pt'];
 
+/** The pages each language has, as the routes name them (`app.routes.ts`). */
+export const SITE_PAGES: readonly string[] = ['home', 'about', 'research', 'running', 'contact'];
+
 /** The path of a page in a language, `/de/about`: links inside the site never drop the prefix. */
 export function pagePath(lang: Language, page: string): string {
   return `/${lang}/${page}`;
@@ -20,7 +23,7 @@ export function languageLinks(url: string): LanguageLink[] {
   const path = url.split(/[#?]/)[0];
   const [, here, page] = (path === '/' ? '/en/home' : path).split('/');
   // Not a page of the site: the 404 page leads to the home pages (SHELL-09).
-  const found = (LANGUAGES as string[]).includes(here);
+  const found = (LANGUAGES as string[]).includes(here) && SITE_PAGES.includes(page);
   return LANGUAGES.map((lang) => ({
     lang,
     href: pagePath(lang, found ? page : 'home'),

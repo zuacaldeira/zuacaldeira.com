@@ -8,6 +8,7 @@ import { routes } from './app.routes';
 import { serverRoutes } from './app.routes.server';
 import { RenderMode } from '@angular/ssr';
 import { I18nService } from './services/i18n.service';
+import { SITE_PAGES } from './models/i18n';
 
 @Component({ template: '' })
 class DummyComponent {}
@@ -18,6 +19,11 @@ describe('App Routes', () => {
       const tree = routes.find((r) => r.path === lang);
       const paths = tree?.children?.map((r) => r.path);
       expect(paths).toEqual(['home', 'about', 'research', 'running', 'contact']);
+    });
+
+    it('SHELL-09: should have the pages the language links know, SITE_PAGES', () => {
+      const tree = routes.find((r) => r.path === 'de');
+      expect(tree?.children?.map((r) => r.path)).toEqual(SITE_PAGES);
     });
 
     it('should not expose the hidden work and paedagogik routes', () => {
