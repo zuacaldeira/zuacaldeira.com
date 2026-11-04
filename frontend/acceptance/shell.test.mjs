@@ -18,11 +18,14 @@ const PAGES = [
 ];
 
 // Links inside the site: an `<a href>` that starts with `/`. Links to files (with an extension,
-// such as the paper's PDF) are not pages.
+// such as the paper's PDF) are not pages. The language links (with `hreflang`) lead to the other
+// languages on purpose; SHELL-02 reads them.
 const siteLinks = (html) =>
-  [...html.matchAll(/<a\b[^>]*\bhref="(\/[^"#?]*)[^"]*"/g)]
-    .map(([, href]) => href)
-    .filter((href) => !/\.[a-z0-9]+$/i.test(href));
+  [...html.matchAll(/<a\b[^>]*>/g)]
+    .map(([tag]) => tag)
+    .filter((tag) => !/\shreflang="/.test(tag))
+    .map((tag) => tag.match(/\shref="(\/[^"#?]*)[^"]*"/)?.[1])
+    .filter((href) => href && !/\.[a-z0-9]+$/i.test(href));
 
 test('SHELL-04: every link inside the site on every built page keeps its language and is a page of the build', () => {
   const wrong = PAGES.flatMap(([route, lang]) =>
@@ -35,4 +38,35 @@ test('SHELL-04: every link inside the site on every built page keeps its languag
       .map((href) => `${route} → ${href}`),
   );
   assert.deepEqual([...new Set(wrong)], []);
+});
+
+// The language links: every `<a>` with `hreflang`, as "hreflang href", with " current" when it
+// carries `aria-current`. The header's codes and the footer's names give the same lines.
+const languageLinks = (html) =>
+  [
+    ...new Set(
+      [...html.matchAll(/<a\b[^>]*>/g)]
+        .map(([tag]) => tag)
+        .filter((tag) => /\shreflang="/.test(tag))
+        .map((tag) => {
+          const attr = (name) => tag.match(new RegExp(`\\s${name}="([^"]*)"`))?.[1];
+          return `${attr('hreflang')} ${attr('href')}${attr('aria-current') ? ' current' : ''}`;
+        }),
+    ),
+  ].sort();
+
+const htmlLang = (html) => html.match(/<html\b[^>]*\slang="([^"]*)"/)?.[1];
+
+test('SHELL-02: on every built page EN, DE and PT lead to the same page in their language, the current one marked', () => {
+  for (const [route, lang] of PAGES) {
+    const notFound = route === '404';
+    const name = route === '.' || notFound ? 'home' : route.split('/')[1];
+    const expected = ['de', 'en', 'pt'].map(
+      (l) => `${l} /${l}/${name}${l === lang && !notFound ? ' current' : ''}`,
+    );
+    assert.deepEqual(languageLinks(page(route)), expected, route);
+  }
+  for (const lang of ['en', 'de', 'pt']) {
+    assert.equal(htmlLang(page(`${lang}/research`)), lang, `${lang}/research has lang="${lang}"`);
+  }
 });
