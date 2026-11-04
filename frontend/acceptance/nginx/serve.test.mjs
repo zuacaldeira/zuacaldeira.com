@@ -71,11 +71,27 @@ test('HOME-PAGE-09: /en/home answers 200 with no redirect', async () => {
   assert.ok(html.includes('<html lang="en"'), '/en/home is not the English page');
 });
 
-test('HOME-PAGE-09: every URL in the sitemap answers 200 with no redirect', async () => {
+const sitemapPaths = () => {
   const sitemap = readFileSync(join(site, 'sitemap.xml'), 'utf8');
-  const paths = [...sitemap.matchAll(/<loc>https:\/\/zuacaldeira\.com(\/[^<]*)<\/loc>/g)].map(([, p]) => p);
+  return [...sitemap.matchAll(/<loc>https:\/\/zuacaldeira\.com(\/[^<]*)<\/loc>/g)].map(([, p]) => p);
+};
+
+test('HOME-PAGE-09: every URL in the sitemap answers 200 with no redirect', async () => {
+  const paths = sitemapPaths();
   assert.equal(paths.length, 15, 'the sitemap does not list the 15 pages');
   for (const path of paths) await assertServedDirectly(path);
+});
+
+test('HOME-PAGE-09: every hreflang link of the built pages answers 200 with no redirect', async () => {
+  const targets = new Set();
+  for (const page of sitemapPaths()) {
+    const html = readFileSync(join(site, page, 'index.html'), 'utf8');
+    for (const [, path] of html.matchAll(/<link rel="alternate" hreflang="[^"]+" href="https:\/\/zuacaldeira\.com(\/[^"]*)">/g)) {
+      targets.add(path);
+    }
+  }
+  assert.ok(targets.size > 0, 'the built pages have no hreflang links');
+  for (const path of targets) await assertServedDirectly(path);
 });
 
 async function assertMovedTo(path, location) {
