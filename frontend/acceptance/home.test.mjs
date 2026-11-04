@@ -91,6 +91,14 @@ test('HOME-PAGE-07: the sitemap lists every page in en, de and pt, and nothing e
   assert.deepEqual(sitemapUrls().toSorted(), expected.toSorted());
 });
 
+// The sitemap is written by hand (D43); this ties it to what the build prerendered.
+test('HOME-PAGE-08: every URL in the sitemap is a page of the build', () => {
+  const missing = sitemapUrls().filter(
+    (url) => !url.startsWith(`${SITE}/`) || !existsSync(join(browser, url.slice(SITE.length), 'index.html')),
+  );
+  assert.deepEqual(missing, []);
+});
+
 // The build's own backend seeded these (compose.build.yml, db/seed); the page got them from the
 // API through the snapshot (D25). The rest of HOME-HERO-01 to 03 comes with the v2 hero (D27).
 const SEEDED_SENTENCES = [
