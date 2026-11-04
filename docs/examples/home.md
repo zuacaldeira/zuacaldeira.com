@@ -34,8 +34,8 @@ German and Portuguese labels not listed here come from today's `src/app/i18n/{de
 | HOME-PAGE-04 | a visitor opens `/` | the page loads | it is the prerendered English home (same content as `/en/home`, `lang="en"`), with visible links to `/de/home` and `/pt/home` (SHELL-01); no redirect (D1) | reopened: the test reads `<link rel="alternate">`, and no visible link exists yet |
 | HOME-PAGE-05 | an old link to `/home` (e.g. from a CV) | it is opened | nginx answers `301` with `Location: /en/home`; the same for every old path (`/about`, `/research`, `/running`, `/contact`), with the path kept exactly, so `/home/` → `/en/home/` (D2, D33, D34); the new location then opens the page | yes (web image, live config text, and on `next` on 2026-11-04, D35; the live config waits to be applied on the server, D36) |
 | HOME-PAGE-06 | a visitor opens `/fr/home` | the page loads | the 404 page is shown; French is not a language of the site | yes (build, web image, and on `next` on 2026-11-04: `/fr/home` answers `404`, see HOME-PAGE-05's test 7; the live config waits to be applied on the server) |
-| HOME-PAGE-07 | the built site | `sitemap.xml` is read | it lists the 15 pages `https://zuacaldeira.com/{en,de,pt}/{home,about,research,running,contact}`, without a trailing slash, and no old path (`/home`, `/about`, `/research`, `/running`, `/contact`); `/` is not listed (D40, D41) | |
-| HOME-PAGE-08 | the built site | each URL in `sitemap.xml` is checked | each is a prerendered page of the build (`<path>/index.html` exists), so the sitemap cannot name a page that is not there (D43) | |
+| HOME-PAGE-07 | the built site | `sitemap.xml` is read | it lists the 15 pages `https://zuacaldeira.com/{en,de,pt}/{home,about,research,running,contact}`, without a trailing slash, and no old path (`/home`, `/about`, `/research`, `/running`, `/contact`); `/` is not listed (D40, D41) | yes (build) |
+| HOME-PAGE-08 | the built site | each URL in `sitemap.xml` is checked | each is a prerendered page of the build (`<path>/index.html` exists), so the sitemap cannot name a page that is not there (D43) | yes (build) |
 
 **HOME-PAGE-06, covered on 2026-11-03.** The 404 page of D9 is prerendered at `404/index.html`;
 `build-site.yml` copies it to `404.html` without `|| true` (D31), so a build without it fails, and
@@ -161,6 +161,14 @@ flowchart LR
 Test list (every test name cites its ID): 1 HOME-PAGE-07, no old path; 2 HOME-PAGE-07, exactly the
 15 URLs of D40, without a slash; 3 HOME-PAGE-08, every `loc` is a page in `dist` (bites: a `loc` for a
 page that does not exist, once); then, with no test, `CLAUDE.md`'s Routing and i18n sections (D45).
+
+**HOME-PAGE-07 and 08, covered on 2026-11-04,** in `frontend/acceptance/home.test.mjs`, green on
+a real build. Test 3 was green on its first run; it was shown to bite (a `loc` for `/de/software`,
+which is not built yet, D15, added to the built sitemap once). Test 1 is implied by test 2's exact
+list and kept because it names the old paths. Each URL still answers `301` to its form with a slash
+until D42's element is built. Found on the way, not built: the `Language` type, `LANGUAGES` and
+`TRANSLATION_MAP` still have `fr`, with `src/app/i18n/fr.ts`, and the comment on
+`TRANSLATIONS_ENABLED` in `i18n.service.ts` still speaks of pt/de/fr and an English-only site.
 
 ## 2. Hero
 
