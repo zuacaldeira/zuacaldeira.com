@@ -32,6 +32,14 @@ describe('languageLinks', () => {
       { lang: 'pt', href: '/pt/home', current: false },
     ]);
   });
+
+  it('SHELL-09: treats a language the site does not offer as not found, /fr/research', () => {
+    expect(languageLinks('/fr/research')).toEqual([
+      { lang: 'en', href: '/en/home', current: false },
+      { lang: 'de', href: '/de/home', current: false },
+      { lang: 'pt', href: '/pt/home', current: false },
+    ]);
+  });
 });
 
 describe('pagePath', () => {
