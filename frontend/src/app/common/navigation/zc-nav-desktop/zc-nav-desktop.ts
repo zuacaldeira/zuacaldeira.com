@@ -5,6 +5,7 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 import { ZcDesktopMenuItems } from '../../menu-items/zc-desktop-menu-items/zc-desktop-menu-items';
 import { Footer } from '../../footer/footer';
 import { ThemeToggle } from '../../theme-toggle/theme-toggle';
+import { LanguageLinks } from '../../language-links/language-links';
 import { I18nService } from '../../../services/i18n.service';
 import { NavItem } from '../../../models/models';
 import { pagePath } from '../../../models/i18n';
@@ -19,6 +20,7 @@ import { pagePath } from '../../../models/i18n';
     ZcDesktopMenuItems,
     Footer,
     ThemeToggle,
+    LanguageLinks,
   ],
   templateUrl: './zc-nav-desktop.html',
   styleUrl: './zc-nav-desktop.css',

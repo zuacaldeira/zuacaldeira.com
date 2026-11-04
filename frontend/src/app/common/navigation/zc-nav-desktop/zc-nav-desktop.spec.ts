@@ -40,4 +40,16 @@ describe('ZcNavDesktop', () => {
       (fixture.nativeElement as HTMLElement).querySelector(selector)?.getAttribute('href');
     expect([href('a.logo'), href('a.nav-cta')]).toEqual(['/de/home', '/de/contact']);
   });
+
+  it('SHELL-01: shows EN, DE and PT in the header', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavDesktop, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavDesktop);
+    await fixture.whenStable();
+    const codes = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll('header app-language-links a'),
+    ].map((a) => a.textContent?.trim());
+    expect(codes).toEqual(['EN', 'DE', 'PT']);
+  });
 });
