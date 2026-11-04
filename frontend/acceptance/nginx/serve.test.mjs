@@ -115,8 +115,9 @@ test('HOME-PAGE-05: every other old path answers 301 to its English page', async
   }
 });
 
-test('HOME-PAGE-05: an old path keeps its trailing slash and query string', async () => {
-  await assertMovedTo('/home/', '/en/home/');
+test('HOME-PAGE-05: an old path drops a trailing slash and keeps its query string', async () => {
+  await assertMovedTo('/home/', '/en/home');
+  await assertMovedTo('/home/?from=cv', '/en/home?from=cv');
   await assertMovedTo('/about?from=cv', '/en/about?from=cv');
 });
 
