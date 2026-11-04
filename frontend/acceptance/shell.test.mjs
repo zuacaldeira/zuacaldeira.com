@@ -55,6 +55,23 @@ const languageLinks = (html) =>
     ),
   ].sort();
 
+// The links inside an element's HTML, each as [text, and the named attributes].
+const anchors = (html, names) =>
+  [...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].map(([, attrs, text]) => [
+    text.replace(/<[^>]*>/g, '').trim(),
+    ...names.map((name) => attrs.match(new RegExp(`\\s${name}="([^"]*)"`))?.[1] ?? null),
+  ]);
+
+test('SHELL-01: the header of /de/home has EN, DE and PT in a navigation labelled "Sprache", DE current', () => {
+  const nav = page('de/home').match(/<nav\b[^>]*\saria-label="Sprache"[^>]*>([\s\S]*?)<\/nav>/);
+  assert.ok(nav, 'a nav labelled "Sprache"');
+  assert.deepEqual(anchors(nav[1], ['href', 'hreflang', 'lang', 'aria-label', 'aria-current']), [
+    ['EN', '/en/home', 'en', 'en', 'English (EN)', null],
+    ['DE', '/de/home', 'de', 'de', 'Deutsch (DE)', 'page'],
+    ['PT', '/pt/home', 'pt', 'pt', 'Português (PT)', null],
+  ]);
+});
+
 const htmlLang = (html) => html.match(/<html\b[^>]*\slang="([^"]*)"/)?.[1];
 
 test('SHELL-02: on every built page EN, DE and PT lead to the same page in their language, the current one marked', () => {
