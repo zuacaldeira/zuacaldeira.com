@@ -8,6 +8,14 @@ describe('languageLinks', () => {
       { lang: 'pt', href: '/pt/research', current: false },
     ]);
   });
+
+  it('SHELL-02: treats the site root as the English home, /', () => {
+    expect(languageLinks('/')).toEqual([
+      { lang: 'en', href: '/en/home', current: true },
+      { lang: 'de', href: '/de/home', current: false },
+      { lang: 'pt', href: '/pt/home', current: false },
+    ]);
+  });
 });
 
 describe('pagePath', () => {

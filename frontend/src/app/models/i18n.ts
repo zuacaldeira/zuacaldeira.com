@@ -16,7 +16,8 @@ export interface LanguageLink {
 
 /** The language links of the page at `url`: the same page in every language (SHELL-02). */
 export function languageLinks(url: string): LanguageLink[] {
-  const [, here, page] = url.split('/');
+  // The site root is the English home itself (D1 in home.md).
+  const [, here, page] = (url === '/' ? '/en/home' : url).split('/');
   return LANGUAGES.map((lang) => ({
     lang,
     href: pagePath(lang, page),
