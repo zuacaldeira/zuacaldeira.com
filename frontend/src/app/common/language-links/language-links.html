@@ -1,5 +1,5 @@
 @if (form() === 'names') {
-  <ul>
+  <ul class="names">
     @for (link of links(); track link.lang) {
       <li>
         <a
@@ -13,7 +13,7 @@
     }
   </ul>
 } @else {
-  <nav [attr.aria-label]="t().common.language">
+  <nav class="codes" [attr.aria-label]="t().common.language">
     @for (link of links(); track link.lang) {
       @let code = link.lang.toUpperCase();
       <a

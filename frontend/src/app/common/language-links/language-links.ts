@@ -10,6 +10,7 @@ import { LANGUAGE_NAMES, languageLinks } from '../../models/i18n';
   selector: 'app-language-links',
   imports: [RouterLink],
   templateUrl: './language-links.html',
+  styleUrl: './language-links.css',
 })
 export class LanguageLinks {
   /** The bar's codes (EN DE PT), or the names written out for the footer. */
