@@ -73,6 +73,16 @@ test('HOME-PAGE-06: the 404 page is titled with the name and "Page not found" (D
   assert.equal(page('404').match(/<title>(.*?)<\/title>/)?.[1], 'Alexandre Caldeira — Page not found');
 });
 
+// The sitemap is hand-written in public/ (D43); the build copies it, so the built one is read.
+const SITE = 'https://zuacaldeira.com';
+const sitemapUrls = () =>
+  [...readFileSync(join(browser, 'sitemap.xml'), 'utf8').matchAll(/<loc>([^<]*)<\/loc>/g)].map(([, url]) => url);
+
+test('HOME-PAGE-07: the sitemap lists none of the old paths, which answer 301 (D33)', () => {
+  const old = ['/home', '/about', '/research', '/running', '/contact'].map((path) => SITE + path);
+  assert.deepEqual(sitemapUrls().filter((url) => old.includes(url.replace(/\/$/, ''))), []);
+});
+
 // The build's own backend seeded these (compose.build.yml, db/seed); the page got them from the
 // API through the snapshot (D25). The rest of HOME-HERO-01 to 03 comes with the v2 hero (D27).
 const SEEDED_SENTENCES = [
