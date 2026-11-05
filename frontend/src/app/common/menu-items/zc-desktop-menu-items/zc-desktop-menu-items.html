@@ -1,4 +1,4 @@
-<div class="desktop-menu-items" role="navigation" aria-label="Main navigation">
+<div class="desktop-menu-items" role="navigation" [attr.aria-label]="t().common.mainNav">
   @for (item of navItems(); track item.page) {
     <a
       [routerLink]="item.link"

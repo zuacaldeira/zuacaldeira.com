@@ -48,6 +48,13 @@ describe('ZcDesktopMenuItems', () => {
     expect(hrefs()).toEqual(['/pt/home', '/pt/about', '/pt/research', '/pt/running']);
   });
 
+  it('SHELL-08: names the navigation in the page language, Navegação principal', async () => {
+    TestBed.inject(I18nService).setLanguage('pt');
+    await fixture.whenStable();
+    const nav = (fixture.nativeElement as HTMLElement).querySelector('[role="navigation"]');
+    expect(nav?.getAttribute('aria-label')).toBe('Navegação principal');
+  });
+
   it('should translate labels based on current language', () => {
     const i18nService = TestBed.inject(I18nService);
     i18nService.setLanguage('de');
