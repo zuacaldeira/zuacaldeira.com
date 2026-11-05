@@ -327,4 +327,20 @@ for (const lang of ['en', 'de', 'pt']) {
       { inMenu: [], open: false, path: `/${lang}/home` },
     );
   });
+
+  test(`SHELL-08-P-03: on /${lang}/home with the menu open, Tab and Shift+Tab never leave it`, async () => {
+    // Six controls in the menu (close and five links): ten presses each way wrap around.
+    const { visited, state } = await withMenu(`/${lang}/home`, async (page) => {
+      const visited = [];
+      for (const key of [...Array(10).fill('Tab'), ...Array(10).fill('Shift+Tab')]) {
+        await page.keyboard.press(key);
+        visited.push((await readState(page)).focus);
+      }
+      return { visited, state: await readState(page) };
+    });
+    assert.deepEqual(
+      { outside: visited.filter((f) => !f.startsWith('in menu')), open: state.open, path: state.path },
+      { outside: [], open: true, path: `/${lang}/home` },
+    );
+  });
 }
