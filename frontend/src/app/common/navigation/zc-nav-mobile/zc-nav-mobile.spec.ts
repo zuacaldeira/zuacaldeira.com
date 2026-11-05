@@ -52,6 +52,19 @@ describe('ZcNavMobile', () => {
     expect(parts).toEqual(['mark', 'app-language-links', 'app-theme-toggle', 'menu']);
   });
 
+  it('SHELL-06: keeps the name and the menu links out of the phone bar', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    await fixture.whenStable();
+    const header = (fixture.nativeElement as HTMLElement).querySelector('header')!;
+    expect({
+      name: header.textContent?.includes('Zua Caldeira'),
+      menu: header.querySelector('app-zc-sidenav-menu-items') !== null,
+    }).toEqual({ name: false, menu: false });
+  });
+
   it('should create', () => {
     const fixture = TestBed.configureTestingModule({
       providers: [provideRouter([])],
