@@ -135,27 +135,37 @@ for (const lang of ['en', 'de', 'pt']) {
   });
 }
 
-// SHELL-08: the phone's menu. Opens /l/home at 390 px after Angular has started, taps the menu
-// button and waits until the drawer has finished sliding in; `fn` then reads or acts on the page.
-const withMenu = async (route, fn) => {
+// SHELL-08: the phone's menu. Opens /l/home at 390 px after Angular has started, with the menu
+// closed; `fn` then reads or acts on the page.
+const withPhone = async (route, fn) => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   try {
     await page.goto(`${origin}${route}`, { waitUntil: 'networkidle' });
     await page.waitForSelector('app-zc-nav-mobile header', { timeout: 15000 });
     await page.evaluate(() => document.fonts.ready);
-    await page.click('app-zc-nav-mobile header button.menu-button');
-    await page.waitForSelector('mat-sidenav.mat-drawer-opened');
-    await settled(page);
-    // Open in G's sense: Material has moved focus into the drawer (after the slide, a tick later)
-    // and so has noted the menu button to give it back to.
-    await page.waitForFunction(() =>
-      document.querySelector('mat-sidenav').contains(document.activeElement),
-    );
     return await fn(page);
   } finally {
     await page.close();
   }
 };
+
+// Taps the menu button and waits until the menu is open in G's sense: the slide has ended and
+// Material has moved focus into the drawer (a tick after the slide), so it has noted the menu
+// button to give focus back to.
+const openMenu = async (page) => {
+  await page.click('app-zc-nav-mobile header button.menu-button');
+  await page.waitForSelector('mat-sidenav.mat-drawer-opened');
+  await settled(page);
+  await page.waitForFunction(() =>
+    document.querySelector('mat-sidenav').contains(document.activeElement),
+  );
+};
+
+const withMenu = (route, fn) =>
+  withPhone(route, async (page) => {
+    await openMenu(page);
+    return fn(page);
+  });
 
 // Until the drawer's slide has ended. Material marks it with mat-drawer-animating from the moment
 // it opens or closes; the transition itself may not have started yet, so the class is the signal.
