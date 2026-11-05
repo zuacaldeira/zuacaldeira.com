@@ -254,4 +254,11 @@ for (const lang of ['en', 'de', 'pt']) {
     );
     assert.deepEqual(state, CLOSED_ON_BUTTON(lang));
   });
+
+  test(`SHELL-08 A3: on /${lang}/home, the close button closes the menu and focus returns to the menu button`, async () => {
+    const state = await withMenu(`/${lang}/home`, (page) =>
+      stateAfter(page, (p) => p.click('mat-sidenav mat-toolbar button')),
+    );
+    assert.deepEqual(state, CLOSED_ON_BUTTON(lang));
+  });
 }
