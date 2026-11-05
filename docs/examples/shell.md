@@ -17,7 +17,7 @@ the home hero, because the hero's page needs them.
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | |
 | SHELL-06 | a phone (the CDK `Handset` query) | the page loads and has started in the browser | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | yes (browser and unit, 2026-11-05) |
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
-| SHELL-08 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | it slides in from the right, is a dialog named Menu / Menü / Menu, and lists Home, About, Research, Running and Contact, translated, to `/xx/…`, each at least 44 px high; Escape, the close button or a tap beside it closes it and focus returns to the menu button; following a link closes it on the new page | |
+| SHELL-08 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | it slides in from the right, is a dialog named Menu / Menü / Menu, and lists Home, About, Research, Running and Contact, translated, to `/xx/…`, each at least 44 px high; Escape, the close button or a tap beside it closes it and focus returns to the menu button; following a link closes it on the new page | yes (browser and unit, 2026-11-05) |
 | SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04) |
 | SHELL-10 | a keyboard user on `/de/home` | they press Tab once | focus lands on "Zum Hauptinhalt springen", visibly, and following it moves to `<main>` | |
 | SHELL-11 | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`; no link drops the language prefix (waits for the Software and Texte pages) | |
@@ -31,10 +31,10 @@ the home hero, because the hero's page needs them.
 | SHELL-06-P-03 | the same | the bar is read | the name "Zua Caldeira" or a link of the menu in the bar is refused || yes (break, browser and unit) |
 | SHELL-06-P-04 | the same | the bar is read | any order other than mark, `EN`, `DE`, `PT`, theme, menu is refused || yes (browser and unit: red before) |
 | SHELL-06-P-05 | the same | the page is read | a second header (the desktop bar as well) is refused || yes (break in `ZcPage`) |
-| SHELL-08-P-01 | a phone at 390 px, the menu closed | Escape is pressed | nothing changes: the menu stays closed, focus stays where it was | |
-| SHELL-08-P-02 | the same | Tab is pressed from the menu button | focus never lands on a link of the closed menu | |
-| SHELL-08-P-03 | the menu open | Tab or Shift+Tab is pressed, over and over | focus never leaves the menu for the page behind | |
-| SHELL-08-P-04 | the menu closed | the menu button is tapped twice quickly | the menu is open, not opened and closed again (if red, keeping or refusing it is the developer's call) | |
+| SHELL-08-P-01 | a phone at 390 px, the menu closed | Escape is pressed | nothing changes: the menu stays closed, focus stays where it was | yes (browser; break) |
+| SHELL-08-P-02 | the same | Tab is pressed from the menu button | focus never lands on a link of the closed menu | yes (browser; break) |
+| SHELL-08-P-03 | the menu open | Tab or Shift+Tab is pressed, over and over | focus never leaves the menu for the page behind | yes (browser; break) |
+| SHELL-08-P-04 | the menu closed | the menu button is tapped twice quickly | the menu is open, not opened and closed again (refused, D11) | yes (browser and unit: red before) |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -339,6 +339,52 @@ from `common.mainNav`. The five links are already unit-tested in `zc-sidenav-men
 44 px heights are CSS, driven by A1. Rows green on their first run (Material's behaviour) are each
 shown to bite by a declared break, then restored.
 
+**Done 2026-11-05.** A1 went red in all three languages with `name null, navName 'Main navigation',
+left 0, right 280` (no name, English, from the left) and green after U1 (`'start'` → `'end'`), U2
+(`null` → `'Menü'`) and U3 (`'Main navigation'` → `'Hauptnavigation'`); the desktop menu's name went
+red the same way (`'Navegação principal'`). The links and their 44 px were green at once; the height
+check bit with the list items at 32 px. A2 to A5 and P-01 to P-03 were green on their first run
+(Material's drawer), and each was shown to bite by a declared break, rebuilt, then restored:
+A2 by `[disableClose]` (`open: true, focus: 'in menu: close'`) and by blurring the menu button on
+`(closed)` (`focus: 'body'`); A3 by removing the close button's click; A4 and P-03 by
+`[hasBackdrop]="false"` (Material traps focus only while the backdrop shows); A5 by removing
+`drawer.close()` on `NavigationEnd` (the shell lives once in `app.html`, so that handler is what
+closes it); P-01 by an Escape handler that opens the drawer.
+
+Three things about the test itself:
+- **A2 and A4 were flaky at first** (de A2 `open: true`, pt A4 `focus: 'body'`). Material moves focus
+  into the drawer, and notes the element to give it back to, in an `openedChange` handler a tick after
+  the slide; a key or tap in that gap finds nothing noted and blurs to `body`. The tests now act only
+  once focus is inside the drawer, G's open state (three runs, 12/12).
+- **P-02's first version checked nothing.** With `position="end"` Material puts the drawer after the
+  content, so its links come after the footer; 30 Tabs from the top never got there and stayed green
+  under the break. The walk now goes from the menu button to the end of the document. Lifting the
+  drawer's `visibility` alone also stayed green: Material hides a closed drawer twice, with
+  `visibility: hidden` and `display: none` on its inner container; with both lifted P-02 reached
+  the close button and all five links.
+- **P-04 was a real finding.** The second tap of a quick double tap reached the button before the
+  backdrop covered it, and `toggle()` closed the menu mid-slide (`open: false`). Material then left the
+  closed drawer marked `mat-drawer-animating`, so it was not hidden and Tab reached its six controls
+  off-screen, against P-02. Refused (D11): the button only opens the menu. The unit test was red first
+  (`expected false to be true`). No other `toggle()` is left in `src/app`.
+
+The browser suite: 30/30 (SHELL-06 and SHELL-08). The unit suite 195 passed, 5 skipped;
+`acceptance` 22/22; the build prerenders 20 routes, and the built `/de/home` names its navigation
+"Hauptnavigation".
+
+Leftovers, not built:
+- **The logo's `aria-label="Home"`** (`zc-nav-mobile.html`, `zc-nav-desktop.html`) and **the theme
+  button's labels** (`theme-toggle.html`) are not translated (D8).
+- **`aria-current`** on the current page's link in the menu (D10).
+- **Focus after following a link** in the menu: Material gives it back to the menu button; whether it
+  should go to `<main>` or the new page's heading is for SHELL-10 (D9).
+- **A tap just after the menu has slid in** (the gap above) loses focus to `body` for a real visitor
+  too. It lasts a tick; not worked around.
+- **The initial bundle** is still over its warning budget: 510.21 kB against 500 kB during the
+  element, 510.19 kB after `toggle()` went.
+- **Not seen in a screenshot:** the menu from the right was measured in the browser (right edge 390),
+  but not reviewed visually against the mock-up's drawer (white, `--zc-shadow-lg`, Plex Mono links).
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
@@ -399,6 +445,9 @@ Agreed with the developer on 2026-11-05, for SHELL-08:
 - **D9, after following a link** A5 checks only that the menu closes; where focus goes stays open for
   SHELL-10.
 - **D10, `aria-current`** on the current page's link in the menu is a leftover.
+- **D11, a double tap on the menu button** (P-04's finding) is refused: the button only opens the
+  menu, `(click)="drawer.open()"` instead of `toggle()`; closing stays with Escape, the close button,
+  a tap beside the menu and a link.
 
 Agreed with the developer on 2026-11-05, for SHELL-06:
 
