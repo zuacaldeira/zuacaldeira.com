@@ -15,7 +15,7 @@ the home hero, because the hero's page needs them.
 | SHELL-03 | the built `/pt/home` | the footer is read | it lists English, Deutsch, Português as links, Português with `aria-current` | yes (build and unit, 2026-11-04) |
 | SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read; the language links (they carry `hreflang`) go to the same page in their own language instead (SHELL-02) | yes (build, 2026-11-04; P-01 to P-04) |
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | |
-| SHELL-06 | a phone (the CDK `Handset` query) | the page loads | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | |
+| SHELL-06 | a phone (the CDK `Handset` query) | the page loads and has started in the browser | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | |
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
 | SHELL-08 | the phone's menu is open | it is read | it lists the four navigation links and the contact link, each at least 44 px high, translated; Escape or the close button closes it and focus returns to the menu button | |
 | SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04) |
@@ -26,6 +26,11 @@ the home hero, because the hero's page needs them.
 | SHELL-02-P-02 | any built page | its language links are read | a link whose `hreflang` and `href` disagree (`hreflang="pt"`, `/en/research`) is refused, here and by SHELL-04 | yes (break in the build, both) |
 | SHELL-02-P-03 | any built page | its language links are read | a language the site does not offer (a fourth link, `/fr/research`) is refused | yes (break in the build) |
 | SHELL-02-P-04 | a visitor in the browser on `/de/research` | they move to `/de/about` | `PT` follows at once to `/pt/about`; links left at `/pt/research` are refused | yes (unit) |
+| SHELL-06-P-01 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home` | the bar is measured | a control smaller than 44 × 44 px (its visible box) is refused | |
+| SHELL-06-P-02 | the same | the bar is measured | a bar or a page wider than 390 px is refused | |
+| SHELL-06-P-03 | the same | the bar is read | the name "Zua Caldeira" or a link of the menu in the bar is refused | |
+| SHELL-06-P-04 | the same | the bar is read | any order other than mark, `EN`, `DE`, `PT`, theme, menu is refused | |
+| SHELL-06-P-05 | the same | the page is read | a second header (the desktop bar as well) is refused | |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -185,6 +190,61 @@ Leftovers, not built:
 - `app.routes.spec.ts` and `i18n/de.ts`, `en.ts`, `pt.ts` were not Prettier-clean before this element;
   left as they were.
 
+## Diagram: SHELL-06 (acceptance, in the browser)
+
+The prerendered HTML holds the desktop bar only (the server does not know the screen), so the
+phone bar is seen only in a browser, after Angular has started.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Test as Browser test (playwright-core, Chromium 390×844)
+    participant Srv as static server (stands in for nginx)
+    participant Page as ZcPage
+    participant BO as BreakpointObserver (Handset)
+    participant Bar as ZcNavMobile header
+    Test->>Srv: GET /de/home
+    Srv-->>Test: prerendered HTML (desktop bar)
+    Note over Page,BO: Angular starts in the browser
+    Page->>BO: observe(Handset)
+    BO-->>Page: { handset ✓ , other }
+    Page->>Bar: render phone bar
+    Bar-->>Test: bar[mark, EN, DE, PT, theme, menu]
+    Test->>Bar: A1 order · A2 each ≥ 44×44 · A3 right edge ≤ 390, page width ≤ 390 · A4 no name or menu links · A5 one header
+    Note over Test,Bar: P-01…05: each is a bar outside G, so the test goes red
+```
+
+Session type. Convention: a role that a branch never reaches just ends there.
+
+```
+G = Phone → Srv : get(/l/home) . Srv → Phone : html(desktopBar) .
+    Page → BO : observe(Handset) .
+    BO → Page : { handset . Page → Phone : bar[mark, langs(EN,DE,PT), theme, menu]  (each ≥ 44², total width ≤ 390) . end ,
+                  other   . Page → Phone : desktopBar . end }
+
+Phone ↾ = Srv!get . Srv?html . Page?{ bar[mark,langs,theme,menu] . end , desktopBar . end }
+Page ↾  = BO!observe . BO?{ handset . Phone!bar[…] . end , other . Phone!desktopBar . end }
+```
+
+| Diagram arrow | Step in G | Rows |
+|---|---|---|
+| 1–2 GET / HTML | `get` / `html(desktopBar)` | (setup) |
+| 3–4 observe / handset | `observe`, `handset` branch | A5, P-05 |
+| 5–6 phone bar | `bar[mark, langs, theme, menu]` | A1, unit 1, P-04 |
+| item sizes | `each ≥ 44²` | A2, P-01 |
+| widths | `total ≤ 390` | A3, P-02 |
+| nothing else in the bar | the bar's list is closed | A4, unit 2, P-03 |
+| `other` branch | the desktop bar | SHELL-01, 04 (build) |
+
+Test list. Acceptance (`frontend/acceptance/browser/shell-phone.test.mjs`, `npm run acceptance:browser`):
+the built site served locally, opened at 390×844 in portrait, after Angular has started, on `/en/home`,
+`/de/home`, `/pt/home`: A1 the bar's controls are exactly mark, EN, DE, PT, theme, menu, in order; A2
+each is at least 44×44 px; A3 the header's right edge and the page's width are at most 390 px; A4 no
+"Zua Caldeira" and no menu link in the bar; A5 exactly one header. Unit (`zc-nav-mobile.spec.ts`):
+1 the bar's order is logo, language links, theme, menu button; 2 the header holds no name and no menu
+list. The sizes are CSS, driven by A2 only. Protocol rows: P-01 and P-04 are red before this element
+(40 px buttons, the menu first); P-02, P-03 and P-05 by declared breaks, then restored.
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
@@ -216,6 +276,11 @@ languages. The real header needs a check at both sides of the CDK `Handset` quer
 | SHELL-02-P-02 | A language link always goes to the language it names. | Ein Sprachlink führt immer in die Sprache, die er nennt. | Um link de língua leva sempre à língua que indica. |
 | SHELL-02-P-03 | The language links offer exactly English, German and Portuguese. | Die Sprachlinks bieten genau Englisch, Deutsch und Portugiesisch an. | Os links de língua oferecem exatamente inglês, alemão e português. |
 | SHELL-02-P-04 | After moving to another page, the language links follow at once. | Nach einem Seitenwechsel folgen die Sprachlinks sofort. | Depois de mudar de página, os links de língua acompanham logo. |
+| SHELL-06-P-01 | Every control in the phone bar is at least 44 px each way. | Jedes Bedienelement der Handy-Leiste ist in beide Richtungen mindestens 44 px groß. | Cada controlo da barra do telemóvel tem pelo menos 44 px em cada direção. |
+| SHELL-06-P-02 | Nothing in the phone bar reaches past the edge of the screen. | Nichts in der Handy-Leiste ragt über den Bildschirmrand. | Nada na barra do telemóvel passa da margem do ecrã. |
+| SHELL-06-P-03 | The phone bar never shows the name or the menu's links. | Die Handy-Leiste zeigt nie den Namen oder die Links des Menüs. | A barra do telemóvel nunca mostra o nome nem os links do menu. |
+| SHELL-06-P-04 | The phone bar keeps its order: mark, languages, theme, menu. | Die Handy-Leiste behält ihre Reihenfolge: Zeichen, Sprachen, Farbschema, Menü. | A barra do telemóvel mantém a ordem: marca, línguas, tema, menu. |
+| SHELL-06-P-05 | A phone shows only the phone bar, never the desktop bar as well. | Ein Handy zeigt nur die Handy-Leiste, nie zusätzlich die Desktop-Leiste. | Um telemóvel mostra só a barra do telemóvel, nunca também a do computador. |
 
 ## Decisions
 
@@ -223,6 +288,18 @@ languages. The real header needs a check at both sides of the CDK `Handset` quer
 - **Language names in full appear in the footer** too, as a second way to reach them.
 - **"⊥ Kontakt" and "⊥ Contacto"** use today's translated nav words, because "Kontakt
   aufnehmen" does not fit the bar at 768 px.
+
+Agreed with the developer on 2026-11-05, for SHELL-06:
+
+- **D1, a browser test:** `playwright-core` (no bundled browser) as a dev dependency of `frontend/`,
+  `npm run acceptance:browser`, and one CI step that installs Chromium and runs it after `acceptance`.
+- **D2, 44 px is the visible box** of each control, not Material's invisible 48 px touch target; the
+  theme and menu buttons become 44 px.
+- **D3, the width check:** the header and the page's width, on the three home pages.
+- **D4, after Angular has started.** The prerendered HTML holds the desktop bar; the page's width before
+  Angular starts is measured once, in the first red run, and recorded as a finding.
+- **D5, the drawer's side** (from the right, in the spec) stays with SHELL-08; here the menu button
+  only moves to the end of the bar.
 
 Agreed with the developer on 2026-11-04, for SHELL-04:
 
