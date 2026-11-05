@@ -32,12 +32,21 @@ header {
   border-bottom: 1px solid var(--zc-border-light);
 }
 
+/* Thumb-sized: every control in the bar is at least 44 × 44 px, its visible box (SHELL-06, D2). */
+.mobile-toolbar {
+  --mat-icon-button-state-layer-size: 44px;
+}
+
 .mobile-toolbar app-theme-toggle {
   color: var(--nav-fg);
   --mdc-icon-button-icon-color: var(--nav-fg);
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
   text-decoration: none;
   margin-left: var(--zc-space-2);
 }

@@ -10,6 +10,7 @@
     "serve:ssr:zuacaldeira-com": "node dist/zuacaldeira-com/server/server.mjs",
     "acceptance": "node --test acceptance/*.test.mjs",
     "acceptance:nginx": "node --test acceptance/nginx/*.test.mjs",
+    "acceptance:browser": "node --test acceptance/browser/*.test.mjs",
     "test:scripts": "node --test scripts/*.test.mjs",
     "content": "node scripts/fetch-content.mjs"
   },
@@ -50,6 +51,7 @@
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
     "jsdom": "^27.1.0",
+    "playwright-core": "^1.64.1",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

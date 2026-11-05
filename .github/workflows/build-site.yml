@@ -96,6 +96,12 @@ jobs:
 
       - run: npm run acceptance
 
+      # What only a browser sees: the phone bar exists after Angular has started (SHELL-06, D1).
+      - name: Check the phone bar in Chromium
+        run: |
+          npx playwright-core install --with-deps --only-shell chromium
+          npm run acceptance:browser
+
       # The web image's nginx config, run for real on the prepared site (D30): unknown paths
       # answer 404 with 404.html.
       - run: npm run acceptance:nginx
