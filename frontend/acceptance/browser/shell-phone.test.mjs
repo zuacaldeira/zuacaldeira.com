@@ -146,15 +146,24 @@ const withMenu = async (route, fn) => {
     await page.click('app-zc-nav-mobile header button.menu-button');
     await page.waitForSelector('mat-sidenav.mat-drawer-opened');
     await settled(page);
+    // Open in G's sense: Material has moved focus into the drawer (after the slide, a tick later)
+    // and so has noted the menu button to give it back to.
+    await page.waitForFunction(() =>
+      document.querySelector('mat-sidenav').contains(document.activeElement),
+    );
     return await fn(page);
   } finally {
     await page.close();
   }
 };
 
-// Until the drawer's slide (a CSS transition) has ended.
+// Until the drawer's slide has ended. Material marks it with mat-drawer-animating from the moment
+// it opens or closes; the transition itself may not have started yet, so the class is the signal.
 const settled = (page) =>
-  page.waitForFunction(() => document.querySelector('mat-sidenav').getAnimations().length === 0);
+  page.waitForFunction(() => {
+    const drawer = document.querySelector('mat-sidenav');
+    return !drawer.classList.contains('mat-drawer-animating') && drawer.getAnimations().length === 0;
+  });
 
 // The menu as a visitor reads it: the dialog's name and box, the nav's name, and each link's
 // label (without its icon), href and height.
@@ -258,6 +267,14 @@ for (const lang of ['en', 'de', 'pt']) {
   test(`SHELL-08 A3: on /${lang}/home, the close button closes the menu and focus returns to the menu button`, async () => {
     const state = await withMenu(`/${lang}/home`, (page) =>
       stateAfter(page, (p) => p.click('mat-sidenav mat-toolbar button')),
+    );
+    assert.deepEqual(state, CLOSED_ON_BUTTON(lang));
+  });
+
+  test(`SHELL-08 A4: on /${lang}/home, a tap beside the menu closes it and focus returns to the menu button`, async () => {
+    // The drawer is 280 px wide at the right edge, so x 40 is the page behind, under the backdrop.
+    const state = await withMenu(`/${lang}/home`, (page) =>
+      stateAfter(page, (p) => p.mouse.click(40, 400)),
     );
     assert.deepEqual(state, CLOSED_ON_BUTTON(lang));
   });
