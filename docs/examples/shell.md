@@ -382,8 +382,11 @@ Leftovers, not built:
   too. It lasts a tick; not worked around.
 - **The initial bundle** is still over its warning budget: 510.21 kB against 500 kB during the
   element, 510.19 kB after `toggle()` went.
-- **Not seen in a screenshot:** the menu from the right was measured in the browser (right edge 390),
-  but not reviewed visually against the mock-up's drawer (white, `--zc-shadow-lg`, Plex Mono links).
+
+**Reviewed 2026-11-05.** After `63f5946` was pushed and deployed, the developer reviewed the phone
+menu on next.zuacaldeira.com on a phone, against the mock-up's drawer: "good as it is". That settles
+the leftover of a visual comparison with the mock-up's drawer (white, `--zc-shadow-lg`, Plex Mono
+links); no change asked for.
 
 ## Width of the header
 
