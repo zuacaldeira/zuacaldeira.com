@@ -306,4 +306,25 @@ for (const lang of ['en', 'de', 'pt']) {
     assert.deepEqual(after, before);
     assert.equal(before.open, false);
   });
+
+  test(`SHELL-08-P-02: on /${lang}/home with the menu closed, Tab never reaches the menu's links`, async () => {
+    // From the menu button to the end of the document: at the end (position="end") Material puts
+    // the drawer after the content, so its links would come last, after the footer.
+    const { visited, state } = await withPhone(`/${lang}/home`, async (page) => {
+      await page.focus('app-zc-nav-mobile header button.menu-button');
+      const visited = [];
+      for (let i = 0; i < 150; i++) {
+        await page.keyboard.press('Tab');
+        const { focus } = await readState(page);
+        if (focus === 'body') break; // focus has left the document
+        visited.push(focus);
+      }
+      return { visited, state: await readState(page) };
+    });
+    assert.equal(state.focus, 'body', `did not reach the end: ${JSON.stringify(visited)}`);
+    assert.deepEqual(
+      { inMenu: visited.filter((f) => f.startsWith('in menu')), open: state.open, path: state.path },
+      { inMenu: [], open: false, path: `/${lang}/home` },
+    );
+  });
 }
