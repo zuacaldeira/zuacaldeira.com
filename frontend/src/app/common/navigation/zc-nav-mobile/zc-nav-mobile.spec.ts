@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { ZcNavMobile } from './zc-nav-mobile';
-import { MatSidenav } from '@angular/material/sidenav';
 import { I18nService } from '../../../services/i18n.service';
 
 describe('ZcNavMobile', () => {
@@ -116,15 +115,18 @@ describe('ZcNavMobile', () => {
     expect(fixture.componentInstance.t()).toBeTruthy();
   });
 
-  it('should call toggle on the drawer', () => {
-    const fixture = TestBed.configureTestingModule({
+  it('SHELL-08-P-04: the menu button opens the drawer, and a second click leaves it open', async () => {
+    TestBed.configureTestingModule({
       providers: [provideRouter([])],
-    })
-      .overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } })
-      .createComponent(ZcNavMobile);
-    fixture.detectChanges();
-    const mockDrawer = { toggle: vi.fn() } as unknown as MatSidenav;
-    fixture.componentInstance.toggle(mockDrawer);
-    expect(mockDrawer.toggle).toHaveBeenCalled();
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    await fixture.whenStable();
+    const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>(
+      'header button.menu-button',
+    )!;
+    button.click();
+    button.click();
+    await fixture.whenStable();
+    expect(fixture.componentInstance.drawer.opened).toBe(true);
   });
 });

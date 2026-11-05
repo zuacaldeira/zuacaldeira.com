@@ -343,4 +343,15 @@ for (const lang of ['en', 'de', 'pt']) {
       { outside: [], open: true, path: `/${lang}/home` },
     );
   });
+
+  test(`SHELL-08-P-04: on /${lang}/home, a quick double tap on the menu button leaves the menu open`, async () => {
+    // Read after a fixed wait, not `settled`: a menu opened and closed mid-slide stays marked
+    // mat-drawer-animating, so waiting for the slide to end would never return.
+    const { open, path } = await withPhone(`/${lang}/home`, async (page) => {
+      await page.dblclick('app-zc-nav-mobile header button.menu-button');
+      await page.waitForTimeout(1500);
+      return readState(page);
+    });
+    assert.deepEqual({ open, path }, { open: true, path: `/${lang}/home` });
+  });
 }

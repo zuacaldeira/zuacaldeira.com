@@ -43,8 +43,4 @@ export class ZcNavMobile {
       }
     });
   }
-
-  toggle(drawer: MatSidenav): void {
-    drawer.toggle();
-  }
 }
