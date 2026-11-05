@@ -85,6 +85,17 @@ describe('ZcNavMobile', () => {
     expect(drawer?.getAttribute('aria-label')).toBe('Menü');
   });
 
+  it("SHELL-08: names the menu's navigation in the page language, Hauptnavigation", async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('de');
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    await fixture.whenStable();
+    const nav = (fixture.nativeElement as HTMLElement).querySelector('mat-sidenav nav');
+    expect(nav?.getAttribute('aria-label')).toBe('Hauptnavigation');
+  });
+
   it('should create', () => {
     const fixture = TestBed.configureTestingModule({
       providers: [provideRouter([])],

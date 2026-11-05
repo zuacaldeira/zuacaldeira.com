@@ -81,6 +81,7 @@ export const en: Translations = {
     closeMenu: 'Close menu',
     openMenu: 'Open menu',
     language: 'Language',
+    mainNav: 'Main',
   },
   notFound: {
     title: 'Page not found',

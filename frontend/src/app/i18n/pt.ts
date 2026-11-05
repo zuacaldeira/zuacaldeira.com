@@ -81,6 +81,7 @@ export const pt: Translations = {
     closeMenu: 'Fechar menu',
     openMenu: 'Abrir menu',
     language: 'Língua',
+    mainNav: 'Navegação principal',
   },
   notFound: {
     title: 'Página não encontrada',
