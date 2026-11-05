@@ -24,20 +24,21 @@
   <mat-sidenav-content>
     <header>
       <mat-toolbar class="mobile-toolbar">
-        <button
-          type="button"
-          [attr.aria-label]="t().common.openMenu"
-          mat-icon-button
-          (click)="toggle(drawer)"
-        >
-          <mat-icon>menu</mat-icon>
-        </button>
         <a [routerLink]="link('home')" class="logo" aria-label="Home">
           <span class="logo-text">zc</span>
         </a>
         <span class="spacer"></span>
         <app-language-links />
         <app-theme-toggle />
+        <button
+          type="button"
+          class="menu-button"
+          [attr.aria-label]="t().common.openMenu"
+          mat-icon-button
+          (click)="toggle(drawer)"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
       </mat-toolbar>
     </header>
 

@@ -33,6 +33,25 @@ describe('ZcNavMobile', () => {
     expect(codes).toEqual(['EN', 'DE', 'PT']);
   });
 
+  it('SHELL-06: orders the phone bar mark, EN DE PT, theme, menu', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    await fixture.whenStable();
+    const toolbar = (fixture.nativeElement as HTMLElement).querySelector('header mat-toolbar')!;
+    const parts = [...toolbar.children]
+      .filter((el) => !el.classList.contains('spacer'))
+      .map((el) =>
+        el.matches('a.logo')
+          ? 'mark'
+          : el.matches('button.menu-button')
+            ? 'menu'
+            : el.tagName.toLowerCase(),
+      );
+    expect(parts).toEqual(['mark', 'app-language-links', 'app-theme-toggle', 'menu']);
+  });
+
   it('should create', () => {
     const fixture = TestBed.configureTestingModule({
       providers: [provideRouter([])],
