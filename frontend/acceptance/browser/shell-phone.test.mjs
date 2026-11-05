@@ -218,3 +218,40 @@ for (const lang of ['en', 'de', 'pt']) {
     );
   });
 }
+
+// The menu's state as G sees it: open or closed, which element has focus, and the URL.
+const readState = (page) =>
+  page.evaluate(() => {
+    const el = document.activeElement;
+    const focus =
+      !el || el === document.body
+        ? 'body'
+        : el.matches('app-zc-nav-mobile header button.menu-button')
+          ? 'menu button'
+          : el.closest('mat-sidenav')
+            ? `in menu: ${el.textContent.trim().slice(0, 30)}`
+            : `page: ${el.tagName.toLowerCase()} ${el.textContent.trim().slice(0, 30)}`;
+    return {
+      open: document.querySelector('mat-sidenav').classList.contains('mat-drawer-opened'),
+      focus,
+      path: location.pathname,
+    };
+  });
+
+// `act` is a step of the visitor; the state is read once the drawer has had time to slide (or not).
+const stateAfter = async (page, act) => {
+  await act(page);
+  await page.waitForTimeout(600); // longer than the drawer's slide
+  await settled(page);
+  return readState(page);
+};
+const CLOSED_ON_BUTTON = (lang) => ({ open: false, focus: 'menu button', path: `/${lang}/home` });
+
+for (const lang of ['en', 'de', 'pt']) {
+  test(`SHELL-08 A2: on /${lang}/home, Escape closes the menu and focus returns to the menu button`, async () => {
+    const state = await withMenu(`/${lang}/home`, (page) =>
+      stateAfter(page, (p) => p.keyboard.press('Escape')),
+    );
+    assert.deepEqual(state, CLOSED_ON_BUTTON(lang));
+  });
+}
