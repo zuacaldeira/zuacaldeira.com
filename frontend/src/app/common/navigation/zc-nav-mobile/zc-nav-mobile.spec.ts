@@ -65,6 +65,15 @@ describe('ZcNavMobile', () => {
     }).toEqual({ name: false, menu: false });
   });
 
+  it('SHELL-08: slides the menu in from the right, the end of the bar', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    await fixture.whenStable();
+    expect(fixture.componentInstance.drawer.position).toBe('end');
+  });
+
   it('should create', () => {
     const fixture = TestBed.configureTestingModule({
       providers: [provideRouter([])],

@@ -2,7 +2,7 @@
 // only, so the phone bar exists only after Angular has started (D4 in shell.md). Run `npm run build`
 // first, then `npm run acceptance:browser`. CHROMIUM_PATH picks a Chromium of your own; without
 // it, playwright-core's (CI: `npx playwright-core install --with-deps --only-shell chromium`).
-// Example: SHELL-06 and its protocol rows in docs/examples/shell.md.
+// Examples: SHELL-06, SHELL-08 and their protocol rows in docs/examples/shell.md.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
@@ -131,6 +131,90 @@ for (const lang of ['en', 'de', 'pt']) {
         headers: 1,
       },
       JSON.stringify(bar),
+    );
+  });
+}
+
+// SHELL-08: the phone's menu. Opens /l/home at 390 px after Angular has started, taps the menu
+// button and waits until the drawer has finished sliding in; `fn` then reads or acts on the page.
+const withMenu = async (route, fn) => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  try {
+    await page.goto(`${origin}${route}`, { waitUntil: 'networkidle' });
+    await page.waitForSelector('app-zc-nav-mobile header', { timeout: 15000 });
+    await page.evaluate(() => document.fonts.ready);
+    await page.click('app-zc-nav-mobile header button.menu-button');
+    await page.waitForSelector('mat-sidenav.mat-drawer-opened');
+    await settled(page);
+    return await fn(page);
+  } finally {
+    await page.close();
+  }
+};
+
+// Until the drawer's slide (a CSS transition) has ended.
+const settled = (page) =>
+  page.waitForFunction(() => document.querySelector('mat-sidenav').getAnimations().length === 0);
+
+// The menu as a visitor reads it: the dialog's name and box, the nav's name, and each link's
+// label (without its icon), href and height.
+const readMenu = (page) =>
+  page.evaluate(() => {
+    const drawer = document.querySelector('mat-sidenav');
+    const box = drawer.getBoundingClientRect();
+    const label = (a) => {
+      const copy = a.cloneNode(true);
+      copy.querySelectorAll('mat-icon').forEach((icon) => icon.remove());
+      return copy.textContent.trim();
+    };
+    const links = [...drawer.querySelectorAll('nav a')];
+    return {
+      role: drawer.getAttribute('role'),
+      name: drawer.getAttribute('aria-label'),
+      navName: drawer.querySelector('nav')?.getAttribute('aria-label'),
+      left: box.left,
+      right: box.right,
+      links: links.map((a) => `${label(a)} ${a.getAttribute('href')}`),
+      low: links.filter((a) => a.getBoundingClientRect().height < 44).map(label),
+    };
+  });
+
+const MENU = {
+  en: { name: 'Menu', nav: 'Main', labels: ['Home', 'About', 'Research', 'Running', 'Contact'] },
+  de: {
+    name: 'Menü',
+    nav: 'Hauptnavigation',
+    labels: ['Startseite', 'Über mich', 'Forschung', 'Laufen', 'Kontakt'],
+  },
+  pt: {
+    name: 'Menu',
+    nav: 'Navegação principal',
+    labels: ['Início', 'Sobre', 'Investigação', 'Corrida', 'Contacto'],
+  },
+};
+const PAGES = ['home', 'about', 'research', 'running', 'contact'];
+
+for (const lang of ['en', 'de', 'pt']) {
+  test(`SHELL-08 A1: on a phone, /${lang}/home's menu slides in from the right, named, with five links, each 44 px high`, async () => {
+    const menu = await withMenu(`/${lang}/home`, readMenu);
+    assert.deepEqual(
+      {
+        role: menu.role,
+        name: menu.name,
+        navName: menu.navName,
+        fromRight: Math.round(menu.right) === 390 && menu.left > 0,
+        links: menu.links,
+        low: menu.low,
+      },
+      {
+        role: 'dialog',
+        name: MENU[lang].name,
+        navName: MENU[lang].nav,
+        fromRight: true,
+        links: PAGES.map((p, i) => `${MENU[lang].labels[i]} /${lang}/${p}`),
+        low: [],
+      },
+      JSON.stringify(menu),
     );
   });
 }
