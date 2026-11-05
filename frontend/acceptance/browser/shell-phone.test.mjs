@@ -296,4 +296,14 @@ for (const lang of ['en', 'de', 'pt']) {
     );
     assert.deepEqual({ open, path }, { open: false, path: `/${lang}/about` });
   });
+
+  test(`SHELL-08-P-01: on /${lang}/home with the menu closed, Escape changes nothing`, async () => {
+    const [before, after] = await withPhone(`/${lang}/home`, async (page) => {
+      await page.focus('app-zc-nav-mobile header a.logo');
+      const before = await readState(page);
+      return [before, await stateAfter(page, (p) => p.keyboard.press('Escape'))];
+    });
+    assert.deepEqual(after, before);
+    assert.equal(before.open, false);
+  });
 }
