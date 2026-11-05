@@ -15,7 +15,7 @@ the home hero, because the hero's page needs them.
 | SHELL-03 | the built `/pt/home` | the footer is read | it lists English, Deutsch, Português as links, Português with `aria-current` | yes (build and unit, 2026-11-04) |
 | SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read; the language links (they carry `hreflang`) go to the same page in their own language instead (SHELL-02) | yes (build, 2026-11-04; P-01 to P-04) |
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | |
-| SHELL-06 | a phone (the CDK `Handset` query) | the page loads and has started in the browser | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | |
+| SHELL-06 | a phone (the CDK `Handset` query) | the page loads and has started in the browser | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | yes (browser and unit, 2026-11-05) |
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
 | SHELL-08 | the phone's menu is open | it is read | it lists the four navigation links and the contact link, each at least 44 px high, translated; Escape or the close button closes it and focus returns to the menu button | |
 | SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04) |
@@ -26,11 +26,11 @@ the home hero, because the hero's page needs them.
 | SHELL-02-P-02 | any built page | its language links are read | a link whose `hreflang` and `href` disagree (`hreflang="pt"`, `/en/research`) is refused, here and by SHELL-04 | yes (break in the build, both) |
 | SHELL-02-P-03 | any built page | its language links are read | a language the site does not offer (a fourth link, `/fr/research`) is refused | yes (break in the build) |
 | SHELL-02-P-04 | a visitor in the browser on `/de/research` | they move to `/de/about` | `PT` follows at once to `/pt/about`; links left at `/pt/research` are refused | yes (unit) |
-| SHELL-06-P-01 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home` | the bar is measured | a control smaller than 44 × 44 px (its visible box) is refused | |
-| SHELL-06-P-02 | the same | the bar is measured | a bar or a page wider than 390 px is refused | |
-| SHELL-06-P-03 | the same | the bar is read | the name "Zua Caldeira" or a link of the menu in the bar is refused | |
-| SHELL-06-P-04 | the same | the bar is read | any order other than mark, `EN`, `DE`, `PT`, theme, menu is refused | |
-| SHELL-06-P-05 | the same | the page is read | a second header (the desktop bar as well) is refused | |
+| SHELL-06-P-01 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home` | the bar is measured | a control smaller than 44 × 44 px (its visible box) is refused || yes (browser: red before, 40 px) |
+| SHELL-06-P-02 | the same | the bar is measured | a bar or a page wider than 390 px is refused || yes (break in the CSS) |
+| SHELL-06-P-03 | the same | the bar is read | the name "Zua Caldeira" or a link of the menu in the bar is refused || yes (break, browser and unit) |
+| SHELL-06-P-04 | the same | the bar is read | any order other than mark, `EN`, `DE`, `PT`, theme, menu is refused || yes (browser and unit: red before) |
+| SHELL-06-P-05 | the same | the page is read | a second header (the desktop bar as well) is refused || yes (break in `ZcPage`) |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -244,6 +244,34 @@ each is at least 44×44 px; A3 the header's right edge and the page's width are 
 1 the bar's order is logo, language links, theme, menu button; 2 the header holds no name and no menu
 list. The sizes are CSS, driven by A2 only. Protocol rows: P-01 and P-04 are red before this element
 (40 px buttons, the menu first); P-02, P-03 and P-05 by declared breaks, then restored.
+
+**Done 2026-11-05.** The browser test went red in all three languages with order `[menu, mark, EN,
+DE, PT, theme]` and `small: [menu 40×40, mark 26.4375×28, theme 40×40]` (P-04, P-01). Unit 1 was red
+first (`button` before the mark) and green with the menu button moved to the end; unit 2 was green on
+its first run and bit when the name and the menu list were put into the bar. The sizes: the mark
+`min-width`/`min-height` 44 px, and `--mat-icon-button-state-layer-size: 44px` on the bar, so the
+icons sit 10 px inside each side. Breaks against the browser test, each rebuilt, then restored:
+P-02 (`min-width: 480px` on the bar) **stayed green at first**: the test measured the header's own
+box, which always has the viewport's width, and the page does not scroll because the bar is clipped.
+A3 now takes the bar's scroll width and the right edge of everything in it, and went red
+(`barRight 480`). P-05 (the desktop bar rendered as well) went red with `headers 2`; P-03 (the name in
+the bar) with `name true` and `barRight 421`. Seen in a screenshot at 390 px on `/de/home`: mark,
+`EN DE PT` with DE underlined, theme, menu.
+
+**Finding (D4), before Angular starts.** With JavaScript off at 390 px, `/en/home`, `/de/home` and
+`/pt/home` hold the prerendered desktop bar: the page does not scroll (`scrollWidth` 390), but the
+bar is 756 px wide inside its header and its last control ends at 752 px, so `EN DE PT`, the contact
+button and the theme are cut off until Angular starts. A switch in CSS instead of
+`BreakpointObserver` would fix it; that is a change of `ZcPage`, its own element.
+
+Leftovers, not built:
+- **The drawer's side** (from the right, in the spec) stays with SHELL-08 (D5).
+- **The theme icon** is a lighter grey than the menu icon in the phone bar; styling, for the design
+  review.
+- **The page width on the other pages** (D3: only the three home pages are measured).
+- **The initial bundle** is still over its warning budget: 510.08 kB against 500 kB.
+- Locally the browser test finds a Chromium in `~/.cache/ms-playwright` when playwright-core's own is
+  not installed; `CHROMIUM_PATH` overrides both.
 
 ## Width of the header
 
