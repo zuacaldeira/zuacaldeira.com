@@ -17,7 +17,7 @@ the home hero, because the hero's page needs them.
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | |
 | SHELL-06 | a phone (the CDK `Handset` query) | the page loads and has started in the browser | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | yes (browser and unit, 2026-11-05) |
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
-| SHELL-08 | the phone's menu is open | it is read | it lists the four navigation links and the contact link, each at least 44 px high, translated; Escape or the close button closes it and focus returns to the menu button | |
+| SHELL-08 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | it slides in from the right, is a dialog named Menu / Menü / Menu, and lists Home, About, Research, Running and Contact, translated, to `/xx/…`, each at least 44 px high; Escape, the close button or a tap beside it closes it and focus returns to the menu button; following a link closes it on the new page | |
 | SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04) |
 | SHELL-10 | a keyboard user on `/de/home` | they press Tab once | focus lands on "Zum Hauptinhalt springen", visibly, and following it moves to `<main>` | |
 | SHELL-11 | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`; no link drops the language prefix (waits for the Software and Texte pages) | |
@@ -31,6 +31,10 @@ the home hero, because the hero's page needs them.
 | SHELL-06-P-03 | the same | the bar is read | the name "Zua Caldeira" or a link of the menu in the bar is refused || yes (break, browser and unit) |
 | SHELL-06-P-04 | the same | the bar is read | any order other than mark, `EN`, `DE`, `PT`, theme, menu is refused || yes (browser and unit: red before) |
 | SHELL-06-P-05 | the same | the page is read | a second header (the desktop bar as well) is refused || yes (break in `ZcPage`) |
+| SHELL-08-P-01 | a phone at 390 px, the menu closed | Escape is pressed | nothing changes: the menu stays closed, focus stays where it was | |
+| SHELL-08-P-02 | the same | Tab is pressed from the menu button | focus never lands on a link of the closed menu | |
+| SHELL-08-P-03 | the menu open | Tab or Shift+Tab is pressed, over and over | focus never leaves the menu for the page behind | |
+| SHELL-08-P-04 | the menu closed | the menu button is tapped twice quickly | the menu is open, not opened and closed again (if red, keeping or refusing it is the developer's call) | |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -273,6 +277,68 @@ Leftovers, not built:
 - Locally the browser test finds a Chromium in `~/.cache/ms-playwright` when playwright-core's own is
   not installed; `CHROMIUM_PATH` overrides both.
 
+## Diagram: SHELL-08 (rules with states, in the browser)
+
+The test enters through Chromium at 390×844 against the built site on the local static server, as in
+SHELL-06. No fakes.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Closed : /l/home loaded, Angular started (SHELL-06)
+    Closed --> Open : tap the menu button (A1)
+    Open --> Closed : Escape (A2) · close button (A3) · tap beside it (A4)<br/>focus → menu button
+    Open --> Closed : follow About → /l/about (A5)
+    Closed --> Closed : Escape: nothing (P-01) · Tab skips the menu's links (P-02)
+    Open --> Open : Tab and Shift+Tab stay inside (P-03) · second tap of a double tap (P-04)
+```
+
+Session type. Convention: a role that a branch never calls just ends there (Router on all but
+`follow`, Menu on `leave`).
+
+```
+G = μX . Visitor → Bar : { open . Bar → Menu : show .
+          Menu → Visitor : menu(dialog name, side = end, links[home, about, research, running, contact] → /l/…, each ≥ 44 px) .
+          Visitor → Menu : { escape    . Menu → Bar : closed . Bar → Visitor : focus(menuButton) . X ,
+                             close     . Menu → Bar : closed . Bar → Visitor : focus(menuButton) . X ,
+                             backdrop  . Menu → Bar : closed . Bar → Visitor : focus(menuButton) . X ,
+                             follow(p) . Menu → Router : navigate(/l/p) . Router → Menu : navigationEnd .
+                                         Menu → Visitor : closed . X } ,
+                         leave . end }
+
+Visitor ↾ = μX . Bar ! { open . Menu ? menu(…) . Menu ! { escape . Bar ? focus . X , close . Bar ? focus . X ,
+                                                          backdrop . Bar ? focus . X , follow(p) . Menu ? closed . X } ,
+                         leave . end }
+Menu ↾    = μX . Bar ? show . Visitor ! menu(…) . Visitor ? { escape . Bar ! closed . X , close . Bar ! closed . X ,
+                         backdrop . Bar ! closed . X , follow(p) . Router ! navigate . Router ? navigationEnd . Visitor ! closed . X }
+```
+
+Forbidden by G: while closed, any `Visitor → Menu` step (P-01 Escape, P-02 Tab into its links);
+while open, a step that skips `Menu` (P-03, the page behind) and a second `open` (P-04). No token or
+version, so no stale-token row.
+
+| Diagram arrow | Step in G | Rows |
+|---|---|---|
+| Closed → Open | `open . show . menu(…)` | A1, U1, U2, U3 |
+| Escape | `escape . closed . focus` | A2 |
+| close button | `close . closed . focus` | A3 |
+| tap beside it | `backdrop . closed . focus` | A4 |
+| follow About | `follow(p) . navigate . navigationEnd . closed` | A5 |
+| Closed → Closed | `Visitor → Menu` refused while closed | P-01, P-02 |
+| Open → Open | leaving `Menu`, a second `open` refused | P-03, P-04 |
+
+Test list. Acceptance (`frontend/acceptance/browser/shell-phone.test.mjs`), in en, de and pt on
+`/xx/home` at 390×844 after Angular has started: A1 a tap on the menu button opens a dialog named
+from the translations, its right edge at 390, its left edge above 0, with exactly five links,
+translated, to `/xx/home, about, research, running, contact`, each at least 44 px high; A2 Escape
+closes it and the menu button has focus; A3 the close button, the same; A4 a tap beside it (the
+backdrop), the same; A5 following About reaches `/xx/about` with the menu closed. P-01 to P-04, each
+refused with the menu's state, the focus and the URL unchanged. Unit (`zc-nav-mobile.spec.ts`): U1 the
+drawer opens from the end; U2 the drawer is named from `common.menu`; U3 the menu's `<nav>` is named
+from `common.mainNav`. Unit (`zc-desktop-menu-items.spec.ts`): the desktop menu's navigation is named
+from `common.mainNav`. The five links are already unit-tested in `zc-sidenav-menu-items.spec.ts`; the
+44 px heights are CSS, driven by A1. Rows green on their first run (Material's behaviour) are each
+shown to bite by a declared break, then restored.
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
@@ -295,7 +361,7 @@ languages. The real header needs a check at both sides of the CDK `Handset` quer
 | SHELL-05 | The contact button at the top is in the page's language and leads to the contact page. | Der Kontakt-Knopf oben steht in der Sprache der Seite und führt zur Kontaktseite. | O botão de contacto no topo está na língua da página e leva à página de contacto. |
 | SHELL-06 | On a phone the top bar fits without sideways scrolling, and every button is big enough for a thumb. | Auf dem Handy passt die obere Leiste ohne seitliches Scrollen, und jeder Knopf ist groß genug für den Daumen. | No telemóvel, a barra de cima cabe sem deslizar para o lado, e cada botão tem tamanho para o polegar. |
 | SHELL-07 | The footer ends with an invitation to talk, the work Zua is open to, an email address and profile links. | Die Fußzeile endet mit einer Einladung zum Gespräch, der Arbeit, für die Zua offen ist, E-Mail und Profil-Links. | O rodapé termina com um convite para conversar, o trabalho a que o Zua está aberto, um e-mail e links de perfil. |
-| SHELL-08 | On a phone the menu lists every link, easy to tap; Escape or its button closes it, and focus returns. | Auf dem Handy zeigt das Menü alle Links, leicht zu tippen; Escape oder der Knopf schließt es, der Fokus kehrt zurück. | No telemóvel, o menu mostra todos os links, fáceis de tocar; fecha com Escape ou o botão, e o foco volta. |
+| SHELL-08 | On a phone the menu slides in from the right and lists every link, easy to tap; Escape, its button or a tap beside it closes it, and focus returns. | Auf dem Handy gleitet das Menü von rechts herein und zeigt alle Links, leicht zu tippen; Escape, der Knopf oder ein Tippen daneben schließt es, der Fokus kehrt zurück. | No telemóvel, o menu desliza da direita e mostra todos os links, fáceis de tocar; fecha com Escape, o botão ou um toque ao lado, e o foco volta. |
 | SHELL-09 | On the "page not found" page, the top and bottom are in English, and the language links lead home. | Auf der Seite „Seite nicht gefunden“ sind Kopf- und Fußzeile englisch, und die Sprachlinks führen zur Startseite. | Na página «página não encontrada», o topo e o rodapé estão em inglês, e os links de língua levam ao início. |
 | SHELL-10 | A keyboard user's first press of Tab shows a visible link that jumps straight to the main content. | Beim ersten Druck auf Tab erscheint sichtbar ein Link, der direkt zum Hauptinhalt springt. | Ao premir Tab pela primeira vez, aparece um link visível que salta diretamente para o conteúdo principal. |
 | SHELL-11 | The main menu has four translated links, and none of them takes the visitor into another language. | Das Hauptmenü hat vier übersetzte Links, und keiner führt in eine andere Sprache. | O menu principal tem quatro links traduzidos, e nenhum leva o visitante para outra língua. |
@@ -309,6 +375,10 @@ languages. The real header needs a check at both sides of the CDK `Handset` quer
 | SHELL-06-P-03 | The phone bar never shows the name or the menu's links. | Die Handy-Leiste zeigt nie den Namen oder die Links des Menüs. | A barra do telemóvel nunca mostra o nome nem os links do menu. |
 | SHELL-06-P-04 | The phone bar keeps its order: mark, languages, theme, menu. | Die Handy-Leiste behält ihre Reihenfolge: Zeichen, Sprachen, Farbschema, Menü. | A barra do telemóvel mantém a ordem: marca, línguas, tema, menu. |
 | SHELL-06-P-05 | A phone shows only the phone bar, never the desktop bar as well. | Ein Handy zeigt nur die Handy-Leiste, nie zusätzlich die Desktop-Leiste. | Um telemóvel mostra só a barra do telemóvel, nunca também a do computador. |
+| SHELL-08-P-01 | Escape does nothing while the menu is closed. | Ist das Menü zu, bewirkt Escape nichts. | Com o menu fechado, Escape não faz nada. |
+| SHELL-08-P-02 | A closed menu's links can't be reached with the keyboard. | Die Links eines geschlossenen Menüs sind mit der Tastatur nicht erreichbar. | Os links de um menu fechado não se alcançam com o teclado. |
+| SHELL-08-P-03 | While the menu is open, the keyboard stays inside it. | Solange das Menü offen ist, bleibt die Tastatur darin. | Enquanto o menu está aberto, o teclado fica dentro dele. |
+| SHELL-08-P-04 | A quick double tap on the menu button leaves the menu open. | Ein schnelles Doppeltippen auf den Menüknopf lässt das Menü offen. | Um toque duplo rápido no botão do menu deixa o menu aberto. |
 
 ## Decisions
 
@@ -316,6 +386,19 @@ languages. The real header needs a check at both sides of the CDK `Handset` quer
 - **Language names in full appear in the footer** too, as a second way to reach them.
 - **"⊥ Kontakt" and "⊥ Contacto"** use today's translated nav words, because "Kontakt
   aufnehmen" does not fit the bar at 768 px.
+
+Agreed with the developer on 2026-11-05, for SHELL-08:
+
+- **D5, the drawer's side:** from the right, `position="end"`, as the spec and the mock-up.
+- **D6, a tap beside the menu** closes it, a branch of G with its own row (A4).
+- **D7, names:** the dialog is named from `common.menu`; the nav from a new key `common.mainNav`, en
+  "Main", de "Hauptnavigation", pt "Navegação principal".
+- **D8, `common.mainNav` in the desktop menu too,** with its own unit test. The logo's
+  `aria-label="Home"` (`zc-nav-mobile.html`, `zc-nav-desktop.html`) and the theme button's labels
+  (`theme-toggle.html`) are leftovers.
+- **D9, after following a link** A5 checks only that the menu closes; where focus goes stays open for
+  SHELL-10.
+- **D10, `aria-current`** on the current page's link in the menu is a leftover.
 
 Agreed with the developer on 2026-11-05, for SHELL-06:
 
