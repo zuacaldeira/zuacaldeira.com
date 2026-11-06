@@ -1,4 +1,4 @@
-import { Component, computed, inject, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -36,6 +36,7 @@ export class ZcNavMobile {
   readonly t = this.i18n.translations;
   readonly link = (page: NavItem['page']) => pagePath(this.i18n.language(), page);
   @ViewChild('drawer') drawer!: MatSidenav;
+  @ViewChild('main') main!: ElementRef<HTMLElement>;
 
   // The page's own path: a bare `#main-content` resolves against `<base href="/">` and leaves the page.
   private readonly url = toSignal(
@@ -49,8 +50,10 @@ export class ZcNavMobile {
 
   constructor(private router: Router) {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
-      if (this.drawer) {
-        this.drawer.close();
+      if (this.drawer?.opened) {
+        // After a link in the menu the new page's content, not the menu button, gets focus (D9);
+        // once closed, so Material's own return of focus comes first.
+        this.drawer.close().then(() => this.main.nativeElement.focus());
       }
     });
   }

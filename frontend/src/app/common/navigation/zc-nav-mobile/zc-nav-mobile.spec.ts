@@ -155,4 +155,40 @@ describe('ZcNavMobile', () => {
     await fixture.whenStable();
     expect(fixture.componentInstance.drawer.opened).toBe(true);
   });
+
+  it("SHELL-12: after a link in the open menu, focus is on the new page's main", async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([{ path: '**', children: [] }])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    document.body.appendChild(fixture.nativeElement);
+    await fixture.whenStable();
+    await fixture.componentInstance.drawer.open();
+    await TestBed.inject(Router).navigateByUrl('/de/about');
+    await fixture.whenStable();
+    await vi.waitFor(() =>
+      expect(document.activeElement).toBe(
+        (fixture.nativeElement as HTMLElement).querySelector('main'),
+      ),
+    );
+    fixture.nativeElement.remove();
+  });
+
+  it('SHELL-12: a navigation with the menu closed, PT in the bar, leaves focus where it was (D15)', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([{ path: '**', children: [] }])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    document.body.appendChild(fixture.nativeElement);
+    await fixture.whenStable();
+    const pt = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
+      'header app-language-links a[hreflang="pt"]',
+    )!;
+    pt.focus();
+    await TestBed.inject(Router).navigateByUrl('/pt/home');
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(document.activeElement).toBe(pt);
+    fixture.nativeElement.remove();
+  });
 });

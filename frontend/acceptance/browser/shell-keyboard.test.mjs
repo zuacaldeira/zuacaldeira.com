@@ -98,6 +98,8 @@ const readFocus = (page) =>
           ? 'skip link'
           : el.matches('header a.logo')
             ? 'logo'
+            : el.matches('header button.menu-button')
+              ? 'menu button'
           : el === main
             ? 'main'
             : main?.contains(el)
@@ -185,4 +187,29 @@ for (const lang of ['en', 'de', 'pt']) {
       );
     });
   }
+}
+
+// SHELL-12 (D9): the phone menu, opened as in shell-phone.test.mjs: acted on only once Material has
+// moved focus into the drawer.
+for (const lang of ['en', 'de', 'pt']) {
+  test(`SHELL-12: on a phone, following About in the menu on /${lang}/home leaves focus on /${lang}/about's main`, async () => {
+    const state = await withPage(`/${lang}/home`, 'phone', 'light', async (page) => {
+      await page.click('app-zc-nav-mobile header button.menu-button');
+      await page.waitForSelector('mat-sidenav.mat-drawer-opened');
+      await page.waitForFunction(() =>
+        document.querySelector('mat-sidenav').contains(document.activeElement),
+      );
+      await page.click(`mat-sidenav nav a[href="/${lang}/about"]`);
+      await page.waitForTimeout(800); // longer than the drawer's slide
+      const open = await page.evaluate(() =>
+        document.querySelector('mat-sidenav').classList.contains('mat-drawer-opened'),
+      );
+      return { open, ...(await readFocus(page)) };
+    });
+    assert.deepEqual(
+      { open: state.open, focus: state.focus, path: state.path },
+      { open: false, focus: 'main', path: `/${lang}/about` },
+      JSON.stringify(state),
+    );
+  });
 }

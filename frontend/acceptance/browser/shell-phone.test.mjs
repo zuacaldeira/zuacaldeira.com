@@ -290,7 +290,7 @@ for (const lang of ['en', 'de', 'pt']) {
   });
 
   test(`SHELL-08 A5: on /${lang}/home, following About in the menu reaches /${lang}/about with the menu closed`, async () => {
-    // Where focus goes after a link stays open for SHELL-10 (D9).
+    // Where focus goes after a link is SHELL-12's (D9), in shell-keyboard.test.mjs.
     const { open, path } = await withMenu(`/${lang}/home`, (page) =>
       stateAfter(page, (p) => p.click(`mat-sidenav nav a[href="/${lang}/about"]`)),
     );
