@@ -52,6 +52,17 @@ describe('ZcNavDesktop', () => {
     expect(cta?.textContent?.replace(/\s+/g, ' ').trim()).toBe('⊥ Kontakt');
   });
 
+  it('SHELL-05: the contact button reads "⊥ write to me" on an English page', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavDesktop, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('en');
+    const fixture = TestBed.createComponent(ZcNavDesktop);
+    await fixture.whenStable();
+    const cta = (fixture.nativeElement as HTMLElement).querySelector('a.nav-cta');
+    expect(cta?.textContent?.replace(/\s+/g, ' ').trim()).toBe('⊥ write to me');
+  });
+
   it("SHELL-10: starts with the skip link to this page's main content, /de/research#main-content", async () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([{ path: '**', children: [] }])],
