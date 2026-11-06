@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { ZcNavMobile } from './zc-nav-mobile';
 import { I18nService } from '../../../services/i18n.service';
 
@@ -18,6 +18,22 @@ describe('ZcNavMobile', () => {
     await fixture.whenStable();
     const logo = (fixture.nativeElement as HTMLElement).querySelector('a.logo');
     expect(logo?.getAttribute('href')).toBe('/de/home');
+  });
+
+  it("SHELL-10: starts with the skip link to this page's main content, /pt/running#main-content", async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([{ path: '**', children: [] }])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('pt');
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    await TestBed.inject(Router).navigateByUrl('/pt/running');
+    await fixture.whenStable();
+    const first = (fixture.nativeElement as HTMLElement).firstElementChild;
+    expect([first?.className, first?.getAttribute('href'), first?.textContent?.trim()]).toEqual([
+      'skip-link',
+      '/pt/running#main-content',
+      'Saltar para o conteúdo principal',
+    ]);
   });
 
   it('SHELL-01: shows EN, DE and PT in the phone bar', async () => {
