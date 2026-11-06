@@ -213,3 +213,17 @@ for (const lang of ['en', 'de', 'pt']) {
     );
   });
 }
+
+// The protocol rows: each a page outside G, so the test goes red.
+for (const lang of ['en', 'de', 'pt']) {
+  for (const width of ['phone', 'desktop']) {
+    test(`SHELL-10-P-01: on /${lang}/home (${width}), before any Tab no part of the skip link shows`, async () => {
+      const state = await withPage(`/${lang}/home`, width, 'light', readFocus);
+      assert.deepEqual(
+        { focus: state.focus, seen: state.seen },
+        { focus: 'body', seen: false },
+        JSON.stringify(state),
+      );
+    });
+  }
+}
