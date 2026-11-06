@@ -38,7 +38,7 @@ describe('Footer', () => {
     expect(footerText('p')).toBe('⊥ end · hier endet jedes Protokoll');
   });
 
-  it('SHELL-07 (D29): hides the end line\'s ⊥ from screen readers, and only that', async () => {
+  it("SHELL-07 (D29): hides the end line's ⊥ from screen readers, and only that", async () => {
     await fixture.whenStable();
     const hidden = [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll('footer [aria-hidden="true"]'),
@@ -87,7 +87,9 @@ describe('Footer', () => {
     TestBed.inject(I18nService).setLanguage('de');
     await fixture.whenStable();
     const pages = [
-      ...(fixture.nativeElement as HTMLElement).querySelectorAll('footer a[href^="/"]:not([hreflang])'),
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll(
+        'footer a[href^="/"]:not([hreflang])',
+      ),
     ]
       .map((a) => a.getAttribute('href'))
       .filter((href) => !href?.startsWith('/assets/'));
