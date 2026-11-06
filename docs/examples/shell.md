@@ -17,7 +17,7 @@ the home hero, because the hero's page needs them.
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | yes (build, every page, and unit, 2026-11-06) |
 | SHELL-05b | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | its Contact link reads en "⊥ Contact", de "⊥ Kontakt", pt "⊥ Contacto" (the `nav.contact` words), the `⊥` hidden from screen readers, so its name is the words alone; Home, About, Research and Running read as before | yes (browser and unit, 2026-11-06) |
 | SHELL-06 | a phone (the CDK `Handset` query) | the page loads and has started in the browser | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | yes (browser and unit, 2026-11-05) |
-| SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let’s talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
+| SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let’s talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | yes (build, every page, unit and browser colours, 2026-11-06; the CV file still to come, D26) |
 | SHELL-08 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | it slides in from the right, is a dialog named Menu / Menü / Menu, and lists Home, About, Research, Running and Contact, translated, to `/xx/…`, each at least 44 px high; Escape, the close button or a tap beside it closes it and focus returns to the menu button; following a link closes it on the new page | yes (browser and unit, 2026-11-05) |
 | SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04); the English contact button (build `/404`, SHELL-05, 2026-11-06) |
 | SHELL-10 | a keyboard user on `/en/home`, `/de/home`, `/pt/home`, at 390 and 1280 px, in the light and the dark theme | they press Tab once | focus lands on the skip link, en "Skip to main content", de "Zum Hauptinhalt springen", pt "Saltar para o conteúdo principal", its box wholly inside the viewport and its text at 4.5:1 or more; following it moves focus to `<main>` on the same page, with no reload and the same language, and the next Tab lands inside `<main>` | yes (browser and unit, 2026-11-06) |
@@ -45,11 +45,11 @@ the home hero, because the hero's page needs them.
 | SHELL-05-P-02 | the same | its header is read | a contact button without its `⊥`, or with two, is refused | yes (break in the build, both) |
 | SHELL-05-P-03 | the same | its header is read | a second contact button in the header, or none, is refused | yes (break in the build, both) |
 | SHELL-05b-P-01 | the phone menu open | it is read | a `⊥` on any link but Contact (About), or a `⊥` a screen reader reads, is refused | yes (break in the template, browser, both) |
-| SHELL-07-P-01 | a built page | its footer is read | a text in another language than the page (the English heading on `/de/home`) is refused | |
-| SHELL-07-P-02 | the same | its footer is read | an end line without its `⊥`, with two, or with `end` translated (`⊥ Ende`) is refused | |
-| SHELL-07-P-03 | the same | its footer is read | a second footer, a second heading in it or a second mail link, or none, is refused | |
-| SHELL-07-P-04 | the same | its footer is read | any link but the mail link, GitHub, LinkedIn, CV and the three language names (the old page menu, Strava) is refused | |
-| SHELL-07-P-05 | the same | its footer is read | a mail link whose text and `mailto:` address disagree is refused | |
+| SHELL-07-P-01 | a built page | its footer is read | a text in another language than the page (the English heading on `/de/home`) is refused | yes (break in the build) |
+| SHELL-07-P-02 | the same | its footer is read | an end line without its `⊥`, with two, or with `end` translated (`⊥ Ende`) is refused | yes (break in the build, all three) |
+| SHELL-07-P-03 | the same | its footer is read | a second footer, a second heading in it or a second mail link, or none, is refused | yes (break in the build: a second heading, a second mail link, none) |
+| SHELL-07-P-04 | the same | its footer is read | any link but the mail link, GitHub, LinkedIn, CV and the three language names (the old page menu, Strava) is refused | yes (build: red before, the menu and Strava) |
+| SHELL-07-P-05 | the same | its footer is read | a mail link whose text and `mailto:` address disagree is refused | yes (break in the build) |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -651,7 +651,7 @@ Unit 206 passed, 5 skipped; `acceptance` 24/24; browser 33/33 (`shell-phone`) an
   each commit.
 
 Leftovers, not built:
-- **The footer's menu** lists Contact without the `⊥`; not asked for.
+- **The footer's menu** lists Contact without the `⊥`; not asked for. (Gone with the menu, D25.)
 - **The initial bundle** is 510.88 kB against the 500 kB warning budget.
 
 **Reviewed 2026-11-06.** After `ad16d99` was pushed and deployed, the developer reviewed the top bar's
@@ -722,6 +722,48 @@ P-03 and P-05 by declared breaks in the built `de/home/index.html`, restored (md
 before. Browser C (`frontend/acceptance/browser/shell-footer.test.mjs`): on `/en/home`, `/de/home`,
 `/pt/home` at 1280×800, in the light and the dark theme, every text in the footer, the mail button's
 included, at 4.5:1 or more. The layout is styling, reviewed on the preview.
+
+**Done 2026-11-06.** A went red on all 17 pages with the old footer: the menu (`Home → /en/home`, …),
+Strava, `Email → mailto:…` and the texts `p: Researcher. Developer. Educator. Runner.`, `h4: Pages`,
+`h4: Connect` in place of the end line, heading and availability (P-04 red before). It went green
+after the unit tests, each red first: U1 `expected 'Forscher. Entwickler. Erzieher. Läufer.'`, U2
+`expected [] to deeply equal [ '⊥' ]`, U3 and U4 `expected undefined`, U5 `[ 'Email', … ]`, U6 Strava
+in place of the CV, U7 `[ '/de/home', '/de/about', …(3) ]`; then the old brand line and the keys
+`tagline`, `pagesHeading`, `connectHeading` went. The address is now `ContentService.email`, for the
+footer and the contact page. `should expose social links`, the two nav-label tests and SHELL-04's footer
+test read what is gone and went too; SHELL-04's build test still reads every link and stayed green (the
+CV is a file and is skipped).
+
+P-01, P-02 (no `⊥`, two, `⊥ Ende`), P-03 (a second heading, a second mail link, none) and P-05
+(`mailto:hi@…`) were each a declared break in the built `de/home/index.html`, restored from a copy with
+the md5 checked; A went red on each with the line it names, for example
+`+ 'hello@zuacaldeira.com → mailto:hi@zuacaldeira.com'`.
+
+C was green on its first run, on the old light footer, and again on the ink footer. It was shown to bite
+by a declared break: without `color: inherit` on the footer's language names they took the accent, and C
+went red in the light theme in all three languages (`English`, `Deutsch`, `Português` at 1.8:1; every
+other text 8.46 to 15.76). The dark theme stayed green there, because its accent lifts to the pale blue.
+Seen in screenshots of the built `/de/home` at 390 and 1280 px in both themes: the mock-up's layout,
+copy beside contact at 1280, one column at 390.
+
+- **SHELL-12's and HOME-PAGE-04's unit tests failed under load** (load 12 to 38 from other sessions):
+  SHELL-12's `vi.waitFor` gives up after 1 s while the drawer is still `mat-drawer-animating`. It failed
+  on U6's commit too at the same load, so not this element's change. Each commit waited for a clean run.
+
+Unit 209 passed, 5 skipped; `acceptance` 25/25; browser 6/6 (`shell-footer`), 33/33 (`shell-phone`),
+45/45 (`shell-keyboard`); the build prerenders 20 routes.
+
+Leftovers, not built:
+- **The CV file** `/assets/cv/alexandre-zua-caldeira-cv.pdf` does not exist yet: the link is dead on
+  `next` until the developer adds it, with no phone number or street address (D26, D16).
+- **The bottom row** of the mock-up, `Zua = software ∥ research ∥ running` and "© … Alexandre Zua
+  Caldeira · Berlin", is a later example (D27); the `Zua = …` line needs reticulateP on its shown form.
+  Today's row reads "© 2026 Alexandre Caldeira", the year from the build's clock.
+- **The footer at 768 px and its look** are for the developer on the preview; C measures 1280 only
+  (the colours are the same tokens at every width).
+- **The footer's language names** sit 8 px inside the column's edge (their padding, as in the mock-up).
+- **SHELL-12's unit test** is sensitive to load (above); a longer `vi.waitFor` timeout would steady it.
+- **The initial bundle** is 512.12 kB against the 500 kB warning budget.
 
 ## Width of the header
 
