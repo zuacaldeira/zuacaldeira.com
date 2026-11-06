@@ -250,5 +250,19 @@ for (const lang of ['en', 'de', 'pt']) {
       );
       assert.deepEqual(counts, { skipLinks: 1, mainContent: 1, mains: 1 });
     });
+
+    test(`SHELL-10-P-04: on /${lang}/research (${width}), following the skip link keeps the page, its language and its document`, async () => {
+      const state = await withPage(`/${lang}/research`, width, 'light', async (page) => {
+        await page.keyboard.press('Tab');
+        await page.keyboard.press('Enter');
+        await page.waitForTimeout(400);
+        return readFocus(page);
+      });
+      assert.deepEqual(
+        { focus: state.focus, path: state.path, lang: state.lang, sameDocument: state.sameDocument },
+        { focus: 'main', path: `/${lang}/research`, lang, sameDocument: true },
+        JSON.stringify(state),
+      );
+    });
   }
 }
