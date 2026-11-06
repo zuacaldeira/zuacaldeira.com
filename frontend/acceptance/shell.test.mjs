@@ -118,6 +118,33 @@ test('SHELL-03: the footer of /pt/home lists English, Deutsch and Português, Po
 
 const htmlLang = (html) => html.match(/<html\b[^>]*\slang="([^"]*)"/)?.[1];
 
+// The contact buttons in a page's header, each as "text → href", the text with its tags taken out.
+const contactButtons = (html) =>
+  [
+    ...(html.match(/<header\b[^>]*>([\s\S]*?)<\/header>/)?.[1] ?? '').matchAll(
+      /<a\b([^>]*\sclass="[^"]*\bnav-cta\b[^"]*"[^>]*)>([\s\S]*?)<\/a>/g,
+    ),
+  ].map(
+    ([, attrs, text]) =>
+      `${text
+        .replace(/<[^>]*>/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()} → ${attrs.match(/\shref="([^"]*)"/)?.[1]}`,
+  );
+
+const CONTACT = { en: '⊥ write to me', de: '⊥ Kontakt', pt: '⊥ Contacto' };
+
+test("SHELL-05: on every built page the header has one contact button, in the page's language, to its contact page", () => {
+  const buttons = Object.fromEntries(PAGES.map(([route]) => [route, contactButtons(page(route))]));
+  const expected = Object.fromEntries(
+    PAGES.map(([route, lang]) => [route, [`${CONTACT[lang]} → /${lang}/contact`]]),
+  );
+  assert.deepEqual(buttons, expected);
+  for (const lang of ['en', 'de', 'pt']) {
+    assert.equal(htmlLang(page(`${lang}/contact`)), lang, `${lang}/contact has lang="${lang}"`);
+  }
+});
+
 test('SHELL-02: on every built page EN, DE and PT lead to the same page in their language, the current one marked', () => {
   for (const [route, lang] of PAGES) {
     const notFound = route === '404';

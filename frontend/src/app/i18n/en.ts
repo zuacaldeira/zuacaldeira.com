@@ -82,6 +82,7 @@ export const en: Translations = {
     openMenu: 'Open menu',
     language: 'Language',
     mainNav: 'Main',
+    contactCta: 'write to me',
   },
   notFound: {
     title: 'Page not found',

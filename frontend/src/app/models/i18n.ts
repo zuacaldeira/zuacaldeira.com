@@ -134,6 +134,8 @@ export interface Translations {
     language: string;
     /** The label of the main navigation, in the phone menu and the desktop bar (SHELL-08). */
     mainNav: string;
+    /** The contact button in the desktop bar (SHELL-05). `⊥` is notation: the template adds it. */
+    contactCta: string;
   };
   /** The 404 page (D9). `⊥` is notation: the template adds it, the text never holds it. */
   notFound: {
