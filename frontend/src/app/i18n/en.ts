@@ -70,6 +70,8 @@ export const en: Translations = {
   footer: {
     end: 'every protocol ends here',
     heading: 'Let’s talk about your system.',
+    availability:
+      'Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.',
     tagline: 'Researcher. Developer. Educator. Runner.',
     pagesHeading: 'Pages',
     connectHeading: 'Connect',

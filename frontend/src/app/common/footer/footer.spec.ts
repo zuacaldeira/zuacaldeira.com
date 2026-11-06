@@ -80,6 +80,14 @@ describe('Footer', () => {
     expect(footerText('h2')).toBe('Let’s talk about your system.');
   });
 
+  it('SHELL-07: says after the heading what work Zua is open to, on a Portuguese page', async () => {
+    TestBed.inject(I18nService).setLanguage('pt');
+    await fixture.whenStable();
+    expect(footerText('h2 + p')).toBe(
+      'Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.',
+    );
+  });
+
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
     await fixture.whenStable();
     const names = [

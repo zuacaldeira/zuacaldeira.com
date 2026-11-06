@@ -70,6 +70,8 @@ export const de: Translations = {
   footer: {
     end: 'hier endet jedes Protokoll',
     heading: 'Sprechen wir über Ihr System.',
+    availability:
+      'Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.',
     tagline: 'Forscher. Entwickler. Erzieher. Läufer.',
     pagesHeading: 'Seiten',
     connectHeading: 'Vernetzen',

@@ -70,6 +70,8 @@ export const pt: Translations = {
   footer: {
     end: 'todo o protocolo acaba aqui',
     heading: 'Vamos falar do seu sistema.',
+    availability:
+      'Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.',
     tagline: 'Investigador. Programador. Educador. Corredor.',
     pagesHeading: 'Páginas',
     connectHeading: 'Conectar',
