@@ -22,6 +22,7 @@ export class Footer {
       link: pagePath(this.i18n.language(), item.page),
     }))
   );
-  readonly socialLinks = this.contentService.socialLinks;
+  readonly email = this.contentService.email;
+  readonly socialLinks = this.contentService.socialLinks.filter((link) => link.platform !== 'Email');
   readonly currentYear = new Date().getFullYear();
 }

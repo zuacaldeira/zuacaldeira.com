@@ -22,6 +22,8 @@ export class ContentService {
     { label: 'Contact', page: 'contact', icon: 'mail' },
   ];
 
+  readonly email = 'hello@zuacaldeira.com';
+
   readonly socialLinks: readonly SocialLink[] = [
     {
       platform: 'GitHub',
@@ -43,7 +45,7 @@ export class ContentService {
     },
     {
       platform: 'Email',
-      url: 'mailto:hello@zuacaldeira.com',
+      url: `mailto:${this.email}`,
       icon: 'mail',
       label: 'Send Email',
     },

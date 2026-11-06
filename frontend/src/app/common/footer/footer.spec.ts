@@ -88,6 +88,14 @@ describe('Footer', () => {
     );
   });
 
+  it('SHELL-07: has one mail link, showing the address it writes to', async () => {
+    await fixture.whenStable();
+    const mail = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll('footer a[href^="mailto:"]'),
+    ].map((a) => [a.textContent?.trim(), a.getAttribute('href')]);
+    expect(mail).toEqual([['hello@zuacaldeira.com', 'mailto:hello@zuacaldeira.com']]);
+  });
+
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
     await fixture.whenStable();
     const names = [
