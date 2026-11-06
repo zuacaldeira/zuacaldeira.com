@@ -19,7 +19,8 @@ the home hero, because the hero's page needs them.
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
 | SHELL-08 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | it slides in from the right, is a dialog named Menu / Menü / Menu, and lists Home, About, Research, Running and Contact, translated, to `/xx/…`, each at least 44 px high; Escape, the close button or a tap beside it closes it and focus returns to the menu button; following a link closes it on the new page | yes (browser and unit, 2026-11-05) |
 | SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04) |
-| SHELL-10 | a keyboard user on `/de/home` | they press Tab once | focus lands on "Zum Hauptinhalt springen", visibly, and following it moves to `<main>` | |
+| SHELL-10 | a keyboard user on `/en/home`, `/de/home`, `/pt/home`, at 390 and 1280 px, in the light and the dark theme | they press Tab once | focus lands on the skip link, en "Skip to main content", de "Zum Hauptinhalt springen", pt "Saltar para o conteúdo principal", its box wholly inside the viewport and its text at 4.5:1 or more; following it moves focus to `<main>` on the same page, with no reload and the same language, and the next Tab lands inside `<main>` | |
+| SHELL-12 | a phone at 390 px, the menu open on `/xx/home` | they follow About | `/xx/about` opens with the menu closed and focus on its `<main>` (D9) | |
 | SHELL-11 | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`; no link drops the language prefix (waits for the Software and Texte pages) | |
 | SHELL-01-P-01 | a language page in the build | its language links are read | exactly one is `aria-current`, the page's own language; none, or two, is refused | yes (break in the build) |
 | SHELL-02-P-01 | `/de/research` | its language links are read | a language link to another page (`PT` → `/pt/home`) is refused | yes (break in the build) |
@@ -35,6 +36,10 @@ the home hero, because the hero's page needs them.
 | SHELL-08-P-02 | the same | Tab is pressed from the menu button | focus never lands on a link of the closed menu | yes (browser; break) |
 | SHELL-08-P-03 | the menu open | Tab or Shift+Tab is pressed, over and over | focus never leaves the menu for the page behind | yes (browser; break) |
 | SHELL-08-P-04 | the menu closed | the menu button is tapped twice quickly | the menu is open, not opened and closed again (refused, D11) | yes (browser and unit: red before) |
+| SHELL-10-P-01 | a page loaded, no key pressed | it is read | a skip link in view before any Tab is refused | |
+| SHELL-10-P-02 | the same | Tab is pressed | anything focusable before the skip link is refused | |
+| SHELL-10-P-03 | the same | it is read | a second skip link or a second `#main-content` is refused | |
+| SHELL-10-P-04 | the skip link focused | it is followed | a reload, a change of path or a change of language is refused | |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -388,6 +393,68 @@ menu on next.zuacaldeira.com on a phone, against the mock-up's drawer: "good as 
 the leftover of a visual comparison with the mock-up's drawer (white, `--zc-shadow-lg`, Plex Mono
 links); no change asked for.
 
+## Diagram: SHELL-10 and SHELL-12 (rules with states, in the browser)
+
+The test enters through Chromium against the built site on the local static server, as in SHELL-06
+and SHELL-08, at 390×844 and 1280×800, in en, de and pt. No fakes.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Loaded : /l/home, Angular started
+    Loaded --> SkipFocused : Tab (A1) · link wholly in view, ≥ 4.5:1, light and dark (A2)
+    SkipFocused --> MainFocused : Enter (A3) · same path, same lang, no reload
+    MainFocused --> InMain : Tab (A4) · first link inside main
+    SkipFocused --> LogoFocused : Tab (A6) · skip link out of view again
+    MenuOpen --> NewPageMain : follow About → /l/about (A5, SHELL-12) · focus on main
+    Loaded --> Loaded : link out of view before any Tab (P-01) · one skip link, one main (P-03)
+    SkipFocused --> SkipFocused : nothing focusable before it (P-02)
+    MainFocused --> MainFocused : no reload, no change of path or lang (P-04)
+```
+
+Session type. Convention: a role that a branch never calls just ends there (Router on `tab`).
+
+```
+G = Visitor → Page : tab .
+    Page → Visitor : focus(skipLink, inView, contrast ≥ 4.5) .
+    Visitor → Page : { follow . Page → Router : fragment(#main-content) . Router → Page : same(/l/home, lang l) .
+                                Page → Visitor : focus(main) . Visitor → Page : tab .
+                                Page → Visitor : focus(firstInMain) . end ,
+                       tab    . Page → Visitor : focus(logo), skipLink out of view . end }
+
+Visitor ↾ = Page!tab . Page?focus(skipLink) . Page!{ follow . Page?focus(main) . Page!tab . Page?focus(firstInMain) . end ,
+                                                    tab . Page?focus(logo) . end }
+Page ↾    = Visitor?tab . Visitor!focus(skipLink) . Visitor?{ follow . Router!fragment . Router?same .
+                          Visitor!focus(main) . Visitor?tab . Visitor!focus(firstInMain) . end ,
+                          tab . Visitor!focus(logo) . end }
+```
+
+SHELL-12 changes SHELL-08's `follow(p)` branch, a change of behaviour: the Visitor's projection gains
+one step, `… Menu → Visitor : closed . X` becomes `… Menu → Visitor : closed . Page → Visitor :
+focus(main) . X`.
+
+| Diagram arrow | Step in G | Rows |
+|---|---|---|
+| Loaded → SkipFocused | `tab . focus(skipLink, inView, contrast)` | A1, A2, U1, U2 |
+| SkipFocused → MainFocused | `follow . fragment . same . focus(main)` | A3, U3 |
+| MainFocused → InMain | `tab . focus(firstInMain)` | A4 |
+| SkipFocused → LogoFocused | `tab . focus(logo)` | A6 |
+| MenuOpen → NewPageMain | SHELL-08's `follow(p) … closed . focus(main)` | A5 |
+| forbidden | in view before Tab; something before it; two of each; `same` broken | P-01 to P-04 |
+
+Test list. Acceptance (`frontend/acceptance/browser/shell-keyboard.test.mjs`, `npm run
+acceptance:browser`), on `/en/home`, `/de/home`, `/pt/home` at 390×844 and 1280×800 after Angular
+has started: A1 the first Tab focuses the skip link, with its translated text; A2 its box is wholly
+inside the viewport, its text at 4.5:1 or more in the light and the dark theme; A3 Enter puts focus
+on `<main id="main-content">`, the path, `<html lang>` and a marker on `window` unchanged; A4 the next
+Tab lands on the first focusable inside `<main>`; A6 a second Tab instead focuses the logo, the skip
+link out of view again; A5 (SHELL-12, phone only) with the menu open, following About reaches
+`/xx/about` with focus on `<main>`. P-01 to P-04 each by a declared break, then restored: P-01 `top:
+0` on `.skip-link`, P-02 a focusable element before it, P-03 a second skip link and `<main>`, P-04
+`href="/en/home#main-content"`. Unit (`zc-nav-desktop.spec.ts`, `zc-nav-mobile.spec.ts`): U1, U2 each
+bar's first element is the skip link, `href="#main-content"`, text from `common.skipToContent`; U3
+each bar's `<main>` has `tabindex="-1"`; U4 only if SHELL-12 needs logic in `ZcNavMobile`. The colour
+is CSS, driven by A2.
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
@@ -412,7 +479,6 @@ languages. The real header needs a check at both sides of the CDK `Handset` quer
 | SHELL-07 | The footer ends with an invitation to talk, the work Zua is open to, an email address and profile links. | Die Fußzeile endet mit einer Einladung zum Gespräch, der Arbeit, für die Zua offen ist, E-Mail und Profil-Links. | O rodapé termina com um convite para conversar, o trabalho a que o Zua está aberto, um e-mail e links de perfil. |
 | SHELL-08 | On a phone the menu slides in from the right and lists every link, easy to tap; Escape, its button or a tap beside it closes it, and focus returns. | Auf dem Handy gleitet das Menü von rechts herein und zeigt alle Links, leicht zu tippen; Escape, der Knopf oder ein Tippen daneben schließt es, der Fokus kehrt zurück. | No telemóvel, o menu desliza da direita e mostra todos os links, fáceis de tocar; fecha com Escape, o botão ou um toque ao lado, e o foco volta. |
 | SHELL-09 | On the "page not found" page, the top and bottom are in English, and the language links lead home. | Auf der Seite „Seite nicht gefunden“ sind Kopf- und Fußzeile englisch, und die Sprachlinks führen zur Startseite. | Na página «página não encontrada», o topo e o rodapé estão em inglês, e os links de língua levam ao início. |
-| SHELL-10 | A keyboard user's first press of Tab shows a visible link that jumps straight to the main content. | Beim ersten Druck auf Tab erscheint sichtbar ein Link, der direkt zum Hauptinhalt springt. | Ao premir Tab pela primeira vez, aparece um link visível que salta diretamente para o conteúdo principal. |
 | SHELL-11 | The main menu has four translated links, and none of them takes the visitor into another language. | Das Hauptmenü hat vier übersetzte Links, und keiner führt in eine andere Sprache. | O menu principal tem quatro links traduzidos, e nenhum leva o visitante para outra língua. |
 | SHELL-01-P-01 | Exactly one language is marked as current. | Genau eine Sprache ist als aktuell markiert. | Exatamente uma língua está assinalada como atual. |
 | SHELL-02-P-01 | A language link never moves the visitor to a different page. | Ein Sprachlink führt nie auf eine andere Seite. | Um link de língua nunca leva o visitante a outra página. |
@@ -429,7 +495,33 @@ languages. The real header needs a check at both sides of the CDK `Handset` quer
 | SHELL-08-P-03 | While the menu is open, the keyboard stays inside it. | Solange das Menü offen ist, bleibt die Tastatur darin. | Enquanto o menu está aberto, o teclado fica dentro dele. |
 | SHELL-08-P-04 | A quick double tap on the menu button leaves the menu open. | Ein schnelles Doppeltippen auf den Menüknopf lässt das Menü offen. | Um toque duplo rápido no botão do menu deixa o menu aberto. |
 
+From 2026-11-06 the plain sentences of new or changed examples are in English only (the developer's
+rule; the site's own texts stay in en, de and pt).
+
+| ID | English |
+|----|---------|
+| SHELL-10 | A keyboard user's first press of Tab shows a clearly readable link that jumps straight to the main content, without leaving the page. |
+| SHELL-12 | After choosing a page in the phone menu, the keyboard starts at the new page's main content. |
+| SHELL-10-P-01 | The skip link stays out of sight until Tab is pressed. |
+| SHELL-10-P-02 | Nothing comes before the skip link when tabbing. |
+| SHELL-10-P-03 | A page has one skip link and one main content. |
+| SHELL-10-P-04 | Following the skip link never reloads the page or changes its language. |
+
 ## Decisions
+
+Agreed with the developer on 2026-11-06, for SHELL-10 and SHELL-12:
+
+- **D12, where:** en, de and pt, at 390 and 1280 px.
+- **D13, "visibly":** the link's box wholly inside the viewport and its text at 4.5:1 or more in both
+  themes, computed in the browser.
+- **D14, the link's text colour** is `var(--zc-bg-white)` instead of `#ffffff` (white on the dark
+  theme's light `--zc-azul-deep` fails 4.5:1).
+- **D9, after a link in the phone menu** focus goes to the new page's `<main>` (SHELL-12).
+- **D15, the phone menu only;** focus after the desktop menu's links is a new example for later.
+- **D16, no focus ring on `main:focus`,** checked visually.
+- **D17, a new `acceptance/browser/shell-keyboard.test.mjs`,** run by `npm run acceptance:browser`.
+- **D18, JavaScript off** is measured once in the first red run and recorded as a finding.
+- **Plain sentences in English only** from now on, for examples added or changed.
 
 - **Frame option A** (2026-11-02): language codes in the bar, at every width.
 - **Language names in full appear in the footer** too, as a second way to reach them.
