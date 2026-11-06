@@ -4,7 +4,7 @@
       <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
       <span matListItemTitle>
         @if (item.page === 'contact') {
-          ⊥
+          <span aria-hidden="true">⊥</span>
         }
         {{ item.label }}</span
       >

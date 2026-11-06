@@ -45,6 +45,17 @@ describe('ZcSidenavMenuItems', () => {
     expect(titles).toEqual(['Startseite', 'Über mich', 'Forschung', 'Laufen', '⊥ Kontakt']);
   });
 
+  it("SHELL-05b: hides Contact's ⊥ from screen readers, the only hidden text in the list", async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+    const hidden = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll(
+        '[matListItemTitle] [aria-hidden="true"]',
+      ),
+    ].map((el) => [el.closest('a')?.getAttribute('href'), el.textContent?.trim()]);
+    expect(hidden).toEqual([['/de/contact', '⊥']]);
+  });
+
   it('should translate labels based on current language', () => {
     const i18nService = TestBed.inject(I18nService);
     i18nService.setLanguage('pt');
