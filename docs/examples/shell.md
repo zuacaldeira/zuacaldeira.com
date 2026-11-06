@@ -581,7 +581,7 @@ Leftovers, not built:
 
 **Reviewed 2026-11-06.** After `f722abf` was pushed and deployed, the developer saw the contact
 button on next.zuacaldeira.com: the `⊥` as intended. The phone menu's Contact link gets it too
-(SHELL-05b).
+(SHELL-05b). After `ad16d99`, both reviewed together: "yes, it looks right!" (see SHELL-05b's notes).
 
 ## Diagram: SHELL-05b (the phone menu's Contact, in the browser)
 
@@ -648,6 +648,10 @@ Unit 206 passed, 5 skipped; `acceptance` 24/24; browser 33/33 (`shell-phone`) an
 Leftovers, not built:
 - **The footer's menu** lists Contact without the `⊥`; not asked for.
 - **The initial bundle** is 510.88 kB against the 500 kB warning budget.
+
+**Reviewed 2026-11-06.** After `ad16d99` was pushed and deployed, the developer reviewed the top bar's
+contact button (SHELL-05) and the phone menu's Contact (SHELL-05b) on next.zuacaldeira.com: "yes, it
+looks right!". No change asked for.
 
 ## Width of the header
 
