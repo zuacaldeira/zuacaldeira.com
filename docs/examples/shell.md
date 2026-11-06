@@ -15,6 +15,7 @@ the home hero, because the hero's page needs them.
 | SHELL-03 | the built `/pt/home` | the footer is read | it lists English, Deutsch, Português as links, Português with `aria-current` | yes (build and unit, 2026-11-04) |
 | SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read; the language links (they carry `hreflang`) go to the same page in their own language instead (SHELL-02); links to a spot on the same page (its own path and `#…`, the skip link) are not read either, a `#…` link to another page is (D19) | yes (build, 2026-11-04; P-01 to P-04; D19 2026-11-06) |
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | yes (build, every page, and unit, 2026-11-06) |
+| SHELL-05b | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | its Contact link reads en "⊥ Contact", de "⊥ Kontakt", pt "⊥ Contacto" (the `nav.contact` words), the `⊥` hidden from screen readers, so its name is the words alone; Home, About, Research and Running read as before | |
 | SHELL-06 | a phone (the CDK `Handset` query) | the page loads and has started in the browser | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | yes (browser and unit, 2026-11-05) |
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
 | SHELL-08 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | it slides in from the right, is a dialog named Menu / Menü / Menu, and lists Home, About, Research, Running and Contact, translated, to `/xx/…`, each at least 44 px high; Escape, the close button or a tap beside it closes it and focus returns to the menu button; following a link closes it on the new page | yes (browser and unit, 2026-11-05) |
@@ -43,6 +44,7 @@ the home hero, because the hero's page needs them.
 | SHELL-05-P-01 | a built page | its header is read | a contact button in another language than the page ("⊥ write to me" on `/de/home`) is refused | yes (break in the build) |
 | SHELL-05-P-02 | the same | its header is read | a contact button without its `⊥`, or with two, is refused | yes (break in the build, both) |
 | SHELL-05-P-03 | the same | its header is read | a second contact button in the header, or none, is refused | yes (break in the build, both) |
+| SHELL-05b-P-01 | the phone menu open | it is read | a `⊥` on any link but Contact (About), or a `⊥` a screen reader reads, is refused | |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -574,8 +576,56 @@ Leftovers, not built:
 - **The bar at 768 px** with "⊥ write to me", one character longer than "Get in touch": for the
   developer on the preview (D24).
 - **The phone menu's Contact link** still reads `nav.contact` ("Contact", "Kontakt", "Contacto"),
-  with no `⊥`; the phone bar has no contact button (SHELL-06).
+  with no `⊥`; the phone bar has no contact button (SHELL-06). Taken up as SHELL-05b.
 - **The initial bundle** is 510.75 kB against the 500 kB warning budget.
+
+**Reviewed 2026-11-06.** After `f722abf` was pushed and deployed, the developer saw the contact
+button on next.zuacaldeira.com: the `⊥` as intended. The phone menu's Contact link gets it too
+(SHELL-05b).
+
+## Diagram: SHELL-05b (the phone menu's Contact, in the browser)
+
+The test enters through Chromium at 390×844 against the built site on the local static server, as in
+SHELL-08. No fakes.
+
+```mermaid
+flowchart LR
+    T["nav.contact(l)<br/>Contact · Kontakt · Contacto"] --> M["ZcSidenavMenuItems<br/>item.page = contact?"]
+    M -->|contact| C["span aria-hidden ⊥ + words"]
+    M -->|"home, about, research, running"| O["words only"]
+    C & O --> D["drawer, open on /l/home"]
+    D -->|"B1: visible text and name per link"| OK["green"]
+    D -.->|"P-01: ⊥ on About, or ⊥ in the name"| R["red"]
+```
+
+Session type. It refines SHELL-08's `menu(…)` message; the rest of SHELL-08's G is unchanged.
+
+```
+G = Menu → Visitor : menu(links[ home, about, research, running : text = name = nav.p(l) ,
+                                 contact : text = "⊥ " · nav.contact(l), name = nav.contact(l) ]) . end
+
+Visitor ↾ = Menu ? menu(links[…]) . end
+Menu ↾    = Visitor ! menu(links[…]) . end
+```
+
+Forbidden by G: a `⊥` in the text of any other link, and a `⊥` in any link's name (P-01).
+
+| Diagram arrow | Step in G | Rows |
+|---|---|---|
+| contact → `⊥` + words | `contact : text = "⊥ " · nav.contact(l)` | B1, U1 |
+| the `⊥` hidden | `name = nav.contact(l)` | B1, U2 |
+| others → words only | `home … running : text = name = nav.p(l)` | B1, U1 |
+| forbidden | `⊥` elsewhere or in a name | P-01 |
+
+Test list. Acceptance B1 (`frontend/acceptance/browser/shell-phone.test.mjs`), on `/en/home`,
+`/de/home`, `/pt/home` at 390×844 with the menu open: each link's visible text (without its icon)
+and its name (without the `aria-hidden` parts) are the words, except Contact, whose text is "⊥ " and
+the words. SHELL-08 A1 then reads each link's name, so its labels stay. Unit
+(`zc-sidenav-menu-items.spec.ts`): U1 on a German page the links' titles read Startseite, Über mich,
+Forschung, Laufen, "⊥ Kontakt"; U2 the Contact link's `⊥` sits in an element with
+`aria-hidden="true"`, the only one in the list. P-01 by two declared breaks in the template (the phone menu exists only
+after Angular starts, not in the prerendered HTML), each rebuilt, then restored: the `⊥` on every
+link, and the `⊥` without `aria-hidden`.
 
 ## Width of the header
 
@@ -631,6 +681,8 @@ rule; the site's own texts stay in en, de and pt).
 | SHELL-05-P-01 | The contact button never speaks another language than the page. |
 | SHELL-05-P-02 | The contact button's `⊥` appears exactly once, before the words. |
 | SHELL-05-P-03 | The top bar has exactly one contact button. |
+| SHELL-05b | In the phone menu, Contact carries the same ⊥ as the contact button at the top; the other links stay as they are. |
+| SHELL-05b-P-01 | In the phone menu only Contact has the ⊥, and screen readers never read it. |
 
 ## Decisions
 
