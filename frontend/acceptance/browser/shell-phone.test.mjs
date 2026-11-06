@@ -172,19 +172,21 @@ const withMenu = (route, fn) =>
 const settled = (page) =>
   page.waitForFunction(() => {
     const drawer = document.querySelector('mat-sidenav');
-    return !drawer.classList.contains('mat-drawer-animating') && drawer.getAnimations().length === 0;
+    return (
+      !drawer.classList.contains('mat-drawer-animating') && drawer.getAnimations().length === 0
+    );
   });
 
 // The menu as a visitor reads it: the dialog's name and box, the nav's name, and each link's
-// label (without its icon), href and height.
+// label as a screen reader reads it (without its icon and Contact's ⊥, SHELL-05b), href and height.
 const readMenu = (page) =>
   page.evaluate(() => {
     const drawer = document.querySelector('mat-sidenav');
     const box = drawer.getBoundingClientRect();
     const label = (a) => {
       const copy = a.cloneNode(true);
-      copy.querySelectorAll('mat-icon').forEach((icon) => icon.remove());
-      return copy.textContent.trim();
+      copy.querySelectorAll('mat-icon, [aria-hidden="true"]').forEach((el) => el.remove());
+      return copy.textContent.replace(/\s+/g, ' ').trim();
     };
     const links = [...drawer.querySelectorAll('nav a')];
     return {
@@ -234,6 +236,30 @@ for (const lang of ['en', 'de', 'pt']) {
         low: [],
       },
       JSON.stringify(menu),
+    );
+  });
+}
+
+// Each menu link as "text | name": what shows (without its icon) and what a screen reader reads
+// (without the parts hidden from it).
+const readMenuWords = (page) =>
+  page.evaluate(() => {
+    const words = (a, hidden) => {
+      const copy = a.cloneNode(true);
+      copy.querySelectorAll(hidden).forEach((el) => el.remove());
+      return copy.textContent.replace(/\s+/g, ' ').trim();
+    };
+    return [...document.querySelectorAll('mat-sidenav nav a')].map(
+      (a) => `${words(a, 'mat-icon')} | ${words(a, 'mat-icon, [aria-hidden="true"]')}`,
+    );
+  });
+
+for (const lang of ['en', 'de', 'pt']) {
+  test(`SHELL-05b: on a phone, /${lang}/home's menu shows ⊥ before Contact only, and no screen reader reads it`, async () => {
+    const labels = MENU[lang].labels;
+    assert.deepEqual(
+      await withMenu(`/${lang}/home`, readMenuWords),
+      labels.map((l, i) => `${i === labels.length - 1 ? '⊥ ' : ''}${l} | ${l}`),
     );
   });
 }
@@ -323,7 +349,11 @@ for (const lang of ['en', 'de', 'pt']) {
     });
     assert.equal(state.focus, 'body', `did not reach the end: ${JSON.stringify(visited)}`);
     assert.deepEqual(
-      { inMenu: visited.filter((f) => f.startsWith('in menu')), open: state.open, path: state.path },
+      {
+        inMenu: visited.filter((f) => f.startsWith('in menu')),
+        open: state.open,
+        path: state.path,
+      },
       { inMenu: [], open: false, path: `/${lang}/home` },
     );
   });
@@ -339,7 +369,11 @@ for (const lang of ['en', 'de', 'pt']) {
       return { visited, state: await readState(page) };
     });
     assert.deepEqual(
-      { outside: visited.filter((f) => !f.startsWith('in menu')), open: state.open, path: state.path },
+      {
+        outside: visited.filter((f) => !f.startsWith('in menu')),
+        open: state.open,
+        path: state.path,
+      },
       { outside: [], open: true, path: `/${lang}/home` },
     );
   });

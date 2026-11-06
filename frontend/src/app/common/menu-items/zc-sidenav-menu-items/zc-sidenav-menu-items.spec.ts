@@ -36,6 +36,15 @@ describe('ZcSidenavMenuItems', () => {
     expect(hrefs).toEqual(['/pt/home', '/pt/about', '/pt/research', '/pt/running', '/pt/contact']);
   });
 
+  it('SHELL-05b: on a German page only Contact carries the ⊥, "⊥ Kontakt"', async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+    const titles = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll('[matListItemTitle]'),
+    ].map((title) => title.textContent?.replace(/\s+/g, ' ').trim());
+    expect(titles).toEqual(['Startseite', 'Über mich', 'Forschung', 'Laufen', '⊥ Kontakt']);
+  });
+
   it('should translate labels based on current language', () => {
     const i18nService = TestBed.inject(I18nService);
     i18nService.setLanguage('pt');
