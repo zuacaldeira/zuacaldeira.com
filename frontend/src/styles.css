@@ -63,6 +63,14 @@
   --zc-transition-slow: 0.4s ease;
 
   --zc-max-width: 1100px;
+
+  /* The ink footer (home-spec.md, "Footer colours"): heading ink on light glazes, raised surface on
+     dark ones. The gold is fixed in both: 8.4:1 on the light ink, 6.9:1 on the dark raised surface;
+     the mail button's text on it is 8.7:1 (SHELL-07 C checks them in the browser). */
+  --zc-foot-bg: var(--zc-text-heading);
+  --zc-foot-fg: var(--zc-bg-warm);
+  --zc-foot-gold: #d9a94a;
+  --zc-foot-on-gold: #1a1205;
 }
 
 /* Night glaze: the tile fires darker, the blue lifts to read against it. */
@@ -96,6 +104,9 @@ html.dark-theme {
   --zc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
   --zc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
   --zc-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  --zc-foot-bg: var(--zc-bg-light);
+  --zc-foot-fg: var(--zc-text-heading);
 }
 
 /* Global reset */

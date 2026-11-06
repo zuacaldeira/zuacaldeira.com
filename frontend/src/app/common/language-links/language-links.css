@@ -38,11 +38,17 @@
   list-style: none;
 }
 
+/* The footer's names take the footer's colour, whatever its ground. */
 .names a {
+  color: inherit;
   display: inline-flex;
   align-items: center;
   min-height: 44px;
   padding-inline: var(--zc-space-2);
+}
+
+.names a:hover {
+  color: inherit;
 }
 
 .names a[aria-current] {

@@ -1,19 +1,25 @@
 <footer class="footer">
-  <p class="foot__end"><span aria-hidden="true">⊥</span> end · {{ t().footer.end }}</p>
-  <h2>{{ t().footer.heading }}</h2>
-  <p>{{ t().footer.availability }}</p>
-  <a class="foot__mail" [href]="'mailto:' + email">{{ email }}</a>
-  <div class="footer-content">
-    <div class="foot__links">
-      @for (link of profiles; track link.platform) {
-        <a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.platform }}</a>
-      }
-      <a [href]="cvUrl">{{ t().footer.cv }}</a>
+  <div class="foot__col">
+    <div class="foot__top">
+      <div class="foot__copy">
+        <p class="foot__end"><span aria-hidden="true">⊥</span> end · {{ t().footer.end }}</p>
+        <h2>{{ t().footer.heading }}</h2>
+        <p>{{ t().footer.availability }}</p>
+      </div>
+      <div class="foot__contact">
+        <a class="foot__mail" [href]="'mailto:' + email">{{ email }}</a>
+        <div class="foot__links">
+          @for (link of profiles; track link.platform) {
+            <a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.platform }}</a>
+          }
+          <a [href]="cvUrl">{{ t().footer.cv }}</a>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="footer-bottom">
-    <app-language-links form="names" />
-    <span>&copy; {{ currentYear }} Alexandre Caldeira</span>
+    <div class="foot__bottom">
+      <app-language-links form="names" />
+      <span>&copy; {{ currentYear }} Alexandre Caldeira</span>
+    </div>
   </div>
 </footer>
