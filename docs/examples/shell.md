@@ -40,6 +40,9 @@ the home hero, because the hero's page needs them.
 | SHELL-10-P-02 | the same | Tab is pressed | anything focusable before the skip link is refused | yes (browser; break) |
 | SHELL-10-P-03 | the same | it is read | a second skip link or a second `#main-content` is refused | yes (browser; break) |
 | SHELL-10-P-04 | the skip link focused | it is followed | a reload, a change of path or a change of language is refused | yes (browser: red before, path `/`; break) |
+| SHELL-05-P-01 | a built page | its header is read | a contact button in another language than the page ("⊥ write to me" on `/de/home`) is refused | |
+| SHELL-05-P-02 | the same | its header is read | a contact button without its `⊥`, or with two, is refused | |
+| SHELL-05-P-03 | the same | its header is read | a second contact button in the header, or none, is refused | |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -499,6 +502,55 @@ Leftovers, not built:
 (SHELL-10) and the focus after a link in the phone menu (SHELL-12) on next.zuacaldeira.com: "done". No
 change asked for.
 
+## Diagram: SHELL-05 (acceptance, at build time)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Test as Acceptance test (shell.test.mjs)
+    participant Build as Angular build (prerender)
+    participant Page as dist/…/l/p/index.html
+    participant Target as dist/…/l/contact/index.html
+    Test->>Build: When the site is built
+    Build->>Page: prerender header: ⊥ + common.contactCta(l), routerLink /l/contact
+    Test->>Page: Then exactly one a.nav-cta in <header> (P-03)
+    Test->>Page: its text is "⊥ write to me" | "⊥ Kontakt" | "⊥ Contacto" for l (P-01, P-02)
+    Test->>Page: its href is /l/contact
+    Test->>Target: And that file exists, with lang="l"
+    Note over Test,Page: "/" and "/404" count as English
+```
+
+Session type. Convention: a role that a branch never calls just ends there (Site on `leave`).
+
+```
+G = Header → Visitor : cta(text = "⊥ " · label(l), href = /l/contact) .
+    Visitor → Site : { follow . Site → Visitor : page(/l/contact, lang l) . end ,
+                       leave  . end }
+
+Visitor ↾ = Header ? cta(…) . Site ! { follow . Site ? page . end , leave . end }
+Header ↾  = Visitor ! cta(…) . end          (label ∈ { en "write to me", de "Kontakt", pt "Contacto" })
+```
+
+Forbidden by G: a `cta` whose label is another language's (P-01); any text other than one `⊥` and
+the label (P-02); a second `cta`, or none (P-03). An old path or another language in the href is
+SHELL-04-P-01 and P-02 already. No state, token or race, so no repeat or stale row.
+
+| Diagram arrow | Step in G | Rows |
+|---|---|---|
+| 2 prerender header | `Header → Visitor : cta(…)` | U1, U2 |
+| 3 exactly one | `cta` occurs once | A, P-03 |
+| 4 text for l | `text = "⊥ " · label(l)` | A, U1, U2, U3, P-01, P-02 |
+| 5 href | `href = /l/contact` | A (and SHELL-04, unit 7) |
+| 6 target with `lang=l` | `follow . page(/l/contact, lang l)` | A |
+
+Test list. Acceptance A (`frontend/acceptance/shell.test.mjs`): on every built page (the 15, `/` and
+`/404` as English) the `<header>` has exactly one `a.nav-cta`, its text "⊥ write to me", "⊥ Kontakt"
+or "⊥ Contacto" for the page's language, its href `/l/contact`, that page built with `<html
+lang="l">`. Unit (`zc-nav-desktop.spec.ts`): U1 on a German page the button reads "⊥ Kontakt"; U2 on
+an English page "⊥ write to me" (triangulation); U3 the `⊥` sits in an element with
+`aria-hidden="true"` (D21). P-01 to P-03 by declared breaks in the built `de/home/index.html`, then
+restored (md5 checked).
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
@@ -550,8 +602,22 @@ rule; the site's own texts stay in en, de and pt).
 | SHELL-10-P-02 | Nothing comes before the skip link when tabbing. |
 | SHELL-10-P-03 | A page has one skip link and one main content. |
 | SHELL-10-P-04 | Following the skip link never reloads the page or changes its language. |
+| SHELL-05-P-01 | The contact button never speaks another language than the page. |
+| SHELL-05-P-02 | The contact button's `⊥` appears exactly once, before the words. |
+| SHELL-05-P-03 | The top bar has exactly one contact button. |
 
 ## Decisions
+
+Agreed with the developer on 2026-11-06, for SHELL-05:
+
+- **D20, the text** is a new key `common.contactCta`, en "write to me", de "Kontakt", pt "Contacto";
+  the template adds "⊥ " (notation, as on the 404 page), the translations never hold it.
+- **D21, the `⊥` is `aria-hidden="true"`,** so the accessible name is the words alone (WCAG 2.5.3
+  lets a symbol stay out of the name).
+- **D22, where:** the acceptance test reads every built page, `/` and `/404` as English.
+- **D23, the hero's button** keeps `hero.contactCta` ("Get in touch", "Kontakt aufnehmen",
+  "Entrar em contacto").
+- **D24, the bar at 768 px** gets no browser test; the developer checks it on the preview.
 
 Agreed with the developer on 2026-11-06, for SHELL-10 and SHELL-12:
 
