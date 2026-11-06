@@ -22,30 +22,6 @@ describe('Footer', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have translated nav items', () => {
-    const i18nService = TestBed.inject(I18nService);
-    i18nService.setLanguage('en');
-    const items = component.navItems();
-    expect(items).toHaveLength(5);
-    expect(items[0].label).toBe('Home');
-    expect(items[0].page).toBe('home');
-  });
-
-  it('SHELL-04: links its menu to the pages in German on a German page, /de/about', async () => {
-    TestBed.inject(I18nService).setLanguage('de');
-    await fixture.whenStable();
-    const menu = (fixture.nativeElement as HTMLElement).querySelectorAll('.footer-nav a');
-    const hrefs = [...menu].map((a) => a.getAttribute('href'));
-    expect(hrefs).toEqual(['/de/home', '/de/about', '/de/research', '/de/running', '/de/contact']);
-  });
-
-  it('should update nav labels when language changes', () => {
-    const i18nService = TestBed.inject(I18nService);
-    i18nService.setLanguage('pt');
-    const items = component.navItems();
-    expect(items[0].label).toBe('Início');
-  });
-
   it('should have the current year', () => {
     expect(component.currentYear).toBe(new Date().getFullYear());
   });
@@ -105,6 +81,17 @@ describe('Footer', () => {
       ['LinkedIn', 'https://linkedin.com/in/zuacaldeira'],
       ['Lebenslauf (PDF)', '/assets/cv/alexandre-zua-caldeira-cv.pdf'],
     ]);
+  });
+
+  it('SHELL-07 (D25): has no page menu, its only links into the site are the languages', async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+    const pages = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll('footer a[href^="/"]:not([hreflang])'),
+    ]
+      .map((a) => a.getAttribute('href'))
+      .filter((href) => !href?.startsWith('/assets/'));
+    expect(pages).toEqual([]);
   });
 
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
