@@ -1,18 +1,17 @@
 import { Component, computed, ElementRef, inject, ViewChild } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterOutlet, RouterLink, NavigationEnd } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { ZcSidenavMenuItems } from '../../menu-items/zc-sidenav-menu-items/zc-sidenav-menu-items';
 import { Footer } from '../../footer/footer';
 import { ThemeToggle } from '../../theme-toggle/theme-toggle';
 import { LanguageLinks } from '../../language-links/language-links';
 import { I18nService } from '../../../services/i18n.service';
 import { NavItem } from '../../../models/models';
-import { pagePath } from '../../../models/i18n';
+import { injectPageUrl, pagePath } from '../../../models/i18n';
 
 @Component({
   selector: 'app-zc-nav-mobile',
@@ -39,13 +38,7 @@ export class ZcNavMobile {
   @ViewChild('main') main!: ElementRef<HTMLElement>;
 
   // The page's own path: a bare `#main-content` resolves against `<base href="/">` and leaves the page.
-  private readonly url = toSignal(
-    inject(Router).events.pipe(
-      filter((event) => event instanceof NavigationEnd),
-      map((event) => event.urlAfterRedirects),
-    ),
-    { initialValue: inject(Router).url },
-  );
+  private readonly url = injectPageUrl();
   readonly skipHref = computed(() => `${this.url().split(/[?#]/)[0]}#main-content`);
 
   constructor(private router: Router) {

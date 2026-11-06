@@ -1,3 +1,8 @@
+import { inject, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter, map } from 'rxjs';
+
 export type Language = 'en' | 'de' | 'pt';
 
 export const LANGUAGES: Language[] = ['en', 'de', 'pt'];
@@ -15,6 +20,21 @@ export const SITE_PAGES: readonly string[] = ['home', 'about', 'research', 'runn
 /** The path of a page in a language, `/de/about`: links inside the site never drop the prefix. */
 export function pagePath(lang: Language, page: string): string {
   return `/${lang}/${page}`;
+}
+
+/**
+ * The router's URL as a signal, after each navigation (`/de/research#main-content`). Call it where
+ * `inject()` works, as a field initializer. Used by the language links and the bars' skip link.
+ */
+export function injectPageUrl(): Signal<string> {
+  const router = inject(Router);
+  return toSignal(
+    router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects),
+    ),
+    { initialValue: router.url },
+  );
 }
 
 /** A link to the page in another language; `current` marks the page's own language. */
