@@ -24,20 +24,50 @@ const siteLinks = (html, pageLang) =>
   [...html.matchAll(/<a\b[^>]*>/g)]
     .map(([tag]) => ({
       href: tag.match(/\shref="(\/[^"#?]*)[^"]*"/)?.[1],
+      fragment: /\shref="\/[^"#]*#/.test(tag),
       lang: tag.match(/\shreflang="([^"]*)"/)?.[1] ?? pageLang,
     }))
     .filter(({ href }) => href && !/\.[a-z0-9]+$/i.test(href));
 
-test('SHELL-04: every link inside the site on every built page keeps its language and is a page of the build', () => {
-  const wrong = PAGES.flatMap(([route, pageLang]) =>
-    siteLinks(page(route), pageLang)
-      .filter(
-        ({ href, lang }) =>
-          !new RegExp(`^/${lang}/[a-z-]+$`).test(href) ||
-          !existsSync(join(browser, href, 'index.html')),
-      )
-      .map(({ href }) => `${route} → ${href}`),
+// The links of a page that SHELL-04 refuses, as "route → href". A link to a spot on the page itself
+// (its own path and a `#`, the skip link) is no navigation and is left out (D19).
+const wrongLinks = (html, route, pageLang) =>
+  siteLinks(html, pageLang)
+    .filter(({ href, fragment }) => !(fragment && href === (route === '.' ? '/' : `/${route}`)))
+    .filter(
+      ({ href, lang }) =>
+        !new RegExp(`^/${lang}/[a-z-]+$`).test(href) ||
+        !existsSync(join(browser, href, 'index.html')),
+    )
+    .map(({ href }) => `${route} → ${href}`);
+
+test('SHELL-04 (D19): a link to a spot on the same page passes; a # link to another page is still refused', () => {
+  const links = (hrefs) => hrefs.map((href) => `<a href="${href}">x</a>`).join('');
+  assert.deepEqual(
+    {
+      root: wrongLinks(links(['/#main-content']), '.', 'en'),
+      notFound: wrongLinks(links(['/404#main-content']), '404', 'en'),
+      research: wrongLinks(
+        links([
+          '/de/research#main-content',
+          '/#main-content',
+          '/en/research#main-content',
+          '/de/software#x',
+        ]),
+        'de/research',
+        'de',
+      ),
+    },
+    {
+      root: [],
+      notFound: [],
+      research: ['de/research → /', 'de/research → /en/research', 'de/research → /de/software'],
+    },
   );
+});
+
+test('SHELL-04: every link inside the site on every built page keeps its language and is a page of the build', () => {
+  const wrong = PAGES.flatMap(([route, pageLang]) => wrongLinks(page(route), route, pageLang));
   assert.deepEqual([...new Set(wrong)], []);
 });
 

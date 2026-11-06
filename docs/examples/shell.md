@@ -523,6 +523,15 @@ Agreed with the developer on 2026-11-06, for SHELL-10 and SHELL-12:
 - **D18, JavaScript off** is measured once in the first red run and recorded as a finding.
 - **Plain sentences in English only** from now on, for examples added or changed.
 
+Agreed with the developer on 2026-11-06, after SHELL-04 went red on the skip link:
+
+- **D19, links to a spot on the same page** (the page's own path plus `#…`, the skip link's
+  `/#main-content` on `/`, `/404#main-content` on the 404 page) are not navigation and SHELL-04 leaves
+  them out; a `#…` link to another page is still checked like any link and refused when wrong. The
+  404 page with JavaScript off is a leftover.
+- **The router URL as a signal** is shared as `injectPageUrl()` next to `pagePath` in
+  `models/i18n.ts`, used by both bars and `LanguageLinks`.
+
 - **Frame option A** (2026-11-02): language codes in the bar, at every width.
 - **Language names in full appear in the footer** too, as a second way to reach them.
 - **"⊥ Kontakt" and "⊥ Contacto"** use today's translated nav words, because "Kontakt
