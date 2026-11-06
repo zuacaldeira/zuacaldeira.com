@@ -123,9 +123,6 @@ export interface Translations {
     heading: string;
     availability: string;
     cv: string;
-    tagline: string;
-    pagesHeading: string;
-    connectHeading: string;
   };
   common: {
     source: string;

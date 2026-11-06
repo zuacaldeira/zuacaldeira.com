@@ -73,9 +73,6 @@ export const en: Translations = {
     availability:
       'Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.',
     cv: 'CV (PDF)',
-    tagline: 'Researcher. Developer. Educator. Runner.',
-    pagesHeading: 'Pages',
-    connectHeading: 'Connect',
   },
   common: {
     source: 'Source',

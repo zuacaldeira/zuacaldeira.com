@@ -4,11 +4,6 @@
   <p>{{ t().footer.availability }}</p>
   <a class="foot__mail" [href]="'mailto:' + email">{{ email }}</a>
   <div class="footer-content">
-    <div class="footer-brand">
-      <span class="logo-text">zuacaldeira</span>
-      <p>{{ t().footer.tagline }}</p>
-    </div>
-
     <div class="foot__links">
       @for (link of profiles; track link.platform) {
         <a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.platform }}</a>
