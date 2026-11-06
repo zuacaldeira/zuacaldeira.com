@@ -36,6 +36,16 @@ describe('ZcNavMobile', () => {
     ]);
   });
 
+  it('SHELL-10: lets the skip link move focus to main, which takes focus but no Tab stop', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    await fixture.whenStable();
+    const main = (fixture.nativeElement as HTMLElement).querySelector('main');
+    expect([main?.id, main?.getAttribute('tabindex')]).toEqual(['main-content', '-1']);
+  });
+
   it('SHELL-01: shows EN, DE and PT in the phone bar', async () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([])],
