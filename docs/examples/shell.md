@@ -14,11 +14,11 @@ the home hero, because the hero's page needs them.
 | SHELL-02 | a visitor on `/de/research` | they follow `PT` | they reach `/pt/research`: the same page in the other language | yes (build, every page, and unit, 2026-11-04) |
 | SHELL-03 | the built `/pt/home` | the footer is read | it lists English, Deutsch, Português as links, Português with `aria-current` | yes (build and unit, 2026-11-04) |
 | SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read; the language links (they carry `hreflang`) go to the same page in their own language instead (SHELL-02); links to a spot on the same page (its own path and `#…`, the skip link) are not read either, a `#…` link to another page is (D19) | yes (build, 2026-11-04; P-01 to P-04; D19 2026-11-06) |
-| SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | |
+| SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | yes (build, every page, and unit, 2026-11-06) |
 | SHELL-06 | a phone (the CDK `Handset` query) | the page loads and has started in the browser | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | yes (browser and unit, 2026-11-05) |
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
 | SHELL-08 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | it slides in from the right, is a dialog named Menu / Menü / Menu, and lists Home, About, Research, Running and Contact, translated, to `/xx/…`, each at least 44 px high; Escape, the close button or a tap beside it closes it and focus returns to the menu button; following a link closes it on the new page | yes (browser and unit, 2026-11-05) |
-| SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04) |
+| SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04); the English contact button (build `/404`, SHELL-05, 2026-11-06) |
 | SHELL-10 | a keyboard user on `/en/home`, `/de/home`, `/pt/home`, at 390 and 1280 px, in the light and the dark theme | they press Tab once | focus lands on the skip link, en "Skip to main content", de "Zum Hauptinhalt springen", pt "Saltar para o conteúdo principal", its box wholly inside the viewport and its text at 4.5:1 or more; following it moves focus to `<main>` on the same page, with no reload and the same language, and the next Tab lands inside `<main>` | yes (browser and unit, 2026-11-06) |
 | SHELL-12 | a phone at 390 px, the menu open on `/xx/home` | they follow About | `/xx/about` opens with the menu closed and focus on its `<main>` (D9) | yes (browser and unit, 2026-11-06) |
 | SHELL-11 | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`; no link drops the language prefix (waits for the Software and Texte pages) | |
@@ -40,9 +40,9 @@ the home hero, because the hero's page needs them.
 | SHELL-10-P-02 | the same | Tab is pressed | anything focusable before the skip link is refused | yes (browser; break) |
 | SHELL-10-P-03 | the same | it is read | a second skip link or a second `#main-content` is refused | yes (browser; break) |
 | SHELL-10-P-04 | the skip link focused | it is followed | a reload, a change of path or a change of language is refused | yes (browser: red before, path `/`; break) |
-| SHELL-05-P-01 | a built page | its header is read | a contact button in another language than the page ("⊥ write to me" on `/de/home`) is refused | |
-| SHELL-05-P-02 | the same | its header is read | a contact button without its `⊥`, or with two, is refused | |
-| SHELL-05-P-03 | the same | its header is read | a second contact button in the header, or none, is refused | |
+| SHELL-05-P-01 | a built page | its header is read | a contact button in another language than the page ("⊥ write to me" on `/de/home`) is refused | yes (break in the build) |
+| SHELL-05-P-02 | the same | its header is read | a contact button without its `⊥`, or with two, is refused | yes (break in the build, both) |
+| SHELL-05-P-03 | the same | its header is read | a second contact button in the header, or none, is refused | yes (break in the build, both) |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -550,6 +550,32 @@ lang="l">`. Unit (`zc-nav-desktop.spec.ts`): U1 on a German page the button read
 an English page "⊥ write to me" (triangulation); U3 the `⊥` sits in an element with
 `aria-hidden="true"` (D21). P-01 to P-03 by declared breaks in the built `de/home/index.html`, then
 restored (md5 checked).
+
+**Done 2026-11-06.** A went red on every built page with the hero's text in the bar (`en/home:
+expected '⊥ write to me → /en/contact' but got 'Get in touch → /en/contact'`, de "Kontakt
+aufnehmen", pt "Entrar em contacto"); the href was right already (SHELL-04). U1 was red with
+`expected 'Kontakt aufnehmen' to be '⊥ Kontakt'` and green with `common.contactCta` and "⊥ " in the
+template. U2 was green on its first run and bit with the label hard-coded as "⊥ Kontakt". U3 was red
+with `expected [ [], '⊥ Kontakt' ]` and green with the `⊥` in a `<span aria-hidden="true">`. After
+the build, A was green on all 17 pages. Each P row was green after the build. Each was then shown to
+bite by a declared break in the built `de/home/index.html`, restored with the md5 checked: P-01
+"⊥ write to me" (`'⊥ write to me → /de/contact'`), P-02 no `⊥` (`'Kontakt → /de/contact'`) and two
+(`'⊥ ⊥ Kontakt → /de/contact'`), P-03 a second button (an extra `'⊥ Kontakt → /de/contact'`) and
+none (`'de/home': []`).
+
+The first P-03 break stayed green, but the fault was in the break, not the test. The edit lost the
+space after `nav-cta`, so it added one button and took the class off the real one; the count stayed
+one. That was restored (md5 checked), and the break was redone with its edge away from the space.
+
+Unit 204 passed, 5 skipped; `acceptance` 24/24; the build prerenders 20 routes. The browser suites
+were not run: the element changes only the bar's text, and no browser test reads it.
+
+Leftovers, not built:
+- **The bar at 768 px** with "⊥ write to me", one character longer than "Get in touch": for the
+  developer on the preview (D24).
+- **The phone menu's Contact link** still reads `nav.contact` ("Contact", "Kontakt", "Contacto"),
+  with no `⊥`; the phone bar has no contact button (SHELL-06).
+- **The initial bundle** is 510.75 kB against the 500 kB warning budget.
 
 ## Width of the header
 
