@@ -100,14 +100,18 @@ const readFocus = (page) =>
             ? 'logo'
             : el.matches('header button.menu-button')
               ? 'menu button'
-          : el === main
-            ? 'main'
-            : main?.contains(el)
-              ? 'in main'
-              : `other: ${el.tagName.toLowerCase()} ${el.textContent.trim().slice(0, 30)}`;
+              : el === main
+                ? 'main'
+                : main?.contains(el)
+                  ? 'in main'
+                  : `other: ${el.tagName.toLowerCase()} ${el.textContent.trim().slice(0, 30)}`;
     const link = document.querySelector('a.skip-link');
     const box = link.getBoundingClientRect();
-    const rgb = (c) => c.match(/[\d.]+/g).slice(0, 3).map(Number);
+    const rgb = (c) =>
+      c
+        .match(/[\d.]+/g)
+        .slice(0, 3)
+        .map(Number);
     const luminance = (c) => {
       const [r, g, b] = rgb(c).map((v) => {
         const s = v / 255;
@@ -116,7 +120,9 @@ const readFocus = (page) =>
       return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     };
     const style = getComputedStyle(link);
-    const [l1, l2] = [luminance(style.color), luminance(style.backgroundColor)].sort((a, b) => b - a);
+    const [l1, l2] = [luminance(style.color), luminance(style.backgroundColor)].sort(
+      (a, b) => b - a,
+    );
     return {
       focus,
       text: link.textContent.trim(),
@@ -156,8 +162,18 @@ for (const lang of ['en', 'de', 'pt']) {
         const where = { path: `/${lang}/home`, lang, sameDocument: true };
         assert.deepEqual(
           {
-            tab: { focus: tab.focus, text: tab.text, inView: tab.inView, readable: tab.contrast >= 4.5 }, // A1, A2
-            follow: { focus: follow.focus, path: follow.path, lang: follow.lang, sameDocument: follow.sameDocument }, // A3, P-04
+            tab: {
+              focus: tab.focus,
+              text: tab.text,
+              inView: tab.inView,
+              readable: tab.contrast >= 4.5,
+            }, // A1, A2
+            follow: {
+              focus: follow.focus,
+              path: follow.path,
+              lang: follow.lang,
+              sameDocument: follow.sameDocument,
+            }, // A3, P-04
             next: next.focus, // A4
           },
           {
@@ -259,7 +275,12 @@ for (const lang of ['en', 'de', 'pt']) {
         return readFocus(page);
       });
       assert.deepEqual(
-        { focus: state.focus, path: state.path, lang: state.lang, sameDocument: state.sameDocument },
+        {
+          focus: state.focus,
+          path: state.path,
+          lang: state.lang,
+          sameDocument: state.sameDocument,
+        },
         { focus: 'main', path: `/${lang}/research`, lang, sameDocument: true },
         JSON.stringify(state),
       );
