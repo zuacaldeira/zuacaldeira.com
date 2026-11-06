@@ -63,6 +63,25 @@ describe('ZcNavDesktop', () => {
     expect(cta?.textContent?.replace(/\s+/g, ' ').trim()).toBe('⊥ write to me');
   });
 
+  it('SHELL-05 (D21): hides the ⊥ from screen readers, so the button is named by its words', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavDesktop, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('de');
+    const fixture = TestBed.createComponent(ZcNavDesktop);
+    await fixture.whenStable();
+    const cta = (fixture.nativeElement as HTMLElement).querySelector('a.nav-cta');
+    const hidden = [...(cta?.querySelectorAll('[aria-hidden="true"]') ?? [])].filter((el) =>
+      el.textContent?.trim(),
+    );
+    const named = cta?.cloneNode(true) as HTMLElement | undefined;
+    named?.querySelectorAll('[aria-hidden="true"]').forEach((el) => el.remove());
+    expect([
+      hidden.map((el) => el.textContent?.trim()),
+      named?.textContent?.replace(/\s+/g, ' ').trim(),
+    ]).toEqual([['⊥'], 'Kontakt']);
+  });
+
   it("SHELL-10: starts with the skip link to this page's main content, /de/research#main-content", async () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([{ path: '**', children: [] }])],

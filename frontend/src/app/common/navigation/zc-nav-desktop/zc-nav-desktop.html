@@ -12,7 +12,7 @@
       <div class="toolbar-actions">
         <app-language-links />
         <a mat-flat-button [routerLink]="link('contact')" class="nav-cta"
-          >⊥ {{ t().common.contactCta }}</a
+          ><span aria-hidden="true">⊥</span> {{ t().common.contactCta }}</a
         >
         <app-theme-toggle />
       </div>
