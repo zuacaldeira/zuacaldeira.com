@@ -13,14 +13,14 @@ the home hero, because the hero's page needs them.
 | SHELL-01 | the built `/de/home` | the header is read | a navigation labelled "Sprache" has three links, `EN`, `DE`, `PT`, to `/en/home`, `/de/home`, `/pt/home`; each has `hreflang`, `lang` and an accessible name that gives the language's name in that language and its code, "English (EN)", "Deutsch (DE)", "Português (PT)" (WCAG 2.5.3); `DE` has `aria-current` and is underlined | yes (build and unit, 2026-11-04; the underline not yet seen in a browser) |
 | SHELL-02 | a visitor on `/de/research` | they follow `PT` | they reach `/pt/research`: the same page in the other language | yes (build, every page, and unit, 2026-11-04) |
 | SHELL-03 | the built `/pt/home` | the footer is read | it lists English, Deutsch, Português as links, Português with `aria-current` | yes (build and unit, 2026-11-04) |
-| SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read; the language links (they carry `hreflang`) go to the same page in their own language instead (SHELL-02) | yes (build, 2026-11-04; P-01 to P-04) |
+| SHELL-04 | the built pages in en, de and pt, and `/` and the 404 page (both English) | their links inside the site are read: the menu, the phone menu, the logo, the contact button, the footer, the hero's buttons | each starts with the page's language, `/de/about` on a German page, names a page of the build and has no trailing slash; none is an old path (`/about`), so no click takes a redirect (the D42 finding in `home.md`). Links to files (the paper's PDF) are not read; the language links (they carry `hreflang`) go to the same page in their own language instead (SHELL-02); links to a spot on the same page (its own path and `#…`, the skip link) are not read either, a `#…` link to another page is (D19) | yes (build, 2026-11-04; P-01 to P-04; D19 2026-11-06) |
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | |
 | SHELL-06 | a phone (the CDK `Handset` query) | the page loads and has started in the browser | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | yes (browser and unit, 2026-11-05) |
 | SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
 | SHELL-08 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | it slides in from the right, is a dialog named Menu / Menü / Menu, and lists Home, About, Research, Running and Contact, translated, to `/xx/…`, each at least 44 px high; Escape, the close button or a tap beside it closes it and focus returns to the menu button; following a link closes it on the new page | yes (browser and unit, 2026-11-05) |
 | SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04) |
-| SHELL-10 | a keyboard user on `/en/home`, `/de/home`, `/pt/home`, at 390 and 1280 px, in the light and the dark theme | they press Tab once | focus lands on the skip link, en "Skip to main content", de "Zum Hauptinhalt springen", pt "Saltar para o conteúdo principal", its box wholly inside the viewport and its text at 4.5:1 or more; following it moves focus to `<main>` on the same page, with no reload and the same language, and the next Tab lands inside `<main>` | |
-| SHELL-12 | a phone at 390 px, the menu open on `/xx/home` | they follow About | `/xx/about` opens with the menu closed and focus on its `<main>` (D9) | |
+| SHELL-10 | a keyboard user on `/en/home`, `/de/home`, `/pt/home`, at 390 and 1280 px, in the light and the dark theme | they press Tab once | focus lands on the skip link, en "Skip to main content", de "Zum Hauptinhalt springen", pt "Saltar para o conteúdo principal", its box wholly inside the viewport and its text at 4.5:1 or more; following it moves focus to `<main>` on the same page, with no reload and the same language, and the next Tab lands inside `<main>` | yes (browser and unit, 2026-11-06) |
+| SHELL-12 | a phone at 390 px, the menu open on `/xx/home` | they follow About | `/xx/about` opens with the menu closed and focus on its `<main>` (D9) | yes (browser and unit, 2026-11-06) |
 | SHELL-11 | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`; no link drops the language prefix (waits for the Software and Texte pages) | |
 | SHELL-01-P-01 | a language page in the build | its language links are read | exactly one is `aria-current`, the page's own language; none, or two, is refused | yes (break in the build) |
 | SHELL-02-P-01 | `/de/research` | its language links are read | a language link to another page (`PT` → `/pt/home`) is refused | yes (break in the build) |
@@ -36,10 +36,10 @@ the home hero, because the hero's page needs them.
 | SHELL-08-P-02 | the same | Tab is pressed from the menu button | focus never lands on a link of the closed menu | yes (browser; break) |
 | SHELL-08-P-03 | the menu open | Tab or Shift+Tab is pressed, over and over | focus never leaves the menu for the page behind | yes (browser; break) |
 | SHELL-08-P-04 | the menu closed | the menu button is tapped twice quickly | the menu is open, not opened and closed again (refused, D11) | yes (browser and unit: red before) |
-| SHELL-10-P-01 | a page loaded, no key pressed | it is read | a skip link in view before any Tab is refused | |
-| SHELL-10-P-02 | the same | Tab is pressed | anything focusable before the skip link is refused | |
-| SHELL-10-P-03 | the same | it is read | a second skip link or a second `#main-content` is refused | |
-| SHELL-10-P-04 | the skip link focused | it is followed | a reload, a change of path or a change of language is refused | |
+| SHELL-10-P-01 | a page loaded, no key pressed | it is read | a skip link in view before any Tab is refused | yes (browser; break) |
+| SHELL-10-P-02 | the same | Tab is pressed | anything focusable before the skip link is refused | yes (browser; break) |
+| SHELL-10-P-03 | the same | it is read | a second skip link or a second `#main-content` is refused | yes (browser; break) |
+| SHELL-10-P-04 | the skip link focused | it is followed | a reload, a change of path or a change of language is refused | yes (browser: red before, path `/`; break) |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -454,6 +454,46 @@ link out of view again; A5 (SHELL-12, phone only) with the menu open, following 
 bar's first element is the skip link, `href="#main-content"`, text from `common.skipToContent`; U3
 each bar's `<main>` has `tabindex="-1"`; U4 only if SHELL-12 needs logic in `ZcNavMobile`. The colour
 is CSS, driven by A2.
+
+**Done 2026-11-06.** The skip link was there but broken. A bare `#main-content` resolves against
+`<base href="/">`, so on `/de/home` following it opened `/` in English, a new document. The
+acceptance test went red in all twelve runs with `follow: { focus: 'body', path: '/', lang: 'en',
+sameDocument: false }`, and in the dark theme with contrast 1.81 (white on the pale `--zc-azul-deep`).
+It went green after U1, U2 (each bar's href from the router's URL, `/de/research#main-content`), U3
+(`tabindex="-1"` on each `<main>`) and the colour `var(--zc-bg-white)` (D14). A4 was green from the
+start: Chromium moves the Tab starting point to the target even when it cannot take focus.
+- **A6 did not bite at first.** It asked whether the link was wholly in view, and stayed green with
+  the link at `top: -30px`, 6 px into the page. It now asks whether any part of it shows (`seen`), and
+  went red under that break. P-01 uses the same check.
+- **SHELL-12** was red in all three languages with focus on the menu button. Green: on
+  `NavigationEnd`, only when the menu was open, close it and then focus `<main>`. A unit test pins
+  D15: with the menu closed, `PT` in the bar keeps focus; removing the `opened` check turned it red.
+- **P-01 to P-04** were green on their first run and each was shown to bite by a declared break, then
+  restored: P-01 `top: 0` (`seen: true`), P-02 a link before the shell (`tab: 'other: a break'`), P-03
+  a second skip link and `<main>` (`mainContent: 2`), P-04 the bare `#main-content` back
+  (`path: '/'`, `sameDocument: false`), on `/xx/research`.
+- **SHELL-04 went red** on the new href: `/#main-content` on `/` and `/404#main-content` on the 404
+  page, both the page itself. D19: SHELL-04 leaves out links to a spot on the same page; its test was
+  red first (`root: [ '. → /' ]`).
+- **D18, JavaScript off,** measured once. Before the fix, `/de/home` went to `/` in English. After it,
+  focus is on `<main>` and the URL stays `/de/home#main-content`.
+- The router URL as a signal is shared as `injectPageUrl()` in `models/i18n.ts`.
+
+Unit 201 passed, 5 skipped; `acceptance` 23/23; browser 45/45 (`shell-keyboard`) and 30/30
+(`shell-phone`); the build prerenders 20 routes.
+
+Leftovers, not built:
+- **The 404 page with JavaScript off.** nginx serves the prerendered 404 at any path; its skip link
+  reads `/404#main-content` until Angular starts, so following it then moves to `/404`. Once Angular
+  has started it reads `/fr/home#main-content` (D19).
+- **The hiding margin is 4 px.** The link is 36 px tall at `top: -40px`; larger text would let it
+  peek out. Hiding it with `translate: 0 -100%` would not depend on its height.
+- **HOME-PAGE-04 times out under load.** The first lazy load of the home route took 6 to 8 s against
+  the 5 s limit while the machine was busy, with or without this element's change; it passes
+  otherwise.
+- **The initial bundle** is 510.62 kB against the 500 kB warning budget (510.73 kB during the element).
+- **The skip link's href** (`path#main-content`) is one line written in both bars.
+- **Focus after the desktop menu's links** is a new example for later (D15).
 
 ## Width of the header
 
