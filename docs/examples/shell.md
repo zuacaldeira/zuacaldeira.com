@@ -765,6 +765,10 @@ Leftovers, not built:
 - **SHELL-12's unit test** is sensitive to load (above); a longer `vi.waitFor` timeout would steady it.
 - **The initial bundle** is 512.12 kB against the 500 kB warning budget.
 
+**Reviewed 2026-11-06.** After `fafa1c7` was pushed and deployed, the developer reviewed the footer
+(SHELL-07) on next.zuacaldeira.com: "great". No change asked for. The CV file (D26) and the bottom row
+(D27) stay as leftovers.
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
