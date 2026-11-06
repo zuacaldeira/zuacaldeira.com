@@ -1,7 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet, RouterLink } from '@angular/router';
 import { ZcDesktopMenuItems } from '../../menu-items/zc-desktop-menu-items/zc-desktop-menu-items';
 import { Footer } from '../../footer/footer';
 import { ThemeToggle } from '../../theme-toggle/theme-toggle';
@@ -29,4 +31,15 @@ export class ZcNavDesktop {
   private i18n = inject(I18nService);
   readonly t = this.i18n.translations;
   readonly link = (page: NavItem['page']) => pagePath(this.i18n.language(), page);
+
+  // The page's own path: a bare `#main-content` resolves against `<base href="/">` and leaves the page.
+  private readonly router = inject(Router);
+  private readonly url = toSignal(
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects),
+    ),
+    { initialValue: this.router.url },
+  );
+  readonly skipHref = computed(() => `${this.url().split(/[?#]/)[0]}#main-content`);
 }

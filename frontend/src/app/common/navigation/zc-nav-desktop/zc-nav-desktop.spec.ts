@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { ZcNavDesktop } from './zc-nav-desktop';
 import { I18nService } from '../../../services/i18n.service';
 
@@ -39,6 +39,22 @@ describe('ZcNavDesktop', () => {
     const href = (selector: string) =>
       (fixture.nativeElement as HTMLElement).querySelector(selector)?.getAttribute('href');
     expect([href('a.logo'), href('a.nav-cta')]).toEqual(['/de/home', '/de/contact']);
+  });
+
+  it("SHELL-10: starts with the skip link to this page's main content, /de/research#main-content", async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([{ path: '**', children: [] }])],
+    }).overrideComponent(ZcNavDesktop, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('de');
+    const fixture = TestBed.createComponent(ZcNavDesktop);
+    await TestBed.inject(Router).navigateByUrl('/de/research');
+    await fixture.whenStable();
+    const first = (fixture.nativeElement as HTMLElement).firstElementChild;
+    expect([first?.className, first?.getAttribute('href'), first?.textContent?.trim()]).toEqual([
+      'skip-link',
+      '/de/research#main-content',
+      'Zum Hauptinhalt springen',
+    ]);
   });
 
   it('SHELL-01: shows EN, DE and PT in the header', async () => {
