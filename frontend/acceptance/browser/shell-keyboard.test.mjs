@@ -96,6 +96,8 @@ const readFocus = (page) =>
         ? 'body'
         : el.matches('a.skip-link')
           ? 'skip link'
+          : el.matches('header a.logo')
+            ? 'logo'
           : el === main
             ? 'main'
             : main?.contains(el)
@@ -122,6 +124,13 @@ const readFocus = (page) =>
         box.left >= 0 &&
         box.bottom <= innerHeight &&
         box.right <= innerWidth,
+      // Any part of it on the screen: a link that peeks out a few pixels is not out of view.
+      seen:
+        box.width > 0 &&
+        box.bottom > 0 &&
+        box.right > 0 &&
+        box.top < innerHeight &&
+        box.left < innerWidth,
       contrast: Math.round(((l1 + 0.05) / (l2 + 0.05)) * 100) / 100,
       path: location.pathname,
       lang: document.documentElement.lang,
@@ -158,5 +167,22 @@ for (const lang of ['en', 'de', 'pt']) {
         );
       });
     }
+  }
+}
+
+for (const lang of ['en', 'de', 'pt']) {
+  for (const width of ['phone', 'desktop']) {
+    test(`SHELL-10 A6: on /${lang}/home (${width}), a second Tab passes the skip link for the logo and hides it again`, async () => {
+      const next = await withPage(`/${lang}/home`, width, 'light', async (page) => {
+        await page.keyboard.press('Tab');
+        await page.keyboard.press('Tab');
+        return readFocus(page);
+      });
+      assert.deepEqual(
+        { focus: next.focus, seen: next.seen, path: next.path },
+        { focus: 'logo', seen: false, path: `/${lang}/home` },
+        JSON.stringify(next),
+      );
+    });
   }
 }
