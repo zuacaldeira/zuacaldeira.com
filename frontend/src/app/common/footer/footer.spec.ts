@@ -74,6 +74,12 @@ describe('Footer', () => {
     expect(hidden).toEqual(['⊥']);
   });
 
+  it('SHELL-07: invites with the heading "Let’s talk about your system." on an English page', async () => {
+    TestBed.inject(I18nService).setLanguage('en');
+    await fixture.whenStable();
+    expect(footerText('h2')).toBe('Let’s talk about your system.');
+  });
+
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
     await fixture.whenStable();
     const names = [

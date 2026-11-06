@@ -69,6 +69,7 @@ export const pt: Translations = {
   },
   footer: {
     end: 'todo o protocolo acaba aqui',
+    heading: 'Vamos falar do seu sistema.',
     tagline: 'Investigador. Programador. Educador. Corredor.',
     pagesHeading: 'Páginas',
     connectHeading: 'Conectar',

@@ -69,6 +69,7 @@ export const de: Translations = {
   },
   footer: {
     end: 'hier endet jedes Protokoll',
+    heading: 'Sprechen wir über Ihr System.',
     tagline: 'Forscher. Entwickler. Erzieher. Läufer.',
     pagesHeading: 'Seiten',
     connectHeading: 'Vernetzen',

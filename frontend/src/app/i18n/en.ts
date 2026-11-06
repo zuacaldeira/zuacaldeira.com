@@ -69,6 +69,7 @@ export const en: Translations = {
   },
   footer: {
     end: 'every protocol ends here',
+    heading: 'Let’s talk about your system.',
     tagline: 'Researcher. Developer. Educator. Runner.',
     pagesHeading: 'Pages',
     connectHeading: 'Connect',
