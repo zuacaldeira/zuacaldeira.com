@@ -495,6 +495,10 @@ Leftovers, not built:
 - **The skip link's href** (`path#main-content`) is one line written in both bars.
 - **Focus after the desktop menu's links** is a new example for later (D15).
 
+**Reviewed 2026-11-06.** After `def0378` was pushed and deployed, the developer reviewed the skip link
+(SHELL-10) and the focus after a link in the phone menu (SHELL-12) on next.zuacaldeira.com: "done". No
+change asked for.
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
