@@ -66,6 +66,14 @@ describe('Footer', () => {
     expect(footerText('p')).toBe('⊥ end · hier endet jedes Protokoll');
   });
 
+  it('SHELL-07 (D29): hides the end line\'s ⊥ from screen readers, and only that', async () => {
+    await fixture.whenStable();
+    const hidden = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll('footer [aria-hidden="true"]'),
+    ].map((el) => el.textContent?.trim());
+    expect(hidden).toEqual(['⊥']);
+  });
+
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
     await fixture.whenStable();
     const names = [
