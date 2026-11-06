@@ -57,6 +57,16 @@ describe('ZcNavDesktop', () => {
     ]);
   });
 
+  it('SHELL-10: lets the skip link move focus to main, which takes focus but no Tab stop', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavDesktop, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavDesktop);
+    await fixture.whenStable();
+    const main = (fixture.nativeElement as HTMLElement).querySelector('main');
+    expect([main?.id, main?.getAttribute('tabindex')]).toEqual(['main-content', '-1']);
+  });
+
   it('SHELL-01: shows EN, DE and PT in the header', async () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([])],
