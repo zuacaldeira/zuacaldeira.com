@@ -17,7 +17,7 @@ the home hero, because the hero's page needs them.
 | SHELL-05 | the built header | it is read in each language | the contact button reads en "⊥ write to me", de "⊥ Kontakt", pt "⊥ Contacto", to `/xx/contact` | yes (build, every page, and unit, 2026-11-06) |
 | SHELL-05b | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | its Contact link reads en "⊥ Contact", de "⊥ Kontakt", pt "⊥ Contacto" (the `nav.contact` words), the `⊥` hidden from screen readers, so its name is the words alone; Home, About, Research and Running read as before | yes (browser and unit, 2026-11-06) |
 | SHELL-06 | a phone (the CDK `Handset` query) | the page loads and has started in the browser | the bar shows the mark, `EN DE PT`, the theme button and the menu button, each at least 44 px, with no horizontal scroll at 390 px in all three languages; the name "Zua Caldeira" and the menu links are not in the bar | yes (browser and unit, 2026-11-05) |
-| SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let's talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
+| SHELL-07 | any language | the footer is read | it shows en "⊥ end · every protocol ends here", de "⊥ end · hier endet jedes Protokoll", pt "⊥ end · todo o protocolo acaba aqui", the heading "Let’s talk about your system." (de "Sprechen wir über Ihr System.", pt "Vamos falar do seu sistema."), the availability line en "Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.", de "Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.", pt "Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.", `hello@zuacaldeira.com`, GitHub, LinkedIn and CV | |
 | SHELL-08 | a phone at 390 px, on `/en/home`, `/de/home`, `/pt/home`, the menu open | it is read | it slides in from the right, is a dialog named Menu / Menü / Menu, and lists Home, About, Research, Running and Contact, translated, to `/xx/…`, each at least 44 px high; Escape, the close button or a tap beside it closes it and focus returns to the menu button; following a link closes it on the new page | yes (browser and unit, 2026-11-05) |
 | SHELL-09 | the 404 page at `/fr/home` | it is read | the header and footer are English, and `EN`, `DE`, `PT` lead to the three home pages; none is marked current | the language links only (build `/404` and unit, 2026-11-04); the English contact button (build `/404`, SHELL-05, 2026-11-06) |
 | SHELL-10 | a keyboard user on `/en/home`, `/de/home`, `/pt/home`, at 390 and 1280 px, in the light and the dark theme | they press Tab once | focus lands on the skip link, en "Skip to main content", de "Zum Hauptinhalt springen", pt "Saltar para o conteúdo principal", its box wholly inside the viewport and its text at 4.5:1 or more; following it moves focus to `<main>` on the same page, with no reload and the same language, and the next Tab lands inside `<main>` | yes (browser and unit, 2026-11-06) |
@@ -45,6 +45,11 @@ the home hero, because the hero's page needs them.
 | SHELL-05-P-02 | the same | its header is read | a contact button without its `⊥`, or with two, is refused | yes (break in the build, both) |
 | SHELL-05-P-03 | the same | its header is read | a second contact button in the header, or none, is refused | yes (break in the build, both) |
 | SHELL-05b-P-01 | the phone menu open | it is read | a `⊥` on any link but Contact (About), or a `⊥` a screen reader reads, is refused | yes (break in the template, browser, both) |
+| SHELL-07-P-01 | a built page | its footer is read | a text in another language than the page (the English heading on `/de/home`) is refused | |
+| SHELL-07-P-02 | the same | its footer is read | an end line without its `⊥`, with two, or with `end` translated (`⊥ Ende`) is refused | |
+| SHELL-07-P-03 | the same | its footer is read | a second footer, a second heading in it or a second mail link, or none, is refused | |
+| SHELL-07-P-04 | the same | its footer is read | any link but the mail link, GitHub, LinkedIn, CV and the three language names (the old page menu, Strava) is refused | |
+| SHELL-07-P-05 | the same | its footer is read | a mail link whose text and `mailto:` address disagree is refused | |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -653,6 +658,71 @@ Leftovers, not built:
 contact button (SHELL-05) and the phone menu's Contact (SHELL-05b) on next.zuacaldeira.com: "yes, it
 looks right!". No change asked for.
 
+## Diagram: SHELL-07 (the footer, at build time)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Test as Acceptance test (shell.test.mjs)
+    participant Build as Angular build (prerender)
+    participant Page as dist/…/l/p/index.html
+    Test->>Build: When the site is built
+    Build->>Page: prerender footer: "⊥ end · " + footer.end(l), h2 footer.heading(l), footer.availability(l)
+    Build->>Page: mail button, GitHub, LinkedIn, CV, English Deutsch Português
+    Test->>Page: Then exactly one footer, one h2, one mail link (P-03)
+    Test->>Page: its texts are l's, the ⊥ end untouched (P-01, P-02)
+    Test->>Page: its links are exactly mail, GitHub, LinkedIn, CV, 3 languages (P-04, P-05)
+    Note over Test,Page: "/" and "/404" count as English (SHELL-09). Mail client, GitHub and LinkedIn are outside the boundary: only the href is read.
+```
+
+Session type. Convention: a role that a branch never calls just ends there (Mail and Web on every
+branch but their own).
+
+```
+G = Footer → Visitor : foot( endLine = "⊥ end · " · end(l), heading(l), availability(l),
+                             mail(text = A, href = mailto:A),
+                             profiles[ GitHub → github.com/zuacaldeira, LinkedIn → linkedin.com/in/zuacaldeira, CV → cv ],
+                             langs[en, de, pt] ) .
+    Visitor → Footer : { write      . Visitor → Mail : compose(A) . end ,
+                         profile(p) . Visitor → Web  : get(url(p)) . end ,
+                         language(L) . end                                   (SHELL-02, SHELL-03) ,
+                         leave . end }
+    A = hello@zuacaldeira.com; l = the page's language
+
+Visitor ↾ = Footer ? foot(…) . Footer ! { write . Mail ! compose . end , profile(p) . Web ! get . end ,
+                                          language(L) . end , leave . end }
+Footer ↾  = Visitor ! foot(…) . Visitor ? { write . end , profile(p) . end , language(L) . end , leave . end }
+```
+
+Forbidden by G: a text not in `l` (P-01), the notation changed (P-02), `foot` or its heading or mail
+twice or not at all (P-03), a link outside the closed list (P-04), a mail whose text is not its
+address (P-05). No state, token or race, so no repeat or stale rows.
+
+| Diagram arrow | Step in G | Rows |
+|---|---|---|
+| 2 end line, heading, availability | `endLine`, `heading(l)`, `availability(l)` | A, U1–U4, P-01, P-02 |
+| 3 mail button, profiles, languages | `mail(…)`, `profiles[…]`, `langs` | A, U5, U6 (languages: SHELL-03) |
+| 4 exactly one | `foot` once, one heading, one mail | A, P-03 |
+| 5 texts in l | `(l)` in every text | A, P-01, P-02 |
+| 6 links closed | the closed list in `foot` | A, U7, P-04 |
+| `write` branch | `mail(text = A, href = mailto:A)` | A, U5, P-05 |
+| (colours) | not in G: how `foot` is shown | C |
+
+Test list. Acceptance A (`frontend/acceptance/shell.test.mjs`): on every built page (the 15, `/` and
+`/404` as English) the `<footer>` reads the end line, the `<h2>`, the availability line, in that
+order, and its links are exactly, in order, `hello@zuacaldeira.com → mailto:hello@zuacaldeira.com`,
+`GitHub → https://github.com/zuacaldeira`, `LinkedIn → https://linkedin.com/in/zuacaldeira`,
+`CV (PDF) | Lebenslauf (PDF) → /assets/cv/alexandre-zua-caldeira-cv.pdf`, English, Deutsch,
+Português. Unit (`footer.spec.ts`): U1 on a German page the end line reads "⊥ end · hier endet jedes
+Protokoll"; U2 its `⊥` sits in an `aria-hidden` span, the only one; U3 on an English page the `<h2>`
+reads "Let’s talk about your system."; U4 on a Portuguese page the availability line; U5 the mail
+link's text and `mailto:` agree; U6 GitHub, LinkedIn and CV in order with their hrefs; U7 no page
+menu (it replaces SHELL-04's footer test and the two nav-label tests). Then the old keys go. P-01 to
+P-03 and P-05 by declared breaks in the built `de/home/index.html`, restored (md5 checked); P-04 red
+before. Browser C (`frontend/acceptance/browser/shell-footer.test.mjs`): on `/en/home`, `/de/home`,
+`/pt/home` at 1280×800, in the light and the dark theme, every text in the footer, the mail button's
+included, at 4.5:1 or more. The layout is styling, reviewed on the preview.
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
@@ -709,8 +779,32 @@ rule; the site's own texts stay in en, de and pt).
 | SHELL-05-P-03 | The top bar has exactly one contact button. |
 | SHELL-05b | In the phone menu, Contact carries the same ⊥ as the contact button at the top; the other links stay as they are. |
 | SHELL-05b-P-01 | In the phone menu only Contact has the ⊥, and screen readers never read it. |
+| SHELL-07-P-01 | The footer never speaks another language than the page. |
+| SHELL-07-P-02 | The footer's `⊥ end` is notation and stays exactly as it is in every language. |
+| SHELL-07-P-03 | A page has one footer, with one heading and one email link. |
+| SHELL-07-P-04 | The footer links only to email, the profiles, the CV and the languages. |
+| SHELL-07-P-05 | The email link writes to the address it shows. |
 
 ## Decisions
+
+Agreed with the developer on 2026-11-06, for SHELL-07:
+
+- **D25, the footer's page menu goes,** as in the mock-up; SHELL-05b's leftover (the footer's
+  Contact without the `⊥`) goes with it.
+- **D26, the CV:** one English file, `/assets/cv/alexandre-zua-caldeira-cv.pdf`, on every page, its
+  text a new key `footer.cv` (en "CV (PDF)", de "Lebenslauf (PDF)", pt "CV (PDF)"). A dead link on
+  `next` until the developer adds the file; no phone number or street address in it (D16 in
+  `home.md`).
+- **D27, the bottom row** (`Zua = software ∥ research ∥ running`, "© … Alexandre Zua Caldeira ·
+  Berlin") stays for a later example; today's bottom row stays.
+- **D28, Strava, "Connect", "Pages" and the old tagline** leave the footer; `socialLinks` stays for
+  the contact page.
+- **D29, the end line's `⊥` is `aria-hidden`,** as D21.
+- **D30, keys** `footer.end`, `footer.heading`, `footer.availability`, `footer.cv`; the template adds
+  "⊥ end · ", the translations never hold it (as D20).
+- **D31, "Let’s"** with the typographic apostrophe.
+- **D32, contrast:** browser row C in a new `acceptance/browser/shell-footer.test.mjs`, 4.5:1 or more
+  in light and dark at 1280 px; the footer's colours become tokens in `styles.css`.
 
 Agreed with the developer on 2026-11-06, for SHELL-05:
 
