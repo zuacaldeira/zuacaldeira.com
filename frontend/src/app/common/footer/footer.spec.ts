@@ -54,6 +54,18 @@ describe('Footer', () => {
     expect(component.currentYear).toBe(new Date().getFullYear());
   });
 
+  const footerText = (selector: string) =>
+    (fixture.nativeElement as HTMLElement)
+      .querySelector(`footer ${selector}`)
+      ?.textContent?.replace(/\s+/g, ' ')
+      .trim();
+
+  it('SHELL-07: ends with "⊥ end · hier endet jedes Protokoll" on a German page', async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+    expect(footerText('p')).toBe('⊥ end · hier endet jedes Protokoll');
+  });
+
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
     await fixture.whenStable();
     const names = [

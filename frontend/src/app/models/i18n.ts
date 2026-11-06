@@ -118,6 +118,8 @@ export interface Translations {
     subtitle: string;
   };
   footer: {
+    /** The words after the notation "⊥ end · ", which the template adds (D30). */
+    end: string;
     tagline: string;
     pagesHeading: string;
     connectHeading: string;

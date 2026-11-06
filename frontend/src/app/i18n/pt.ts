@@ -68,6 +68,7 @@ export const pt: Translations = {
     subtitle: 'Vamos conectar — entre em contacto por qualquer um destes canais.',
   },
   footer: {
+    end: 'todo o protocolo acaba aqui',
     tagline: 'Investigador. Programador. Educador. Corredor.',
     pagesHeading: 'Páginas',
     connectHeading: 'Conectar',

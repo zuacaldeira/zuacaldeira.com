@@ -68,6 +68,7 @@ export const en: Translations = {
     subtitle: "Let's connect — reach out through any of these channels.",
   },
   footer: {
+    end: 'every protocol ends here',
     tagline: 'Researcher. Developer. Educator. Runner.',
     pagesHeading: 'Pages',
     connectHeading: 'Connect',

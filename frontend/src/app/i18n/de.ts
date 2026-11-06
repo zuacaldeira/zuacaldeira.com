@@ -68,6 +68,7 @@ export const de: Translations = {
     subtitle: 'Lassen Sie uns vernetzen — kontaktieren Sie mich über einen dieser Kanäle.',
   },
   footer: {
+    end: 'hier endet jedes Protokoll',
     tagline: 'Forscher. Entwickler. Erzieher. Läufer.',
     pagesHeading: 'Seiten',
     connectHeading: 'Vernetzen',

@@ -158,3 +158,66 @@ test('SHELL-02: on every built page EN, DE and PT lead to the same page in their
     assert.equal(htmlLang(page(`${lang}/research`)), lang, `${lang}/research has lang="${lang}"`);
   }
 });
+
+const text = (html) =>
+  html
+    .replace(/<[^>]*>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+// A page's footers, each as its paragraphs and headings in order, and its links as "text → href";
+// a language link (it has `hreflang`) by its text alone, its href is SHELL-02's.
+const footers = (html) =>
+  [...html.matchAll(/<footer\b[^>]*>([\s\S]*?)<\/footer>/g)].map(([, footer]) => ({
+    texts: [...footer.matchAll(/<(p|h[1-6])\b[^>]*>([\s\S]*?)<\/\1>/g)].map(
+      ([, tag, inner]) => `${tag}: ${text(inner)}`,
+    ),
+    links: [...footer.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)].map(([, attrs, inner]) =>
+      /\shreflang="/.test(attrs)
+        ? text(inner)
+        : `${text(inner)} → ${attrs.match(/\shref="([^"]*)"/)?.[1]}`,
+    ),
+  }));
+
+const FOOTER = {
+  en: [
+    'p: ⊥ end · every protocol ends here',
+    'h2: Let’s talk about your system.',
+    'p: Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.',
+  ],
+  de: [
+    'p: ⊥ end · hier endet jedes Protokoll',
+    'h2: Sprechen wir über Ihr System.',
+    'p: Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.',
+  ],
+  pt: [
+    'p: ⊥ end · todo o protocolo acaba aqui',
+    'h2: Vamos falar do seu sistema.',
+    'p: Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.',
+  ],
+};
+const CV = { en: 'CV (PDF)', de: 'Lebenslauf (PDF)', pt: 'CV (PDF)' };
+
+test("SHELL-07: on every built page the footer invites a talk, in the page's language, with mail, profiles and CV", () => {
+  const actual = Object.fromEntries(PAGES.map(([route]) => [route, footers(page(route))]));
+  const expected = Object.fromEntries(
+    PAGES.map(([route, lang]) => [
+      route,
+      [
+        {
+          texts: FOOTER[lang],
+          links: [
+            'hello@zuacaldeira.com → mailto:hello@zuacaldeira.com',
+            'GitHub → https://github.com/zuacaldeira',
+            'LinkedIn → https://linkedin.com/in/zuacaldeira',
+            `${CV[lang]} → /assets/cv/alexandre-zua-caldeira-cv.pdf`,
+            'English',
+            'Deutsch',
+            'Português',
+          ],
+        },
+      ],
+    ]),
+  );
+  assert.deepEqual(actual, expected);
+});
