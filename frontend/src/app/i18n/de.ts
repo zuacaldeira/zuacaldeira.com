@@ -72,6 +72,7 @@ export const de: Translations = {
     heading: 'Sprechen wir über Ihr System.',
     availability:
       'Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.',
+    cv: 'Lebenslauf (PDF)',
     tagline: 'Forscher. Entwickler. Erzieher. Läufer.',
     pagesHeading: 'Seiten',
     connectHeading: 'Vernetzen',

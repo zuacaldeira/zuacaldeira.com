@@ -122,6 +122,7 @@ export interface Translations {
     end: string;
     heading: string;
     availability: string;
+    cv: string;
     tagline: string;
     pagesHeading: string;
     connectHeading: string;

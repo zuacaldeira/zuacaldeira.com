@@ -23,6 +23,11 @@ export class Footer {
     }))
   );
   readonly email = this.contentService.email;
-  readonly socialLinks = this.contentService.socialLinks.filter((link) => link.platform !== 'Email');
+  /** GitHub and LinkedIn; Strava and Email stay on the contact page (D28). */
+  readonly profiles = this.contentService.socialLinks.filter((link) =>
+    ['GitHub', 'LinkedIn'].includes(link.platform),
+  );
+  /** One English CV on every page (D26); the file is still to come. */
+  readonly cvUrl = '/assets/cv/alexandre-zua-caldeira-cv.pdf';
   readonly currentYear = new Date().getFullYear();
 }

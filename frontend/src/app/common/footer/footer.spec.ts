@@ -46,10 +46,6 @@ describe('Footer', () => {
     expect(items[0].label).toBe('Início');
   });
 
-  it('should expose social links', () => {
-    expect(component.socialLinks.length).toBeGreaterThan(0);
-  });
-
   it('should have the current year', () => {
     expect(component.currentYear).toBe(new Date().getFullYear());
   });
@@ -94,6 +90,21 @@ describe('Footer', () => {
       ...(fixture.nativeElement as HTMLElement).querySelectorAll('footer a[href^="mailto:"]'),
     ].map((a) => [a.textContent?.trim(), a.getAttribute('href')]);
     expect(mail).toEqual([['hello@zuacaldeira.com', 'mailto:hello@zuacaldeira.com']]);
+  });
+
+  it('SHELL-07 (D26, D28): links to GitHub, LinkedIn and the CV, "Lebenslauf (PDF)" on a German page', async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+    const profiles = [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll(
+        'footer a[href^="https:"], footer a[href^="/assets/"]',
+      ),
+    ].map((a) => [a.textContent?.trim(), a.getAttribute('href')]);
+    expect(profiles).toEqual([
+      ['GitHub', 'https://github.com/zuacaldeira'],
+      ['LinkedIn', 'https://linkedin.com/in/zuacaldeira'],
+      ['Lebenslauf (PDF)', '/assets/cv/alexandre-zua-caldeira-cv.pdf'],
+    ]);
   });
 
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {

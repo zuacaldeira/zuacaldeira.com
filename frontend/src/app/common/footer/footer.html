@@ -18,13 +18,11 @@
       </ul>
     </div>
 
-    <div class="footer-social">
-      <h4>{{ t().footer.connectHeading }}</h4>
-      <ul>
-        @for (link of socialLinks; track link.platform) {
-          <li><a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.platform }}</a></li>
-        }
-      </ul>
+    <div class="foot__links">
+      @for (link of profiles; track link.platform) {
+        <a [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.platform }}</a>
+      }
+      <a [href]="cvUrl">{{ t().footer.cv }}</a>
     </div>
   </div>
 

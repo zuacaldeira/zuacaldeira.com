@@ -72,6 +72,7 @@ export const en: Translations = {
     heading: 'Let’s talk about your system.',
     availability:
       'Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.',
+    cv: 'CV (PDF)',
     tagline: 'Researcher. Developer. Educator. Runner.',
     pagesHeading: 'Pages',
     connectHeading: 'Connect',
