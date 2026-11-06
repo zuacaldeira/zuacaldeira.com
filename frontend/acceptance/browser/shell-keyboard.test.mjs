@@ -225,5 +225,19 @@ for (const lang of ['en', 'de', 'pt']) {
         JSON.stringify(state),
       );
     });
+
+    test(`SHELL-10-P-02: on /${lang}/home (${width}), nothing takes focus before the skip link`, async () => {
+      const [tab, back] = await withPage(`/${lang}/home`, width, 'light', async (page) => {
+        await page.keyboard.press('Tab');
+        const tab = await readFocus(page);
+        await page.keyboard.press('Shift+Tab');
+        return [tab, await readFocus(page)];
+      });
+      assert.deepEqual(
+        { tab: tab.focus, back: back.focus },
+        { tab: 'skip link', back: 'body' },
+        JSON.stringify({ tab, back }),
+      );
+    });
   }
 }
