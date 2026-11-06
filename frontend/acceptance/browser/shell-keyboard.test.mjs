@@ -239,5 +239,16 @@ for (const lang of ['en', 'de', 'pt']) {
         JSON.stringify({ tab, back }),
       );
     });
+
+    test(`SHELL-10-P-03: /${lang}/home (${width}) has one skip link and one main content`, async () => {
+      const counts = await withPage(`/${lang}/home`, width, 'light', (page) =>
+        page.evaluate(() => ({
+          skipLinks: document.querySelectorAll('a.skip-link').length,
+          mainContent: document.querySelectorAll('#main-content').length,
+          mains: document.querySelectorAll('main').length,
+        })),
+      );
+      assert.deepEqual(counts, { skipLinks: 1, mainContent: 1, mains: 1 });
+    });
   }
 }
