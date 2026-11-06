@@ -172,7 +172,8 @@ nav a,
   top: -40px;
   left: 0;
   background: var(--zc-azul-deep);
-  color: #ffffff;
+  /* The page's light ground: light on deep blue, and dark on the dark theme's pale blue (SHELL-10). */
+  color: var(--zc-bg-white);
   padding: var(--zc-space-2) var(--zc-space-4);
   text-decoration: none;
   z-index: 100;
@@ -182,6 +183,11 @@ nav a,
 
 .skip-link:focus {
   top: 0;
+}
+
+/* The skip link's target, not a control: no ring around the whole content (D16 in shell.md). */
+main:focus {
+  outline: none;
 }
 
 /* Focus indicators */
