@@ -124,6 +124,7 @@ describe('App Routes', () => {
 
     it.each([
       ['/de/software', 'h1', 'heading de'],
+      ['/de/writing', 'h1', 'writing heading de'],
       ['/pt/home', 'h1', 'headline pt'],
       ['/', 'h1', 'headline en'],
     ])('SW-PAGE-14: %s brings its own text with its route', async (url, selector, text) => {
