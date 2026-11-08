@@ -4,6 +4,7 @@ export const pt: Translations = {
   nav: {
     home: 'Início',
     about: 'Sobre',
+    software: 'Software',
     research: 'Investigação',
     work: 'Trabalho',
     paedagogik: 'Pedagogia',

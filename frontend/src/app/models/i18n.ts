@@ -69,6 +69,7 @@ export interface Translations {
   nav: {
     home: string;
     about: string;
+    software: string;
     research: string;
     work: string;
     paedagogik: string;

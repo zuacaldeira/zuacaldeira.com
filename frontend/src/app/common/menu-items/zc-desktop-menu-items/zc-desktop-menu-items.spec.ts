@@ -27,16 +27,16 @@ describe('ZcDesktopMenuItems', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have 4 translated nav items (contact is the toolbar button, not a text link)', () => {
+  it('should have 5 translated nav items (contact is the toolbar button, not a text link)', () => {
     const items = component.navItems();
-    expect(items).toHaveLength(4);
+    expect(items).toHaveLength(5);
     expect(items.map((i) => i.page)).not.toContain('contact');
   });
 
   it('SHELL-04: links to the pages in German on a German page, without contact', async () => {
     TestBed.inject(I18nService).setLanguage('de');
     await fixture.whenStable();
-    expect(hrefs()).toEqual(['/de/home', '/de/about', '/de/research', '/de/running']);
+    expect(hrefs()).toEqual(['/de/home', '/de/about', '/de/software', '/de/research', '/de/running']);
   });
 
   it('SHELL-04: follows a change of language without a reload, /pt/about', async () => {
@@ -45,7 +45,22 @@ describe('ZcDesktopMenuItems', () => {
     await fixture.whenStable();
     i18n.setLanguage('pt');
     await fixture.whenStable();
-    expect(hrefs()).toEqual(['/pt/home', '/pt/about', '/pt/research', '/pt/running']);
+    expect(hrefs()).toEqual(['/pt/home', '/pt/about', '/pt/software', '/pt/research', '/pt/running']);
+  });
+
+  it('SW-PAGE-10 (D13): lists Software before Research, the rest as before', async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+    const links = [...(fixture.nativeElement as HTMLElement).querySelectorAll('a')].map(
+      (a) => `${a.textContent?.trim()} → ${a.getAttribute('href')}`,
+    );
+    expect(links).toEqual([
+      'Startseite → /de/home',
+      'Über mich → /de/about',
+      'Software → /de/software',
+      'Forschung → /de/research',
+      'Laufen → /de/running',
+    ]);
   });
 
   it('SHELL-08: names the navigation in the page language, Navegação principal', async () => {

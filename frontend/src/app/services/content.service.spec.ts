@@ -9,8 +9,8 @@ describe('ContentService', () => {
   });
 
   describe('navItems', () => {
-    it('should have 5 navigation items', () => {
-      expect(service.navItems).toHaveLength(5);
+    it('should have 6 navigation items (Software since slice 7, D13)', () => {
+      expect(service.navItems).toHaveLength(6);
     });
 
     it('should not link to the hidden work and paedagogik pages', () => {

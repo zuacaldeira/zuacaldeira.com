@@ -16,6 +16,8 @@ export class ContentService {
   readonly navItems: readonly NavItem[] = [
     { label: 'Home', page: 'home', icon: 'home' },
     { label: 'About', page: 'about', icon: 'person' },
+    // Software before Research; the rest waits for the Writing page (D13, SHELL-11).
+    { label: 'Software', page: 'software', icon: 'code' },
     { label: 'Research', page: 'research', icon: 'science' },
     // Work and Pädagogik are hidden until their content is fine-tuned; see app.routes.ts.
     { label: 'Running', page: 'running', icon: 'directions_run' },
