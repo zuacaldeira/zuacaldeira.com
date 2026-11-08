@@ -75,6 +75,36 @@ export interface SoftwareHow {
   readonly caption: string;
 }
 
+/** A statement quoted from the paper: notation, the same in every language (HOME-PAPER-04, D31). */
+export interface PaperStatement {
+  readonly kind: 'theorem' | 'definition' | 'lemma' | 'proposition';
+  readonly number: number;
+  readonly name?: string;
+  readonly text: string;
+}
+
+/** One language's labels of the paper, shared by pages (`shared/paper`, HOME-PAPER-09, D30). */
+export interface SharedPaper {
+  readonly eyebrow: string;
+  readonly paperTitle: string;
+  readonly year: number;
+  readonly theorem: string;
+  readonly definition: string;
+  readonly lemma: string;
+  readonly proposition: string;
+  readonly evidence: string;
+  readonly read: string;
+  readonly allResearch: string;
+  readonly more: string;
+  readonly pdfUrl: string;
+  readonly statements: readonly PaperStatement[];
+}
+
+/** Text several pages read, `@page-content/shared` (D30). */
+export interface SharedContent {
+  readonly paper: Readonly<Record<Language, SharedPaper>>;
+}
+
 /** The home page's text, `@page-content/home` (D21). */
 export interface HomeContent {
   readonly hero: Readonly<Record<Language, HomeHero>>;
@@ -86,12 +116,15 @@ export interface SoftwareContent {
   readonly lead: Readonly<Record<Language, SoftwareLead>>;
   readonly work: Readonly<Record<Language, SoftwareWork>>;
   readonly how: Readonly<Record<Language, SoftwareHow>>;
+  /** The proof band's own line (D30). */
+  readonly proof: Readonly<Record<Language, { readonly kicker: string }>>;
 }
 
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
 export interface ContentSnapshot {
   readonly home: HomeContent;
   readonly software: SoftwareContent;
+  readonly shared: SharedContent;
 }
 
 /**
@@ -100,3 +133,5 @@ export interface ContentSnapshot {
  */
 export const HOME_CONTENT = new InjectionToken<HomeContent>('HOME_CONTENT');
 export const SOFTWARE_CONTENT = new InjectionToken<SoftwareContent>('SOFTWARE_CONTENT');
+/** Text several pages read, provided by each route that needs it (D30). */
+export const SHARED_CONTENT = new InjectionToken<SharedContent>('SHARED_CONTENT');

@@ -1,0 +1,26 @@
+/* The theorem band (home-spec.md, "Theorem band colours", D32): the --band-* tokens, set by the
+   theme. Notation in IBM Plex Mono, the statement in Fraunces. */
+.band {
+  padding-block: clamp(40px, 6vw, 80px);
+  background: var(--band-bg);
+  color: var(--band-fg);
+}
+
+.band__in {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.band__paper,
+.band__kicker {
+  margin: 0 0 var(--zc-space-3);
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 599.98px) {
+  .band__in {
+    padding-inline: 16px;
+  }
+}

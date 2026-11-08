@@ -4,6 +4,8 @@ import {
   ContentSnapshot,
   HOME_CONTENT,
   HomeHero,
+  SHARED_CONTENT,
+  SharedPaper,
   SOFTWARE_CONTENT,
   SoftwareHead,
   SoftwareHow,
@@ -83,6 +85,22 @@ const softwareHowIn = (lang: Language): SoftwareHow => ({
   caption: `how caption ${lang}`,
 });
 
+const sharedPaperIn = (lang: Language): SharedPaper => ({
+  eyebrow: `eyebrow ${lang}`,
+  paperTitle: 'Paper Title',
+  year: 2026,
+  theorem: `theorem ${lang}`,
+  definition: `definition ${lang}`,
+  lemma: `lemma ${lang}`,
+  proposition: `proposition ${lang}`,
+  evidence: `evidence ${lang}`,
+  read: `read ${lang}`,
+  allResearch: `all research ${lang}`,
+  more: `more ${lang}`,
+  pdfUrl: '/assets/pdfs/paper.pdf',
+  statements: [{ kind: 'theorem', number: 15, name: 'Name', text: 'For every S, a statement.' }],
+});
+
 const inEvery = <T>(make: (lang: Language) => T): Record<Language, T> => ({
   en: make('en'),
   de: make('de'),
@@ -97,10 +115,13 @@ export const TEST_CONTENT: ContentSnapshot = {
     lead: inEvery(softwareLeadIn),
     work: inEvery(softwareWorkIn),
     how: inEvery(softwareHowIn),
+    proof: inEvery((lang) => ({ kicker: `proof kicker ${lang}` })),
   },
+  shared: { paper: inEvery(sharedPaperIn) },
 };
 
 export const provideTestContent = (): Provider => [
   { provide: HOME_CONTENT, useValue: TEST_CONTENT.home },
   { provide: SOFTWARE_CONTENT, useValue: TEST_CONTENT.software },
+  { provide: SHARED_CONTENT, useValue: TEST_CONTENT.shared },
 ];
