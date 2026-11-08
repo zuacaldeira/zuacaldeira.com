@@ -59,18 +59,18 @@ language as its example.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| SW-LEAD-01 | The first piece of work is the TDD monitor, told as a case study. | the built `/en/software` | the first section after the head is read | kicker "Case study · AI agents", `<h2>` "A monitor that holds a coding agent to its TDD protocol", status "In use on this site since November 2026" | |
-| SW-LEAD-02 | The case study answers five questions, in this order. | the same | its blocks are read | five headings in order: The question, What I built, The protocol behind it, The live view, The result; each followed by its text (`lead.*`, en); then Stack | |
-| SW-LEAD-03 | The German and Portuguese case studies are fully translated. | the built `/de/software` and `/pt/software` | the lead is read | every text is the de or pt copy; no English sentence (P-02) | |
-| SW-LEAD-04 | The protocol is shown as the real line from the checked workflow type. | any language | the protocol block is read | a `<pre translate="no">` whose text, with whitespace collapsed, is exactly `Run = &{runTest: +{RED: Code, WRONG_RED: Fix, GREEN: Green}}`, the same in en, de and pt, and equal to the recorded checked line (D5); its caption is `lead.runCaption` | |
+| SW-LEAD-01 | The first piece of work is the TDD monitor, told as a case study. | the built `/en/software` | the first section after the head is read | kicker "Case study · AI agents", `<h2>` "A monitor that holds a coding agent to its TDD protocol", status "In use on this site since November 2026" | yes (build and unit, 2026-11-08) |
+| SW-LEAD-02 | The case study answers five questions, in this order. | the same | its blocks are read | five headings in order: The question, What I built, The protocol behind it, The live view, The result; each followed by its text (`lead.*`, en); then Stack | yes (build and unit, 2026-11-08) |
+| SW-LEAD-03 | The German and Portuguese case studies are fully translated. | the built `/de/software` and `/pt/software` | the lead is read | every text is the de or pt copy; no English sentence (P-02) | yes (build, 2026-11-08) |
+| SW-LEAD-04 | The protocol is shown as the real line from the checked workflow type. | any language | the protocol block is read | a `<pre translate="no">` whose text, with whitespace collapsed, is exactly `Run = &{runTest: +{RED: Code, WRONG_RED: Fix, GREEN: Green}}`, the same in en, de and pt, and equal to the recorded checked line (D5); its caption is `lead.runCaption` | yes (build and unit, 2026-11-08; `docs/notation/run.st`, D17) |
 | SW-LEAD-05 | A small drawing shows the one action and its three results. | any language | the figure is read | an SVG with `role="img"` and the translated `lead.figure` as its name and caption; its labels `Run`, `&{runTest}`, `+RED`, `+WRONG_RED`, `+GREEN`, `Code`, `Fix`, `Green` in every language | |
 | SW-LEAD-06 | A screenshot shows the live view, light or dark to match the page. | `/en/software` in the browser, light and dark theme | the screenshot is read | exactly one image shows: `reticulab-live-light.png` on a light glaze, `-dark.png` on a dark one; its alt text is `lead.shotAlt` in the page's language; it links to the full-size file; its caption is `lead.shotCaption` | |
-| SW-LEAD-07 | The result says only what is true: in use on this site. | any language | the result is read | `lead.result`; the page makes no claim of better or worse results, and gives no figures for the experiment | |
-| SW-LEAD-08 | The case study has no link to the lab, which is private. | the built pages | the lead's links are read | it has none: no repository, no write-up (D2) | |
-| SW-LEAD-09 | A fresh database, filled with the starting texts, gives the whole case study in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/lead?lang=en`, `de`, `pt` | 200; en is the spec's copy (D19's shape), and de and pt have the same fields, each non-empty | |
-| SW-LEAD-P-01 | A Run line that differs from the checked one is refused. | the built page | its Run line is changed (a label renamed, `WRONG_RED` dropped) or the recorded line changes while the page does not | SW-LEAD-04 goes red | |
-| SW-LEAD-P-02 | English text on a German or Portuguese case study is refused. | the built `/de/software` | an English block is put in | SW-LEAD-03 goes red | |
-| SW-LEAD-P-03 | Notation translated on a German page is refused. | the built `/de/software` | the figure reads `+ROT` or the line `Lauf = …` | SW-LEAD-04 or 05 goes red | |
+| SW-LEAD-07 | The result says only what is true: in use on this site. | any language | the result is read | `lead.result`; the page makes no claim of better or worse results, and gives no figures for the experiment | yes (build, 2026-11-08: the lead's only numbers are 2026, 56, 89, 2026) |
+| SW-LEAD-08 | The case study has no link to the lab, which is private. | the built pages | the lead's links are read | it has none: no repository, no write-up (D2) | yes (build and unit, 2026-11-08) |
+| SW-LEAD-09 | A fresh database, filled with the starting texts, gives the whole case study in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/lead?lang=en`, `de`, `pt` | 200; en is the spec's copy (D19's shape), and de and pt have the same fields, each non-empty | yes (integration, 2026-11-08) |
+| SW-LEAD-P-01 | A Run line that differs from the checked one is refused. | the built page | its Run line is changed (a label renamed, `WRONG_RED` dropped) or the recorded line changes while the page does not | SW-LEAD-04 goes red | yes (break in the build; break in `run.st`) |
+| SW-LEAD-P-02 | English text on a German or Portuguese case study is refused. | the built `/de/software` | an English block is put in | SW-LEAD-03 goes red | yes (break in the build) |
+| SW-LEAD-P-03 | Notation translated on a German page is refused. | the built `/de/software` | the figure reads `+ROT` or the line `Lauf = …` | SW-LEAD-04 or 05 goes red | the line only (break in the build: `Lauf = …`, `ROT`); the figure's `+ROT` comes with slice 3 |
 
 ## 4. More work
 
@@ -319,6 +319,33 @@ Page ↾    = Build?prerender . Visitor!lead(…) . end
 | forbidden: a link in the lead | `lead(…)` carries no link (D2) | A6 |
 
 The build is read-only: no repeat, stale-token or race rows.
+
+**Done 2026-11-08.** Red first, each for its own reason: A (on slice 1's build) "the lead does not
+follow the head"; B1 404 in all three languages; S1 "Missing expected rejection"; U1 `expected []`
+(after a stub, so the red was not a missing module); U3 `expected undefined to be 'no'`; U4 `expected
+[] to deeply equal [ 'kicker de' ]`; U5 no `<h3>`; U6 `expected [] to deeply equal [ 'no &{…}', … ]`;
+U7 no `<pre>`. U6's first red came partly from the test reading the wrong paragraph; the test was
+fixed and shown red once more against the plain-text block. Declared to the monitor: A as
+`writeAcceptance`, every break and restore. Green at first and shown to bite: U2 (the empty-piece
+filter taken out), U8 and A6 (a link put in), A2 (the result block moved before the live view), A3
+(SW-LEAD-P-02), A4 (SW-LEAD-P-01 in the page and in `run.st`, SW-LEAD-P-03's `Lauf = …`), A5 (a
+"40%" claim). A2's first run failed only because the test's reader did not decode `&amp;`; the
+reader was fixed before the result was taken.
+
+Results: unit 224 passed, 5 skipped (34 files); scripts 5/5; `acceptance` 38/38;
+`acceptance:nginx` 11/11; backend `./mvnw verify` 19 integration tests; the build prerenders 23
+routes. The browser tests were not run: they read the home pages only.
+
+Leftovers, not built:
+- **The initial bundle** grew to 519.27 kB (513.03 kB after slice 1): the content snapshot is
+  imported in `app.config.ts`, so every page's text is in the initial bundle. Each slice adds more.
+  Worth a decision before slice 4: load each page's part of the snapshot with its route.
+- **Port 8081** was taken on this machine by another project's Java process; the build's backend ran
+  on 8091 through an override on stdin and `CONTENT_API` from an env file, nothing in the repo
+  changed. `compose.build.yml` fixes the port.
+- **SW-LEAD-P-03's figure half** (`+ROT`) comes with slice 3.
+- **The lead at 390, 768 and 1280 px:** one column for now; the side column (figure, screenshot)
+  comes with slice 3. The Run line's three lines at 390 px are for the developer on the preview.
 
 ## Decisions
 
