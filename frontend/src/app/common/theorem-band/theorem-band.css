@@ -41,6 +41,40 @@
   line-height: 1.6;
 }
 
+/* Buttons: plain links, 44 px or taller, radius 2 px, filled and outlined (home-spec.md, `Button`). */
+.band__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--zc-space-3);
+  margin-top: var(--zc-space-6);
+}
+
+.band__btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--zc-space-4);
+  border: 2px solid var(--band-btn);
+  border-radius: 2px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.band__btn--filled {
+  background: var(--band-btn);
+  color: var(--band-btn-fg);
+}
+
+.band__btn--outlined {
+  background: transparent;
+  color: var(--band-fg);
+}
+
+.band__btn:focus-visible {
+  outline: 2px solid var(--band-fg);
+  outline-offset: 2px;
+}
+
 @media (max-width: 599.98px) {
   .band__in {
     padding-inline: 16px;

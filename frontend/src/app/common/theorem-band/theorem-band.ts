@@ -1,5 +1,7 @@
 import { Component, inject, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { SHARED_CONTENT } from '../../content/content';
+import { pagePath } from '../../models/i18n';
 import { I18nService } from '../../services/i18n.service';
 
 /**
@@ -8,6 +10,7 @@ import { I18nService } from '../../services/i18n.service';
  */
 @Component({
   selector: 'app-theorem-band',
+  imports: [RouterLink],
   templateUrl: './theorem-band.html',
   styleUrl: './theorem-band.css',
 })
@@ -17,4 +20,6 @@ export class TheoremBand {
   readonly paper = inject(SHARED_CONTENT).paper[this.lang];
   /** The band's statement: the paper's theorem (Theorem 15, the Reticulate Theorem). */
   readonly theorem = this.paper.statements.find((s) => s.kind === 'theorem');
+  /** All research, in the page's language (SHELL-04). */
+  readonly research = pagePath(this.lang, 'research');
 }

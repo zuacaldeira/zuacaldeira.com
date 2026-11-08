@@ -11,5 +11,9 @@
       <p class="band__statement" translate="no">{{ theorem.text }}</p>
     }
     <p class="band__evidence">{{ paper.evidence }}</p>
+    <div class="band__actions">
+      <a class="band__btn band__btn--filled" [href]="paper.pdfUrl">{{ paper.read }}</a>
+      <a class="band__btn band__btn--outlined" [routerLink]="research">{{ paper.allResearch }}</a>
+    </div>
   </div>
 </section>

@@ -31,4 +31,11 @@ describe('TheoremBand', () => {
     expect(parts).toEqual(['theorem pt 15 · Name', 'For every S, a statement.', 'evidence pt']);
     expect(el.querySelector('.band__statement')?.getAttribute('translate')).toBe('no');
   });
+
+  it('SW-PROOF-02: should lead on to the paper and to the research page in the same language', () => {
+    const buttons = [...render('de').querySelectorAll('.band__actions a')].map(
+      (a) => `${text(a)} → ${a.getAttribute('href')}`,
+    );
+    expect(buttons).toEqual(['read de → /assets/pdfs/paper.pdf', 'all research de → /de/research']);
+  });
 });
