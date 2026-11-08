@@ -2,11 +2,13 @@ import { Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { WRITING_CONTENT } from '../../content/content';
 import { I18nService } from '../../services/i18n.service';
+import { PageHead } from '../../common/page-head/page-head';
 
 /** The Writing page (docs/examples/writing.md; build spec docs/mockups/writing/writing-spec.md). */
 @Component({
   selector: 'app-writing',
-  template: '',
+  imports: [PageHead],
+  template: '<app-page-head [head]="head" />',
 })
 export class Writing {
   private readonly lang = inject(I18nService).language();
