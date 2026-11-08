@@ -7,7 +7,7 @@ import {
   SHARED_CONTENT,
   SharedPaper,
   SOFTWARE_CONTENT,
-  SoftwareHead,
+  PageHead,
   SoftwareHow,
   SoftwareLead,
   SoftwareWork,
@@ -23,7 +23,7 @@ const heroIn = (lang: Language): HomeHero => ({
   latticeCaption: `caption ${lang}`,
 });
 
-const softwareHeadIn = (lang: Language): SoftwareHead => ({
+const softwareHeadIn = (lang: Language): PageHead => ({
   eyebrow: `eyebrow ${lang}`,
   heading: `heading ${lang}`,
   intro: `intro ${lang}`,

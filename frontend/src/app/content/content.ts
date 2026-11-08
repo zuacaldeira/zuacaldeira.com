@@ -12,8 +12,11 @@ export interface HomeHero {
   readonly latticeCaption: string;
 }
 
-/** One language's head of the Software page, `GET /api/content/software/head?lang=xx` (D11). */
-export interface SoftwareHead {
+/**
+ * One language's page head, `GET /api/content/<page>/head?lang=xx` (D11 in software.md), for the
+ * Software and Writing pages (D13 in writing.md).
+ */
+export interface PageHead {
   readonly eyebrow: string;
   readonly heading: string;
   readonly intro: string;
@@ -113,7 +116,7 @@ export interface HomeContent {
 
 /** The Software page's text, `@page-content/software` (D21). */
 export interface SoftwareContent {
-  readonly head: Readonly<Record<Language, SoftwareHead>>;
+  readonly head: Readonly<Record<Language, PageHead>>;
   readonly lead: Readonly<Record<Language, SoftwareLead>>;
   readonly work: Readonly<Record<Language, SoftwareWork>>;
   readonly how: Readonly<Record<Language, SoftwareHow>>;

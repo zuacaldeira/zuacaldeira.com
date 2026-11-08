@@ -23,8 +23,8 @@ describe('Software', () => {
     const page: HTMLElement = fixture.nativeElement;
     const texts = (selector: string) =>
       [...page.querySelectorAll(selector)].map((el) => el.textContent?.trim());
-    expect(texts('.sw-head__eyebrow')).toEqual(['eyebrow de']);
+    expect(texts('.page-head__eyebrow')).toEqual(['eyebrow de']);
     expect(texts('h1')).toEqual(['heading de']);
-    expect(texts('.sw-head__intro')).toEqual(['intro de']);
+    expect(texts('.page-head__intro')).toEqual(['intro de']);
   });
 });

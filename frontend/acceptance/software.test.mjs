@@ -35,9 +35,9 @@ const sections = (html) =>
 const lead = (html) => sections(html).find(({ cls }) => cls.split(' ').includes('sw-lead'))?.inner ?? '';
 
 const head = (html) => ({
-  eyebrow: texts(html, 'p', 'sw-head__eyebrow'),
+  eyebrow: texts(html, 'p', 'page-head__eyebrow'),
   h1: texts(html, 'h1'),
-  intro: texts(html, 'p', 'sw-head__intro'),
+  intro: texts(html, 'p', 'page-head__intro'),
 });
 
 const LANGS = ['en', 'de', 'pt'];
@@ -82,7 +82,7 @@ test('SW-LEAD-01: the first piece after the head is the TDD monitor, told as a c
   const html = page('en/software');
   assert.deepEqual(
     sections(html).map(({ cls }) => cls).slice(0, 2),
-    ['sw-head', 'sw-lead'],
+    ['page-head','sw-lead'],
     'the lead does not follow the head',
   );
   assert.deepEqual(
@@ -414,7 +414,7 @@ test('SW-WORK-01: three more pieces follow the lead, in a fixed order', () => {
   const html = page('en/software');
   assert.deepEqual(
     sections(html).map(({ cls }) => cls).slice(0, 3),
-    ['sw-head', 'sw-lead', 'sw-work'],
+    ['page-head','sw-lead', 'sw-work'],
     'More work does not follow the lead',
   );
   assert.deepEqual({ heading: texts(work(html), 'h2'), rows: workRows(html) }, { heading: ['More work'], rows: EN_ROWS });
@@ -487,7 +487,7 @@ test('SW-HOW-01: three steps say how the work is done, after More work', () => {
   const html = page('en/software');
   assert.deepEqual(
     sections(html).map(({ cls }) => cls).slice(0, 4),
-    ['sw-head', 'sw-lead', 'sw-work', 'sw-how'],
+    ['page-head','sw-lead', 'sw-work', 'sw-how'],
     'How I work does not follow More work',
   );
   assert.deepEqual(howOf(html), {

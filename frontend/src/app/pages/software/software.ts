@@ -6,13 +6,13 @@ import { WorkLead } from './work-lead/work-lead';
 import { WorkRows } from './work-rows/work-rows';
 import { HowStrip } from './how-strip/how-strip';
 import { TheoremBand } from '../../common/theorem-band/theorem-band';
+import { PageHead } from '../../common/page-head/page-head';
 
 /** The Software page (docs/examples/software.md; build spec docs/mockups/software/software-spec.md). */
 @Component({
   selector: 'app-software',
-  imports: [WorkLead, WorkRows, HowStrip, TheoremBand],
+  imports: [PageHead, WorkLead, WorkRows, HowStrip, TheoremBand],
   templateUrl: './software.html',
-  styleUrl: './software.css',
 })
 export class Software {
   private readonly lang = inject(I18nService).language();

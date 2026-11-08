@@ -1,5 +1,6 @@
-/* The page head, on the home hero's lozenge tile (software-spec.md; home-spec.md, "Tile pattern"). */
-.sw-head {
+/* The page head, on the home hero's lozenge tile (software-spec.md, writing-spec.md; home-spec.md,
+   "Tile pattern"). Shared by the Software and Writing pages (D13 in writing.md). */
+.page-head {
   --grout: color-mix(in oklab, var(--zc-edge) 28%, transparent);
   background-image:
     repeating-linear-gradient(45deg, transparent 0 31px, var(--grout) 31px 32px),
@@ -7,7 +8,7 @@
   padding-block: clamp(40px, 6vw, 80px) clamp(32px, 5vw, 72px);
 }
 
-.sw-head__in {
+.page-head__in {
   max-width: 1200px;
   margin-inline: auto;
   padding-inline: 24px;
@@ -16,14 +17,14 @@
   gap: clamp(18px, 2vw, 26px);
 }
 
-.sw-head__eyebrow {
+.page-head__eyebrow {
   margin: 0;
   font-family: var(--zc-font-mono);
   font-size: 0.875rem;
   color: var(--zc-ochre-text);
 }
 
-.sw-head__title {
+.page-head__title {
   margin: 0;
   font-family: var(--zc-font-heading);
   font-optical-sizing: auto;
@@ -36,7 +37,7 @@
   overflow-wrap: break-word;
 }
 
-.sw-head__intro {
+.page-head__intro {
   margin: 0;
   max-width: 40rem;
   font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
@@ -44,7 +45,7 @@
 }
 
 @media (max-width: 599.98px) {
-  .sw-head__in {
+  .page-head__in {
     padding-inline: 16px;
   }
 }
