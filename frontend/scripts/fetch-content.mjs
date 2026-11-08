@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 const SECTIONS = [
   ['home', 'hero'],
   ['software', 'head'],
+  ['software', 'lead'],
 ];
 const LANGUAGES = ['en', 'de', 'pt'];
 

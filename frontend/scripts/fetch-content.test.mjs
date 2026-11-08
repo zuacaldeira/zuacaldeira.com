@@ -8,6 +8,7 @@ import { fetchContent } from './fetch-content.mjs';
 
 const heroIn = (lang) => ({ headline: `headline ${lang}`, lede: `lede ${lang}` });
 const headIn = (lang) => ({ eyebrow: `eyebrow ${lang}`, heading: 'Software', intro: `intro ${lang}` });
+const leadIn = (lang) => ({ kicker: `kicker ${lang}`, labels: { question: `question ${lang}` } });
 
 // Answers GET /api/content/{page}/{section}?lang=xx from `stored`; anything else is 404.
 async function fakeApi(stored) {
@@ -25,7 +26,10 @@ async function fakeApi(stored) {
 test('the snapshot holds every section of every language as the API answers it', async (t) => {
   const stored = {
     home: { hero: { en: heroIn('en'), de: heroIn('de'), pt: heroIn('pt') } },
-    software: { head: { en: headIn('en'), de: headIn('de'), pt: headIn('pt') } },
+    software: {
+      head: { en: headIn('en'), de: headIn('de'), pt: headIn('pt') },
+      lead: { en: leadIn('en'), de: leadIn('de'), pt: leadIn('pt') },
+    },
   };
   const api = await fakeApi(stored);
   t.after(api.close);
@@ -49,6 +53,19 @@ test('SW-PAGE-09: a Software head missing in de stops the build, naming page, se
 
   await assert.rejects(fetchContent(api.url), {
     message: 'No content for page software, section head, language de (404)',
+  });
+});
+
+test('SW-PAGE-09: a Software lead missing in pt stops the build, naming page, section and language', async (t) => {
+  const all = (make) => ({ en: make('en'), de: make('de'), pt: make('pt') });
+  const api = await fakeApi({
+    home: { hero: all(heroIn) },
+    software: { head: all(headIn), lead: { en: leadIn('en'), de: leadIn('de') } },
+  });
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'No content for page software, section lead, language pt (404)',
   });
 });
 
