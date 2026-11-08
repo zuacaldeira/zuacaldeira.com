@@ -44,6 +44,11 @@ test('SW-PAGE-02: the German Software page links to its version in every languag
   ]);
 });
 
+test('SW-PAGE-03: the Software page is titled "Alexandre Zua Caldeira — Software" in every language (D9)', () => {
+  const titles = LANGS.map((lang) => page(`${lang}/software`).match(/<title>(.*?)<\/title>/)?.[1]);
+  assert.deepEqual(titles, Array(3).fill('Alexandre Zua Caldeira — Software'));
+});
+
 test('SW-HEAD-02: the German Software page opens in German: eyebrow, one <h1>, the intro', () => {
   const html = page('de/software');
   assert.match(html, /<html lang="de"/);
