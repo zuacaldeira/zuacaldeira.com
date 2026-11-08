@@ -216,7 +216,19 @@ for (const lang of ['en', 'de', 'pt']) {
         document.querySelector('mat-sidenav').contains(document.activeElement),
       );
       await page.click(`mat-sidenav nav a[href="/${lang}/about"]`);
-      await page.waitForTimeout(800); // longer than the drawer's slide
+      // Wait up to 5 s for the drawer to close and focus to reach main: a fixed 800 ms
+      // wait failed under load (3 of 8 runs on 2026-11-08). If it never gets there, the
+      // assertion below still fails with the state it reads.
+      await page
+        .waitForFunction(
+          () =>
+            !document.querySelector('mat-sidenav').classList.contains('mat-drawer-opened') &&
+            document.activeElement === document.querySelector('main') &&
+            location.pathname.endsWith('/about'),
+          null,
+          { timeout: 5000 },
+        )
+        .catch(() => {});
       const open = await page.evaluate(() =>
         document.querySelector('mat-sidenav').classList.contains('mat-drawer-opened'),
       );
