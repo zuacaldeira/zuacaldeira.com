@@ -107,6 +107,33 @@ class ContentSectionIntegrationTest {
         assertMissing(get("/api/content/writing/nope?lang=en"));
     }
 
+    /** D11's shape, one text: nested objects, an array, a number and booleans, stored as they are. */
+    private static String writingTexts(String read, String kind) {
+        return """
+                {"inEnglish": "Em inglês", "read": "%s", "newTab": "abre num novo separador",
+                 "kinds": {"workshop": "%s", "conference": "Artigo de conferência", "report": "Relatório técnico"},
+                 "items": [{"id": "ice2026", "year": 2026, "kind": "workshop",
+                            "title": "Session Type State Spaces Form Lattices",
+                            "authors": [{"name": "Alexandre Zua Caldeira", "self": true}],
+                            "venue": "ICE 2026 · International Workshop on Interaction and Concurrency Experience",
+                            "note": "Versão final · a publicar na EPTCS",
+                            "href": "/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf",
+                            "external": false}]}""".formatted(read, kind);
+    }
+
+    @Test
+    @DisplayName("WR-LIST-12 answers the stored Portuguese list of the Writing page as it is")
+    void answersTheStoredWritingTexts() throws Exception {
+        String ptTexts = writingTexts("Ler (PDF)", "Artigo de workshop");
+        store("writing", "texts", "pt", ptTexts);
+        store("writing", "texts", "en", writingTexts("Read (PDF)", "Workshop paper"));
+
+        HttpResponse<String> response = get("/api/content/writing/texts?lang=pt");
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(json(response.body())).isEqualTo(json(ptTexts));
+    }
+
     private static void assertMissing(HttpResponse<String> response) {
         assertThat(response.statusCode()).isEqualTo(404);
         assertThat(response.body()).isEmpty();
