@@ -70,6 +70,7 @@ language as its example.
 | SW-LEAD-09 | A fresh database, filled with the starting texts, gives the whole case study in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/lead?lang=en`, `de`, `pt` | 200; en is the spec's copy (D19's shape), and de and pt have the same fields, each non-empty | yes (integration, 2026-11-08) |
 | SW-LEAD-P-01 | A Run line that differs from the checked one is refused. | the built page | its Run line is changed (a label renamed, `WRONG_RED` dropped) or the recorded line changes while the page does not | SW-LEAD-04 goes red | yes (break in the build; break in `run.st`) |
 | SW-LEAD-P-02 | English text on a German or Portuguese case study is refused. | the built `/de/software` | an English block is put in | SW-LEAD-03 goes red | yes (break in the build) |
+| SW-LEAD-P-04 | A screenshot that does not match the theme, or both at once, is refused. | `/en/software` in the browser, light and dark | the dark image shows on a light page, both show, or the hidden one is downloaded too | SW-LEAD-06 goes red | |
 | SW-LEAD-P-03 | Notation translated on a German page is refused. | the built `/de/software` | the figure reads `+ROT` or the line `Lauf = …` | SW-LEAD-04 or 05 goes red | the line only (break in the build: `Lauf = …`, `ROT`); the figure's `+ROT` comes with slice 3 |
 
 ## 4. More work
@@ -347,7 +348,81 @@ Leftovers, not built:
 - **The lead at 390, 768 and 1280 px:** one column for now; the side column (figure, screenshot)
   comes with slice 3. The Run line's three lines at 390 px are for the developer on the preview.
 
+## Slice 3: the Run figure and the monitor screenshot
+
+Test list:
+- **Backend:** B1 SW-LEAD-09 grows by the lead's `figure`, `shotAlt` and `shotCaption` (D22).
+- **Unit:** U1 `RunFigure` is an `<svg role="img">` named by its label, with the label as its
+  `<figcaption>` (SW-LEAD-05); U2 its labels are exactly `Run`, `&{runTest}`, `+RED`, `+WRONG_RED`,
+  `+GREEN`, `Code`, `Fix`, `Green`; U3 the action edge is solid, the three result edges dashed (the
+  spec: not colour alone); U4 `MonitorShot` has the light and the dark image, each in a link to its
+  own file, with the alt text, `width="1440"`, `height="900"`, `loading="lazy"`, and one caption; U5
+  the lead's side column holds the figure and the shot with the lead's texts; U6 SW-LEAD-08 narrowed:
+  the lead's only links go to the two screenshot files (D23).
+- **Acceptance (build):** A SW-LEAD-05, the outer test (the figure's name and caption in en, de, pt,
+  its labels the same in every language); A2 SW-LEAD-06's build half (both images in each page with
+  the page's alt text, the links, the caption; the files are in the build); A3 SW-LEAD-08 narrowed.
+- **Browser (one file, one Chromium, closed after):** C SW-LEAD-06 on `/en/software` at 1280, light
+  and dark: exactly one image shows, the one that matches, and only its file is downloaded.
+- **Protocol rows:** SW-LEAD-P-03's figure half (`+ROT` in the built `/de/software`, A red);
+  SW-LEAD-P-04 (a break in the CSS: the dark image on a light page; and `loading="eager"`: the hidden
+  one downloaded; C red).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/software/index.html
+    participant B as Chromium (C), light or dark
+    participant F as /assets/software/reticulab-live-{light,dark}.png
+    NG->>P: RunFigure (U1–U3): role=img, label_l, fixed labels; MonitorShot (U4): both images, lazy
+    T->>P: A, A2, A3 (build)
+    T->>B: C: open /en/software with colorScheme light | dark
+    B->>B: ThemeService sets html.dark-theme (or not); CSS shows one image
+    B->>F: only the shown image is fetched (lazy, the other display: none)
+    T->>B: which image is displayed, which files were requested
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → Page : prerender(figure(label_l, labels), shot(alt_l, caption_l, light, dark)) .
+    Visitor → Page : open(mode) .
+    Page → Visitor : { light: show(light.png) . Visitor → Files : get(light.png) . end ,
+                       dark:  show(dark.png)  . Visitor → Files : get(dark.png)  . end }
+  labels = [Run, &{runTest}, +RED, +WRONG_RED, +GREEN, Code, Fix, Green], the same for every l
+
+Visitor ↾ = Page!open(mode) . Page?{ light: Files!get(light.png) . end , dark: Files!get(dark.png) . end }
+Page ↾    = Build?prerender . Visitor?open . Visitor!{ light . end , dark . end }
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1 NG → P | `prerender(figure, shot)` | U1–U6 |
+| 2 T → P | `figure(label_l, labels)`, `shot(alt_l, caption_l, …)` | A, A2, A3 |
+| 3–4 open, mode | `Visitor → Page : open(mode)` | C (light, dark) |
+| 4 show one | `{ light: show(light.png) , dark: show(dark.png) }` | C |
+| 5 fetch | `get(light.png)` or `get(dark.png)`, never both | C |
+| forbidden: the other image shown, or both | the branch's one `show` | SW-LEAD-P-04 |
+| forbidden: the hidden image fetched | one `get` per branch | SW-LEAD-P-04 |
+| forbidden: a label translated | `labels` the same for every `l` | SW-LEAD-P-03 |
+
+The page is read-only: no repeat, stale-token or race rows.
+
 ## Decisions
+
+Taken in slice 3's plan on 2026-11-08, following the spec (the developer may change them):
+
+- **D22. The lead grows by three texts:** `figure` (the figure's name and caption), `shotAlt`,
+  `shotCaption`, the spec's copy in en, de and pt.
+- **D23. SW-LEAD-08 is narrowed to its own words:** no link to the lab, no repository, no write-up.
+  The screenshot's link to its full-size file (SW-LEAD-06, the spec's `MonitorShot`) is allowed;
+  slice 2's tests refused every link and are narrowed to "only the two screenshot files".
+- **D24. Light or dark** is the one theme the site has today, `html.dark-theme` from `ThemeService`
+  (the five glazes of the spec are not built). Both images are in the page; CSS shows one, and the
+  other is never downloaded (`loading="lazy"` and `display: none`). Without JavaScript the page is
+  light and shows the light image.
 
 Taken in slice 2's plan on 2026-11-08, following D5, D11 and the spec (the developer may change
 them):
