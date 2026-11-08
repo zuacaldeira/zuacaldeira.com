@@ -474,6 +474,38 @@ test('SW-WORK-05: the rows are translated; the names and the stacks are not', ()
   assert.deepEqual({ de: shown('de'), pt: shown('pt') }, TRANSLATED_WORK);
 });
 
+// "How I work": its heading, and its steps (the <li> of its <ol>) as title and sentence.
+const how = (html) => sections(html).find(({ cls }) => cls.split(' ').includes('sw-how'))?.inner ?? '';
+const howOf = (html) => ({
+  heading: texts(how(html), 'h2'),
+  steps: [...(how(html).match(/<ol\b[^>]*>(.*?)<\/ol>/s)?.[1] ?? '').matchAll(/<li\b[^>]*>(.*?)<\/li>/gs)].map(
+    ([, step]) => [texts(step, 'h3')[0], texts(step, 'p', 'sw-how__text')[0]],
+  ),
+});
+
+test('SW-HOW-01: three steps say how the work is done, after More work', () => {
+  const html = page('en/software');
+  assert.deepEqual(
+    sections(html).map(({ cls }) => cls).slice(0, 4),
+    ['sw-head', 'sw-lead', 'sw-work', 'sw-how'],
+    'How I work does not follow More work',
+  );
+  assert.deepEqual(howOf(html), {
+    heading: ['How I work'],
+    steps: [
+      ['Protocol first', 'The behaviour is agreed as examples and written as a session type before any code exists.'],
+      [
+        'Test-first, one step at a time',
+        'Each test is seen to fail for the right reason, then made to pass; then the code is tidied and committed.',
+      ],
+      [
+        'Every forbidden path shown red',
+        'What the protocol rules out gets a test too, and each such test is broken once on purpose, to prove it bites.',
+      ],
+    ],
+  });
+});
+
 const PAPER = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
 const REPO = { en: 'Repository', de: 'Repository', pt: 'Repositório' };
 const READ_PAPER = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };
