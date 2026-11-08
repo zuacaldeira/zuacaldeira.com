@@ -185,6 +185,52 @@ test('WR-LIST-06: the older papers link to where they are published, in a new ta
   );
 });
 
+// What a text keeps in every language, and how its title is marked (D10, WR-LIST-07 to 09).
+const published = (item) => {
+  const { year, title, authors, self, venue } = fields(item);
+  return { year, title, authors, self, venue, targets: linksOf(item).map(({ href }) => href) };
+};
+const marked = (item) => {
+  const h3 = item.match(/<h3\b([^>]*)>/)?.[1] ?? '';
+  return {
+    kind: fields(item).kind,
+    lang: attr(h3, 'lang'),
+    translate: attr(h3, 'translate'),
+    inEnglish: texts(item, 'p', 'wr-texts__lang'),
+  };
+};
+
+test('WR-LIST-07, 08, 09 (D10): the labels are translated, the titles, names and venues stay as published', () => {
+  const english = items(page('en/writing')).map(published);
+  const shown = Object.fromEntries(
+    LANGS.map((lang) => [
+      lang,
+      { published: items(page(`${lang}/writing`)).map(published), marked: items(page(`${lang}/writing`)).map(marked) },
+    ]),
+  );
+  const markedAs = (kinds, lang, inEnglish) =>
+    kinds.map((kind) => ({ kind, lang, translate: 'no', inEnglish: inEnglish ? [inEnglish] : [] }));
+  assert.deepEqual(shown, {
+    en: {
+      published: english,
+      marked: markedAs(['Workshop paper', 'Conference paper', 'Workshop paper', 'Technical report'], null, null),
+    },
+    de: {
+      published: english,
+      marked: markedAs(['Workshop-Paper', 'Konferenz-Paper', 'Workshop-Paper', 'Technischer Bericht'], 'en', 'Auf Englisch'),
+    },
+    pt: {
+      published: english,
+      marked: markedAs(
+        ['Artigo de workshop', 'Artigo de conferência', 'Artigo de workshop', 'Relatório técnico'],
+        'en',
+        'Em inglês',
+      ),
+    },
+  });
+  assert.deepEqual(english.map(({ title }) => title), TITLES);
+});
+
 test('WR-LIST-10 (D4): no abstract is on the Writing page, in any language', () => {
   const abstracts = [
     'We prove that the state space of every well-formed session type',
