@@ -63,15 +63,15 @@ language as its example.
 | SW-LEAD-02 | The case study answers five questions, in this order. | the same | its blocks are read | five headings in order: The question, What I built, The protocol behind it, The live view, The result; each followed by its text (`lead.*`, en); then Stack | yes (build and unit, 2026-11-08) |
 | SW-LEAD-03 | The German and Portuguese case studies are fully translated. | the built `/de/software` and `/pt/software` | the lead is read | every text is the de or pt copy; no English sentence (P-02) | yes (build, 2026-11-08) |
 | SW-LEAD-04 | The protocol is shown as the real line from the checked workflow type. | any language | the protocol block is read | a `<pre translate="no">` whose text, with whitespace collapsed, is exactly `Run = &{runTest: +{RED: Code, WRONG_RED: Fix, GREEN: Green}}`, the same in en, de and pt, and equal to the recorded checked line (D5); its caption is `lead.runCaption` | yes (build and unit, 2026-11-08; `docs/notation/run.st`, D17) |
-| SW-LEAD-05 | A small drawing shows the one action and its three results. | any language | the figure is read | an SVG with `role="img"` and the translated `lead.figure` as its name and caption; its labels `Run`, `&{runTest}`, `+RED`, `+WRONG_RED`, `+GREEN`, `Code`, `Fix`, `Green` in every language | |
-| SW-LEAD-06 | A screenshot shows the live view, light or dark to match the page. | `/en/software` in the browser, light and dark theme | the screenshot is read | exactly one image shows: `reticulab-live-light.png` on a light glaze, `-dark.png` on a dark one; its alt text is `lead.shotAlt` in the page's language; it links to the full-size file; its caption is `lead.shotCaption` | |
+| SW-LEAD-05 | A small drawing shows the one action and its three results. | any language | the figure is read | an SVG with `role="img"` and the translated `lead.figure` as its name and caption; its labels `Run`, `&{runTest}`, `+RED`, `+WRONG_RED`, `+GREEN`, `Code`, `Fix`, `Green` in every language | yes (build and unit, 2026-11-08) |
+| SW-LEAD-06 | A screenshot shows the live view, light or dark to match the page. | `/en/software` in the browser, light and dark theme | the screenshot is read | exactly one image shows: `reticulab-live-light.png` on a light glaze, `-dark.png` on a dark one; its alt text is `lead.shotAlt` in the page's language; it links to the full-size file; its caption is `lead.shotCaption` | yes (browser, light and dark; build and unit, 2026-11-08); that the other image is never downloaded is open (D25) |
 | SW-LEAD-07 | The result says only what is true: in use on this site. | any language | the result is read | `lead.result`; the page makes no claim of better or worse results, and gives no figures for the experiment | yes (build, 2026-11-08: the lead's only numbers are 2026, 56, 89, 2026) |
 | SW-LEAD-08 | The case study has no link to the lab, which is private. | the built pages | the lead's links are read | it has none: no repository, no write-up (D2) | yes (build and unit, 2026-11-08) |
 | SW-LEAD-09 | A fresh database, filled with the starting texts, gives the whole case study in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/lead?lang=en`, `de`, `pt` | 200; en is the spec's copy (D19's shape), and de and pt have the same fields, each non-empty | yes (integration, 2026-11-08) |
 | SW-LEAD-P-01 | A Run line that differs from the checked one is refused. | the built page | its Run line is changed (a label renamed, `WRONG_RED` dropped) or the recorded line changes while the page does not | SW-LEAD-04 goes red | yes (break in the build; break in `run.st`) |
 | SW-LEAD-P-02 | English text on a German or Portuguese case study is refused. | the built `/de/software` | an English block is put in | SW-LEAD-03 goes red | yes (break in the build) |
-| SW-LEAD-P-04 | A screenshot that does not match the theme, or both at once, is refused. | `/en/software` in the browser, light and dark | the dark image shows on a light page, both show, or the hidden one is downloaded too | SW-LEAD-06 goes red | |
-| SW-LEAD-P-03 | Notation translated on a German page is refused. | the built `/de/software` | the figure reads `+ROT` or the line `Lauf = …` | SW-LEAD-04 or 05 goes red | the line only (break in the build: `Lauf = …`, `ROT`); the figure's `+ROT` comes with slice 3 |
+| SW-LEAD-P-04 | A screenshot that does not match the theme, or both at once, is refused. | `/en/software` in the browser, light and dark | the dark image shows on a light page, both show, or the hidden one is downloaded too | SW-LEAD-06 goes red | the image shown (break in `monitor-shot.ts`, rebuilt); the download waits for D25 |
+| SW-LEAD-P-03 | Notation translated on a German page is refused. | the built `/de/software` | the figure reads `+ROT` or the line `Lauf = …` | SW-LEAD-04 or 05 goes red | yes (breaks in the build: the line's `Lauf = …`, `ROT`; the figure's `+ROT`) |
 
 ## 4. More work
 
@@ -410,7 +410,44 @@ Page ↾    = Build?prerender . Visitor?open . Visitor!{ light . end , dark . en
 
 The page is read-only: no repeat, stale-token or race rows.
 
+**Done 2026-11-08, but for one open point (D25).** Red first: A on slice 2's build (no figure); B1
+(the lead without its three new texts, en, de, pt); U1 `expected undefined to be 'img'` (after a
+stub); U2 no labels; U3 no dashes; U4 no images; U5 no side column. SW-LEAD-08's slice-2 tests went
+red on the two screenshot links, as D23 foresaw, and were narrowed; SW-LEAD-04's reader took the
+lead's three captions and now reads its own figure's. Declared to the monitor: A as
+`writeAcceptance`, every break and restore. Green at first and shown to bite: U6 (a write-up link),
+A2 (an English alt text on `pt`; a first try by `sed` was refused and broke nothing, so it was done
+again by an edit), SW-LEAD-P-03's figure half (`+ROT`), C (SW-LEAD-P-04: the dark image not hidden by
+default, a break in the source and a rebuild; the same break in the prerendered page's `<style>` did
+not bite, because after hydration the component's styles come from its script).
+
+**Found by C, open (D25):** on a dark page the light screenshot is downloaded too (about 150 kB).
+Before Angular sets `html.dark-theme`, the page is light, and the lazy light image is close enough
+to the viewport to load. The image shown is right in both themes; C checks only that until D25 is
+decided.
+
+Results: unit 232 passed, 5 skipped (36 files); scripts 6/6; `acceptance` 41/41; `acceptance:nginx`
+11/11; browser C 2/2 (the shell's browser tests were not run: they read the home pages only); backend
+`./mvnw verify` 19 integration tests; the build prerenders 23 routes; initial bundle 510.81 kB.
+
+Leftovers:
+- **The design hook** flags `monitor-shot.ts` with "broken-image": a false positive, the `src` is a
+  binding (`[src]="file(mode)"`) to the two real files, checked by U4 and A2. The narrow ignore
+  needs a command this session may not run; it is left standing.
+- **The figure and the side column at 390, 768 and 1280 px,** in light and dark: for the developer on
+  the preview; drawn and styled by eye, the figure's contrast not measured.
+- **Port 8081** was taken again; the build's backend ran on 8091 (stdin override), as in slice 2.
+
 ## Decisions
+
+Open, for the developer (2026-11-08):
+
+- **D25. The light screenshot downloaded on a dark page.** Options: (1, recommended) a few lines of
+  script in `index.html`'s `<head>` set `html.dark-theme` before the page paints, by the same rule as
+  `ThemeService` (saved choice, else the system's), so the right image loads and dark pages no longer
+  flash light first, on every page; a test ties the script's rule to the service's; (2) leave it:
+  about 150 kB more on dark pages, C keeps checking only the image shown; (3) CSS only, by the
+  system's setting: wrong for a visitor whose saved choice differs from the system's.
 
 Taken in slice 3's plan on 2026-11-08, following the spec (the developer may change them):
 
