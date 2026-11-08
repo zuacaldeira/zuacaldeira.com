@@ -1,7 +1,8 @@
 # Examples: Software page
 
-Status: **draft for the developer to agree** (written 2026-11-08). Decisions D1–D4 and D6 were
-agreed on 2026-11-08; D5, D7, D8 and D9 are open and are answered before the build.
+Status: **agreed with the developer on 2026-11-08** (D1–D4 and D6 first; D3's wording, D5, D7, D8
+and D9 answered the same day, then D10 to D16 for the build). The Portuguese copy is a draft nobody
+has read yet: it is built as drafted and reviewed by the developer on the preview (D16).
 
 The Software page in three languages, at `/en/software`, `/de/software` and `/pt/software`.
 Design: `docs/mockups/software/software-spec.md` (option 1, lead plus list), with the mock-up
@@ -30,9 +31,9 @@ language as its example.
 |----|----------------|-------|------|------|---------|
 | SW-PAGE-01 | The Software page exists in all three languages. | the software content in en, de and pt | the site is built | `/en/software/index.html`, `/de/software/index.html`, `/pt/software/index.html` exist, with `<html lang="en">`, `"de"`, `"pt"` | |
 | SW-PAGE-02 | Search engines learn that the three pages are one page in three languages. | the built `/de/software` | it is read | `<link rel="alternate">` for `hreflang` en, de, pt to `https://zuacaldeira.com/{en,de,pt}/software`, and `x-default` to `/en/software` | |
-| SW-PAGE-03 | The browser tab names the page. | the built pages | they are read | `<title>` is "Alexandre Caldeira — Software" in en, de and pt (D9) | |
+| SW-PAGE-03 | The browser tab names the page. | the built pages | they are read | `<title>` is "Alexandre Zua Caldeira — Software" in en, de and pt (D9) | |
 | SW-PAGE-04 | The sitemap lists the new pages, and only built ones. | the built site | `sitemap.xml` is read | it lists `https://zuacaldeira.com/{en,de,pt}/software` beside the 15 pages of HOME-PAGE-07, 18 in all, and each is a built page (HOME-PAGE-08) | |
-| SW-PAGE-05 | "See selected work" on the home page now opens the Software page, not the 404 page. | the built `/de/home` | its links are read | the hero's "Ausgewählte Arbeiten" and the lattice's `software` go to `/de/software`, which is built (SHELL-04 now accepts it; its P-04 example moves to `/de/writing`) | |
+| SW-PAGE-05 | "See selected work" on the home page now opens the Software page, not the 404 page. | the built `/de/home` | its links are read | the hero's "Ausgewählte Arbeiten" and the lattice's `software` go to `/de/software`, which is built (SHELL-04 now accepts it; its P-04 example moves to `/de/writing`) | moved to the v2 hero (D12): the home page has no such link yet; HOME-HERO-01, 03 and 09 hold it |
 | SW-PAGE-06 | In the web server, the new page opens straight away. | the built site in the web image's nginx | `/en/software`, `/de/software`, `/pt/software` are requested | each answers `200`, not the 404 page, with no redirect (HOME-PAGE-09); `/de/software/` answers `301` to `/de/software` (HOME-PAGE-10) | |
 | SW-PAGE-07 | The header shows "Software" as the page you are on. | the built `/pt/software` | the main navigation is read | its "software" link goes to `/pt/software` and carries `aria-current="page"`; no other link does | |
 | SW-PAGE-08 | The language links lead to the same page in the other language. | the built `/de/software` | its language links are read | `EN` → `/en/software`, `PT` → `/pt/software`, `DE` current (SHELL-01, 02 on the new page) | |
@@ -48,6 +49,11 @@ language as its example.
 | SW-HEAD-01 | The page opens with its name and one sentence about it. | the built `/en/software` | the head is read | eyebrow "Selected work", `<h1>` "Software", the intro (`head.intro`, en); the page has exactly one `<h1>` | |
 | SW-HEAD-02 | The German page reads in German, the eyebrow matching the home page's button. | the built `/de/software` | the head is read | "Ausgewählte Arbeiten" (the same words as HOME-HERO-01's link), "Software", `head.intro` de | |
 | SW-HEAD-03 | The Portuguese page reads in Portuguese. | the built `/pt/software` | the head is read | "Trabalhos selecionados", "Software", `head.intro` pt | |
+| SW-HEAD-04 | When the site asks for the German head, it gets its three texts exactly as stored. | `software/head` stored for de | `GET /api/content/software/head?lang=de` | 200 with `{"eyebrow": "Ausgewählte Arbeiten", "heading": "Software", "intro": "Software, die ich gebaut habe, …"}`, the stored JSON as it is (D10, D11) | |
+| SW-HEAD-05 | A fresh database, filled with the starting texts, gives the head in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/head?lang=en`, `de`, `pt` | 200 with the spec's copy for `eyebrow`, `heading`, `intro`, each non-empty | |
+| SW-HEAD-P-01 | English text on the German page's head is refused. | the built `/de/software` | the English intro is put in | SW-HEAD-02 goes red | |
+| SW-HEAD-P-02 | A second main heading is refused. | the built `/de/software` | a second `<h1>` is put in | SW-HEAD-02 goes red | |
+| SW-HEAD-P-03 | A language the site does not have, or a section that does not exist, gets nothing. | `software/head` stored, with a stray `fr` row | `?lang=fr`, or `software/nope?lang=en` | 404 with an empty body, no fallback (as HOME-HERO-07, 12) | |
 
 ## 3. Lead case study
 
@@ -129,6 +135,85 @@ G = Home → Visitor : links(work = /l/software, atom = /l/software) .
 Before this page, `ok200` was `notFound404`: the change is in what the visitor receives, so it is a
 change of behaviour, not a refactor.
 
+## Slices (D10, agreed 2026-11-08)
+
+Each slice ships on `next` with the route live but **no navigation link and no sitemap entry**
+until slice 7, so a merge of `next` mid-way leaves the page out of reach (`docs/tdd.md`).
+
+1. **Frame + head:** route, `lang`, title, alternates, the content pipeline, the head. SW-PAGE-01,
+   02, 03, 08, 09, P-01, P-02; SW-HEAD-01 to 05, P-01 to P-03.
+2. **Lead, text and Run line:** `SessionType`, `docs/notation/run.st`. SW-LEAD-01 to 04, 07, 08,
+   P-01 to P-03.
+3. **Lead, figure and screenshot:** `RunFigure`, `MonitorShot`. SW-LEAD-05, 06.
+4. **More work:** SW-WORK-01 to 05, P-01.
+5. **How I work:** `HowStrip`, `docs/notation/links.global`. SW-HOW-01 to 03, P-01.
+6. **Proof:** SW-PROOF-01, 02 (D14).
+7. **Open the page:** navigation (D13), current marker, sitemap (18 URLs), nginx, phone and
+   keyboard checks. SW-PAGE-04, 06, 07, 10 to 13.
+
+## Slice 1: frame + head
+
+Test list:
+- **Backend** (Testcontainers, one class per run): B1 SW-HEAD-04, the stored German head as it is;
+  B2 SW-HEAD-05, the seed in en, de, pt; B3 SW-HEAD-P-03, `fr` and an unknown section answer 404.
+- **Script:** S1 SW-PAGE-09, the snapshot asks for `software/head` in each language, and a 404 for
+  `de` stops it naming page `software`, section `head`, language `de`.
+- **Unit:** U1 the route `/de/software` loads the Software page in German; U2 SW-PAGE-03, the title
+  (D9, D11); U3 SW-HEAD-02, the head from `CONTENT` on a German page.
+- **Acceptance:** A SW-HEAD-02, the outer test; A2 SW-PAGE-01; A3 SW-PAGE-02; A4 SW-PAGE-03; A5
+  SW-HEAD-01 and 03; A6 the three pages join `PAGES` in `shell.test.mjs` (SW-PAGE-08, SHELL-04 and
+  SHELL-07b on the new pages).
+- **Protocol rows:** SW-PAGE-P-01 (a built page deleted), SW-PAGE-P-02 (a link to `/software`),
+  SW-HEAD-P-01 (the English intro on `/de/software`), SW-HEAD-P-02 (a second `<h1>`).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1–B3
+        participant DB as MySQL 8 (Flyway + seed)
+        participant API as Content API
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/software/index.html
+    T->>API: B1–B3: GET software/head?lang=l
+    API->>DB: select body where page=software, section=head, lang=l
+    F->>API: GET software/head?lang=l, for l in en, de, pt
+    API-->>F: 200 {eyebrow, heading, intro} or 404 → the build stops (S1)
+    F->>NG: snapshot
+    NG->>P: route /l/software (U1): lang, alternates, title (U2), head (U3)
+    T->>P: A, A2–A6, P rows
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → API : get(software, head, l) .
+    API → Build : { ok200(head_l) .
+                    Build → Page : prerender(l, title, alternates, head_l) .
+                    Page → Visitor : page(lang = l, h1, links) . end ,
+                    missing404 . Build → CI : fail(software, head, l) . end }
+
+Build ↾   = API!get . API?{ ok200 . Page!prerender . end , missing404 . CI!fail . end }
+Visitor ↾ = Page?page(lang = l, h1, links) . end
+API ↾     = Build?get . Build!{ ok200 . end , missing404 . end }
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1–2 test → API → DB | `get`, `ok200(head_l)` | B1, B2 |
+| 1 with `fr` or an unknown section | `missing404` | B3 |
+| 3–4 F → API | `get` × 3, `{ok200, missing404}` | S1 |
+| 5–6 NG → P | `prerender(l, title, alternates, head_l)` | U1, U2, U3 |
+| 7 T → P | `page(lang, h1, links)` | A, A2–A6 |
+| forbidden: a page missing for some `l` | `prerender` for every `l` | SW-PAGE-P-01 |
+| forbidden: `head_en` on an `l = de` page | `ok200(head_l)` | SW-HEAD-P-01 |
+| forbidden: `h1` twice | `page` carries one `h1` | SW-HEAD-P-02 |
+| forbidden: a link to `/software` | `links ⊆ /l/x` (SHELL-04) | SW-PAGE-P-02 |
+
+The build is read-only: no repeat, stale-token or race rows.
+
 ## Decisions
 
 Agreed with the developer on 2026-11-08:
@@ -150,19 +235,45 @@ Agreed with the developer on 2026-11-08:
 - **The screenshot** of `reticulab serve` (session `68601dc0`, while it built HOME-PAGE-05) is the
   live view's picture, in light and dark, at `frontend/public/assets/software/`.
 
-Open, to answer before the build:
+Answered by the developer on 2026-11-08:
 
-- **D5. Where the checked lines live.** Recommended: `docs/notation/run.st` (the line, with a
-  comment naming the lab file and reticulateP commit) and `docs/notation/links.global`, and the
-  build's acceptance test compares each page's line with its file, as SHELL-07b does with
-  `zua.st`. Other options: the lines only in the content seed; or a test that runs reticulateP in
-  CI (it is not available there today).
-- **D7. Where the text lives.** Recommended: the content API, page `software`, one object per
-  section, seeded like the hero (the architecture in `docs/tdd.md`). Other option: the i18n files,
-  as the 404 page does (D28 in `home.md`), quicker but against the architecture.
-- **D8. The two repository links.** Kita Dienstplan and the Casa Azul website link to GitHub
-  (from `ContentService.projects`). Are both repositories public? If not, drop the link, as for
-  reticulateP.
-- **D9. The page title.** Recommended: "Alexandre Caldeira — Software" in all three languages
-  (SW-PAGE-03), short, like the 404 page's (D29 in `home.md`). Other option: the intro sentence
-  after the name, as the home page does with its sentence.
+- **D3, the intro sentence:** the draft stands: "Software I have built, and how I hold it to its
+  protocol: written down first, checked, then built test-first.", with the de and pt versions in
+  the spec.
+- **D5. The checked lines** live in `docs/notation/run.st` and `docs/notation/links.global`, and the
+  build's tests compare each page's line with its file, as they do with `zua.st`. Both were
+  **checked in the lab** with the pinned reticulateP (main `7d20ba416`) on 2026-11-08: `Run =
+  &{runTest: +{RED: Code, WRONG_RED: Fix, GREEN: Green}}` is line 10 of the lab's workflow type,
+  which parses (56 states, 89 transitions, a lattice); `Page -> Visitor : {links: Visitor -> Nginx :
+  {get: Nginx -> Visitor : {ok200: end}}}` parses as a global type. `run.st` holds the one line as
+  shown on the page, and says that it is a line of the lab's checked workflow type, not a whole
+  program.
+- **D7. The text comes from the content API,** seeded like the home hero (`docs/tdd.md`).
+- **D8. Both repositories are public** (checked 2026-11-08): `github.com/zuacaldeira/kita-dienstplan`
+  and `github.com/zuacaldeira/ca-website`. The links stay. reticulateP's repository is private: no
+  link.
+- **D9. The title** is "Alexandre Zua Caldeira — Software" in all three languages: the full name,
+  as the footer has it, not "Alexandre Caldeira".
+
+Agreed with the developer on 2026-11-08, for the build:
+
+- **D10. Seven slices,** as listed above; slice 1 is frame + head with its test list.
+- **D11. The content table:** one generic table `content_section(page, section, lang, body JSON)`,
+  keyed on all three, in one Flyway migration; the controller answers the stored JSON as it is.
+  `software/head` is `{eyebrow, heading, intro}`; the title is built in the component as
+  `Alexandre Zua Caldeira — ${heading}`, so the name stays in the template. `home_hero` stays as it
+  is (backlog).
+- **D12. SW-PAGE-05 moves to the v2 hero:** the home page has no link to `/software` yet.
+- **D13. The navigation** (slice 7): Software before Research; the rest waits for Writing
+  (SHELL-11).
+- **D14. The proof band** (slice 6): a shared theorem-band component and one shared content section
+  for the paper's labels; the home band reuses both later.
+- **D15. The home page's title stays** "Alexandre Caldeira — …"; "Zua" in it goes to the backlog.
+- **D16. The Portuguese copy** in the spec is a draft nobody has read: built as drafted, and listed
+  for the developer's review on the preview.
+
+## Backlog
+
+- **`home_hero` into `content_section`** (D11): a refactor, the API's answers unchanged
+  (HOME-HERO-05 to 16 stay green).
+- **"Alexandre Zua Caldeira" in the home page's title** (D15, HOME-PAGE-03).

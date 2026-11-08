@@ -85,7 +85,7 @@ title and theorem are the same in every language.
 ### Copy (en / de / pt)
 | Key | en | de | pt |
 |-----|----|----|----|
-| `title` | Alexandre Caldeira — Software | Alexandre Caldeira — Software | Alexandre Caldeira — Software |
+| `title` | Alexandre Zua Caldeira — Software | Alexandre Zua Caldeira — Software | Alexandre Zua Caldeira — Software |
 | `head.eyebrow` | Selected work | Ausgewählte Arbeiten | Trabalhos selecionados |
 | `head.h1` | Software | Software | Software |
 | `head.intro` (draft, D3) | Software I have built, and how I hold it to its protocol: written down first, checked, then built test-first. | Software, die ich gebaut habe, und wie ich sie an ihr Protokoll binde: zuerst aufgeschrieben, geprüft, dann testgetrieben gebaut. | Software que construí, e como o prendo ao seu protocolo: primeiro escrito, depois verificado, depois construído com os testes primeiro. |

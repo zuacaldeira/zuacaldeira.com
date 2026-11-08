@@ -126,6 +126,9 @@ restored to the same file (md5 checked), turned A red with: P-02 `de/home → /e
 run and shown to bite: test 4 by reading the language once when the menu is made, test 5 by
 removing `routerLinkActive`.
 
+From 2026-11-08 `/de/software` is built (`software.md`, slice 1), so P-04's example of a page not
+built is `/de/writing` from then on.
+
 Leftovers, not built:
 - The desktop menu's `routerLinkActiveOptions` (`exact` for Home) no longer changes anything: with
   it removed, test 5 stayed green, because `/de/home` is no prefix of another page. It can go.
