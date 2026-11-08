@@ -10,6 +10,11 @@
         <p class="sw-work__text">{{ row.text }}</p>
         <div class="sw-work__more">
           <p class="sw-work__stack" translate="no">{{ row.stack }}</p>
+          <ul class="sw-work__links">
+            @for (link of row.links; track link.href) {
+              <li><a [href]="link.href">{{ link.label }}</a></li>
+            }
+          </ul>
         </div>
       </article>
     }

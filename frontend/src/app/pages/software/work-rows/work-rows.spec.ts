@@ -31,4 +31,14 @@ describe('WorkRows', () => {
       { kicker: 'kicker second de', title: 'Second de', text: 'text second de', stack: 'Angular · Java' },
     ]);
   });
+
+  it('SW-WORK-02 to 04: should give each row its own links, each label to its target', () => {
+    const rows = [...render('pt').querySelectorAll('article')].map((row) =>
+      [...row.querySelectorAll('a')].map((a) => `${text(a)} → ${a.getAttribute('href')}`),
+    );
+    expect(rows).toEqual([
+      ['paper pt → /assets/pdfs/paper.pdf'],
+      ['example.org → https://example.org', 'repo pt → https://github.com/example/second'],
+    ]);
+  });
 });

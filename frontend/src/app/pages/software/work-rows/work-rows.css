@@ -54,6 +54,25 @@
   color: var(--zc-text-body);
 }
 
+/* Links in running text are underlined and at least 44 px tall (software-spec.md). */
+.sw-work__links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--zc-space-4);
+}
+
+.sw-work__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--zc-azul);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 @media (min-width: 900px) {
   .sw-work__row {
     grid-template-columns: 0.9fr 1.5fr 1fr;
