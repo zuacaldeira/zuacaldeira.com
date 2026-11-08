@@ -6,6 +6,7 @@ import {
   HomeHero,
   SOFTWARE_CONTENT,
   SoftwareHead,
+  SoftwareHow,
   SoftwareLead,
   SoftwareWork,
 } from './content';
@@ -76,7 +77,13 @@ const softwareWorkIn = (lang: Language): SoftwareWork => ({
   ],
 });
 
-const inEvery =<T>(make: (lang: Language) => T): Record<Language, T> => ({
+const softwareHowIn = (lang: Language): SoftwareHow => ({
+  heading: `how heading ${lang}`,
+  steps: [1, 2, 3].map((n) => ({ title: `step ${n} ${lang}`, text: `sentence ${n} ${lang}` })),
+  caption: `how caption ${lang}`,
+});
+
+const inEvery = <T>(make: (lang: Language) => T): Record<Language, T> => ({
   en: make('en'),
   de: make('de'),
   pt: make('pt'),
@@ -89,6 +96,7 @@ export const TEST_CONTENT: ContentSnapshot = {
     head: inEvery(softwareHeadIn),
     lead: inEvery(softwareLeadIn),
     work: inEvery(softwareWorkIn),
+    how: inEvery(softwareHowIn),
   },
 };
 

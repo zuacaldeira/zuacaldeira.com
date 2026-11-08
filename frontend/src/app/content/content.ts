@@ -68,6 +68,13 @@ export interface SoftwareWork {
   readonly rows: readonly WorkRow[];
 }
 
+/** One language's "How I work" (D28): three steps in the page's order, and the type's caption. */
+export interface SoftwareHow {
+  readonly heading: string;
+  readonly steps: readonly { readonly title: string; readonly text: string }[];
+  readonly caption: string;
+}
+
 /** The home page's text, `@page-content/home` (D21). */
 export interface HomeContent {
   readonly hero: Readonly<Record<Language, HomeHero>>;
@@ -78,6 +85,7 @@ export interface SoftwareContent {
   readonly head: Readonly<Record<Language, SoftwareHead>>;
   readonly lead: Readonly<Record<Language, SoftwareLead>>;
   readonly work: Readonly<Record<Language, SoftwareWork>>;
+  readonly how: Readonly<Record<Language, SoftwareHow>>;
 }
 
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */

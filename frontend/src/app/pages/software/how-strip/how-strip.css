@@ -1,0 +1,67 @@
+/* How I work (software-spec.md, `HowStrip`): on the white surface; steps stacked on a phone and a
+   tablet, three in a row from 900 px; then the type (1.3fr) beside its caption (1fr). */
+.sw-how {
+  padding-block: clamp(40px, 6vw, 80px);
+  background: var(--zc-bg-white);
+}
+
+.sw-how__in {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.sw-how__heading {
+  margin: 0 0 var(--zc-space-6);
+  font-family: var(--zc-font-heading);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: var(--zc-text-heading);
+}
+
+.sw-how__steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--zc-space-6);
+}
+
+.sw-how__step {
+  padding-top: var(--zc-space-4);
+  border-top: 2px solid var(--zc-azul);
+}
+
+.sw-how__n {
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
+  color: var(--zc-ochre-text);
+}
+
+.sw-how__title {
+  margin: var(--zc-space-2) 0;
+  font-family: var(--zc-font-heading);
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: var(--zc-text-heading);
+}
+
+.sw-how__text {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--zc-text-body);
+}
+
+@media (min-width: 900px) {
+  .sw-how__steps {
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(24px, 3vw, 48px);
+  }
+}
+
+@media (max-width: 599.98px) {
+  .sw-how__in {
+    padding-inline: 16px;
+  }
+}

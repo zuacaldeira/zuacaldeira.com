@@ -1,0 +1,14 @@
+<section class="sw-how">
+  <div class="sw-how__in">
+    <h2 class="sw-how__heading">{{ how.heading }}</h2>
+    <ol class="sw-how__steps">
+      @for (step of how.steps; track step.title; let i = $index) {
+        <li class="sw-how__step">
+          <span class="sw-how__n" aria-hidden="true">{{ number(i) }}</span>
+          <h3 class="sw-how__title">{{ step.title }}</h3>
+          <p class="sw-how__text">{{ step.text }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
