@@ -9,8 +9,10 @@
             <span class="wr-texts__kind">{{ texts.kinds[item.kind] }}</span>
           </p>
           <div class="wr-texts__body">
-            <h3 class="wr-texts__title">{{ item.title }}</h3>
-            <p class="wr-texts__authors">
+            <h3 class="wr-texts__title" translate="no" [attr.lang]="englishPage ? null : 'en'">
+              {{ item.title }}
+            </h3>
+            <p class="wr-texts__authors" translate="no">
               @for (author of item.authors; track author.name; let last = $last) {
                 @if (author.self) {
                   <b>{{ author.name }}</b>{{ last ? '' : ',' }}
@@ -19,12 +21,15 @@
                 }
               }
             </p>
-            <p class="wr-texts__venue">{{ item.venue }}</p>
+            <p class="wr-texts__venue" translate="no">{{ item.venue }}</p>
             @if (item.note) {
               <p class="wr-texts__note">{{ item.note }}</p>
             }
           </div>
           <div class="wr-texts__more">
+            @if (!englishPage) {
+              <p class="wr-texts__lang">{{ texts.inEnglish }}</p>
+            }
             @if (item.external) {
               <a
                 class="wr-texts__link"

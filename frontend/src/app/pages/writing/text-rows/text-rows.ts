@@ -13,4 +13,6 @@ export class TextRows {
   /** The list's own `<h2>` is the page's name again, visually hidden (writing-spec.md). */
   readonly heading = this.content.head[this.lang].heading;
   readonly texts = this.content.texts[this.lang];
+  /** The texts are in English: said, and marked, on the other languages' pages only (D10). */
+  readonly englishPage = this.lang === 'en';
 }

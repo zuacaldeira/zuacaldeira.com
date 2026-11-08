@@ -98,4 +98,30 @@ describe('TextRows', () => {
       },
     ]);
   });
+
+  // Each text's title language, what is never translated, and its "in English" line.
+  const english = (el: HTMLElement) =>
+    [...el.querySelectorAll('ul > li')].map((li) => ({
+      titleLang: li.querySelector('h3')?.getAttribute('lang'),
+      notTranslated: [...li.querySelectorAll('[translate="no"]')].map((node) => node.className),
+      line: [...li.querySelectorAll('.wr-texts__lang')].map((line) => text(line)),
+    }));
+
+  it('WR-LIST-07, 09 (D10): should mark the titles English and untranslated on a German page, and say each is in English', () => {
+    const shown = {
+      titleLang: 'en',
+      notTranslated: ['wr-texts__title', 'wr-texts__authors', 'wr-texts__venue'],
+      line: ['in English de'],
+    };
+    expect(english(render('de'))).toEqual([shown, shown]);
+  });
+
+  it('WR-LIST-09 (D10): should not say a text is in English on an English page', () => {
+    const shown = {
+      titleLang: null,
+      notTranslated: ['wr-texts__title', 'wr-texts__authors', 'wr-texts__venue'],
+      line: [],
+    };
+    expect(english(render('en'))).toEqual([shown, shown]);
+  });
 });
