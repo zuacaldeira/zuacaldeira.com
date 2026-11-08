@@ -73,6 +73,7 @@ export const de: Translations = {
     availability:
       'Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.',
     cv: 'Lebenslauf (PDF)',
+    city: 'Berlin',
   },
   common: {
     source: 'Quellcode',

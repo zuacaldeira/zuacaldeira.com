@@ -119,6 +119,12 @@ describe('Footer', () => {
     }
   });
 
+  it('SHELL-07b (D34): names the city "Berlim" in the copyright on a Portuguese page', async () => {
+    TestBed.inject(I18nService).setLanguage('pt');
+    await fixture.whenStable();
+    expect(bottomTexts().at(-1)).toMatch(/^© \d{4} Alexandre Zua Caldeira · Berlim$/);
+  });
+
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
     await fixture.whenStable();
     const names = [

@@ -123,6 +123,8 @@ export interface Translations {
     heading: string;
     availability: string;
     cv: string;
+    /** The city after the name in the copyright; "©", the year and the name stay as they are (D34). */
+    city: string;
   };
   common: {
     source: string;

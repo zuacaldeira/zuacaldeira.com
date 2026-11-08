@@ -73,6 +73,7 @@ export const en: Translations = {
     availability:
       'Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.',
     cv: 'CV (PDF)',
+    city: 'Berlin',
   },
   common: {
     source: 'Source',
