@@ -9,6 +9,9 @@ const SECTIONS = [
   ['software', 'lead'],
   ['software', 'work'],
   ['software', 'how'],
+  ['software', 'proof'],
+  // Text several pages read, written as shared.json (D30).
+  ['shared', 'paper'],
 ];
 const LANGUAGES = ['en', 'de', 'pt'];
 

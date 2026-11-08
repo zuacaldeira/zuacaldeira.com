@@ -13,6 +13,8 @@ const headIn = (lang) => ({ eyebrow: `eyebrow ${lang}`, heading: 'Software', int
 const leadIn = (lang) => ({ kicker: `kicker ${lang}`, labels: { question: `question ${lang}` } });
 const workIn = (lang) => ({ heading: `heading ${lang}`, rows: [{ id: 'reticulatep' }] });
 const howIn = (lang) => ({ heading: `heading ${lang}`, steps: [{ title: `title ${lang}` }] });
+const paperIn = (lang) => ({ eyebrow: `eyebrow ${lang}`, year: 2026 });
+const proofIn = (lang) => ({ kicker: `kicker ${lang}` });
 
 // Answers GET /api/content/{page}/{section}?lang=xx from `stored`; anything else is 404.
 async function fakeApi(stored) {
@@ -28,15 +30,7 @@ async function fakeApi(stored) {
 }
 
 test('the snapshot holds every section of every language as the API answers it', async (t) => {
-  const stored = {
-    home: { hero: { en: heroIn('en'), de: heroIn('de'), pt: heroIn('pt') } },
-    software: {
-      head: { en: headIn('en'), de: headIn('de'), pt: headIn('pt') },
-      lead: { en: leadIn('en'), de: leadIn('de'), pt: leadIn('pt') },
-      work: { en: workIn('en'), de: workIn('de'), pt: workIn('pt') },
-      how: { en: howIn('en'), de: howIn('de'), pt: howIn('pt') },
-    },
-  };
+  const stored = everything();
   const api = await fakeApi(stored);
   t.after(api.close);
 
@@ -98,6 +92,38 @@ test('SW-PAGE-09: a Software how missing in pt stops the build, naming page, sec
 
   await assert.rejects(fetchContent(api.url), {
     message: 'No content for page software, section how, language pt (404)',
+  });
+});
+
+// Every section the snapshot asks for, in every language, from one test API (D30: shared/paper).
+const everything = () => {
+  const all = (make) => ({ en: make('en'), de: make('de'), pt: make('pt') });
+  return {
+    home: { hero: all(heroIn) },
+    shared: { paper: all(paperIn) },
+    software: { head: all(headIn), lead: all(leadIn), work: all(workIn), how: all(howIn), proof: all(proofIn) },
+  };
+};
+
+test('SW-PAGE-09 (D30): the shared paper labels missing in pt stop the build, naming page, section and language', async (t) => {
+  const stored = everything();
+  delete stored.shared.paper.pt;
+  const api = await fakeApi(stored);
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'No content for page shared, section paper, language pt (404)',
+  });
+});
+
+test('SW-PAGE-09: the Software band missing in de stops the build, naming page, section and language', async (t) => {
+  const stored = everything();
+  delete stored.software.proof.de;
+  const api = await fakeApi(stored);
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'No content for page software, section proof, language de (404)',
   });
 });
 
