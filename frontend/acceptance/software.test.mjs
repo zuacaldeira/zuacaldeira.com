@@ -289,6 +289,13 @@ test('SW-LEAD-07: the lead gives no figures for the experiment: its only numbers
   assert.deepEqual(numbers, { en: expected, de: expected, pt: expected });
 });
 
+test('SW-LEAD-08: the case study has no link, as the lab is private and has no write-up (D2)', () => {
+  const links = Object.fromEntries(
+    LANGS.map((lang) => [lang, lead(page(`${lang}/software`)).match(/<a\b[^>]*>/g) ?? []]),
+  );
+  assert.deepEqual(links, { en: [], de: [], pt: [] });
+});
+
 for (const [id, lang, eyebrow, intro] of [
   [
     'SW-HEAD-01',
