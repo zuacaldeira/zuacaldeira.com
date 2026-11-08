@@ -266,7 +266,9 @@ test('SW-LEAD-04: the lead shows the Run line exactly as checked, the same in ev
         translate: attrs.match(/\btranslate="([^"]*)"/)?.[1],
         text: text(body),
       }));
-      return [lang, { pres, caption: texts(inner, 'figcaption') }];
+      // The caption of the Run line's own figure (SessionType), not the lead's other figures.
+      const own = [...inner.matchAll(/<figure\b[^>]*class="st"[^>]*>(.*?)<\/figure>/gs)].map(([, f]) => f);
+      return [lang, { pres, caption: own.flatMap((f) => texts(f, 'figcaption')) }];
     }),
   );
   assert.deepEqual(
@@ -289,11 +291,46 @@ test('SW-LEAD-07: the lead gives no figures for the experiment: its only numbers
   assert.deepEqual(numbers, { en: expected, de: expected, pt: expected });
 });
 
-test('SW-LEAD-08: the case study has no link, as the lab is private and has no write-up (D2)', () => {
+test('SW-LEAD-08: the case study links only to its screenshot files: no lab, no write-up (D2, D23)', () => {
   const links = Object.fromEntries(
-    LANGS.map((lang) => [lang, lead(page(`${lang}/software`)).match(/<a\b[^>]*>/g) ?? []]),
+    LANGS.map((lang) => [
+      lang,
+      [...lead(page(`${lang}/software`)).matchAll(/<a\b[^>]*\shref="([^"]*)"/g)].map(([, href]) => href),
+    ]),
   );
-  assert.deepEqual(links, { en: [], de: [], pt: [] });
+  const shots = ['/assets/software/reticulab-live-light.png', '/assets/software/reticulab-live-dark.png'];
+  assert.deepEqual(links, { en: shots, de: shots, pt: shots });
+});
+
+// The Run figure in a page's lead: the name of its SVG, its role, its labels and its caption.
+const runFigure = (html) => {
+  const inner = lead(html).match(/<figure\b[^>]*class="[^"]*\bsw-figure\b[^"]*"[^>]*>(.*?)<\/figure>/s)?.[1] ?? '';
+  const svg = inner.match(/<svg\b([^>]*)>/)?.[1] ?? '';
+  return {
+    role: svg.match(/\brole="([^"]*)"/)?.[1],
+    name: text(svg.match(/\baria-label="([^"]*)"/)?.[1] ?? ''),
+    labels: texts(inner, 'text'),
+    caption: texts(inner, 'figcaption'),
+  };
+};
+
+const FIGURE_NAMES = {
+  en: 'The Run step: one action of the agent, three results it receives.',
+  de: 'Der Schritt Run: eine Aktion des Agenten, drei Ergebnisse, die er erhält.',
+  pt: 'O passo Run: uma ação do agente, três resultados que recebe.',
+};
+
+test('SW-LEAD-05: a small drawing shows the one action and its three results, its labels never translated', () => {
+  const labels = ['Run', '&{runTest}', '+RED', '+WRONG_RED', '+GREEN', 'Code', 'Fix', 'Green'];
+  assert.deepEqual(
+    Object.fromEntries(LANGS.map((lang) => [lang, runFigure(page(`${lang}/software`))])),
+    Object.fromEntries(
+      LANGS.map((lang) => [
+        lang,
+        { role: 'img', name: FIGURE_NAMES[lang], labels, caption: [FIGURE_NAMES[lang]] },
+      ]),
+    ),
+  );
 });
 
 // The scripts a page loads at once: its <script src> and modulepreload files, and every file they
