@@ -59,6 +59,71 @@ test('WR-LIST-01 (D3): the four papers follow the head, newest first', () => {
   assert.deepEqual(items(html).map((item) => texts(item, 'h3')[0]), TITLES);
 });
 
+// One text as a reader sees it: each field, and its whole text, so nothing else can hide in it.
+const fields = (item) => ({
+  year: texts(item, 'span', 'wr-texts__year')[0],
+  kind: texts(item, 'span', 'wr-texts__kind')[0],
+  title: texts(item, 'h3')[0],
+  authors: texts(item, 'p', 'wr-texts__authors')[0],
+  self: texts(item, 'b'),
+  venue: texts(item, 'p', 'wr-texts__venue')[0],
+  note: texts(item, 'p', 'wr-texts__note'),
+  link: texts(item, 'a'),
+  // Every tag a space here: the fields are separate elements (lines, columns) on the page.
+  whole: item.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').replace(/ ,/g, ',').trim(),
+});
+
+const SELF = ['Alexandre Zua Caldeira', 'Alexandre Z. Caldeira', 'Alexandre Z. Caldeira', 'Alexandre Caldeira'];
+const AUTHORS = [
+  'Alexandre Zua Caldeira',
+  'Simon J. Gay, Vasco T. Vasconcelos, António Ravara, Nils Gesbert, Alexandre Z. Caldeira',
+  'Vasco T. Vasconcelos, Simon J. Gay, António Ravara, Nils Gesbert, Alexandre Z. Caldeira',
+  'João Abreu, Alexandre Caldeira, Antónia Lopes, Isabel Nunes, Luís S. Reis, Vasco T. Vasconcelos',
+];
+const VENUES = [
+  'ICE 2026 · International Workshop on Interaction and Concurrency Experience',
+  'POPL 2010 · ACM SIGPLAN Symposium on Principles of Programming Languages',
+  'FOOL 2009 · International Workshop on Foundations of Object-Oriented Languages',
+  'DI/FCUL TR-07-7 · Department of Informatics, University of Lisbon',
+];
+const YEARS = ['2026', '2010', '2009', '2007'];
+
+test('WR-LIST-02, 03, 10 (D4): each English text shows its year, kind, title, authors, venue and link, and nothing else', () => {
+  const kinds = ['Workshop paper', 'Conference paper', 'Workshop paper', 'Technical report'];
+  const notes = [['Camera-ready · to appear in EPTCS'], [], [], []];
+  const links = [
+    ['Read (PDF)'],
+    ['ACM Digital Library (DOI)↗ (opens in a new tab)'],
+    ['eprints.gla.ac.uk↗ (opens in a new tab)'],
+    ['repositorio.ulisboa.pt↗ (opens in a new tab)'],
+  ];
+  const expected = TITLES.map((title, i) => {
+    const shown = { year: YEARS[i], kind: kinds[i], title, authors: AUTHORS[i], venue: VENUES[i], note: notes[i] };
+    return {
+      ...shown,
+      self: [SELF[i]],
+      link: links[i],
+      whole: [shown.year, shown.kind, title, shown.authors, shown.venue, ...shown.note, ...links[i]]
+        .join(' ')
+        .replace('↗', ' ↗'),
+    };
+  });
+  assert.deepEqual(items(page('en/writing')).map(fields), expected);
+});
+
+test('WR-LIST-10 (D4): no abstract is on the Writing page, in any language', () => {
+  const abstracts = [
+    'We prove that the state space of every well-formed session type',
+    'Session types allow communication protocols to be specified type-theoretically',
+    'We define a small class-based object-oriented language',
+    'ConGu is a tool that supports the checking of Java classes',
+  ];
+  const found = LANGS.flatMap((lang) =>
+    abstracts.filter((sentence) => text(page(`${lang}/writing`)).includes(sentence)).map((s) => `${lang}: ${s}`),
+  );
+  assert.deepEqual(found, []);
+});
+
 test('WR-PAGE-01: the Writing page is built in every language, each with its lang attribute', () => {
   const missing = LANGS.filter((lang) => !existsSync(join(browser, lang, 'writing', 'index.html')));
   assert.deepEqual(missing, [], 'languages without a built Writing page');
