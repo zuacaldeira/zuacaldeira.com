@@ -20,6 +20,9 @@
               }
             </p>
             <p class="wr-texts__venue">{{ item.venue }}</p>
+            @if (item.note) {
+              <p class="wr-texts__note">{{ item.note }}</p>
+            }
           </div>
         </li>
       }

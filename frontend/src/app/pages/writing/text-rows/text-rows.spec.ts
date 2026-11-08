@@ -47,4 +47,11 @@ describe('TextRows', () => {
     );
     expect(bold).toEqual([['A. Self'], ['A. Z. Self']]);
   });
+
+  it('WR-LIST-04: should show a note only on the text that has one, in the page language', () => {
+    const notes = [...render('pt').querySelectorAll('ul > li')].map((li) =>
+      [...li.querySelectorAll('.wr-texts__note')].map((note) => text(note)),
+    );
+    expect(notes).toEqual([['note pt'], []]);
+  });
 });
