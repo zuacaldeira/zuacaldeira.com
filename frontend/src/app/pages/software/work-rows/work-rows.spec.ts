@@ -41,4 +41,15 @@ describe('WorkRows', () => {
       ['example.org → https://example.org', 'repo pt → https://github.com/example/second'],
     ]);
   });
+
+  it('D27: should open links outside the site in a new tab, as the footer does, and the paper in this one', () => {
+    const links = [...render('en').querySelectorAll('article a')].map(
+      (a) => `${a.getAttribute('href')} ${a.getAttribute('target')} ${a.getAttribute('rel')}`,
+    );
+    expect(links).toEqual([
+      '/assets/pdfs/paper.pdf null null',
+      'https://example.org _blank noopener noreferrer',
+      'https://github.com/example/second _blank noopener noreferrer',
+    ]);
+  });
 });

@@ -10,4 +10,6 @@ import { I18nService } from '../../../services/i18n.service';
 })
 export class WorkRows {
   readonly work = inject(SOFTWARE_CONTENT).work[inject(I18nService).language()];
+  /** Outside the site: opened in a new tab, as the footer's links are (D27). */
+  readonly outside = (href: string) => href.startsWith('https://');
 }

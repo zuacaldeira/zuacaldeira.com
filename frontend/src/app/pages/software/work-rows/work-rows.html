@@ -12,7 +12,13 @@
           <p class="sw-work__stack" translate="no">{{ row.stack }}</p>
           <ul class="sw-work__links">
             @for (link of row.links; track link.href) {
-              <li><a [href]="link.href">{{ link.label }}</a></li>
+              <li>
+                @if (outside(link.href)) {
+                  <a [href]="link.href" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+                } @else {
+                  <a [href]="link.href">{{ link.label }}</a>
+                }
+              </li>
             }
           </ul>
         </div>
