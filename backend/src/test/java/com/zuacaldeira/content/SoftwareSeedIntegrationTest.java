@@ -2,6 +2,8 @@ package com.zuacaldeira.content;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.assertj.core.api.InstanceOfAssertFactories;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -68,6 +70,66 @@ class SoftwareSeedIntegrationTest {
                 new TypeReference<Map<String, String>>() {});
         assertThat(head).isEqualTo(expected);
         assertThat(head.values()).allSatisfy(text -> assertThat(text).isNotBlank());
+    }
+
+    /** The spec's English copy of the lead (D19's shape). */
+    private static final Map<String, Object> EN_LEAD = Map.ofEntries(
+            Map.entry("kicker", "Case study · AI agents"),
+            Map.entry("title", "A monitor that holds a coding agent to its TDD protocol"),
+            Map.entry("status", "In use on this site since November 2026"),
+            Map.entry("labels", Map.of(
+                    "question", "The question",
+                    "built", "What I built",
+                    "protocol", "The protocol behind it",
+                    "live", "The live view",
+                    "result", "The result",
+                    "stack", "Stack")),
+            Map.entry("question", "Does a session type make an AI coding agent’s test-driven work better, and in"
+                    + " which mode: in pair with the developer, or in batch on an agreed test list? Better means"
+                    + " tests that are meaningful for the work, not coverage."),
+            Map.entry("built", "A monitor that watches a TDD agent as it works, through the agent’s hooks, and"
+                    + " checks every step against a session type of the TDD workflow: write a test, run it, see"
+                    + " it fail for the right reason, make it pass, refactor, commit. Where a type is given, it"
+                    + " refuses a step the type does not allow; otherwise it only observes."),
+            Map.entry("built2", "It also reports which parts of the target’s own session types the agent’s tests"
+                    + " reach: what the software under test must do, failure paths included."),
+            Map.entry("protocol", "What the agent does (`&{…}`) is kept apart from the results it receives"
+                    + " (`+{…}`). The full workflow type has 56 states and 89 transitions and is a lattice,"
+                    + " checked with reticulateP. The variants for sabotage (breaking the code on purpose to"
+                    + " show a test bites) and for triangulation are subtypes of it."),
+            Map.entry("runCaption", "A line of the workflow type, word for word."),
+            Map.entry("live", "`reticulab serve`, a small read-only web app, follows each session live: what is"
+                    + " being built, in plain sentences; the agreed test list, N of M done; the target’s"
+                    + " coverage; where the agent is in its type; and a slider to replay the steps."),
+            Map.entry("result", "In use on this site since November 2026: every element of its header and"
+                    + " footer was built test-first by an agent under the monitor, in pair with me."),
+            Map.entry("stack", "Python · pytest · Hypothesis · Server-Sent Events · reticulateP"));
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("languagesOfTheLead")
+    @DisplayName("SW-LEAD-09 the seed answers the whole lead of the Software page in every language, none empty")
+    void answersTheSeededLead(String lang) throws Exception {
+        HttpResponse<String> response = get("/api/content/software/lead?lang=" + lang);
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        Map<String, Object> lead = JsonMapper.builder().build().readValue(response.body(),
+                new TypeReference<Map<String, Object>>() {});
+        if (lang.equals("en")) {
+            assertThat(lead).isEqualTo(EN_LEAD);
+        }
+        assertThat(lead.keySet()).isEqualTo(EN_LEAD.keySet());
+        assertThat(lead.get("labels")).asInstanceOf(InstanceOfAssertFactories.MAP)
+                .containsOnlyKeys(((Map<?, ?>) EN_LEAD.get("labels")).keySet())
+                .allSatisfy((key, text) -> assertThat((String) text).isNotBlank());
+        assertThat(lead).allSatisfy((key, value) -> {
+            if (value instanceof String text) {
+                assertThat(text).isNotBlank();
+            }
+        });
+    }
+
+    static Stream<String> languagesOfTheLead() {
+        return Stream.of("en", "de", "pt");
     }
 
     private HttpResponse<String> get(String path) throws Exception {
