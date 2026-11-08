@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { provideRouter, Router } from '@angular/router';
 import { ZcSidenavMenuItems } from './zc-sidenav-menu-items';
 import { I18nService } from '../../../services/i18n.service';
 
@@ -68,5 +68,30 @@ describe('ZcSidenavMenuItems', () => {
     i18nService.setLanguage('pt');
     const items = component.navItems();
     expect(items[0].label).toBe('Início');
+  });
+});
+
+@Component({ template: '' })
+class AnyPage {}
+
+describe('ZcSidenavMenuItems on a page of the site', () => {
+  it('SW-PAGE-07 (D34): marks Software as the page you are on in the phone menu, and only it', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter(
+          ['home', 'about', 'software', 'research', 'running', 'contact'].map((page) => ({
+            path: `pt/${page}`,
+            component: AnyPage,
+          })),
+        ),
+      ],
+    }).overrideComponent(ZcSidenavMenuItems, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('pt');
+    const fixture = TestBed.createComponent(ZcSidenavMenuItems);
+    await TestBed.inject(Router).navigateByUrl('/pt/software');
+    await fixture.whenStable();
+
+    const current = [...(fixture.nativeElement as HTMLElement).querySelectorAll('a[aria-current="page"]')];
+    expect(current.map((a) => a.getAttribute('href'))).toEqual(['/pt/software']);
   });
 });
