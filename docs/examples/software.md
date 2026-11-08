@@ -384,7 +384,29 @@ Decided by the developer on 2026-11-08, after slice 2 (its leftover on the initi
 
 | ID | Given | When | Then | Covered |
 |----|-------|------|------|---------|
-| SW-PAGE-14 | the built site | the files `/en/home` and `/en/software` load at once are read (`<script>`, `modulepreload`, and their static imports) | none of `/en/home`'s holds a Software text ("Case study · AI agents"), none of `/en/software`'s the home hero's sentence ("I build software, and prove its protocols hold.") | |
+| SW-PAGE-14 | the built site | the files `/en/home` and `/en/software` load at once are read (`<script>`, `modulepreload`, and their static imports) | each page's own text is among them; none of `/en/home`'s holds a Software text ("A monitor that holds a coding agent to its TDD protocol"), none of `/en/software`'s the home hero's sentence ("I build software, and prove its protocols hold.") | yes (build and unit, 2026-11-08) |
+
+**Done 2026-11-08.** Red first: SW-PAGE-14 on slice 2's build, `main-*.js` holding both texts
+(its first sentence, "Case study · AI agents", could not be found at all: the minifier escapes `·`
+in the scripts, so the test uses ASCII sentences); the script's one-file-per-page test (no files);
+the route test (`NullInjectorError` with no content at the root). A build without the snapshot
+still stops (`Could not resolve "@page-content/home"`), and the unit tests ran with no fetched files
+on this machine, as in CI. The check that each page's own text is among its files was added after
+the first green and found that `/en/home` had lost its preload: `/` and `/xx/home` shared one loader
+function. Each route now has its own inline `import()`, and `/en/home` preloads its chunk again.
+
+Measured on the build: the initial bundle 519.27 kB before, 510.65 kB after (raw; 128.54 kB
+transferred); `main-*.js` 88.5 kB before, 80.00 kB after. Each page's text now sits in its own lazy
+chunk.
+
+Leftovers:
+- **Still 10.65 kB over the 500 kB warning budget:** that is the app itself (512.27 kB before any
+  page text came from the API), not the content.
+- **`/` has no preload of the home chunk** in the server's manifest (the root route, `pathMatch:
+  'full'`); the page is prerendered, and the chunk loads once Angular starts. Whether `/` had one
+  before is not known: its text was in `main-*.js` then.
+- **SHELL-12** timed out once more in a whole-suite run right after a build (1.8 s), and passed
+  alone and in the next whole run.
 
 Agreed with the developer on 2026-11-08:
 

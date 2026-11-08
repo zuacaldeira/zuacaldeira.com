@@ -21,12 +21,17 @@ npm run serve:ssr:zuacaldeira-com  # Serve SSR build locally
 Build output: `dist/zuacaldeira-com/browser/` (prerendered static HTML).
 
 **Content snapshot.** `npm run content` (`scripts/fetch-content.mjs`) asks the content API for
-every page, section and language and writes `src/app/content/content.generated.json`
-(git-ignored), which `app.config.ts` provides as `CONTENT`. Without it the build fails. The API
+every page, section and language and writes one file per page, `src/app/content/generated/<page>.json`
+(git-ignored). Each page's route file (`pages/home/home.routes.ts`, `pages/software/software.routes.ts`)
+imports its own as `@page-content/<page>` and provides it (`HOME_CONTENT`, `SOFTWARE_CONTENT`), so a
+page downloads only its own text (D20, D21 in `docs/examples/software.md`). Without the files the build
+fails. `tsconfig.spec.json` points `@page-content/*` at `src/app/content/testing/`, so the specs never
+need the fetched files. The API
 is the build's own backend, from the repo root: `docker compose -f compose.build.yml up --build
 --wait` (MySQL and the API on `127.0.0.1:8081`, seeded from `backend/src/main/resources/db/seed`),
 and `docker compose -f compose.build.yml down -v` after the build. `CONTENT_API` overrides the
-URL. Specs never read the file: they use `provideTestContent()` from `content/content.testing.ts`.
+URL. Specs never read the fetched files: they use `provideTestContent()` from
+`content/content.testing.ts`.
 
 ## Architecture
 
@@ -154,7 +159,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 34 test files, 229 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 34 test files, 232 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
