@@ -364,6 +364,14 @@ them):
   `runCaption`, `live`, `result`, `stack`. The stack is the same in every language. The figure's
   and the screenshot's texts come with slice 3. The Run line is in the template, not the content.
 
+Decided by the developer on 2026-11-08, after slice 2 (its leftover on the initial bundle):
+
+- **D20. Each page loads only its own text, with its route,** built as its own small step before
+  slice 3. The pages' texts and the build's stop on a missing language stay as they are. Measured
+  before, on slice 2's build: the initial bundle is 519.27 kB (the build's "Initial total", raw),
+  `main-*.js` 88.5 kB, and `main-*.js` holds the home hero and the Software page's texts in all three
+  languages, so `/en/home` downloads the Software page's text too.
+
 Agreed with the developer on 2026-11-08:
 
 - **D1. Option 1, lead plus list.** The pieces, in order: the TDD monitor (the lead), then
