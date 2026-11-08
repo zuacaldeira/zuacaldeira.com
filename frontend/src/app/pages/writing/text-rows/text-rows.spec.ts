@@ -40,4 +40,11 @@ describe('TextRows', () => {
       },
     ]);
   });
+
+  it('WR-LIST-03: should set the author\'s own name in bold, and only it', () => {
+    const bold = [...render('en').querySelectorAll('ul > li')].map((li) =>
+      [...li.querySelectorAll('.wr-texts__authors b')].map((b) => text(b)),
+    );
+    expect(bold).toEqual([['A. Self'], ['A. Z. Self']]);
+  });
 });

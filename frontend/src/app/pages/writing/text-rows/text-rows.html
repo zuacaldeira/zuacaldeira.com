@@ -12,7 +12,11 @@
             <h3 class="wr-texts__title">{{ item.title }}</h3>
             <p class="wr-texts__authors">
               @for (author of item.authors; track author.name; let last = $last) {
-                {{ author.name }}{{ last ? '' : ', ' }}
+                @if (author.self) {
+                  <b>{{ author.name }}</b>{{ last ? '' : ',' }}
+                } @else {
+                  {{ author.name }}{{ last ? '' : ',' }}
+                }
               }
             </p>
             <p class="wr-texts__venue">{{ item.venue }}</p>
