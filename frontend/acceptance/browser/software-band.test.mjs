@@ -9,6 +9,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { extname, join, normalize } from 'node:path';
 import { chromium } from 'playwright-core';
+import { contrastsIn } from './contrast.mjs';
 
 const site = join(import.meta.dirname, '../../dist/zuacaldeira-com/browser');
 const TYPES = {
@@ -58,49 +59,8 @@ after(async () => {
   server.close();
 });
 
-// Every element in the band that holds text of its own, with its contrast against what is painted
-// behind it (the footer test's reader).
-const bandContrasts = (page) =>
-  page.evaluate(() => {
-    const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
-    const rgba = (css) => {
-      ctx.clearRect(0, 0, 1, 1);
-      ctx.fillStyle = css;
-      ctx.fillRect(0, 0, 1, 1);
-      const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
-      return [r, g, b, a / 255];
-    };
-    const over = ([r, g, b, a], [R, G, B]) => [r * a + R * (1 - a), g * a + G * (1 - a), b * a + B * (1 - a), 1];
-    const background = (el) => {
-      const layers = [];
-      for (let e = el; e; e = e.parentElement) {
-        const c = rgba(getComputedStyle(e).backgroundColor);
-        if (c[3] > 0) layers.push(c);
-        if (c[3] === 1) break;
-      }
-      return layers.reduceRight((below, layer) => over(layer, below), [255, 255, 255, 1]);
-    };
-    const luminance = (c) => {
-      const [r, g, b] = c.slice(0, 3).map((v) => {
-        const s = v / 255;
-        return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
-      });
-      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    };
-    const band = document.querySelector('section.band');
-    return [...band.querySelectorAll('*')]
-      .filter((el) => [...el.childNodes].some((n) => n.nodeType === Node.TEXT_NODE && n.textContent.trim()))
-      .filter((el) => el.getClientRects().length > 0)
-      .map((el) => {
-        const bg = background(el);
-        const fg = over(rgba(getComputedStyle(el).color), bg);
-        const [l1, l2] = [luminance(fg), luminance(bg)].sort((a, b) => b - a);
-        return {
-          text: el.textContent.trim().slice(0, 30),
-          contrast: Math.round(((l1 + 0.05) / (l2 + 0.05)) * 100) / 100,
-        };
-      });
-  });
+// The band's texts and their contrast (the shared reader).
+const bandContrasts = (page) => contrastsIn(page, 'section.band');
 
 for (const theme of ['light', 'dark']) {
   test(`SW-PROOF-05 C: on /en/software (1280, ${theme}), every text in the band is at 4.5:1 or more`, async () => {
