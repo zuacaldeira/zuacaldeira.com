@@ -21,4 +21,11 @@ describe('RunFigure', () => {
     const labels = [...render().querySelectorAll('svg text')].map((t) => t.textContent?.trim());
     expect(labels).toEqual(['Run', '&{runTest}', '+RED', '+WRONG_RED', '+GREEN', 'Code', 'Fix', 'Green']);
   });
+
+  it('SW-LEAD-05: should draw the action solid and the three results dashed, not by colour alone', () => {
+    const edges = [...render().querySelectorAll('svg .edge')].map(
+      (edge) => `${edge.classList.contains('edge--action') ? 'action' : 'result'} ${edge.getAttribute('stroke-dasharray') ?? 'solid'}`,
+    );
+    expect(edges).toEqual(['action solid', 'result 5 4', 'result 5 4', 'result 5 4']);
+  });
 });

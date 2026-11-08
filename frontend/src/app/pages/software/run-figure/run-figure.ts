@@ -4,6 +4,7 @@ import { Component, input } from '@angular/core';
 @Component({
   selector: 'app-run-figure',
   templateUrl: './run-figure.html',
+  styleUrl: './run-figure.css',
 })
 export class RunFigure {
   readonly label = input.required<string>();

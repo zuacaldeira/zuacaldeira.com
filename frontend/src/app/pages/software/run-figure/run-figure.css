@@ -1,0 +1,46 @@
+/* The Run step, drawn like the lattice (software-spec.md, `RunFigure`). Tokens only. */
+.sw-figure {
+  margin: 0;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 400px;
+}
+
+/* Edges and nodes are graphics: 3:1 against the page (WCAG 1.4.11). */
+.edge {
+  stroke: var(--zc-edge);
+  stroke-width: 2;
+  fill: none;
+}
+
+.node--run {
+  fill: var(--zc-ochre);
+}
+
+.node--open {
+  fill: var(--zc-bg-white);
+  stroke: var(--zc-azul);
+  stroke-width: 2;
+}
+
+/* Notation labels with a halo of the page colour, as in the lattice. */
+.label {
+  font-family: var(--zc-font-mono);
+  font-size: 13px;
+  fill: var(--zc-text-heading);
+  paint-order: stroke;
+  stroke: var(--zc-bg-white);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+figcaption {
+  margin-top: var(--zc-space-2);
+  font-family: var(--zc-font-mono);
+  font-size: 0.75rem;
+  color: var(--zc-text-muted);
+}
