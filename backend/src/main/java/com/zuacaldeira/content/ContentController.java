@@ -1,5 +1,6 @@
 package com.zuacaldeira.content;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +17,13 @@ class ContentController {
     }
 
     @GetMapping("/api/content/{page}/{section}")
-    ResponseEntity<HomeHero> section(
+    ResponseEntity<?> section(
             @PathVariable String page, @PathVariable String section, @RequestParam String lang) {
-        return ResponseEntity.of(content.find(page, section, lang));
+        if ("home".equals(page)) {
+            return ResponseEntity.of(content.find(page, section, lang));
+        }
+        return content.findSection(page, section, lang)
+                .<ResponseEntity<?>>map(body -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(body))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
