@@ -420,6 +420,35 @@ test('SW-WORK-01: three more pieces follow the lead, in a fixed order', () => {
   assert.deepEqual({ heading: texts(work(html), 'h2'), rows: workRows(html) }, { heading: ['More work'], rows: EN_ROWS });
 });
 
+const PAPER = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
+const REPO = { en: 'Repository', de: 'Repository', pt: 'Repositório' };
+const READ_PAPER = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };
+
+test('SW-WORK-02 to 04: the paper for reticulateP, the repositories and the live site, in every language', () => {
+  const links = Object.fromEntries(
+    LANGS.map((lang) => [
+      lang,
+      [...work(page(`${lang}/software`)).matchAll(/<article\b[^>]*>(.*?)<\/article>/gs)].map(([, row]) =>
+        [...row.matchAll(/<a\b[^>]*\shref="([^"]*)"[^>]*>(.*?)<\/a>/gs)].map(([, href, label]) => `${text(label)} → ${href}`),
+      ),
+    ]),
+  );
+  assert.deepEqual(
+    links,
+    Object.fromEntries(
+      LANGS.map((lang) => [
+        lang,
+        [
+          [`${READ_PAPER[lang]} → ${PAPER}`],
+          [`${REPO[lang]} → https://github.com/zuacaldeira/kita-dienstplan`],
+          ['casa-azul-berlin.de → https://casa-azul-berlin.de', `${REPO[lang]} → https://github.com/zuacaldeira/ca-website`],
+        ],
+      ]),
+    ),
+  );
+  assert.ok(existsSync(join(browser, PAPER)), 'the paper is not in the build');
+});
+
 // The scripts a page loads at once: its <script src> and modulepreload files, and every file they
 // import statically, followed through (`import("…")` is loaded later, so it is left out).
 const loadedAtOnce = (route) => {
