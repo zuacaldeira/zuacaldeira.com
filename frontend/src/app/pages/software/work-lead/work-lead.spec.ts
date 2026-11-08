@@ -24,4 +24,24 @@ describe('WorkLead', () => {
     expect(texts(el, 'h2')).toEqual(['title de']);
     expect(texts(el, '.sw-lead__status')).toEqual(['status de']);
   });
+
+  it('SW-LEAD-02: should head its five blocks and the stack with <h3> labels, in order, each with its text', () => {
+    const el = render('de');
+    expect(texts(el, 'h3')).toEqual([
+      'label question de',
+      'label built de',
+      'label protocol de',
+      'label live de',
+      'label result de',
+      'label stack de',
+    ]);
+    const block = (label: string) =>
+      [...el.querySelectorAll('.sw-lead__block')].find(
+        (b) => b.querySelector('h3')?.textContent?.trim() === label,
+      ) as HTMLElement;
+    expect(texts(block('label question de'), 'p')).toEqual(['question de']);
+    expect(texts(block('label built de'), 'p')).toEqual(['built de', 'built2 de']);
+    expect(texts(block('label result de'), 'p')).toEqual(['result de']);
+    expect(texts(block('label stack de'), 'p')).toEqual(['Python · pytest']);
+  });
 });

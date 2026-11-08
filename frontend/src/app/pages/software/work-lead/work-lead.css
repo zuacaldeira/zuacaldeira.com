@@ -47,6 +47,33 @@
   transform: rotate(45deg);
 }
 
+.sw-lead__block {
+  max-width: 44rem;
+  margin-top: var(--zc-space-8);
+}
+
+/* Each block's label is its heading (level 3), small and muted (software-spec.md). */
+.sw-lead__label {
+  margin: 0 0 var(--zc-space-2);
+  font-family: var(--zc-font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--zc-text-muted);
+}
+
+.sw-lead__block p {
+  margin: 0 0 var(--zc-space-3);
+  color: var(--zc-text-body);
+  line-height: 1.6;
+}
+
+.sw-lead__block .sw-lead__stack {
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
+}
+
 @media (max-width: 599.98px) {
   .sw-lead__in {
     padding-inline: 16px;

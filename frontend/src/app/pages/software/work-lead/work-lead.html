@@ -3,5 +3,31 @@
     <p class="sw-lead__kicker">{{ lead.kicker }}</p>
     <h2 class="sw-lead__title">{{ lead.title }}</h2>
     <p class="sw-lead__status"><span class="sw-lead__lozenge" aria-hidden="true"></span>{{ lead.status }}</p>
+
+    <div class="sw-lead__block">
+      <h3 class="sw-lead__label">{{ lead.labels.question }}</h3>
+      <p>{{ lead.question }}</p>
+    </div>
+    <div class="sw-lead__block">
+      <h3 class="sw-lead__label">{{ lead.labels.built }}</h3>
+      <p>{{ lead.built }}</p>
+      <p>{{ lead.built2 }}</p>
+    </div>
+    <div class="sw-lead__block">
+      <h3 class="sw-lead__label">{{ lead.labels.protocol }}</h3>
+      <p>{{ lead.protocol }}</p>
+    </div>
+    <div class="sw-lead__block">
+      <h3 class="sw-lead__label">{{ lead.labels.live }}</h3>
+      <p>{{ lead.live }}</p>
+    </div>
+    <div class="sw-lead__block">
+      <h3 class="sw-lead__label">{{ lead.labels.result }}</h3>
+      <p>{{ lead.result }}</p>
+    </div>
+    <div class="sw-lead__block">
+      <h3 class="sw-lead__label">{{ lead.labels.stack }}</h3>
+      <p class="sw-lead__stack" translate="no">{{ lead.stack }}</p>
+    </div>
   </div>
 </section>
