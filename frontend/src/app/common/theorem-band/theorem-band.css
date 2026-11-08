@@ -19,6 +19,28 @@
   font-size: 0.875rem;
 }
 
+.band__label {
+  margin: var(--zc-space-6) 0 var(--zc-space-2);
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
+}
+
+.band__statement {
+  margin: 0;
+  max-width: 40rem;
+  font-family: var(--zc-font-heading);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.band__evidence {
+  margin: var(--zc-space-4) 0 0;
+  max-width: 40rem;
+  line-height: 1.6;
+}
+
 @media (max-width: 599.98px) {
   .band__in {
     padding-inline: 16px;

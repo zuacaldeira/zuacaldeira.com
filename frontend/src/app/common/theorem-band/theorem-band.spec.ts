@@ -24,4 +24,11 @@ describe('TheoremBand', () => {
     expect(text(el.querySelector('.band__paper'))).toBe('eyebrow de — Paper Title · ICE 2026');
     expect(text(el.querySelector('.band__kicker'))).toBe('proof kicker de');
   });
+
+  it('SW-PROOF-01: should state the theorem as stored, under its label, then the evidence line', () => {
+    const el = render('pt');
+    const parts = ['label', 'statement', 'evidence'].map((p) => text(el.querySelector(`.band__${p}`)));
+    expect(parts).toEqual(['theorem pt 15 · Name', 'For every S, a statement.', 'evidence pt']);
+    expect(el.querySelector('.band__statement')?.getAttribute('translate')).toBe('no');
+  });
 });

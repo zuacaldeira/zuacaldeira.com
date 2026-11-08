@@ -15,4 +15,6 @@ export class TheoremBand {
   readonly kicker = input.required<string>();
   private readonly lang = inject(I18nService).language();
   readonly paper = inject(SHARED_CONTENT).paper[this.lang];
+  /** The band's statement: the paper's theorem (Theorem 15, the Reticulate Theorem). */
+  readonly theorem = this.paper.statements.find((s) => s.kind === 'theorem');
 }

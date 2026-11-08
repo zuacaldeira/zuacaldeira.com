@@ -4,5 +4,12 @@
       {{ paper.eyebrow }} — <span translate="no">{{ paper.paperTitle }}</span> · ICE {{ paper.year }}
     </p>
     <p class="band__kicker">{{ kicker() }}</p>
+    @if (theorem) {
+      <p class="band__label">
+        {{ paper.theorem }} {{ theorem.number }} · <span translate="no">{{ theorem.name }}</span>
+      </p>
+      <p class="band__statement" translate="no">{{ theorem.text }}</p>
+    }
+    <p class="band__evidence">{{ paper.evidence }}</p>
   </div>
 </section>
