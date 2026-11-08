@@ -638,6 +638,16 @@ test('SW-PAGE-07: the menu shows Software as the page you are on', () => {
   );
 });
 
+test('SW-PAGE-10: the home page’s menu leads to the Software page, before Research', () => {
+  assert.deepEqual(menu(page('de/home')), [
+    'Startseite → /de/home (current)',
+    'Über mich → /de/about',
+    'Software → /de/software',
+    'Forschung → /de/research',
+    'Laufen → /de/running',
+  ]);
+});
+
 const PAPER = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
 const REPO = { en: 'Repository', de: 'Repository', pt: 'Repositório' };
 const READ_PAPER = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };
