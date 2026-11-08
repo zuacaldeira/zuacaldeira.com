@@ -103,6 +103,13 @@ language as its example.
 | SW-PROOF-01 | The page ends on the theorem that makes the protocols hold. | the built `/de/software` | the band is read | "Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026", "Warum die Protokolle halten", the statement "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice." (untranslated), the home band's German evidence line | |
 | SW-PROOF-02 | Two buttons lead on: the paper, and the research page in the same language. | any language | its buttons are read | "Read the paper (PDF)" / "Paper lesen (PDF)" / "Ler o artigo (PDF)" → the paper's PDF; "All research" / "Zur Forschung" / "Toda a investigação" → `/xx/research` | |
 
+| ID | In plain words | Given | When | Then | Covered |
+|----|----------------|-------|------|------|---------|
+| SW-PROOF-03 | A fresh database, filled with the starting texts, gives the paper's shared labels in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/shared/paper?lang=en`, `de`, `pt` | 200 with HOME-PAGE-09's fields (D30), each label non-empty; `paperTitle`, `year`, `pdfUrl` and `statements` (Theorem 15 alone, D31) the same in every language | |
+| SW-PROOF-04 | The band's own line comes from the Software page's content in every language. | the same | `GET /api/content/software/proof?lang=en`, `de`, `pt` | 200 with `kicker`: "Why the protocols hold", "Warum die Protokolle halten", "Porque é que os protocolos se cumprem" | |
+| SW-PROOF-05 | The band's text is easy to read in light and dark. | `/en/software` in the browser, light and dark | the band's texts are measured | each is at 4.5:1 or more against what is behind it | |
+| SW-PROOF-P-01 | A translated theorem is refused. | the built `/de/software` | the statement reads "Für jeden wohlgeformten Session-Typ S …" | SW-PROOF-01 goes red | |
+
 ## In the browser (after the build, `npm run acceptance:browser`)
 
 | ID | In plain words | Given | When | Then | Covered |
@@ -604,7 +611,94 @@ Leftovers:
   steps in a row from 900 px, are for the developer on the preview.
 - **Port 8081** was taken again; the build's backend ran on 8091 (stdin override).
 
-## Decisions
+## Slice 6: the proof band
+
+Test list:
+- **Backend:** B1 SW-PROOF-03 (and HOME-PAPER-09 in part), the seed's `shared/paper` in en, de, pt, in
+  a new `SharedSeedIntegrationTest`; B2 SW-PROOF-04, the seed's `software/proof`.
+- **Script:** S1 SW-PAGE-09, a `shared/paper` missing in `pt` stops the snapshot, and it is written
+  as `shared.json`; S2 a `software/proof` missing in `de` stops it.
+- **Unit (`TheoremBand`, `common/theorem-band/`, shared with the home band later):** U1 the paper
+  line in the page's language ("eyebrow — paperTitle · ICE year") and the kicker it is given; U2 the
+  theorem: its label ("Satz 15 · Reticulate Theorem") and its statement as stored, then the evidence
+  line; U3 two buttons, the paper's PDF and All research → `/xx/research`. Route: U4 SW-PAGE-14,
+  `/de/software` brings the shared text with its route (`SHARED_CONTENT`).
+- **Acceptance (build):** A SW-PROOF-01, the outer test (de: the last section before the footer is
+  the band: paper line, kicker, label, the untranslated statement, the German evidence line); A2
+  SW-PROOF-02 (the two buttons in en, de, pt); SW-PAGE-14 stays green (the Software page still
+  downloads no home text).
+- **Browser (one file, one Chromium, closed after):** C SW-PROOF-05, the band's texts at 4.5:1 or
+  more, light and dark.
+- **Protocol rows:** SW-PROOF-P-01 (a German statement on `/de/software`, A red).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1, B2
+        participant DB as MySQL 8 (seed R__shared.sql, R__software.sql)
+        participant API as Content API
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/software/index.html
+    T->>API: B1: GET shared/paper?lang=l; B2: GET software/proof?lang=l
+    F->>API: GET shared/paper and software/proof, for l in en, de, pt
+    API-->>F: 200, or 404 → the build stops (S1, S2)
+    F->>NG: shared.json, software.json
+    NG->>P: the Software route provides SHARED_CONTENT (U4); TheoremBand (U1–U3)
+    T->>P: A, A2, SW-PAGE-14, P row
+    T->>P: C in Chromium: the band's contrast, light and dark
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → API : get(shared, paper, l) . API → Build : { ok200(paper_l) . Build → API : get(software, proof, l) .
+        API → Build : { ok200(proof_l) .
+                        Build → Page : prerender(paper_l, proof_l) .
+                        Page → Visitor : band(paperLine_l, kicker_l, label_l, statement, evidence_l,
+                                              read → pdfUrl, all → /l/research) .
+                        Visitor → Page : { read . end , all . end , stay . end } ,
+                        missing404 . Build → CI : fail(software, proof, l) . end } ,
+      missing404 . Build → CI : fail(shared, paper, l) . end }
+  statement = Theorem 15's text, the same for every l (D31)
+
+Visitor ↾ = Page?band(…) . Page!{ read . end , all . end , stay . end }
+Page ↾    = Build?prerender . Visitor!band(…) . Visitor?{ … }
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1 test → API | `get(shared, paper)`, `get(software, proof)`, `ok200` | B1, B2 |
+| 2–3 F → API | both `get` × 3, `{ok200, missing404}` | S1, S2 |
+| 5 NG → P | `prerender(paper_l, proof_l)` | U1–U4 |
+| 6 test → P | `band(paperLine_l, kicker_l, label_l, statement, evidence_l)` | A |
+| 6, the buttons | `read → pdfUrl`, `all → /l/research`, the Visitor's choice | A2, U3 |
+| 7 the band read | `band(…)` legible | C |
+| forbidden: the statement translated | `statement` the same for every `l` | SW-PROOF-P-01 |
+| forbidden: the home text on the Software page | `paper_l` from `shared.json`, not `home.json` | SW-PAGE-14 |
+
+The page is read-only: no repeat, stale-token or race rows.
+
+Taken in slice 6's plan on 2026-11-08, following the home spec (the developer may change them):
+
+- **D32. The band's colours** are new tokens, as `home-spec.md` names them: `--zc-on-accent`,
+  `--band-bg`, `--band-fg`, `--band-btn`, `--band-btn-fg` (light: the accent with on-accent text;
+  dark: the raised surface with heading text), checked in the browser by C. Its buttons are plain
+  `<a>`, 44 px tall, radius 2 px, filled and outlined, not Material (home spec, `Button`).
+- **D33. The home route** provides `SHARED_CONTENT` when the home band is built; today the home
+  page has no band and downloads none of it.
+
+Decided by the developer on 2026-11-08, for slice 6:
+
+- **D30. Shared text has a page of its own.** The paper's labels live at `GET
+  /api/content/shared/paper?lang=xx`, with HOME-PAPER-09's fields; the snapshot writes
+  `shared.json`, read by the Software route now and by the home route when the home band is built.
+  HOME-PAPER-09's address changed from `home/paper` to `shared/paper` (noted in `home.md`). The
+  Software page's own line, "Why the protocols hold", is in `software/proof`.
+- **D31. `statements` holds Theorem 15 alone for now.** The home band adds Definition 6, Lemma 8 and
+  Proposition 18 from the paper when it is built; their texts are not invented here.
 
 Taken in slice 5's plan on 2026-11-08, following the spec and D5 (the developer may change them):
 
