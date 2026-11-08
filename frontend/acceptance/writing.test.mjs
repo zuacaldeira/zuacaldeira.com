@@ -111,6 +111,17 @@ test('WR-LIST-02, 03, 10 (D4): each English text shows its year, kind, title, au
   assert.deepEqual(items(page('en/writing')).map(fields), expected);
 });
 
+test('WR-LIST-04: only the ICE paper has a note, in the page language: camera-ready, to appear in EPTCS', () => {
+  const notes = Object.fromEntries(
+    LANGS.map((lang) => [lang, items(page(`${lang}/writing`)).map((item) => fields(item).note)]),
+  );
+  assert.deepEqual(notes, {
+    en: [['Camera-ready · to appear in EPTCS'], [], [], []],
+    de: [['Druckfassung · erscheint in EPTCS'], [], [], []],
+    pt: [['Versão final · a publicar na EPTCS'], [], [], []],
+  });
+});
+
 test('WR-LIST-10 (D4): no abstract is on the Writing page, in any language', () => {
   const abstracts = [
     'We prove that the state space of every well-formed session type',
