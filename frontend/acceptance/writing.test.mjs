@@ -122,6 +122,37 @@ test('WR-LIST-04: only the ICE paper has a note, in the page language: camera-re
   });
 });
 
+// A text's links: each attribute a test reads, its visible label, and its hidden words.
+const attr = (attrs, name) => attrs.match(new RegExp(`\\s${name}="([^"]*)"`))?.[1] ?? null;
+const linksOf = (item) =>
+  [...item.matchAll(/<a\b([^>]*)>(.*?)<\/a>/gs)].map(([, attrs, inner]) => ({
+    label: text(inner.replace(/<span\b[^>]*>.*?<\/span>/gs, '')),
+    href: attr(attrs, 'href'),
+    target: attr(attrs, 'target'),
+    rel: attr(attrs, 'rel'),
+    type: attr(attrs, 'type'),
+    hreflang: attr(attrs, 'hreflang'),
+    arrow: texts(inner, 'span', 'wr-texts__arrow').length ? /aria-hidden="true"[^>]*>↗</.test(inner) : null,
+    hidden: texts(inner, 'span', 'visually-hidden')[0] ?? null,
+  }));
+
+const PDF = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
+
+test('WR-LIST-05: the ICE paper opens as a PDF from this site, in this tab, in every language', () => {
+  const read = { en: 'Read (PDF)', de: 'Lesen (PDF)', pt: 'Ler (PDF)' };
+  const links = Object.fromEntries(LANGS.map((lang) => [lang, linksOf(items(page(`${lang}/writing`))[0])]));
+  assert.deepEqual(
+    links,
+    Object.fromEntries(
+      LANGS.map((lang) => [
+        lang,
+        [{ label: read[lang], href: PDF, target: null, rel: null, type: 'application/pdf', hreflang: 'en', arrow: null, hidden: null }],
+      ]),
+    ),
+  );
+  assert.ok(existsSync(join(browser, PDF)), 'the paper is not in the build');
+});
+
 test('WR-LIST-10 (D4): no abstract is on the Writing page, in any language', () => {
   const abstracts = [
     'We prove that the state space of every well-formed session type',
