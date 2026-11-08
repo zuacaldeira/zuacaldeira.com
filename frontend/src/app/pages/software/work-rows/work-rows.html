@@ -1,0 +1,17 @@
+<section class="sw-work">
+  <div class="sw-work__in">
+    <h2 class="sw-work__heading">{{ work.heading }}</h2>
+    @for (row of work.rows; track row.id) {
+      <article class="sw-work__row">
+        <div class="sw-work__name">
+          <p class="sw-work__kicker">{{ row.kicker }}</p>
+          <h3 class="sw-work__title">{{ row.title }}</h3>
+        </div>
+        <p class="sw-work__text">{{ row.text }}</p>
+        <div class="sw-work__more">
+          <p class="sw-work__stack" translate="no">{{ row.stack }}</p>
+        </div>
+      </article>
+    }
+  </div>
+</section>

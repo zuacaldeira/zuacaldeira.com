@@ -7,6 +7,7 @@ import {
   SOFTWARE_CONTENT,
   SoftwareHead,
   SoftwareLead,
+  SoftwareWork,
 } from './content';
 
 const heroIn = (lang: Language): HomeHero => ({
@@ -50,7 +51,32 @@ const softwareLeadIn = (lang: Language): SoftwareLead => ({
   shotCaption: `shotCaption ${lang}`,
 });
 
-const inEvery = <T>(make: (lang: Language) => T): Record<Language, T> => ({
+const softwareWorkIn = (lang: Language): SoftwareWork => ({
+  heading: `work heading ${lang}`,
+  rows: [
+    {
+      id: 'first',
+      kicker: `kicker first ${lang}`,
+      title: 'First',
+      text: `text first ${lang}`,
+      stack: 'Python',
+      links: [{ label: `paper ${lang}`, href: '/assets/pdfs/paper.pdf' }],
+    },
+    {
+      id: 'second',
+      kicker: `kicker second ${lang}`,
+      title: `Second ${lang}`,
+      text: `text second ${lang}`,
+      stack: 'Angular · Java',
+      links: [
+        { label: 'example.org', href: 'https://example.org' },
+        { label: `repo ${lang}`, href: 'https://github.com/example/second' },
+      ],
+    },
+  ],
+});
+
+const inEvery =<T>(make: (lang: Language) => T): Record<Language, T> => ({
   en: make('en'),
   de: make('de'),
   pt: make('pt'),
@@ -59,7 +85,11 @@ const inEvery = <T>(make: (lang: Language) => T): Record<Language, T> => ({
 /** A stand-in for the build's snapshot (D25): every text names its field and language. */
 export const TEST_CONTENT: ContentSnapshot = {
   home: { hero: inEvery(heroIn) },
-  software: { head: inEvery(softwareHeadIn), lead: inEvery(softwareLeadIn) },
+  software: {
+    head: inEvery(softwareHeadIn),
+    lead: inEvery(softwareLeadIn),
+    work: inEvery(softwareWorkIn),
+  },
 };
 
 export const provideTestContent = (): Provider => [

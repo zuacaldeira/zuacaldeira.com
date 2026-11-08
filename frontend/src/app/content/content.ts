@@ -46,6 +46,28 @@ export interface SoftwareLead {
   readonly shotCaption: string;
 }
 
+/** A link of a piece of work: inside the site (a file) or outside it (D26, D27). */
+export interface WorkLink {
+  readonly label: string;
+  readonly href: string;
+}
+
+/** One piece of "More work" (D26): names, stacks and targets are the same in every language. */
+export interface WorkRow {
+  readonly id: string;
+  readonly kicker: string;
+  readonly title: string;
+  readonly text: string;
+  readonly stack: string;
+  readonly links: readonly WorkLink[];
+}
+
+/** One language's "More work" of the Software page, its rows in the page's order (D26). */
+export interface SoftwareWork {
+  readonly heading: string;
+  readonly rows: readonly WorkRow[];
+}
+
 /** The home page's text, `@page-content/home` (D21). */
 export interface HomeContent {
   readonly hero: Readonly<Record<Language, HomeHero>>;
@@ -55,6 +77,7 @@ export interface HomeContent {
 export interface SoftwareContent {
   readonly head: Readonly<Record<Language, SoftwareHead>>;
   readonly lead: Readonly<Record<Language, SoftwareLead>>;
+  readonly work: Readonly<Record<Language, SoftwareWork>>;
 }
 
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
