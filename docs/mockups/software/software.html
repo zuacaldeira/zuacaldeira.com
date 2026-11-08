@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en" data-frame="a" data-hero="b" data-band="c" data-opt="1">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alexandre Caldeira, Software page mock-up</title>
+<!-- Software page mock-up, three options. Head, tokens, shell CSS and the glaze engine are
+     copied unchanged from docs/mockups/home/home.html; the Software page's own CSS follows them. -->
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Copied unchanged from frontend/src/styles.css. The glaze engine rewrites the colours. */
+:root {
+  --zc-text-heading: #0b1526;
+  --zc-text-body: #12203a;
+  --zc-text-muted: #556476;
+
+  --zc-bg-white: #f7fafc;
+  --zc-bg-warm: #e9eff4;
+  --zc-bg-light: #dfe8f0;
+
+  --zc-azul: #14417a;
+  --zc-azul-deep: #0a2a55;
+  --zc-azul-pale: #7fa5ce;
+  --zc-azul-wash: #d3e0ec;
+
+  --zc-ochre: #b07a22;
+  --zc-ochre-text: #8a5e15;
+  --zc-ochre-wash: #faf5ec;
+  --zc-tile: #f7fafc;
+
+  --zc-accent: #14417a;
+  --zc-accent-light: #7fa5ce;
+  --zc-accent-hover: #0a2a55;
+
+  --zc-border-light: #c9d8e6;
+  --zc-grout: rgba(20, 65, 122, 0.16);
+  /* Lattice edges carry the diagram's meaning, so they are held at >=3:1 (WCAG 1.4.11)
+     rather than reusing the decorative grout hairline, which resolves to 1.31:1. */
+  --zc-edge: #6987ab;
+
+  --zc-font-heading: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --zc-font-body: 'Archivo', system-ui, -apple-system, sans-serif;
+  --zc-font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --zc-space-2: 0.5rem;
+  --zc-space-3: 0.75rem;
+  --zc-space-4: 1rem;
+  --zc-space-6: 1.5rem;
+  --zc-space-8: 2rem;
+  --zc-space-12: 3rem;
+  --zc-space-16: 4rem;
+  --zc-space-24: 6rem;
+
+  --zc-radius-sm: 0.375rem;
+  --zc-radius-md: 0.5rem;
+  --zc-radius-lg: 0.75rem;
+  --zc-radius-xl: 1rem;
+  --zc-radius-full: 9999px;
+
+  --zc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --zc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --zc-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+
+  --zc-transition-fast: 0.15s ease;
+  --zc-transition-base: 0.25s ease;
+  --zc-transition-slow: 0.4s ease;
+
+  --zc-max-width: 1100px;
+}
+:root{--zc-on-accent:#f7fafc;--gutter:var(--zc-space-6);--grout:color-mix(in oklab,var(--zc-edge) 28%,transparent);--foot-bg:#0b1526;--foot-fg:#e9eff4;--foot-gold:#d9a94a;--band-bg:#14417a;--band-fg:#f7fafc;--band-btn:#f7fafc;--band-btn-fg:#14417a}
+*,*::before,*::after{box-sizing:border-box}
+html,body{overflow-x:clip;max-width:100%}
+body{margin:0;background:var(--zc-bg-warm);color:var(--zc-text-body);font-family:var(--zc-font-body);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,p{margin:0}
+a{color:var(--zc-azul)}
+*:focus-visible{outline:2px solid var(--zc-azul);outline-offset:2px;border-radius:2px}
+.skip-link{position:absolute;top:-60px;left:0;background:var(--zc-azul);color:var(--zc-on-accent);padding:var(--zc-space-2) var(--zc-space-4);z-index:1100;font-family:var(--zc-font-mono)}
+.skip-link:focus{top:0}
+.col{width:100%;max-width:1200px;margin-inline:auto;padding-inline:var(--gutter)}
+.mono{font-family:var(--zc-font-mono)}
+.guide{position:fixed;inset:0;pointer-events:none;z-index:2000;display:none}
+.guide>div{height:100%;position:relative}
+.guide>div::before{content:"";position:absolute;left:var(--gutter);top:0;bottom:0;border-left:1px dashed var(--zc-ochre)}
+html.guides .guide{display:block}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 22px;border-radius:2px;border:1px solid var(--zc-azul);font-size:1rem;font-weight:500;text-decoration:none;text-align:center}
+.btn--fill{background:var(--zc-azul);color:var(--zc-on-accent)}
+.btn--fill:hover{background:var(--zc-azul-deep);border-color:var(--zc-azul-deep)}
+.btn--line{color:var(--zc-azul)}
+.btn--line:hover{background:var(--zc-azul-wash)}
+.tlink{display:inline-flex;align-items:center;min-height:44px;font-weight:500;text-underline-offset:3px}
+
+/* Frame B: strip above the header. */
+.strip{background:var(--zc-bg-white);border-bottom:1px solid var(--zc-border-light);font-size:.875rem}
+.strip nav{display:flex;justify-content:flex-end;gap:var(--zc-space-2)}
+.strip a{display:inline-flex;align-items:center;min-height:44px;padding-inline:var(--zc-space-3);color:var(--zc-text-muted);text-decoration:none}
+.strip a:hover{color:var(--zc-text-heading)}
+.strip a[aria-current]{color:var(--zc-text-heading);font-weight:600;text-decoration:underline;text-underline-offset:4px}
+
+header{position:sticky;top:0;z-index:1000;background:color-mix(in srgb,var(--zc-bg-warm) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--zc-border-light)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:var(--zc-space-3);min-height:64px}
+.brand{display:inline-flex;align-items:center;gap:10px;min-height:44px;min-width:44px;text-decoration:none;color:var(--zc-text-heading);flex:none}
+.brand svg{width:32px;height:32px;flex:none}
+.brand span{font-family:var(--zc-font-heading);font-weight:600;font-size:1.25rem;white-space:nowrap}
+.menu{flex:1;display:flex;justify-content:flex-end;font-family:var(--zc-font-mono);font-size:.875rem}
+.menu a{display:inline-flex;align-items:center;min-height:44px;padding-inline:var(--zc-space-3);color:var(--zc-text-body);text-decoration:none;white-space:nowrap}
+.menu a:hover{color:var(--zc-azul)}
+.actions{display:flex;align-items:center;gap:var(--zc-space-2);flex:none}
+.cta{font-family:var(--zc-font-mono);font-size:.875rem;padding-inline:var(--zc-space-4);white-space:nowrap}
+.icon-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:0;border-radius:2px;background:transparent;color:var(--zc-text-heading);cursor:pointer}
+.icon-btn:hover{background:var(--zc-azul-wash)}
+.icon-btn svg{width:24px;height:24px;fill:currentColor}
+.burger{display:none}
+.codes{display:flex}
+.codes a{display:inline-flex;align-items:center;justify-content:center;width:38px;height:44px;font-family:var(--zc-font-mono);font-size:.8rem;letter-spacing:.04em;color:var(--zc-text-muted);text-decoration:none}
+.codes a:hover{color:var(--zc-text-heading)}
+.codes a[aria-current]{color:var(--zc-text-heading);font-weight:500;text-decoration:underline;text-decoration-thickness:2px;text-decoration-color:var(--zc-ochre);text-underline-offset:5px}
+.pick{position:relative}
+.pick summary{display:inline-flex;align-items:center;gap:.3rem;height:44px;padding-inline:var(--zc-space-2);font-family:var(--zc-font-mono);font-size:.8rem;color:var(--zc-text-heading);cursor:pointer;list-style:none;border-radius:2px}
+.pick summary::-webkit-details-marker{display:none}
+.pick summary::after{content:"";width:0;height:0;border-inline:4px solid transparent;border-top:5px solid currentColor}
+.pick summary:hover{background:var(--zc-azul-wash)}
+.pick ul{position:absolute;right:0;top:calc(100% + 4px);min-width:10rem;margin:0;padding:var(--zc-space-2);list-style:none;background:var(--zc-bg-white);border:1px solid var(--zc-border-light);box-shadow:var(--zc-shadow-md)}
+.pick li a{display:flex;align-items:center;min-height:44px;padding-inline:var(--zc-space-3);color:var(--zc-text-body);text-decoration:none}
+.pick li a:hover{background:var(--zc-azul-wash)}
+.pick li a[aria-current]{font-weight:600;text-decoration:underline;text-underline-offset:4px}
+.drawer{position:fixed;inset:0 0 0 auto;width:min(320px,80%);z-index:1200;background:var(--zc-bg-white);padding:var(--zc-space-2) var(--gutter);box-shadow:var(--zc-shadow-lg);overflow:auto}
+.scrim{position:fixed;inset:0;z-index:1150;background:rgb(11 21 38 / .45)}
+.drawer-top{display:flex;justify-content:flex-end;min-height:56px;align-items:center}
+.drawer a{display:flex;align-items:center;min-height:44px;color:var(--zc-text-body);text-decoration:none;font-family:var(--zc-font-mono);font-size:.95rem}
+.drawer h2{font-family:var(--zc-font-mono);font-size:.75rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--zc-text-muted);margin:var(--zc-space-6) 0 var(--zc-space-2)}
+.drawer a[aria-current]{font-weight:500;text-decoration:underline;text-underline-offset:4px}
+
+@media (max-width:980px){.menu a{padding-inline:var(--zc-space-2)}.cta{padding-inline:var(--zc-space-3)}.brand span{font-size:1.1rem}.bar{gap:var(--zc-space-2)}.actions{gap:0}html[data-frame="a"] .brand span,html[data-frame="c"] .brand span{display:none}}
+/* The CDK Handset query, as the real ZcPage uses it. */
+@media (max-width:599.98px) and (orientation:portrait),(max-width:959.98px) and (orientation:landscape){
+  :root{--gutter:var(--zc-space-4)}
+  .menu,.cta,.pick-bar{display:none}
+  .burger{display:inline-flex}
+  .bar{min-height:56px;gap:0}
+  .actions{gap:0}
+  .codes a{width:44px}
+  html[data-frame="a"] .brand span{display:none}
+  .strip nav{justify-content:flex-start}
+  .strip a:first-child{margin-inline-start:calc(var(--zc-space-3) * -1)}
+}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;padding-block:clamp(40px,6vw,80px) clamp(32px,5vw,72px)}
+html[data-hero="b"] .hero{background-image:repeating-linear-gradient(45deg,transparent 0 31px,var(--grout) 31px 32px),repeating-linear-gradient(-45deg,transparent 0 31px,var(--grout) 31px 32px)}
+.hero__in{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:48px;align-items:center}
+.hero__text{display:flex;flex-direction:column;gap:clamp(18px,2vw,26px);min-width:0}
+.eyebrow{font-family:var(--zc-font-mono);font-size:.875rem;color:var(--zc-ochre-text)}
+.hero h1{font-family:var(--zc-font-heading);font-optical-sizing:auto;font-weight:600;font-size:clamp(2.5rem,5vw,4.25rem);line-height:1.03;letter-spacing:-.025em;color:var(--zc-text-heading);text-wrap:balance;overflow-wrap:break-word}
+.lede{font-size:clamp(1.0625rem,1.5vw,1.25rem);max-width:40rem}
+.hero__actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.lat{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0}
+.lat svg{width:100%;max-width:440px;height:auto;overflow:visible}
+.lat line{stroke:var(--zc-edge);stroke-width:1.6;stroke-linecap:round}
+.lat .inner{fill:var(--zc-edge)}
+.lat .top{fill:var(--zc-ochre)}
+.lat .atom{fill:var(--zc-azul)}
+.lat .bot{fill:var(--zc-bg-warm);stroke:var(--zc-azul);stroke-width:2.5}
+.lat text{font-family:var(--zc-font-mono);font-size:14px;fill:var(--zc-azul)}
+.lat .halo{fill:var(--zc-bg-warm);stroke:var(--zc-bg-warm);stroke-width:6px;stroke-linejoin:round}
+.lat a text:not(.halo){text-decoration:underline;text-underline-offset:2px}
+.lat .ttop{font-family:var(--zc-font-heading);font-weight:600;font-size:16px;fill:var(--zc-text-heading)}
+.lat .hit{fill:transparent;stroke:none}
+.lat a:focus{outline:none}
+.lat a:focus-visible .hit{stroke:var(--zc-azul);stroke-width:2}
+.lat a:hover text{fill:var(--zc-azul-deep)}
+.lat figcaption{font-family:var(--zc-font-mono);font-size:.75rem;color:var(--zc-text-muted);text-align:center}
+.wallbox{display:none}
+.credit{display:none;font-family:var(--zc-font-mono);font-size:.7rem;color:var(--zc-text-muted)}
+html[data-hero="c"] .lat{display:none}
+html[data-hero="c"] .hero__in{grid-template-columns:minmax(0,36rem)}
+html[data-hero="c"] .wallbox{display:block;position:absolute;inset:0 0 0 max(58%,calc(50% + 8rem));-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 30%);mask-image:linear-gradient(90deg,transparent 0%,#000 30%)}
+html[data-hero="c"] .credit{display:block;margin-top:var(--zc-space-2)}
+.wall{display:block;width:100%;height:100%}
+.wall .t rect{fill:transparent;stroke:var(--grout);stroke-width:.8}
+.wall .t line{stroke:var(--zc-edge);stroke-width:1.1}
+.wall .t circle{fill:var(--zc-edge)}
+.wall .nd line{stroke:var(--zc-ochre)}
+.wall .nd circle{fill:var(--zc-ochre)}
+@media (max-width:900px){
+  .hero__in{grid-template-columns:minmax(0,1fr);gap:32px}
+  .lat svg{max-width:342px}
+  html[data-hero="c"] .wallbox{inset:auto 0 0 0;height:170px;-webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 60%);mask-image:linear-gradient(180deg,transparent 0%,#000 60%)}
+  html[data-hero="c"] .hero{padding-bottom:190px}
+}
+@media (max-width:480px){
+  .hero__actions .btn{width:100%}
+}
+
+.later{font-family:var(--zc-font-mono);font-size:.75rem;color:var(--zc-text-muted);border-block:1px dashed var(--zc-border-light);padding-block:var(--zc-space-4)}
+
+/* Theorem band */
+.band{background:var(--band-bg);color:var(--band-fg)}
+.band__in{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:64px;align-items:center;padding-block:clamp(48px,6vw,88px)}
+.band__text{display:flex;flex-direction:column;gap:clamp(16px,2vw,24px);min-width:0}
+.band__paper,.band__kind{font-family:var(--zc-font-mono);font-size:.875rem}
+.band__paper{letter-spacing:.02em}
+.band__stmt{font-family:var(--zc-font-heading);font-size:clamp(1.6rem,3.2vw,2.5rem);line-height:1.2;font-weight:400}
+.band .m{font-family:var(--zc-font-mono);font-size:.9em}
+.band__ev{font-size:1.0625rem;max-width:40rem}
+.band__actions{display:flex;flex-wrap:wrap;gap:12px}
+.band .btn--fill{background:var(--band-btn);border-color:var(--band-btn);color:var(--band-btn-fg)}
+.band .btn--fill:hover{background:transparent;color:var(--band-fg)}
+.band .btn--line{border-color:var(--band-fg);color:var(--band-fg)}
+.band .btn--line:hover{background:var(--band-fg);color:var(--band-bg)}
+.band *:focus-visible{outline-color:var(--band-fg)}
+.band svg{width:100%;max-width:340px;height:auto;justify-self:center}
+.band svg line{stroke:var(--band-fg);stroke-width:1.4;stroke-linecap:round}
+.band svg .inner,.band svg .atom{fill:var(--band-fg)}
+.band svg .top{fill:var(--zc-ochre);stroke:var(--band-fg);stroke-width:2}
+.band svg .bot{fill:var(--band-bg);stroke:var(--band-fg);stroke-width:2.5}
+.stmts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--zc-space-8);padding-top:var(--zc-space-6);border-top:1px solid var(--band-fg)}
+.stmts p{font-family:var(--zc-font-heading);font-size:1.0625rem;line-height:1.5;margin-top:var(--zc-space-2)}
+.band details summary{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;cursor:pointer;font-weight:500;text-decoration:underline;text-underline-offset:3px;list-style:none}
+.band details summary::-webkit-details-marker{display:none}
+.band details summary::before{content:"+";font-family:var(--zc-font-mono)}
+.band details[open] summary::before{content:"−"}
+.band details .stmts{margin-top:var(--zc-space-4)}
+html:not([data-band="b"]) .opt-b{display:none}
+html:not([data-band="c"]) .opt-c{display:none}
+@media (max-width:900px){.band__in{grid-template-columns:minmax(0,1fr);gap:32px}.stmts{grid-template-columns:minmax(0,1fr)}.band svg{max-width:240px}.band .m{white-space:normal}}
+
+/* 404, wording agreed in D9 */
+.nf{padding-block:clamp(64px,10vw,120px);min-height:50vh}
+.nf h1{font-family:var(--zc-font-heading);font-weight:600;font-size:clamp(2rem,5vw,3.25rem);line-height:1.15;color:var(--zc-text-heading);margin-bottom:var(--zc-space-4)}
+.nf h1 span{font-family:var(--zc-font-mono);font-weight:500;color:var(--zc-azul)}
+.nf p{font-size:1.125rem;max-width:65ch;margin-bottom:var(--zc-space-6)}
+
+/* Ink footer, as on the v2 boards. */
+footer{background:var(--foot-bg);color:var(--foot-fg)}
+footer a{color:var(--foot-fg);text-underline-offset:3px}
+footer *:focus-visible{outline-color:var(--foot-fg)}
+.foot__top{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:clamp(32px,5vw,64px);align-items:end;padding-block:clamp(48px,6vw,80px) var(--zc-space-8)}
+.foot__copy{display:flex;flex-direction:column;gap:var(--zc-space-4)}
+.foot__end{font-family:var(--zc-font-mono);font-size:.875rem;color:var(--foot-gold)}
+footer h2{font-family:var(--zc-font-heading);font-weight:600;font-size:clamp(1.8rem,3.2vw,2.75rem);line-height:1.08;color:var(--foot-fg)}
+.foot__contact{display:flex;flex-direction:column;gap:var(--zc-space-3);align-items:flex-start;min-width:0}
+.foot__mail{background:var(--foot-gold);border-color:var(--foot-gold);color:#1a1205;overflow-wrap:anywhere}
+.foot__links{display:flex;flex-wrap:wrap;gap:0 var(--zc-space-4);font-family:var(--zc-font-mono);font-size:.875rem}
+.foot__links a{display:inline-flex;align-items:center;min-height:44px}
+.ann{font-family:var(--zc-font-mono);font-size:.7rem;background:#9e2b25;color:#fff;padding:2px 7px;white-space:nowrap}
+.foot__bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--zc-space-2) var(--zc-space-6);border-top:1px solid color-mix(in srgb,var(--foot-fg) 25%,transparent);padding-block:var(--zc-space-3);font-family:var(--zc-font-mono);font-size:.75rem}
+.foot__langs{display:flex;gap:var(--zc-space-2)}
+.foot__langs a{display:inline-flex;align-items:center;min-height:44px;padding-inline:var(--zc-space-2)}
+.foot__langs a[aria-current]{font-weight:500}
+@media (max-width:720px){.foot__top{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Software page (new). Tokens only; the annotation red is the home mock-up's .ann. ---------- */
+.menu a[aria-current],.drawer nav a[aria-current]{color:var(--zc-text-heading);font-weight:500;text-decoration:underline;text-decoration-thickness:2px;text-decoration-color:var(--zc-ochre);text-underline-offset:5px}
+h2,h3{margin:0}
+.k{font-family:var(--zc-font-mono);font-size:.8125rem;letter-spacing:.02em;color:var(--zc-ochre-text)}
+.lbl{font-family:var(--zc-font-mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--zc-text-muted);margin:0 0 4px}
+.stack{font-family:var(--zc-font-mono);font-size:.875rem;color:var(--zc-text-body);overflow-wrap:anywhere}
+.status{font-family:var(--zc-font-mono);font-size:.875rem;color:var(--zc-text-body);display:flex;align-items:center;gap:.5rem}
+.status::before{content:"";width:.6rem;height:.6rem;flex:none;transform:rotate(45deg);background:var(--zc-ochre)}
+.links{display:flex;flex-wrap:wrap;gap:0 var(--zc-space-6);align-items:center}
+.links a{display:inline-flex;align-items:center;min-height:44px;font-weight:500;text-underline-offset:3px}
+pre.st{margin:0;padding:var(--zc-space-3) var(--zc-space-4);background:var(--zc-bg-white);border:1px solid var(--zc-border-light);border-left:3px solid var(--zc-azul);font-family:var(--zc-font-mono);font-size:.875rem;line-height:1.55;color:var(--zc-text-heading);white-space:pre;overflow-x:auto;max-width:100%}
+.stcap{font-family:var(--zc-font-mono);font-size:.75rem;color:var(--zc-text-muted);margin-top:6px}
+.ph{display:inline;background:color-mix(in srgb,var(--zc-bg-white) 70%,transparent);outline:1px dashed #9e2b25;outline-offset:1px;color:var(--zc-text-body)}
+.ph .ann{margin-inline-end:.35em}
+.phbox{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:180px;padding:var(--zc-space-4);border:1px dashed #9e2b25;background:var(--zc-bg-white);text-align:center;font-size:.9375rem;color:var(--zc-text-muted)}
+.src{display:none;font-family:var(--zc-font-mono);font-size:.6875rem;line-height:1.3;color:var(--zc-text-muted);border-left:2px solid var(--zc-ochre);padding-left:6px;margin-top:4px}
+html.sources .src{display:block}
+.mocknote{background:#9e2b25;color:#fff;font-family:var(--zc-font-mono);font-size:.8rem;padding:var(--zc-space-2) 0}
+
+/* Page head: on the home hero's lozenge tile, shorter. */
+.sw-head{padding-block:clamp(36px,5vw,64px) clamp(28px,4vw,48px);background-image:repeating-linear-gradient(45deg,transparent 0 31px,var(--grout) 31px 32px),repeating-linear-gradient(-45deg,transparent 0 31px,var(--grout) 31px 32px);border-bottom:1px solid var(--zc-border-light)}
+.sw-head .col{display:flex;flex-direction:column;gap:var(--zc-space-4)}
+.sw-head h1{font-family:var(--zc-font-heading);font-optical-sizing:auto;font-weight:600;font-size:clamp(2.5rem,5vw,4rem);line-height:1.03;letter-spacing:-.025em;color:var(--zc-text-heading)}
+.sw-head .intro{font-size:clamp(1.0625rem,1.5vw,1.25rem);max-width:40rem}
+.toc{display:flex;flex-wrap:wrap;gap:0 var(--zc-space-6);margin:0;padding:0;list-style:none;font-family:var(--zc-font-mono);font-size:.875rem}
+.toc a{display:inline-flex;align-items:center;min-height:44px;text-underline-offset:3px}
+
+.sec{padding-block:clamp(40px,6vw,80px)}
+.sec>.col>h2,.sec-h{font-family:var(--zc-font-heading);font-weight:600;font-size:clamp(1.6rem,3vw,2.25rem);line-height:1.12;color:var(--zc-text-heading);margin-bottom:var(--zc-space-6)}
+.ptitle{font-family:var(--zc-font-heading);font-weight:600;color:var(--zc-text-heading);line-height:1.12;letter-spacing:-.01em;text-wrap:balance}
+.blocks{display:flex;flex-direction:column;gap:var(--zc-space-6)}
+.blocks p{max-width:65ch}
+.blocks code,.prose code,.card code{font-family:var(--zc-font-mono);font-size:.9em}
+
+/* The Run step, drawn like the lattice: action edge solid, result edges dashed. */
+.runfig{margin:0;display:flex;flex-direction:column;gap:8px}
+.runfig svg{width:100%;max-width:420px;height:auto;overflow:visible;align-self:center}
+.runfig line{stroke:var(--zc-edge);stroke-width:1.6;stroke-linecap:round}
+.runfig .res{stroke-dasharray:5 5}
+.runfig .n{fill:var(--zc-edge)}
+.runfig .top{fill:var(--zc-ochre)}
+.runfig .leaf{fill:var(--zc-bg-warm);stroke:var(--zc-azul);stroke-width:2}
+.runfig text{font-family:var(--zc-font-mono);font-size:13px;fill:var(--zc-text-heading)}
+.runfig .act{fill:var(--zc-azul)}
+.runfig .halo{fill:var(--zc-bg-warm);stroke:var(--zc-bg-warm);stroke-width:6px;stroke-linejoin:round}
+.runfig figcaption{font-family:var(--zc-font-mono);font-size:.75rem;color:var(--zc-text-muted);text-align:center}
+
+/* Option 1: lead plus list */
+.lead__in{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(32px,5vw,72px);align-items:start}
+.lead .ptitle{font-size:clamp(1.9rem,3.6vw,2.9rem);margin-block:var(--zc-space-2) var(--zc-space-3)}
+.lead__side{display:flex;flex-direction:column;gap:var(--zc-space-8);position:sticky;top:88px}
+.rows{list-style:none;margin:0;padding:0}
+.row{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.5fr) minmax(0,1fr);gap:var(--zc-space-3) clamp(24px,3vw,48px);padding-block:var(--zc-space-6);border-top:1px solid var(--zc-border-light)}
+.row:last-child{border-bottom:1px solid var(--zc-border-light)}
+.row .ptitle{font-size:1.5rem;margin-top:2px}
+.row__meta{display:flex;flex-direction:column;gap:var(--zc-space-2)}
+.also{margin-top:var(--zc-space-6);font-size:.9375rem;color:var(--zc-text-muted)}
+
+/* Option 2: even cards */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--zc-space-6)}
+.card{display:flex;flex-direction:column;gap:var(--zc-space-4);padding:var(--zc-space-6);background:var(--zc-bg-white);border:1px solid var(--zc-border-light);border-top:3px solid var(--zc-azul);min-width:0}
+.card--lead{grid-column:span 2;border-top-color:var(--zc-ochre)}
+.card .ptitle{font-size:1.5rem}
+.card--lead .ptitle{font-size:clamp(1.6rem,2.6vw,2.1rem)}
+.card p{max-width:65ch}
+.card .links{margin-top:auto}
+.card--also{background:transparent;border-style:dashed;border-top-width:1px;justify-content:center;color:var(--zc-text-muted)}
+.card pre.st{background:var(--zc-bg-warm)}
+.more{border-top:1px solid var(--zc-border-light);padding-top:var(--zc-space-2)}
+.more summary{display:inline-flex;align-items:center;gap:.5rem;min-height:44px;cursor:pointer;font-weight:500;color:var(--zc-azul);text-decoration:underline;text-underline-offset:3px;list-style:none}
+.more summary::-webkit-details-marker{display:none}
+.more summary::before{content:"+";font-family:var(--zc-font-mono);text-decoration:none}
+.more[open] summary::before{content:"−"}
+.more .blocks{margin-top:var(--zc-space-4)}
+
+/* Option 3: reading page */
+.read .col{max-width:calc(65ch + 2 * var(--gutter))}
+.art{padding-block:clamp(32px,5vw,56px);border-top:1px solid var(--zc-border-light)}
+.art:first-child{border-top:0;padding-top:0}
+.art .ptitle{font-size:clamp(1.75rem,3.4vw,2.5rem);margin-block:var(--zc-space-2) var(--zc-space-4)}
+.art--small .ptitle{font-size:clamp(1.4rem,2.6vw,1.75rem)}
+.art h3{font-family:var(--zc-font-heading);font-weight:600;font-size:1.15rem;color:var(--zc-text-heading);margin:var(--zc-space-6) 0 var(--zc-space-2)}
+.art p{margin-bottom:var(--zc-space-3)}
+.art pre.st,.art .runfig,.art .phbox{margin-block:var(--zc-space-4)}
+
+/* How I work */
+.how{background:var(--zc-bg-white);border-block:1px solid var(--zc-border-light)}
+.how__steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,48px);counter-reset:s}
+.how__steps li{display:flex;flex-direction:column;gap:var(--zc-space-2);counter-increment:s;padding-top:var(--zc-space-4);border-top:2px solid var(--zc-azul)}
+.how__steps li::before{content:counter(s);font-family:var(--zc-font-mono);font-size:.875rem;color:var(--zc-ochre-text)}
+.how__steps h3{font-family:var(--zc-font-heading);font-weight:600;font-size:1.25rem;line-height:1.2;color:var(--zc-text-heading)}
+.how__type{margin-top:var(--zc-space-8);display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);gap:var(--zc-space-6);align-items:center}
+.how pre.st{background:var(--zc-bg-warm)}
+.read .how__steps{grid-template-columns:minmax(0,1fr)}
+.read .how__type{grid-template-columns:minmax(0,1fr)}
+
+/* Proof: the home page's theorem band, short. */
+.proof .band__in{grid-template-columns:minmax(0,1fr);padding-block:clamp(40px,5vw,72px)}
+.proof .band__stmt{font-size:clamp(1.4rem,2.6vw,2rem)}
+
+@media (max-width:900px){
+  .lead__in{grid-template-columns:minmax(0,1fr)}
+  .lead__side{position:static}
+  .row{grid-template-columns:minmax(0,1fr)}
+  .cards{grid-template-columns:minmax(0,1fr)}
+  .card--lead{grid-column:auto}
+  .how__steps{grid-template-columns:minmax(0,1fr)}
+  .how__type{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:480px){
+  .card{padding:var(--zc-space-4)}
+  pre.st{font-size:.8125rem;padding:var(--zc-space-3)}
+}
+html:not([data-opt="1"]) [data-o="1"],html:not([data-opt="2"]) [data-o="2"],html:not([data-opt="3"]) [data-o="3"]{display:none}
+</style>
+<script>
+/* The glaze engine, copied unchanged from the Living Glaze study. */
+const toLin = c => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+  const toGam = c => (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055);
+  const hexToRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+  const rgbToHex = rgb => '#' + rgb.map(v => Math.round(Math.min(1, Math.max(0, v)) * 255).toString(16).padStart(2, '0')).join('');
+
+  function rgbToLab([r, g, b]) {
+    r = toLin(r); g = toLin(g); b = toLin(b);
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+    const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+    const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    return [
+      0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
+      1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
+      0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
+    ];
+  }
+  function labToRgb([L, a, b]) {
+    const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+    const m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+    const s = (L - 0.0894841775 * a - 1.291485548 * b) ** 3;
+    return [
+      4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+      -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+      -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+    ].map(v => toGam(Math.min(1, Math.max(0, v))));
+  }
+  const lum = rgb => { const [r, g, b] = rgb.map(toLin); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+  const contrast = (a, b) => { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+  const mixLab = (p, q, t) => p.map((v, i) => v + (q[i] - v) * t);
+
+  // ---------- the five glazes ----------
+  const GLAZES = {
+    cobalto: {
+      name: 'Cobalto', mode: 'light', when: 'noon',
+      desc: 'Today\'s light theme. Blue-and-white tile, the Lisbon original.',
+      c: { bg: '#e9eff4', surface: '#f7fafc', raised: '#dfe8f0', wash: '#d3e0ec', border: '#c9d8e6',
+           heading: '#0b1526', body: '#12203a', muted: '#556476', accent: '#14417a', accentHover: '#0a2a55',
+           onAccent: '#f7fafc', ochre: '#b07a22', ochreText: '#8a5e15', edge: '#6987ab' },
+    },
+    amarelo: {
+      name: 'Amarelo e verde', mode: 'light', when: 'afternoon',
+      desc: 'The polychrome tiles of the 1600s: tin-white glaze, copper green, antimony yellow.',
+      c: { bg: '#f2eedf', surface: '#faf8ef', raised: '#e9e3cc', wash: '#e4e4ca', border: '#dcd5b8',
+           heading: '#17190f', body: '#23261a', muted: '#5a5a44', accent: '#2f5b3b', accentHover: '#1f4029',
+           onAccent: '#faf8ef', ochre: '#b07a22', ochreText: '#7c5512', edge: '#868260' },
+    },
+    manganes: {
+      name: 'Manganês', mode: 'light', when: 'dawn',
+      desc: 'The purple-brown of manganese oxide, the oldest tile outline colour.',
+      c: { bg: '#f0ebf2', surface: '#faf7fb', raised: '#e6dfeb', wash: '#e3d8ea', border: '#d9cde2',
+           heading: '#1b1026', body: '#271a33', muted: '#5f526b', accent: '#5b2f73', accentHover: '#3f1d52',
+           onAccent: '#faf7fb', ochre: '#a8741f', ochreText: '#80561a', edge: '#8c7a9c' },
+    },
+    manganesNoite: {
+      name: 'Manganês nocturno', mode: 'dark', when: 'evening',
+      desc: 'Manganese fired dark. The bridge from dusk into the night glaze.',
+      c: { bg: '#160f1f', surface: '#1f1629', raised: '#2a1f37', wash: '#2a1f37', border: '#3b2d4b',
+           heading: '#f0e8f4', body: '#e0d4e8', muted: '#a093ad', accent: '#c4a3dc', accentHover: '#dcc4ec',
+           onAccent: '#160f1f', ochre: '#d9a94a', ochreText: '#d9a94a', edge: '#76638c' },
+    },
+    noite: {
+      name: 'Vidrado nocturno', mode: 'dark', when: 'night',
+      desc: 'Today\'s dark theme. The tile fires darker and the blue lifts to read against it.',
+      c: { bg: '#0b1526', surface: '#12203a', raised: '#17294a', wash: '#17294a', border: '#2a3f63',
+           heading: '#e9eff4', body: '#d3e0ec', muted: '#8496ab', accent: '#7fa5ce', accentHover: '#a8c4de',
+           onAccent: '#0b1526', ochre: '#d9a94a', ochreText: '#d9a94a', edge: '#516b8b' },
+    },
+  };
+  const ORDER = ['manganes', 'cobalto', 'amarelo', 'manganesNoite', 'noite'];
+  const SURFACES = ['bg', 'surface', 'raised', 'wash', 'border'];
+  const INKS = ['heading', 'body', 'muted', 'accent', 'accentHover', 'ochre', 'ochreText', 'edge', 'onAccent'];
+  const CSSVAR = { accentHover: '--accent-hover', onAccent: '--on-accent', ochreText: '--ochre-text' };
+  const varName = k => CSSVAR[k] || '--' + k;
+
+  for (const g of Object.values(GLAZES)) {
+    g.lab = {};
+    for (const [k, hex] of Object.entries(g.c)) g.lab[k] = rgbToLab(hexToRgb(hex));
+  }
+
+  // Keyframes in hours. Between two keyframes with different modes is a crossing.
+  const KEYS = [
+    [0, 'noite'], [5, 'noite'], [6, 'manganesNoite'],
+    [6.5, 'manganes'], [10, 'cobalto'], [15, 'cobalto'],
+    [18, 'amarelo'], [19.5, 'amarelo'], [20, 'manganesNoite'],
+    [23, 'noite'], [24, 'noite'],
+  ];
+
+  // Minimum contrast against both bg and surface (onAccent: against accent).
+  const GUARDS = [
+    ['heading', 4.5], ['body', 4.5], ['muted', 4.5], ['accent', 4.5], ['accentHover', 4.5],
+    ['ochreText', 4.5], ['ochre', 3], ['edge', 3],
+  ];
+
+  const smooth = t => t * t * (3 - 2 * t);
+  const BLACK = [0, 0, 0], WHITE = [1, 0, 0];
+
+  function guard(lab, against, target) {
+    const rgb = labToRgb(lab);
+    const worst = c => Math.min(...against.map(b => contrast(c, b)));
+    if (worst(rgb) >= target) return { lab, moved: false };
+    const toward = worst([0, 0, 0]) > worst([1, 1, 1]) ? BLACK : WHITE;
+    let lo = 0, hi = 1;
+    for (let i = 0; i < 18; i++) {
+      const mid = (lo + hi) / 2;
+      if (worst(labToRgb(mixLab(lab, toward, mid))) >= target) hi = mid; else lo = mid;
+    }
+    return { lab: mixLab(lab, toward, hi), moved: true };
+  }
+
+  function themeAt(minutes) {
+    const h = ((minutes / 60) % 24 + 24) % 24;
+    let i = 0;
+    while (i < KEYS.length - 2 && h >= KEYS[i + 1][0]) i++;
+    const [h0, k0] = KEYS[i], [h1, k1] = KEYS[i + 1];
+    const a = GLAZES[k0], b = GLAZES[k1];
+    const t = h1 > h0 ? smooth((h - h0) / (h1 - h0)) : 0;
+    const lab = {};
+    for (const k of SURFACES) lab[k] = mixLab(a.lab[k], b.lab[k], t);
+
+    const crossing = a.mode !== b.mode;
+    let inkSide = null;
+    if (crossing) {
+      // Snap inks to whichever side the background currently belongs to.
+      const bgRgb = labToRgb(lab.bg);
+      const darkBg = contrast([1, 1, 1], bgRgb) > contrast([0, 0, 0], bgRgb);
+      inkSide = (a.mode === 'dark') === darkBg ? a : b;
+      for (const k of INKS) lab[k] = inkSide.lab[k];
+    } else {
+      for (const k of INKS) lab[k] = mixLab(a.lab[k], b.lab[k], t);
+    }
+
+    const rgb = {};
+    for (const k of SURFACES) rgb[k] = labToRgb(lab[k]);
+    const against = [rgb.bg, rgb.surface];
+    const moved = [];
+    for (const [k, target] of GUARDS) {
+      const r = guard(lab[k], against, target);
+      lab[k] = r.lab;
+      if (r.moved) moved.push(k);
+    }
+    const accRgb = labToRgb(lab.accent);
+    const oa = guard(lab.onAccent, [accRgb], 4.5);
+    lab.onAccent = oa.lab;
+    if (oa.moved) moved.push('onAccent');
+
+    const hex = {};
+    for (const k of [...SURFACES, ...INKS]) hex[k] = rgbToHex(labToRgb(lab[k]));
+    const darkBg = contrast([1, 1, 1], labToRgb(lab.bg)) > contrast([0, 0, 0], labToRgb(lab.bg));
+    return { hex, from: a, to: b, t, crossing, moved, mode: darkBg ? 'dark' : 'light' };
+  }
+
+  
+
+/* Added for the site: the study's tokens onto the site's (unchanged from the home mock-up). */
+const MAP={bg:['--zc-bg-warm'],surface:['--zc-bg-white'],raised:['--zc-bg-light'],wash:['--zc-azul-wash'],border:['--zc-border-light'],heading:['--zc-text-heading'],body:['--zc-text-body'],muted:['--zc-text-muted'],accent:['--zc-azul','--zc-accent'],accentHover:['--zc-azul-deep','--zc-accent-hover'],onAccent:['--zc-on-accent'],ochre:['--zc-ochre'],ochreText:['--zc-ochre-text'],edge:['--zc-edge']};
+const STATE_MIN={light:750,dark:120};
+const nowMin=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
+const view={lang:'en',state:'living',minutes:nowMin(),opt:'1'};
+function paint(){
+  const th=themeAt(view.state==='living'?view.minutes:STATE_MIN[view.state]);
+  const r=document.documentElement.style;
+  for(const[k,names]of Object.entries(MAP))for(const n of names)r.setProperty(n,th.hex[k]);
+  const dark=th.mode==='dark';
+  r.setProperty('--foot-bg',dark?th.hex.raised:th.hex.heading);
+  r.setProperty('--foot-fg',dark?th.hex.heading:th.hex.bg);
+  r.setProperty('--band-bg',dark?th.hex.raised:th.hex.accent);r.setProperty('--band-fg',dark?th.hex.heading:th.hex.onAccent);r.setProperty('--band-btn',dark?th.hex.accent:th.hex.onAccent);r.setProperty('--band-btn-fg',dark?th.hex.onAccent:th.hex.accent);
+  document.documentElement.style.colorScheme=dark?'dark':'light';
+}
+const q0=new URLSearchParams(location.hash.slice(1));
+for(const k of['lang','state','opt'])if(q0.get(k))view[k]=q0.get(k);
+if(q0.get('t'))view.minutes=+q0.get('t');
+document.documentElement.dataset.opt=view.opt;
+if(q0.get('src')==='1')document.documentElement.classList.add('sources');
+paint();
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main" data-t="skip"></a>
+<header>
+  <div class="col bar">
+    <a class="brand" href="/en/home" data-home aria-label="Alexandre Zua Caldeira">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><g stroke="var(--zc-azul)" stroke-width="3" stroke-linecap="round"><line x1="24" y1="7" x2="8" y2="24"/><line x1="24" y1="7" x2="40" y2="24"/><line x1="8" y1="24" x2="24" y2="41"/><line x1="40" y1="24" x2="24" y2="41"/></g><circle cx="24" cy="7" r="5.5" fill="var(--zc-ochre)"/><circle cx="8" cy="24" r="4.5" fill="var(--zc-azul)"/><circle cx="40" cy="24" r="4.5" fill="var(--zc-azul)"/><circle cx="24" cy="41" r="4.5" fill="var(--zc-bg-warm)" stroke="var(--zc-azul)" stroke-width="3"/></svg>
+      <span>Zua Caldeira</span>
+    </a>
+    <nav class="menu" data-mainnav></nav>
+    <div class="actions">
+      <nav class="codes" data-langnav="codes"></nav>
+      <a class="btn btn--fill cta" href="#" data-t="cta"></a>
+      <button type="button" class="icon-btn" id="theme"></button>
+      <button type="button" class="icon-btn burger" id="open-menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden>
+  <div class="drawer-top"><button type="button" class="icon-btn" id="close-menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></svg></button></div>
+  <nav data-mainnav="drawer"></nav>
+</aside>
+
+<div class="mocknote" id="ptnote" hidden><div class="col">Mock-up: the Portuguese copy is not drafted in this round, so this page shows the English text. The build has no fallback (D4).</div></div>
+<main id="main" tabindex="-1"></main>
+
+<footer><div class="col">
+  <div class="foot__top">
+    <div class="foot__copy">
+      <p class="foot__end" data-t="footEnd"></p>
+      <h2 data-t="footH"></h2>
+      <p><span data-t="footP"></span></p>
+    </div>
+    <div class="foot__contact">
+      <a class="btn foot__mail" href="mailto:hello@zuacaldeira.com">hello@zuacaldeira.com</a>
+      <div class="foot__links"><a href="https://github.com/zuacaldeira">GitHub</a><a href="https://linkedin.com/in/zuacaldeira">LinkedIn</a><a href="#">CV (PDF)</a></div>
+    </div>
+  </div>
+  <div class="foot__bottom"><span>Zua = software ∥ research ∥ running</span><nav class="foot__langs" data-langnav="names"></nav><span>© 2026 Alexandre Zua Caldeira · Berlin</span></div>
+</div></footer>
+
+<script>
+const NAMES={en:'English',de:'Deutsch',pt:'Português'};
+const L=['en','de','pt'];
+const ICON={living:'<path d="M12 2 22 12 12 22 2 12zm0 3.4V18.6L18.6 12z"/>',light:'<path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM11 1h2v3h-2zm0 19h2v3h-2zM1 11h3v2H1zm19 0h3v2h-3zM4.2 2.8l2.1 2.1-1.4 1.4-2.1-2.1zm14.9 14.9 2.1 2.1-1.4 1.4-2.1-2.1zM2.8 19.8l2.1-2.1 1.4 1.4-2.1 2.1zM17.7 4.9l2.1-2.1 1.4 1.4-2.1 2.1z"/>',dark:'<path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.4 5.4 0 0 1-9.54-5.4A5.5 5.5 0 0 1 13.36 3.1 9.3 9.3 0 0 0 12 3z"/>'};
+
+/* Notation: never translated. Line breaks are whitespace only, so each still reads as written. */
+const ST={
+ run:'Run = &{runTest: +{RED: Code,\n                   WRONG_RED: Fix,\n                   GREEN: Green}}',
+ zua:'Zua = &{software: end}\n   || &{research: end}\n   || &{running: end}',
+ links:'G_post =\n  Page → Visitor : links(hrefs) .\n  Visitor → Nginx : get(href) .\n  Nginx → Visitor : ok200(page) .\n  end'
+};
+/* Where each piece of content comes from (shown with "Sources"). Lab notes are English only. */
+const SRC={
+ lab:'Zua, 2026-11-08, facts from zuacaldeira/tdd-lab (private)',
+ run:'tdd-lab workflow type, excerpt as Zua gave it; Code, Fix, Green are further equations',
+ site:'Zua, 2026-11-08: shell and footer built under the monitor; docs/examples/shell.md',
+ ret:'docs/tdd.md; frontend/scripts/lattice-wall/README.md; home band evidence line (home.html)',
+ zua:'docs/notation/zua.st; shell.md D33: checked, 8 states, 12 transitions, lattice',
+ kita:'ContentService.projects; i18n/en.ts about text',
+ casa:'ContentService.projects; i18n/en.ts about text',
+ emb:'ContentService.projects (no links there)',
+ how:'docs/tdd.md and docs/examples/*.md: examples first, red for the right reason, P rows shown to bite',
+ links:'docs/examples/shell.md, SHELL-04, G_post (multiparty notation of the examples)',
+ proof:'home band (home.html): Theorem 15 and the evidence line'
+};
+
+const SHELL={
+en:{skip:'Skip to main content',nav:[['software','software'],['research','research'],['writing','writing'],['about','about']],cta:'⊥ write to me',contact:'⊥ write to me',language:'Language',open:'Open menu',close:'Close menu',themeL:{living:'Theme: living glaze',light:'Theme: light',dark:'Theme: dark'},footEnd:'⊥ end · every protocol ends here',footH:'Let’s talk about your system.',footP:'Open to software engineering and research roles, and to collaborations on protocols, verification and agent systems.'},
+de:{skip:'Zum Hauptinhalt springen',nav:[['software','Software'],['research','Forschung'],['writing','Texte'],['about','Über mich']],cta:'⊥ Kontakt',contact:'⊥ Kontakt',language:'Sprache',open:'Menü öffnen',close:'Menü schließen',themeL:{living:'Farbschema: lebendige Glasur',light:'Farbschema: hell',dark:'Farbschema: dunkel'},footEnd:'⊥ end · hier endet jedes Protokoll',footH:'Sprechen wir über Ihr System.',footP:'Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.'},
+pt:{skip:'Saltar para o conteúdo principal',nav:[['software','software'],['research','investigação'],['writing','escrita'],['about','sobre']],cta:'⊥ Contacto',contact:'⊥ Contacto',language:'Idioma',open:'Abrir menu',close:'Fechar menu',themeL:{living:'Tema: vidrado vivo',light:'Tema: claro',dark:'Tema: escuro'},footEnd:'⊥ end · todo o protocolo acaba aqui',footH:'Vamos falar do seu sistema.',footP:'Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.'}};
+
+const PAGE={
+en:{
+ eyebrow:'Selected work', h1:'Software',
+ phTag:'Placeholder', intro:'One sentence on how I build, for Zua to write.',
+ onPage:'On this page',
+ qL:'The question', bL:'What I built', pL:'The protocol behind it', vL:'The live view', rL:'The result', sL:'Stack',
+ k1:'Case study · AI agents', t1:'A monitor that holds a coding agent to its TDD protocol', s1:'In use on this site since November 2026',
+ q1:'Does a session type make an AI coding agent’s test-driven work better, and in which mode: in pair with the developer, or in batch on an agreed test list? Better means tests that are meaningful for the work, not coverage.',
+ b1:'A monitor that watches a TDD agent as it works, through the agent’s hooks, and checks every step against a session type of the TDD workflow: write a test, run it, see it fail for the right reason, make it pass, refactor, commit. Where a type is given, it refuses a step the type does not allow; otherwise it only observes.',
+ b1b:'It also reports which parts of the target’s own session types the agent’s tests reach: what the software under test must do, failure paths included.',
+ p1:'What the agent does (<code>&amp;{…}</code>) is kept apart from the results it receives (<code>+{…}</code>). The full workflow type has 56 states and 89 transitions and is a lattice, checked with reticulateP. The variants for sabotage (breaking the code on purpose to show a test bites) and for triangulation are subtypes of it.',
+ v1:'<code>reticulab serve</code>, a small read-only web app, follows each session live: what is being built, in plain sentences; the agreed test list, N of M done; the target’s coverage; where the agent is in its type; and a slider to replay the steps.',
+ r1:'In use on this site since November 2026: every element of its header and footer was built test-first by an agent under the monitor, in pair with me.',
+ short1:'A monitor that checks every step of an AI coding agent’s test-driven work against a session type of the TDD workflow, and refuses the steps the type does not allow.',
+ stack1:'Python · pytest · Hypothesis · Server-Sent Events · reticulateP',
+ post1:'Write-up of the experiment, link to come',
+ fig1:'The Run step: one action of the agent, three results it receives.',
+ shot1:'Screenshot of the live view (reticulab serve), for Zua to supply',
+ moreLead:'Read the whole case study',
+ k2:'Verification tool', t2:'reticulateP',
+ d2:'Builds the state space of a session type and checks that it forms a lattice. It turned the ICE 2026 paper’s 108 benchmark protocols into lattices, is one of the paper’s two independent tool implementations, and checks every session type on this site.',
+ q2:'Why it was built: Zua to write, in one sentence.', r2:'What it changed: Zua to write, in one sentence.',
+ c2:'This site’s own line, as reticulateP checks it: 8 states, 12 transitions, a lattice.',
+ stack2:'Python', paper:'Read the paper (PDF)', repo:'Repository',
+ repoPh:'Repository link, if it is public',
+ k3:'Web application', t3:'Kita Dienstplan',
+ d3:'Shift planning for the team of Kita Casa Azul, a bilingual Portuguese-German kindergarten in Berlin: an Angular front end and a Spring Boot back end, with role-based access.',
+ q3:'The problem it solves for the team, in one sentence.', r3:'The result, in one sentence: what the team does differently now.',
+ stack3:'Angular · Spring Boot · Java · PostgreSQL',
+ k4:'Website', t4:'Casa Azul website',
+ d4:'The website of Kita Casa Azul, the bilingual Portuguese-German kindergarten in Berlin, prerendered with Angular so every page loads as plain HTML.',
+ q4:'Who it is for and what they come to find, in one sentence.', r4:'The result, in one sentence.',
+ stack4:'Angular · Angular Material · SSR prerendering · TypeScript', live:'casa-azul-berlin.de',
+ also:'Also: the web presence of the Embassy of Angola in Berlin.',
+ moreH:'More work',
+ howH:'How I work',
+ h1t:'Protocol first', h1d:'The behaviour is agreed as examples and written as a session type before any code exists.',
+ h2t:'Test-first, one step at a time', h2d:'Each test is seen to fail for the right reason, then made to pass; then the code is tidied and committed.',
+ h3t:'Every forbidden path shown red', h3d:'What the protocol rules out gets a test too, and each such test is broken once on purpose, to prove it bites.',
+ howCap:'From this site: the links protocol once the redirect branch was removed (SHELL-04). Every link now answers 200 directly.',
+ proofK:'Why the protocols hold', proofP:'From the paper — Session Type State Spaces Form Lattices · ICE 2026',
+ evidence:'Checked on 108 benchmark protocols from networking, databases, distributed systems and AI. Mechanised in Lean 4, with two independent tool implementations.',
+ read:'Read the paper (PDF)', allResearch:'All research'
+},
+de:{
+ eyebrow:'Ausgewählte Arbeiten', h1:'Software',
+ phTag:'Platzhalter', intro:'Ein Satz dazu, wie ich baue; schreibt Zua.',
+ onPage:'Auf dieser Seite',
+ qL:'Die Frage', bL:'Was ich gebaut habe', pL:'Das Protokoll dahinter', vL:'Die Live-Ansicht', rL:'Das Ergebnis', sL:'Stack',
+ k1:'Fallstudie · KI-Agenten', t1:'Ein Monitor, der einen Coding-Agenten an sein TDD-Protokoll bindet', s1:'Auf dieser Website im Einsatz seit November 2026',
+ q1:'Macht ein Session-Typ die testgetriebene Arbeit eines KI-Coding-Agenten besser, und in welchem Modus: im Pair mit dem Entwickler oder im Batch auf einer vereinbarten Testliste? Besser heißt: Tests, die für die Arbeit Bedeutung haben, nicht Abdeckung.',
+ b1:'Ein Monitor, der einem TDD-Agenten über dessen Hooks bei der Arbeit zusieht und jeden Schritt gegen einen Session-Typ des TDD-Ablaufs prüft: Test schreiben, ausführen, aus dem richtigen Grund scheitern sehen, grün machen, refaktorisieren, committen. Ist ein Typ vorgegeben, verweigert er jeden Schritt, den der Typ nicht erlaubt; sonst beobachtet er nur.',
+ b1b:'Er zeigt auch, welche Teile der Session-Typen des Ziels die Tests des Agenten erreichen: was die getestete Software tun muss, Fehlerpfade eingeschlossen.',
+ p1:'Was der Agent tut (<code>&amp;{…}</code>), ist getrennt von den Ergebnissen, die er erhält (<code>+{…}</code>). Der vollständige Ablauftyp hat 56 Zustände und 89 Übergänge und ist ein Verband, geprüft mit reticulateP. Die Varianten für Sabotage (den Code absichtlich brechen, um zu zeigen, dass ein Test greift) und für Triangulation sind Subtypen davon.',
+ v1:'<code>reticulab serve</code>, eine kleine Web-App nur zum Lesen, folgt jeder Sitzung live: was gerade gebaut wird, in einfachen Sätzen; die vereinbarte Testliste, N von M erledigt; die Abdeckung des Ziels; wo der Agent in seinem Typ steht; und ein Regler, der die Schritte noch einmal abspielt.',
+ r1:'Auf dieser Website im Einsatz seit November 2026: Jedes Element ihres Kopf- und Fußbereichs hat ein Agent unter dem Monitor testgetrieben gebaut, im Pair mit mir.',
+ short1:'Ein Monitor, der jeden Schritt der testgetriebenen Arbeit eines KI-Coding-Agenten gegen einen Session-Typ des TDD-Ablaufs prüft und die Schritte verweigert, die der Typ nicht erlaubt.',
+ stack1:'Python · pytest · Hypothesis · Server-Sent Events · reticulateP',
+ post1:'Bericht über das Experiment, Link folgt',
+ fig1:'Der Schritt Run: eine Aktion des Agenten, drei Ergebnisse, die er erhält.',
+ shot1:'Bildschirmfoto der Live-Ansicht (reticulab serve), liefert Zua',
+ moreLead:'Die ganze Fallstudie lesen',
+ k2:'Verifikationswerkzeug', t2:'reticulateP',
+ d2:'Baut den Zustandsraum eines Session-Typs und prüft, ob er einen Verband bildet. Es hat die 108 Benchmark-Protokolle des ICE-2026-Papers in Verbände übersetzt, ist eine der beiden unabhängigen Werkzeug-Implementierungen des Papers und prüft jeden Session-Typ auf dieser Website.',
+ q2:'Warum es entstand: schreibt Zua, in einem Satz.', r2:'Was es verändert hat: schreibt Zua, in einem Satz.',
+ c2:'Die Zeile dieser Website, wie reticulateP sie prüft: 8 Zustände, 12 Übergänge, ein Verband.',
+ stack2:'Python', paper:'Paper lesen (PDF)', repo:'Repository',
+ repoPh:'Link zum Repository, falls es öffentlich ist',
+ k3:'Webanwendung', t3:'Kita Dienstplan',
+ d3:'Dienstplanung für das Team der Kita Casa Azul, einer zweisprachigen portugiesisch-deutschen Kita in Berlin: ein Angular-Frontend und ein Spring-Boot-Backend, mit rollenbasiertem Zugriff.',
+ q3:'Das Problem, das er dem Team löst, in einem Satz.', r3:'Das Ergebnis in einem Satz: was das Team jetzt anders macht.',
+ stack3:'Angular · Spring Boot · Java · PostgreSQL',
+ k4:'Website', t4:'Website der Casa Azul',
+ d4:'Die Website der Kita Casa Azul, der zweisprachigen portugiesisch-deutschen Kita in Berlin, mit Angular vorgerendert, sodass jede Seite als reines HTML lädt.',
+ q4:'Für wen sie ist und was man dort sucht, in einem Satz.', r4:'Das Ergebnis, in einem Satz.',
+ stack4:'Angular · Angular Material · SSR prerendering · TypeScript', live:'casa-azul-berlin.de',
+ also:'Außerdem: der Webauftritt der Botschaft Angolas in Berlin.',
+ moreH:'Weitere Arbeiten',
+ howH:'Wie ich arbeite',
+ h1t:'Erst das Protokoll', h1d:'Das Verhalten wird als Beispiele vereinbart und als Session-Typ aufgeschrieben, bevor es Code gibt.',
+ h2t:'Testgetrieben, Schritt für Schritt', h2d:'Jeder Test scheitert erst sichtbar aus dem richtigen Grund, dann wird er grün; dann wird aufgeräumt und committet.',
+ h3t:'Jeder verbotene Pfad einmal rot', h3d:'Was das Protokoll ausschließt, bekommt auch einen Test, und jeder solche Test wird einmal absichtlich gebrochen, um zu zeigen, dass er greift.',
+ howCap:'Von dieser Website: das Link-Protokoll, nachdem der Umleitungszweig entfernt wurde (SHELL-04). Jeder Link antwortet jetzt direkt mit 200.',
+ proofK:'Warum die Protokolle halten', proofP:'Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026',
+ evidence:'Geprüft an 108 Benchmark-Protokollen aus Netzwerken, Datenbanken, verteilten Systemen und KI. In Lean 4 mechanisiert, mit zwei unabhängigen Werkzeug-Implementierungen.',
+ read:'Paper lesen (PDF)', allResearch:'Zur Forschung'
+}};
+PAGE.pt=PAGE.en;
+
+const PDF='/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
+let P,LG;
+const ph=x=>`<span class="ph"><span class="ann">${P.phTag}</span>${x}</span>`;
+const src=k=>`<span class="src">from: ${SRC[k]}</span>`;
+const pre=k=>`<pre class="st" data-st="${k}"></pre>`;
+const lbl=x=>`<p class="lbl">${x}</p>`;
+const blk=(l,body)=>`<div>${lbl(l)}${body}</div>`;
+const runFig=()=>`<figure class="runfig"><svg viewBox="0 0 400 230" role="img" aria-label="${P.fig1}">
+ <line x1="200" y1="26" x2="200" y2="100"/>
+ <line class="res" x1="200" y1="100" x2="50" y2="186"/><line class="res" x1="200" y1="100" x2="200" y2="186"/><line class="res" x1="200" y1="100" x2="350" y2="186"/>
+ <circle class="top" cx="200" cy="26" r="7"/><circle class="n" cx="200" cy="100" r="5"/>
+ <circle class="leaf" cx="50" cy="186" r="6"/><circle class="leaf" cx="200" cy="186" r="6"/><circle class="leaf" cx="350" cy="186" r="6"/>
+ <text x="216" y="31">Run</text>
+ <text class="halo" x="210" y="68">&amp;{runTest}</text><text class="act" x="210" y="68">&amp;{runTest}</text>
+ <text class="halo" x="136" y="128" text-anchor="end">+RED</text><text x="136" y="128" text-anchor="end">+RED</text>
+ <text class="halo" x="212" y="172">+WRONG_RED</text><text x="212" y="172">+WRONG_RED</text>
+ <text class="halo" x="262" y="128">+GREEN</text><text x="262" y="128">+GREEN</text>
+ <text x="50" y="214" text-anchor="middle">Code</text><text x="200" y="214" text-anchor="middle">Fix</text><text x="350" y="214" text-anchor="middle">Green</text>
+</svg><figcaption>${P.fig1}</figcaption></figure>`;
+const shotBox=()=>`<div class="phbox"><span class="ann">${P.phTag}</span><span>${P.shot1}</span></div>`;
+const head=(toc)=>`<section class="sw-head"><div class="col">
+ <p class="eyebrow">${P.eyebrow}</p><h1>${P.h1}</h1><p class="intro">${ph(P.intro)}</p>
+ ${toc?`<nav aria-label="${P.onPage}"><ul class="toc">${[['w-monitor',P.k1.split(' · ')[0]+': '+(LG==='de'?'TDD-Monitor':'TDD monitor')],['w-ret',P.t2],['w-kita',P.t3],['w-casa',P.t4],['how',P.howH]].map(([id,x])=>`<li><a href="#${id}">${x}</a></li>`).join('')}</ul></nav>`:''}
+</div></section>`;
+const leadLinks=()=>`<div class="links">${ph(P.post1)}</div>`;
+const leadBlocks=(withFig)=>`<div class="blocks">
+ ${blk(P.qL,`<p>${P.q1}</p>`)}
+ ${blk(P.bL,`<p>${P.b1}</p><p style="margin-top:var(--zc-space-3)">${P.b1b}</p>`)}
+ ${blk(P.pL,`${pre('run')}${src('run')}<p style="margin-top:var(--zc-space-3)">${P.p1}</p>`)}
+ ${withFig?runFig():''}
+ ${blk(P.vL,`<p>${P.v1}</p>`)}
+ ${blk(P.rL,`<p>${P.r1}</p>${src('site')}`)}
+ ${blk(P.sL,`<p class="stack">${P.stack1}</p>`)}
+ ${leadLinks()}
+</div>`;
+const lnk=(href,x)=>`<a href="${href}">${x}</a>`;
+const others=()=>[
+ {id:'w-ret',k:P.k2,t:P.t2,d:P.d2,q:P.q2,r:P.r2,stack:P.stack2,s:'ret',links:lnk(PDF,P.paper)+ph(P.repoPh),extra:`${pre('zua')}<p class="stcap">${P.c2}</p>${src('zua')}`},
+ {id:'w-kita',k:P.k3,t:P.t3,d:P.d3,q:P.q3,r:P.r3,stack:P.stack3,s:'kita',links:lnk('https://github.com/zuacaldeira/kita-dienstplan',P.repo)},
+ {id:'w-casa',k:P.k4,t:P.t4,d:P.d4,q:P.q4,r:P.r4,stack:P.stack4,s:'casa',links:lnk('https://casa-azul-berlin.de',P.live)+lnk('https://github.com/zuacaldeira/ca-website',P.repo)}
+];
+const how=(narrow)=>`<section class="sec how" id="how"><div class="col">
+ <h2>${P.howH}</h2>
+ <ol class="how__steps"><li><h3>${P.h1t}</h3><p>${P.h1d}</p></li><li><h3>${P.h2t}</h3><p>${P.h2d}</p></li><li><h3>${P.h3t}</h3><p>${P.h3d}</p></li></ol>
+ ${src('how')}
+ <div class="how__type">${pre('links')}<div><p class="stcap" style="margin:0;font-size:.8125rem">${P.howCap}</p>${src('links')}</div></div>
+</div></section>`;
+const proof=()=>`<section class="band proof"><div class="col band__in"><div class="band__text">
+ <p class="band__paper">${P.proofP}</p>
+ <p class="band__kind">${P.proofK}</p>
+ <blockquote style="margin:0"><p class="band__stmt">For every well-formed session type <span class="m">S</span>, <span class="m">ℒ(S)/≡</span> is a bounded lattice.</p></blockquote>
+ <p class="band__ev">${P.evidence}</p>
+ <div class="band__actions"><a class="btn btn--fill" href="${PDF}">${P.read}</a><a class="btn btn--line" href="/${LG}/research">${P.allResearch}</a></div>
+ ${src('proof')}
+</div></div></section>`;
+
+function opt1(){
+ return head(false)+`
+ <section class="sec lead" id="w-monitor"><div class="col lead__in">
+  <article class="lead__text"><p class="k">${P.k1}</p><h2 class="ptitle">${P.t1}</h2><p class="status">${P.s1}</p>${src('lab')}
+   <div style="margin-top:var(--zc-space-8)">${leadBlocks(false)}</div></article>
+  <aside class="lead__side">${runFig()}${shotBox()}</aside>
+ </div></section>
+ <section class="sec" style="padding-top:0"><div class="col"><h2>${P.moreH}</h2><ul class="rows">
+  ${others().map(o=>`<li class="row" id="${o.id}">
+   <div><p class="k">${o.k}</p><h3 class="ptitle">${o.t}</h3></div>
+   <div><p>${o.d}</p>${src(o.s)}</div>
+   <div class="row__meta"><p class="stack">${o.stack}</p><div class="links">${o.links}</div></div>
+  </li>`).join('')}
+ </ul><p class="also">${P.also}</p>${src('emb')}</div></section>
+ ${how()}${proof()}`;
+}
+function opt2(){
+ return head(false)+`
+ <section class="sec"><div class="col"><div class="cards">
+  <article class="card card--lead" id="w-monitor"><p class="k">${P.k1}</p><h2 class="ptitle">${P.t1}</h2><p class="status">${P.s1}</p>
+   <p>${P.short1}</p>${pre('run')}${src('lab')}
+   <p class="stack">${P.stack1}</p>
+   <details class="more"><summary>${P.moreLead}</summary>${leadBlocks(true)}</details>
+  </article>
+  ${others().map(o=>`<article class="card" id="${o.id}"><p class="k">${o.k}</p><h2 class="ptitle">${o.t}</h2><p>${o.d}</p>${src(o.s)}<p class="stack">${o.stack}</p><div class="links">${o.links}</div></article>`).join('')}
+  <article class="card card--also"><p>${P.also}</p>${src('emb')}</article>
+ </div></div></section>
+ ${how()}${proof()}`;
+}
+function opt3(){
+ return head(true)+`
+ <div class="read"><section class="sec"><div class="col">
+  <article class="art" id="w-monitor"><p class="k">${P.k1}</p><h2 class="ptitle">${P.t1}</h2><p class="status">${P.s1}</p>${src('lab')}
+   <h3>${P.qL}</h3><p>${P.q1}</p>
+   <h3>${P.bL}</h3><p>${P.b1}</p><p>${P.b1b}</p>
+   <h3>${P.pL}</h3>${pre('run')}${src('run')}<p>${P.p1}</p>${runFig()}
+   <h3>${P.vL}</h3><p>${P.v1}</p>${shotBox()}
+   <h3>${P.rL}</h3><p>${P.r1}</p>${src('site')}
+   <p class="lbl" style="margin-top:var(--zc-space-6)">${P.sL}</p><p class="stack">${P.stack1}</p>
+   ${leadLinks()}
+  </article>
+  ${others().map(o=>`<article class="art art--small" id="${o.id}"><p class="k">${o.k}</p><h2 class="ptitle">${o.t}</h2>
+   <h3>${P.qL}</h3><p>${ph(o.q)}</p>
+   <h3>${P.bL}</h3><p>${o.d}</p>${src(o.s)}${o.extra||''}
+   <h3>${P.rL}</h3><p>${ph(o.r)}</p>
+   <p class="lbl" style="margin-top:var(--zc-space-6)">${P.sL}</p><p class="stack">${o.stack}</p><div class="links">${o.links}</div>
+  </article>`).join('')}
+  <p class="also">${P.also}</p>${src('emb')}
+ </div></section>
+ ${how(true)}</div>${proof()}`;
+}
+
+function langLink(l,label,shown){const a=document.createElement('a');a.href='/'+l+'/software';a.hreflang=l;a.lang=l;a.textContent=label;if(label.length===2)a.setAttribute('aria-label',NAMES[l]+' ('+l.toUpperCase()+')');if(l===shown)a.setAttribute('aria-current','true');a.addEventListener('click',ev=>{ev.preventDefault();closeDrawer();tell({lang:l})});return a}
+function render(){
+ LG=view.lang;P=PAGE[LG];const t=SHELL[LG];
+ document.documentElement.lang=LG;document.documentElement.dataset.opt=view.opt;
+ document.getElementById('ptnote').hidden=LG!=='pt';
+ document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t[e.dataset.t]);
+ document.querySelectorAll('[data-mainnav]').forEach(n=>{const items=[...t.nav];if(n.dataset.mainnav==='drawer')items.push(['contact',t.contact]);n.setAttribute('aria-label','Main');n.replaceChildren(...items.map(([s,x])=>{const a=document.createElement('a');a.href='/'+LG+'/'+s;a.textContent=x;if(s==='software')a.setAttribute('aria-current','page');return a}))});
+ document.querySelectorAll('[data-langnav]').forEach(n=>{const k=n.dataset.langnav;n.setAttribute('aria-label',t.language);
+  n.replaceChildren(...L.map(l=>langLink(l,k==='codes'?l.toUpperCase():NAMES[l],LG)))});
+ document.querySelectorAll('[data-home]').forEach(a=>a.href='/'+LG+'/home');
+ const m=document.getElementById('main');m.innerHTML=({1:opt1,2:opt2,3:opt3})[view.opt]();
+ m.querySelectorAll('[data-st]').forEach(e=>{e.textContent=ST[e.dataset.st];e.setAttribute('translate','no')});
+ const th=document.getElementById('theme');th.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+ICON[view.state]+'</svg>';th.setAttribute('aria-label',t.themeL[view.state]);th.title=t.themeL[view.state];
+ document.getElementById('open-menu').setAttribute('aria-label',t.open);document.getElementById('close-menu').setAttribute('aria-label',t.close);
+ paint();
+}
+function tell(p){Object.assign(view,p);render();if(parent!==window)parent.postMessage({zcSoftware:true,...p},'*')}
+const drawer=document.getElementById('drawer'),scrim=document.getElementById('scrim');
+function closeDrawer(){drawer.hidden=true;scrim.hidden=true}
+document.getElementById('open-menu').onclick=()=>{drawer.hidden=false;scrim.hidden=false;document.getElementById('close-menu').focus()};
+document.getElementById('close-menu').onclick=closeDrawer;scrim.onclick=closeDrawer;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+/* No backend: links that would leave the mock-up do nothing; jump links and the skip link work. */
+document.addEventListener('click',e=>{const a=e.target.closest('a');if(!a||a.closest('[data-langnav]'))return;const h=a.getAttribute('href')||'';if(!h.startsWith('#')||h==='#')e.preventDefault()});
+document.getElementById('theme').onclick=()=>{const order=['living','light','dark'];tell({state:order[(order.indexOf(view.state)+1)%3]})};
+window.addEventListener('message',e=>{const m=e.data;if(!m||!m.zcSet)return;for(const k of['lang','state','minutes','opt'])if(k in m)view[k]=m[k];document.documentElement.classList.toggle('sources',!!m.src);render()});
+render();
+</script>
+</body>
+</html>
