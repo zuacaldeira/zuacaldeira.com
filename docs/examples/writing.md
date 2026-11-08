@@ -37,17 +37,17 @@ its example. "In plain words" says what each case means for a visitor, in Englis
 | WR-PAGE-01 | The Writing page exists in all three languages. | the writing content in en, de and pt | the site is built | `/en/writing/index.html`, `/de/writing/index.html`, `/pt/writing/index.html` exist, with `<html lang="en">`, `"de"`, `"pt"` | yes (build and unit, 2026-11-08) |
 | WR-PAGE-02 | Search engines learn that the three pages are one page in three languages. | the built `/de/writing` | it is read | `<link rel="alternate">` for `hreflang` en, de, pt to `https://zuacaldeira.com/{en,de,pt}/writing`, and `x-default` to `/en/writing` | yes (build, 2026-11-08) |
 | WR-PAGE-03 | The browser tab names the page in its language. | the built pages | they are read | `<title>` is "Alexandre Zua Caldeira — Writing", "— Texte", "— Textos" | yes (build and unit, 2026-11-08) |
-| WR-PAGE-04 | The sitemap lists the new pages, and only built ones. | the built site | `sitemap.xml` is read | it lists `https://zuacaldeira.com/{en,de,pt}/writing` beside the 18 pages of SW-PAGE-04, 21 in all, and each is a built page (HOME-PAGE-08); the "page not built" examples of SHELL-04 P-04 and SW-PAGE-P-04 move from `/de/writing` to `/de/nope` | |
-| WR-PAGE-05 | In the web server, the new page opens straight away. | the built site in the web image's nginx | `/en/writing`, `/de/writing`, `/pt/writing` are requested | each answers `200` with no redirect (HOME-PAGE-09); `/de/writing/` answers `301` to `/de/writing` (HOME-PAGE-10) | |
-| WR-PAGE-06 | The menu is complete: Software, Research, Writing, About, in the reader's language. | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`, in that order (SHELL-11; Home and Running leave the menu, D13 in `software.md`); pt "Textos" → `/pt/writing` (D5) | |
-| WR-PAGE-07 | The header shows Writing as the page you are on. | the built `/pt/writing` | the main navigation is read | its writing link goes to `/pt/writing` and carries `aria-current="page"`; no other link does (D34 in `software.md`) | |
+| WR-PAGE-04 | The sitemap lists the new pages, and only built ones. | the built site | `sitemap.xml` is read | it lists `https://zuacaldeira.com/{en,de,pt}/writing` beside the 18 pages of SW-PAGE-04, 21 in all, and each is a built page (HOME-PAGE-08); the "page not built" examples of SHELL-04 P-04 and SW-PAGE-P-04 move from `/de/writing` to `/de/nope` | yes (build and nginx, 2026-11-08) |
+| WR-PAGE-05 | In the web server, the new page opens straight away. | the built site in the web image's nginx | `/en/writing`, `/de/writing`, `/pt/writing` are requested | each answers `200` with no redirect (HOME-PAGE-09); `/de/writing/` answers `301` to `/de/writing` (HOME-PAGE-10) | yes (web image's nginx, 2026-11-08; on `next` after the push, by hand) |
+| WR-PAGE-06 | The menu is complete: Software, Research, Writing, About, in the reader's language. | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`, in that order (SHELL-11; Home and Running leave the menu, D13 in `software.md`); pt "Textos" → `/pt/writing` (D5) | yes (build and unit, desktop and phone menus, 2026-11-08; SHELL-11) |
+| WR-PAGE-07 | The header shows Writing as the page you are on. | the built `/pt/writing` | the main navigation is read | its writing link goes to `/pt/writing` and carries `aria-current="page"`; no other link does (D34 in `software.md`) | yes (build and unit, 2026-11-08) |
 | WR-PAGE-08 | The language links lead to the same page in the other language. | the built `/de/writing` | its language links are read | `EN` → `/en/writing`, `PT` → `/pt/writing`, `DE` current (SHELL-01, 02 on the new page) | yes (build, the shell's tests on the three pages, 2026-11-08) |
 | WR-PAGE-09 | A missing German text stops the build instead of showing English. | no writing content stored for de | the site is built | the build fails, naming page `writing`, the section and `de`; nothing is deployed (as HOME-HERO-06) | yes (the snapshot script, 2026-11-08) |
 | WR-PAGE-10 | Each page downloads only its own text. | the built site | the files `/en/writing` loads at once are read | its own text is among them; none holds the home hero's sentence or the Software lead's title (SW-PAGE-14 on the new page) | yes (build and unit, 2026-11-08) |
 | WR-PAGE-P-01 | A Writing page in only one or two languages is refused. | the build | a language's writing page is missing | WR-PAGE-01 goes red, naming the language | yes (break in the build) |
 | WR-PAGE-P-02 | A link to the Writing page that drops the language is refused. | any built page | a link to `/writing` (no prefix) is read | SHELL-04 goes red (an old path) | yes (break in the build) |
-| WR-PAGE-P-03 | Two links marked as the current page are refused. | the built `/pt/writing` | a second menu link carries `aria-current="page"` | WR-PAGE-07 goes red | |
-| WR-PAGE-P-04 | A menu in another order, or with Running back in it, is refused. | the built `/de/home` | the menu reads Forschung before Software, or holds Laufen | WR-PAGE-06 goes red | |
+| WR-PAGE-P-03 | Two links marked as the current page are refused. | the built `/pt/writing` | a second menu link carries `aria-current="page"` | WR-PAGE-07 goes red | yes (break in the build) |
+| WR-PAGE-P-04 | A menu in another order, or with Running back in it, is refused. | the built `/de/home` | the menu reads Forschung before Software, or holds Laufen | WR-PAGE-06 goes red | yes (break in the build, both) |
 
 ## 2. Head
 
@@ -88,10 +88,10 @@ its example. "In plain words" says what each case means for a visitor, in Englis
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| WR-PAGE-11 | The page fits a phone: nothing runs off the side. | a phone at 390 px, `/en/writing`, `/de/writing`, `/pt/writing` | the page is measured | no horizontal scroll; no element in `<main>` ends right of 390 px | |
-| WR-PAGE-12 | Every link on the page is easy to tap. | the same | the links in `<main>` are measured | each is at least 44 px tall | |
-| WR-PAGE-13 | Keyboard users get to the content first. | `/de/writing`, 390 and 1280 px | Tab, then Enter | the skip link goes to `<main>` on the same page (SHELL-10 on the new page) | |
-| WR-LIST-14 | The list's text is easy to read in light and dark. | `/en/writing` and `/de/writing` at 1280, light and dark | the list's texts are measured | each is at 4.5:1 or more against what is behind it (the mock-up's lowest: 4.91 light, 5.36 dark) | |
+| WR-PAGE-11 | The page fits a phone: nothing runs off the side. | a phone at 390 px, `/en/writing`, `/de/writing`, `/pt/writing` | the page is measured | no horizontal scroll; no element in `<main>` ends right of 390 px | yes (browser, 2026-11-08) |
+| WR-PAGE-12 | Every link on the page is easy to tap. | the same | the links in `<main>` are measured | each is at least 44 px tall | yes (browser, 2026-11-08) |
+| WR-PAGE-13 | Keyboard users get to the content first. | `/de/writing`, 390 and 1280 px | Tab, then Enter | the skip link goes to `<main>` on the same page (SHELL-10 on the new page) | yes (browser, 2026-11-08) |
+| WR-LIST-14 | The list's text is easy to read in light and dark. | `/en/writing` and `/de/writing` at 1280, light and dark | the list's texts are measured | each is at 4.5:1 or more against what is behind it (the mock-up's lowest: 4.91 light, 5.36 dark) | yes (browser, light and dark, 2026-11-08) |
 
 ## Diagram: the build (all slices)
 
@@ -502,6 +502,47 @@ The phone menu's `menu(…)` is the same with `contact` last (D16), as SHELL-05b
 | forbidden: a link without the prefix | `items` are `/l/x` (SHELL-04) | WR-PAGE-P-02 (covered) |
 
 The site is read-only: no repeat, stale-token or race rows.
+
+**Done 2026-11-08; the page is open** (`18f83db` to `3078de7`). Red first, each for its own reason: A
+WR-PAGE-06 on slice 2's build (the old menu: Startseite (current), Über mich, Software, Forschung,
+Laufen); U1 `expected [ 'Startseite → /de/home', …(4) ] to deeply equal [ 'Software → /de/software',
+…(3) ]`; A2 WR-PAGE-07 `[]` (no Textos link); A3 the three writing URLs missing from the sitemap;
+HOME-PAGE-09 in nginx "the sitemap does not list the 21 pages". U2 has no red of its own: the phone
+menu's tests went red with their old lists after U1's change, and their new lists were written after
+it. Green at first and shown to bite, each break restored (md5 checked): U3 (`aria-current` bound to
+Software alone: `expected []`), N WR-PAGE-05 (the built `pt/writing` moved out: `/pt/writing answers
+404`), WR-PAGE-P-03 (a second `aria-current` on `pt/writing`: A2 red), WR-PAGE-P-04 (Forschung before
+Software, and Laufen put back, in `de/home`: A red each time), SW-PAGE-P-04 (`/de/nope` in the built
+sitemap: HOME-PAGE-08 red), and all ten browser rows, by breaks in copies of the built pages: B1 the
+list 480 px wide (`ul.wr-texts__list 496`), B2 the links 20 px tall, B3 a link before the shell
+(`'a break'` for the skip link), B4 the list `#bbb` in light (1.66) and `#444` in dark (1.88).
+
+SHELL-11 is covered. Older tests that pinned the old menu changed with it: the desktop and phone menu
+specs, `ContentService`'s (two tests on Home first and Contact last became one on the whole list),
+SHELL-08 A1 and SHELL-05b in the browser, HOME-PAGE-07 (18 → 21) and HOME-PAGE-09's count; SW-PAGE-10's
+acceptance test is WR-PAGE-06 now (D17). The desktop menu's `exact` match for Home went with Home
+(SHELL-04's leftover). The contrast reader is shared (`acceptance/browser/contrast.mjs`) by the
+footer, the band and the list.
+
+Results: unit 263 passed, 5 skipped (41 files); scripts 12/12; `acceptance` 72/72;
+`acceptance:nginx` 13/13; browser, one Chromium per file: `writing-page` 10/10, `shell-phone` 33/33,
+`shell-keyboard` 45/45, `shell-footer` 6/6, `software-phone` 6/6, `software-band` 2/2, `software-shot`
+2/2, `theme-paint` 5/5; the build prerenders 26 routes, initial bundle 511.34 kB. The backend and the
+seed were not touched, so the build used slice 2's content snapshot (newer than the last backend
+change) and no backend was started. Two whole-suite runs timed out at random under a load of 55 and
+13 (other projects building); the run after the load fell was clean.
+
+Leftovers, not built:
+- **For the developer on the preview:** the menu at 768 and 1280 px with its four links and the ochre
+  underline on Texte; the phone menu with five; the list and head at 390, 768 and 1280 px, light and
+  dark (measured for width, 44 px and contrast, not looked at).
+- **The Portuguese copy** (D9): "Textos" in the menu, "Publicações", the intro, the kinds, "Em
+  inglês", "Ler (PDF)", "abre num novo separador", "Versão final · a publicar na EPTCS".
+- **Home and Running are not in any menu now.** Home is the logo; Running is reachable from the
+  sitemap and by its URL only, as decided.
+- **WR-PAGE-05 on `next`** (`curl` after the push), by hand, as SW-PAGE-06.
+- **The initial bundle** is 511.34 kB against the 500 kB warning budget.
+- **SHELL-12's unit test** did not time out in this slice's clean runs (`850f997`'s 5 s wait).
 
 ## Decisions
 

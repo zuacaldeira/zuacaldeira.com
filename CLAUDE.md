@@ -63,10 +63,11 @@ Routes defined in `src/app/app.routes.ts`. All lazy-loaded:
 - `/` is the prerendered English home itself, not a redirect (D1 in `docs/examples/home.md`)
 - `/en/...`, `/de/...`, `/pt/...`: `home`, `about`, `software`, `research`, `writing`, `running`,
   `contact` under each language prefix. The prefix sets the language, `<html lang>` and the `hreflang`
-  alternates. `software` (`docs/examples/software.md`) is in the menu, before Research (D13), and
-  in the sitemap (18 pages). The menus mark the page you are on with `aria-current="page"` (D34).
-  `writing` (`docs/examples/writing.md`) is built but not yet in the menu or the sitemap (its
-  slice 3). Both pages' heads are the shared `common/page-head/` (D13 in `writing.md`).
+  alternates. The menu is Software, Research, Writing, About (SHELL-11; `ContentService.navItems`,
+  the phone menu adds Contact): Home and Running are in no menu. `software` and `writing`
+  (`docs/examples/software.md`, `writing.md`) are in the sitemap (21 pages). The menus mark the page
+  you are on with `aria-current="page"` (D34). Both pages' heads are the shared `common/page-head/`
+  (D13 in `writing.md`).
 - `/404` and `**`: the English 404 page; nginx serves its copy `404.html` with status 404
   (HOME-PAGE-06)
 - The old paths (`/home`, `/about`, `/research`, `/running`, `/contact`) answer `301` to their
@@ -169,7 +170,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 40 test files, 260 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 41 test files, 268 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
