@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research page mock-up: the ICE 2026 paper</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Review page, in the Writing mock-up's index style: controls, the page at two widths, notes. */
+:root{--bg:#e9eff4;--bg-2:#f7fafc;--line:#c9d8e6;--ink:#0b1526;--text:#12203a;--muted:#556476;--azul:#14417a;--ochre-text:#8a5e15;--on-azul:#f7fafc;
+  --display:'Fraunces',Georgia,serif;--body:'Archivo',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:1560px;margin-inline:auto;padding:24px 16px 64px;display:grid;gap:28px;grid-template-columns:minmax(0,1fr)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,3vw,2.25rem);line-height:1.15;color:var(--ink);margin:0}
+h2{font-family:var(--display);font-weight:600;font-size:1.25rem;color:var(--ink);margin:0 0 8px}
+p{margin:0}
+.lede{margin-top:8px;max-width:75ch}
+ul{max-width:75ch;margin:8px 0 0;padding-left:1.2rem}
+li+li{margin-top:4px}
+.kicker{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ochre-text);margin:0 0 6px}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;position:sticky;top:0;z-index:5;background:var(--bg);padding-block:12px;border-bottom:1px solid var(--line)}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0;margin-bottom:4px}
+.seg{display:flex;flex-wrap:wrap}
+.seg label{position:relative;display:inline-flex;align-items:center;min-height:44px;padding-inline:11px;border:1px solid var(--line);margin-inline-start:-1px;background:var(--bg-2);cursor:pointer;font-size:.875rem;white-space:nowrap}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg label:has(input:checked){background:var(--azul);border-color:var(--azul);color:var(--on-azul);font-weight:600;z-index:1}
+.seg label:has(input:focus-visible){outline:2px solid var(--azul);outline-offset:2px;z-index:2}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 392px;gap:24px;align-items:start}
+.cap{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-bottom:6px}
+.view{overflow:hidden;border:1px solid var(--line);background:#fff}
+iframe{display:block;border:0;transform-origin:0 0}
+code{font-family:var(--mono);font-size:.9em}
+@media (max-width:1000px){.stage{grid-template-columns:minmax(0,1fr)}.controls{position:static}}
+</style>
+<div class="wrap">
+  <header>
+    <p class="kicker">Research page · /en/research · mock-up, one option</p>
+    <h1>Research: a landing page for the ICE 2026 paper</h1>
+    <p class="lede">Built on the answers of 2026-11-08 (R1 b, the rest a where they fit; <code>docs/examples/research.md</code>). All content comes from the repository; "Sources" shows where. Text in a red dashed box is a draft (the wording is new) or a placeholder (for you to fill). The tokens, header, footer and living glaze are the Writing mock-up's.</p>
+  </header>
+
+  <form class="controls" id="controls" aria-label="What to show">
+    <fieldset><legend>Language</legend><div class="seg">
+      <label><input type="radio" name="lang" value="en" checked>EN</label><label><input type="radio" name="lang" value="de">DE</label><label><input type="radio" name="lang" value="pt">PT</label>
+    </div></fieldset>
+    <fieldset><legend>Theme</legend><div class="seg">
+      <label><input type="radio" name="state" value="living" checked>Living</label><label><input type="radio" name="state" value="light">Light</label><label><input type="radio" name="state" value="dark">Dark</label>
+    </div></fieldset>
+    <fieldset><legend>Sources</legend><div class="seg">
+      <label><input type="radio" name="src" value="0" checked>Hide</label><label><input type="radio" name="src" value="1">Show</label>
+    </div></fieldset>
+  </form>
+
+  <div class="stage">
+    <div><p class="cap">1440 px, scaled to fit</p><div class="view" id="v-wide"><iframe id="f-wide" title="The page at 1440 px" width="1440" height="900"></iframe></div></div>
+    <div><p class="cap">390 px</p><div class="view"><iframe id="f-phone" title="The page at 390 px" width="390" height="844"></iframe></div></div>
+  </div>
+
+  <section>
+    <h2>The page, top to bottom</h2>
+    <ul>
+      <li><b>Head</b> (PageHead, as Software and Writing): eyebrow and intro are drafts.</li>
+      <li><b>The paper:</b> year and kind, title, author, venue, the EPTCS note, "Read the paper (PDF)", and the abstract quoted in English (R2).</li>
+      <li><b>What it proves:</b> Theorem 15 in display type, then Definition 6, Lemma 8 and Proposition 18, all open (R3). No figure (R4).</li>
+      <li><b>How it was checked:</b> 108, 93, 15 and Lean 4 from the abstract, then the bands' evidence sentence.</li>
+      <li><b>The tool:</b> the reticulateP row from the Software page, linking there.</li>
+      <li><b>What's next:</b> a placeholder (R6).</li>
+      <li><b>More research:</b> one quiet row with the link to the 2007–2010 papers in Writing (R5 under R1 b), ResearchGate, and placeholders for ORCID, DBLP and Google Scholar (R7 under R1 b).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Screenshots and checks</h2>
+    <p class="lede">In <code>/home/zuacaldeira/.cache/zc-scratch/research-mock/</code> (outside the repo, not committed): <code>research-{en,de,pt}-{390,1440}-{light,dark}.png</code>, full page. The checks are in <code>checks.txt</code> beside them.</p>
+  </section>
+</div>
+<script>
+const f={wide:document.getElementById('f-wide'),phone:document.getElementById('f-phone')};
+const base='research.html';
+function state(){const d=new FormData(document.getElementById('controls'));return Object.fromEntries(d.entries())}
+function load(){const s=state();const h=`#lang=${s.lang}&state=${s.state}&src=${s.src}`;f.wide.src=base+h;f.phone.src=base+h}
+function scale(){const box=document.getElementById('v-wide');const k=Math.min(1,box.clientWidth/1440);f.wide.style.transform=`scale(${k})`;box.style.height=(900*k)+'px'}
+document.getElementById('controls').addEventListener('change',()=>{const s=state();for(const x of Object.values(f))x.contentWindow?.postMessage({zcSet:true,lang:s.lang,state:s.state,src:s.src==='1'},'*')});
+window.addEventListener('resize',scale);
+load();scale();
+</script>
+</html>
