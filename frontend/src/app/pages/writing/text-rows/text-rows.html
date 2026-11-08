@@ -25,7 +25,17 @@
             }
           </div>
           <div class="wr-texts__more">
-            @if (!item.external) {
+            @if (item.external) {
+              <a
+                class="wr-texts__link"
+                [href]="item.href"
+                target="_blank"
+                rel="noopener noreferrer"
+                hreflang="en"
+                >{{ item.label }}<span class="wr-texts__arrow" aria-hidden="true">↗</span
+                ><span class="visually-hidden"> ({{ texts.newTab }})</span></a
+              >
+            } @else {
               <a class="wr-texts__link" [href]="item.href" type="application/pdf" hreflang="en">{{
                 texts.read
               }}</a>

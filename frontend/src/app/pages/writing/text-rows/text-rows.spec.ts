@@ -71,4 +71,31 @@ describe('TextRows', () => {
       },
     ]);
   });
+
+  it('WR-LIST-06: should link a text elsewhere with its own label, in a new tab, and say so in words', () => {
+    const links = [...render('de').querySelectorAll('ul > li')[1].querySelectorAll('a')];
+    expect(
+      links.map((a) => ({
+        name: [...a.childNodes]
+          .filter((node) => !(node instanceof Element && node.getAttribute('aria-hidden') === 'true'))
+          .map((node) => node.textContent)
+          .join('')
+          .replace(/\s+/g, ' ')
+          .trim(),
+        hidden: text(a.querySelector('.visually-hidden')),
+        arrow: text(a.querySelector('[aria-hidden="true"]')),
+        ...attrs(a, 'href', 'target', 'rel', 'hreflang'),
+      })),
+    ).toEqual([
+      {
+        name: 'example.org (new tab de)',
+        hidden: '(new tab de)',
+        arrow: '↗',
+        href: 'https://example.org/article',
+        target: '_blank',
+        rel: 'noopener noreferrer',
+        hreflang: 'en',
+      },
+    ]);
+  });
 });
