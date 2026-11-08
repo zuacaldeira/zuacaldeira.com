@@ -58,6 +58,10 @@ describe('WorkLead', () => {
     expect(protocol.querySelector('figcaption')?.textContent?.trim()).toBe('runCaption de');
   });
 
+  it('SW-LEAD-08 (D2): should have no link: the lab is private and has no write-up yet', () => {
+    expect(render('en').querySelectorAll('a')).toHaveLength(0);
+  });
+
   it('D18: should show the notation in the protocol and live blocks as code that is never translated', () => {
     const el = render('de');
     const paragraphOf = (label: string) =>
