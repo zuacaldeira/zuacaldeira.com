@@ -2,7 +2,7 @@
 // Run `npm run build` first, then `npm run acceptance`. Examples: docs/examples/software.md.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
@@ -21,6 +21,16 @@ const head = (html) => ({
   eyebrow: texts(html, 'p', 'sw-head__eyebrow'),
   h1: texts(html, 'h1'),
   intro: texts(html, 'p', 'sw-head__intro'),
+});
+
+const LANGS = ['en', 'de', 'pt'];
+
+test('SW-PAGE-01: the Software page is built in every language, each with its lang attribute', () => {
+  const missing = LANGS.filter((lang) => !existsSync(join(browser, lang, 'software', 'index.html')));
+  assert.deepEqual(missing, [], 'languages without a built Software page');
+  for (const lang of LANGS) {
+    assert.match(page(`${lang}/software`), new RegExp(`<html lang="${lang}"`), `${lang}/software`);
+  }
 });
 
 test('SW-HEAD-02: the German Software page opens in German: eyebrow, one <h1>, the intro', () => {
