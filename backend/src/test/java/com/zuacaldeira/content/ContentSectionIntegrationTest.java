@@ -59,6 +59,27 @@ class ContentSectionIntegrationTest {
         assertThat(json(response.body())).isEqualTo(json(DE_HEAD));
     }
 
+    @Test
+    @DisplayName("SW-HEAD-P-03 answers 404 for a language the site does not have, even with a stray row for it")
+    void refusesAnUnsupportedLanguageEvenWithAStrayRow() throws Exception {
+        store("software", "head", "fr", DE_HEAD);
+
+        assertMissing(get("/api/content/software/head?lang=fr"));
+    }
+
+    @Test
+    @DisplayName("SW-HEAD-P-03 answers 404 for a section of the Software page that is not stored")
+    void treatsAnUnknownSectionAsMissing() throws Exception {
+        store("software", "head", "en", DE_HEAD);
+
+        assertMissing(get("/api/content/software/nope?lang=en"));
+    }
+
+    private static void assertMissing(HttpResponse<String> response) {
+        assertThat(response.statusCode()).isEqualTo(404);
+        assertThat(response.body()).isEmpty();
+    }
+
     private static Map<String, Object> json(String body) {
         return JsonMapper.builder().build().readValue(body, new TypeReference<Map<String, Object>>() {});
     }

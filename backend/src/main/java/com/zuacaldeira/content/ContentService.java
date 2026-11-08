@@ -27,6 +27,9 @@ class ContentService {
 
     /** A section of `content_section`, its stored JSON as it is (D11). */
     Optional<String> findSection(String page, String section, String lang) {
+        if (!SUPPORTED_LANGUAGES.contains(lang)) {
+            return Optional.empty();
+        }
         return sections.find(page, section, lang);
     }
 }
