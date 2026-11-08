@@ -203,6 +203,44 @@ class SoftwareSeedIntegrationTest {
         });
     }
 
+    /** The spec's English "How I work" (D28's shape). */
+    private static final Map<String, Object> EN_HOW = Map.of(
+            "heading", "How I work",
+            "steps", List.of(
+                    Map.of("title", "Protocol first",
+                            "text", "The behaviour is agreed as examples and written as a session type before any"
+                                    + " code exists."),
+                    Map.of("title", "Test-first, one step at a time",
+                            "text", "Each test is seen to fail for the right reason, then made to pass; then the"
+                                    + " code is tidied and committed."),
+                    Map.of("title", "Every forbidden path shown red",
+                            "text", "What the protocol rules out gets a test too, and each such test is broken once"
+                                    + " on purpose, to prove it bites.")),
+            "caption", "From this site, as a checked global type: the page gives the visitor its links, the"
+                    + " visitor asks nginx, and nginx answers 200. There is no redirect branch (SHELL-04).");
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("languagesOfTheLead")
+    @DisplayName("SW-HOW-04 the seed answers How I work in every language: three steps and a caption, none empty")
+    @SuppressWarnings("unchecked")
+    void answersTheSeededHow(String lang) throws Exception {
+        HttpResponse<String> response = get("/api/content/software/how?lang=" + lang);
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        Map<String, Object> how = JsonMapper.builder().build().readValue(response.body(),
+                new TypeReference<Map<String, Object>>() {});
+        if (lang.equals("en")) {
+            assertThat(how).isEqualTo(EN_HOW);
+        }
+        assertThat(how.keySet()).isEqualTo(EN_HOW.keySet());
+        assertThat((String) how.get("heading")).isNotBlank();
+        assertThat((String) how.get("caption")).isNotBlank();
+        assertThat((List<Map<String, String>>) how.get("steps")).hasSize(3).allSatisfy(step -> {
+            assertThat(step.get("title")).isNotBlank();
+            assertThat(step.get("text")).isNotBlank();
+        });
+    }
+
     static Stream<String> languagesOfTheLead() {
         return Stream.of("en", "de", "pt");
     }

@@ -133,4 +133,26 @@ INSERT INTO content_section (page, section, lang, body) VALUES
                 'stack', 'Angular · Angular Material · SSR prerendering · TypeScript',
                 'links', JSON_ARRAY(
                     JSON_OBJECT('label', 'casa-azul-berlin.de', 'href', 'https://casa-azul-berlin.de'),
-                    JSON_OBJECT('label', 'Repositório', 'href', 'https://github.com/zuacaldeira/ca-website'))))));
+                    JSON_OBJECT('label', 'Repositório', 'href', 'https://github.com/zuacaldeira/ca-website')))))),
+    -- How I work (D28): three steps in the page's order and the caption of the checked global type.
+    ('software', 'how', 'en', JSON_OBJECT(
+        'heading', 'How I work',
+        'steps', JSON_ARRAY(
+            JSON_OBJECT('title', 'Protocol first', 'text', 'The behaviour is agreed as examples and written as a session type before any code exists.'),
+            JSON_OBJECT('title', 'Test-first, one step at a time', 'text', 'Each test is seen to fail for the right reason, then made to pass; then the code is tidied and committed.'),
+            JSON_OBJECT('title', 'Every forbidden path shown red', 'text', 'What the protocol rules out gets a test too, and each such test is broken once on purpose, to prove it bites.')),
+        'caption', 'From this site, as a checked global type: the page gives the visitor its links, the visitor asks nginx, and nginx answers 200. There is no redirect branch (SHELL-04).')),
+    ('software', 'how', 'de', JSON_OBJECT(
+        'heading', 'Wie ich arbeite',
+        'steps', JSON_ARRAY(
+            JSON_OBJECT('title', 'Erst das Protokoll', 'text', 'Das Verhalten wird als Beispiele vereinbart und als Session-Typ aufgeschrieben, bevor es Code gibt.'),
+            JSON_OBJECT('title', 'Testgetrieben, Schritt für Schritt', 'text', 'Jeder Test scheitert erst sichtbar aus dem richtigen Grund, dann wird er grün; dann wird aufgeräumt und committet.'),
+            JSON_OBJECT('title', 'Jeder verbotene Pfad einmal rot', 'text', 'Was das Protokoll ausschließt, bekommt auch einen Test, und jeder solche Test wird einmal absichtlich gebrochen, um zu zeigen, dass er greift.')),
+        'caption', 'Von dieser Website, als geprüfter globaler Typ: Die Seite gibt dem Besucher ihre Links, der Besucher fragt nginx, und nginx antwortet mit 200. Einen Umleitungszweig gibt es nicht (SHELL-04).')),
+    ('software', 'how', 'pt', JSON_OBJECT(
+        'heading', 'Como trabalho',
+        'steps', JSON_ARRAY(
+            JSON_OBJECT('title', 'Primeiro o protocolo', 'text', 'O comportamento é acordado em exemplos e escrito como um tipo de sessão antes de haver código.'),
+            JSON_OBJECT('title', 'Testes primeiro, um passo de cada vez', 'text', 'Cada teste é visto a falhar pela razão certa e depois posto a passar; depois o código é arrumado e vai para commit.'),
+            JSON_OBJECT('title', 'Cada caminho proibido visto a vermelho', 'text', 'O que o protocolo exclui também tem um teste, e cada um desses testes é partido uma vez de propósito, para provar que deteta a falha.')),
+        'caption', 'Deste site, como tipo global verificado: a página dá ao visitante as suas ligações, o visitante pede ao nginx, e o nginx responde 200. Não há ramo de redirecionamento (SHELL-04).'));
