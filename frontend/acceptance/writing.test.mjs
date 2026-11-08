@@ -69,3 +69,24 @@ test('WR-HEAD-02: the German Writing page opens in German: eyebrow, one <h1>, th
     ],
   });
 });
+
+for (const [id, lang, eyebrow, h1, intro] of [
+  [
+    'WR-HEAD-01',
+    'en',
+    'Published work',
+    'Writing',
+    'Papers on session types, and on tools that check code against its specification, newest first. Each one links to where the text lives.',
+  ],
+  [
+    'WR-HEAD-03',
+    'pt',
+    'Publicações',
+    'Textos',
+    'Artigos sobre tipos de sessão e sobre ferramentas que verificam o código face à sua especificação, os mais recentes primeiro. Cada um leva ao sítio onde o texto está.',
+  ],
+]) {
+  test(`${id}: the ${lang} Writing page opens with its eyebrow, one <h1> and the intro`, () => {
+    assert.deepEqual(head(page(`${lang}/writing`)), { eyebrow: [eyebrow], h1: [h1], intro: [intro] });
+  });
+}
