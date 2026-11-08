@@ -1,7 +1,7 @@
 # Examples: Software page
 
 Status: **agreed with the developer on 2026-11-08** (D1–D4 and D6 first; D3's wording, D5, D7, D8
-and D9 answered the same day, then D10 to D16 for the build). The Portuguese copy is a draft nobody
+and D9 answered the same day, then D10 to D16 for the build; D17 to D19 taken in slice 2's plan). The Portuguese copy is a draft nobody
 has read yet: it is built as drafted and reviewed by the developer on the preview (D16).
 
 The Software page in three languages, at `/en/software`, `/de/software` and `/pt/software`.
@@ -67,6 +67,7 @@ language as its example.
 | SW-LEAD-06 | A screenshot shows the live view, light or dark to match the page. | `/en/software` in the browser, light and dark theme | the screenshot is read | exactly one image shows: `reticulab-live-light.png` on a light glaze, `-dark.png` on a dark one; its alt text is `lead.shotAlt` in the page's language; it links to the full-size file; its caption is `lead.shotCaption` | |
 | SW-LEAD-07 | The result says only what is true: in use on this site. | any language | the result is read | `lead.result`; the page makes no claim of better or worse results, and gives no figures for the experiment | |
 | SW-LEAD-08 | The case study has no link to the lab, which is private. | the built pages | the lead's links are read | it has none: no repository, no write-up (D2) | |
+| SW-LEAD-09 | A fresh database, filled with the starting texts, gives the whole case study in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/lead?lang=en`, `de`, `pt` | 200; en is the spec's copy (D19's shape), and de and pt have the same fields, each non-empty | |
 | SW-LEAD-P-01 | A Run line that differs from the checked one is refused. | the built page | its Run line is changed (a label renamed, `WRONG_RED` dropped) or the recorded line changes while the page does not | SW-LEAD-04 goes red | |
 | SW-LEAD-P-02 | English text on a German or Portuguese case study is refused. | the built `/de/software` | an English block is put in | SW-LEAD-03 goes red | |
 | SW-LEAD-P-03 | Notation translated on a German page is refused. | the built `/de/software` | the figure reads `+ROT` or the line `Lauf = …` | SW-LEAD-04 or 05 goes red | |
@@ -243,7 +244,98 @@ Leftovers, not built:
   preview; it is styled from the spec, not measured.
 - **The initial bundle** is 513.03 kB against the 500 kB warning budget (512.27 kB before).
 
+## Slice 2: the lead's text and the Run line
+
+Test list:
+- **Backend:** B1 SW-LEAD-09, the seed's `software/lead` in en, de, pt (added to
+  `SoftwareSeedIntegrationTest`).
+- **Script:** S1 SW-PAGE-09, a lead missing in `pt` stops the snapshot, naming `software`, `lead`,
+  `pt`.
+- **Unit:** U1 `codeSpans()` cuts a text at its backticks into words and notation (D18); U2 it
+  leaves a text without backticks whole; U3 `SessionType` shows its text in a `<pre
+  translate="no">` with its caption; U4 the lead on a German page: kicker, `<h2>`, status (SW-LEAD-01);
+  U5 its five block headings and texts in order, then Stack (SW-LEAD-02); U6 notation in a block is
+  `<code translate="no">` (D18); U7 the protocol block shows the Run line over three lines with
+  `runCaption` (SW-LEAD-04); U8 the lead has no link (SW-LEAD-08).
+- **Acceptance:** A SW-LEAD-01, the outer test (en: the first section after the head); A2 SW-LEAD-02;
+  A3 SW-LEAD-03 (de and pt, every text the copy); A4 SW-LEAD-04 (the Run line in en, de, pt equals
+  `run.st`'s checked line, which is pinned to the agreed one); A5 SW-LEAD-07 (the result, no `%`
+  in the lead); A6 SW-LEAD-08 (no `<a>` in the lead).
+- **Protocol rows:** SW-LEAD-P-01 (in the built page `WRONG_RED` dropped; in `run.st` a label
+  renamed), SW-LEAD-P-02 (an English block on `/de/software`), SW-LEAD-P-03 (`Lauf = …` and
+  `+{ROT: …` on `/de/software`). The figure's half of P-03 comes with slice 3.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1
+        participant DB as MySQL 8 (seed R__software.sql)
+        participant API as Content API
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant ST as docs/notation/run.st (checked in the lab, D5)
+    participant P as dist/…/l/software/index.html
+    T->>API: B1: GET software/lead?lang=l
+    F->>API: GET software/lead?lang=l, for l in en, de, pt
+    API-->>F: 200 lead_l, or 404 → the build stops (S1)
+    F->>NG: snapshot
+    NG->>P: WorkLead (U4–U8): texts, code spans (U1, U2), SessionType (U3) with the Run line
+    T->>ST: read the checked line, pinned to the agreed one
+    T->>P: A–A6; the Run line equals the checked line (A4), P rows
+```
+
+Session type. Convention: a role that a branch never calls just ends there. The Run line is not
+content: like the footer's `Zua = …` it is notation in the template, and only the test reads
+`run.st`.
+
+```
+G = Build → API : get(software, lead, l) .
+    API → Build : { ok200(lead_l) .
+                    Build → Page : prerender(lead_l, run) .
+                    Page → Visitor : lead(kicker, h2, status, blocks[question, built, protocol(run),
+                                          live, result], stack) . end ,
+                    missing404 . Build → CI : fail(software, lead, l) . end }
+  run = checked(run.st), the same for every l
+
+Build ↾   = API!get . API?{ ok200 . Page!prerender . end , missing404 . CI!fail . end }
+Visitor ↾ = Page?lead(…) . end
+Page ↾    = Build?prerender . Visitor!lead(…) . end
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1 test → API | `get`, `ok200(lead_l)` | B1 |
+| 2–3 F → API | `get` × 3, `{ok200, missing404}` | S1 |
+| 5 NG → P | `prerender(lead_l, run)` | U1–U8 |
+| 6 test → run.st | `run = checked(run.st)` | A4 (the pin) |
+| 7 test → P | `lead(kicker, h2, status, blocks, stack)` | A, A2, A3, A5 |
+| 7, the protocol block | `protocol(run)` | A4 |
+| forbidden: `run` ≠ checked | `run = checked(run.st)` | SW-LEAD-P-01 |
+| forbidden: `lead_en` on `l = de` | `ok200(lead_l)` | SW-LEAD-P-02 |
+| forbidden: notation translated | `run` the same for every `l` | SW-LEAD-P-03 |
+| forbidden: blocks out of order | `blocks[…]` in this order | A2 |
+| forbidden: a link in the lead | `lead(…)` carries no link (D2) | A6 |
+
+The build is read-only: no repeat, stale-token or race rows.
+
 ## Decisions
+
+Taken in slice 2's plan on 2026-11-08, following D5, D11 and the spec (the developer may change
+them):
+
+- **D17. `run.st`** holds the Run line as shown on the page, after `#` comment lines that say it
+  is line 10 of the lab's `types/agent/workflow/ext-generic.st` (checked there, D5), not a whole
+  program. reticulateP's parser has no comments; its own fixture loader skips `#` lines and takes
+  the first other line, and the tests read `run.st` the same way. The file is not meant for
+  `reticulatep.cli -f`: on its own, `Code`, `Fix` and `Green` are not defined.
+- **D18. Notation inside a sentence** is written between backticks in the content, as in the
+  spec's copy (`` `&{…}` ``, `` `reticulab serve` ``), and shown as `<code translate="no">`.
+- **D19. `software/lead`** is one object: `kicker`, `title`, `status`, `labels` (`question`,
+  `built`, `protocol`, `live`, `result`, `stack`), `question`, `built`, `built2`, `protocol`,
+  `runCaption`, `live`, `result`, `stack`. The stack is the same in every language. The figure's
+  and the screenshot's texts come with slice 3. The Run line is in the template, not the content.
 
 Agreed with the developer on 2026-11-08:
 
