@@ -34,18 +34,18 @@ its example. "In plain words" says what each case means for a visitor, in Englis
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| WR-PAGE-01 | The Writing page exists in all three languages. | the writing content in en, de and pt | the site is built | `/en/writing/index.html`, `/de/writing/index.html`, `/pt/writing/index.html` exist, with `<html lang="en">`, `"de"`, `"pt"` | |
-| WR-PAGE-02 | Search engines learn that the three pages are one page in three languages. | the built `/de/writing` | it is read | `<link rel="alternate">` for `hreflang` en, de, pt to `https://zuacaldeira.com/{en,de,pt}/writing`, and `x-default` to `/en/writing` | |
-| WR-PAGE-03 | The browser tab names the page in its language. | the built pages | they are read | `<title>` is "Alexandre Zua Caldeira — Writing", "— Texte", "— Textos" | |
+| WR-PAGE-01 | The Writing page exists in all three languages. | the writing content in en, de and pt | the site is built | `/en/writing/index.html`, `/de/writing/index.html`, `/pt/writing/index.html` exist, with `<html lang="en">`, `"de"`, `"pt"` | yes (build and unit, 2026-11-08) |
+| WR-PAGE-02 | Search engines learn that the three pages are one page in three languages. | the built `/de/writing` | it is read | `<link rel="alternate">` for `hreflang` en, de, pt to `https://zuacaldeira.com/{en,de,pt}/writing`, and `x-default` to `/en/writing` | yes (build, 2026-11-08) |
+| WR-PAGE-03 | The browser tab names the page in its language. | the built pages | they are read | `<title>` is "Alexandre Zua Caldeira — Writing", "— Texte", "— Textos" | yes (build and unit, 2026-11-08) |
 | WR-PAGE-04 | The sitemap lists the new pages, and only built ones. | the built site | `sitemap.xml` is read | it lists `https://zuacaldeira.com/{en,de,pt}/writing` beside the 18 pages of SW-PAGE-04, 21 in all, and each is a built page (HOME-PAGE-08); the "page not built" examples of SHELL-04 P-04 and SW-PAGE-P-04 move from `/de/writing` to `/de/nope` | |
 | WR-PAGE-05 | In the web server, the new page opens straight away. | the built site in the web image's nginx | `/en/writing`, `/de/writing`, `/pt/writing` are requested | each answers `200` with no redirect (HOME-PAGE-09); `/de/writing/` answers `301` to `/de/writing` (HOME-PAGE-10) | |
 | WR-PAGE-06 | The menu is complete: Software, Research, Writing, About, in the reader's language. | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`, in that order (SHELL-11; Home and Running leave the menu, D13 in `software.md`); pt "textos" → `/pt/writing` | |
 | WR-PAGE-07 | The header shows Writing as the page you are on. | the built `/pt/writing` | the main navigation is read | its writing link goes to `/pt/writing` and carries `aria-current="page"`; no other link does (D34 in `software.md`) | |
-| WR-PAGE-08 | The language links lead to the same page in the other language. | the built `/de/writing` | its language links are read | `EN` → `/en/writing`, `PT` → `/pt/writing`, `DE` current (SHELL-01, 02 on the new page) | |
-| WR-PAGE-09 | A missing German text stops the build instead of showing English. | no writing content stored for de | the site is built | the build fails, naming page `writing`, the section and `de`; nothing is deployed (as HOME-HERO-06) | |
-| WR-PAGE-10 | Each page downloads only its own text. | the built site | the files `/en/writing` loads at once are read | its own text is among them; none holds the home hero's sentence or the Software lead's title (SW-PAGE-14 on the new page) | |
-| WR-PAGE-P-01 | A Writing page in only one or two languages is refused. | the build | a language's writing page is missing | WR-PAGE-01 goes red, naming the language | |
-| WR-PAGE-P-02 | A link to the Writing page that drops the language is refused. | any built page | a link to `/writing` (no prefix) is read | SHELL-04 goes red (an old path) | |
+| WR-PAGE-08 | The language links lead to the same page in the other language. | the built `/de/writing` | its language links are read | `EN` → `/en/writing`, `PT` → `/pt/writing`, `DE` current (SHELL-01, 02 on the new page) | yes (build, the shell's tests on the three pages, 2026-11-08) |
+| WR-PAGE-09 | A missing German text stops the build instead of showing English. | no writing content stored for de | the site is built | the build fails, naming page `writing`, the section and `de`; nothing is deployed (as HOME-HERO-06) | yes (the snapshot script, 2026-11-08) |
+| WR-PAGE-10 | Each page downloads only its own text. | the built site | the files `/en/writing` loads at once are read | its own text is among them; none holds the home hero's sentence or the Software lead's title (SW-PAGE-14 on the new page) | yes (build and unit, 2026-11-08) |
+| WR-PAGE-P-01 | A Writing page in only one or two languages is refused. | the build | a language's writing page is missing | WR-PAGE-01 goes red, naming the language | yes (break in the build) |
+| WR-PAGE-P-02 | A link to the Writing page that drops the language is refused. | any built page | a link to `/writing` (no prefix) is read | SHELL-04 goes red (an old path) | yes (break in the build) |
 | WR-PAGE-P-03 | Two links marked as the current page are refused. | the built `/pt/writing` | a second menu link carries `aria-current="page"` | WR-PAGE-07 goes red | |
 | WR-PAGE-P-04 | A menu in another order, or with Running back in it, is refused. | the built `/de/home` | the menu reads Forschung before Software, or holds Laufen | WR-PAGE-06 goes red | |
 
@@ -53,13 +53,13 @@ its example. "In plain words" says what each case means for a visitor, in Englis
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| WR-HEAD-01 | The page opens with its name and one sentence about it. | the built `/en/writing` | the head is read | eyebrow "Published work", `<h1>` "Writing", the intro (`head.intro`, en); the page has exactly one `<h1>` | |
-| WR-HEAD-02 | The German page reads in German. | the built `/de/writing` | the head is read | "Veröffentlichungen", "Texte", `head.intro` de | |
-| WR-HEAD-03 | The Portuguese page reads in Portuguese. | the built `/pt/writing` | the head is read | "Publicações", "Textos", `head.intro` pt | |
-| WR-HEAD-04 | When the site asks for the German head, it gets its three texts exactly as stored. | `writing/head` stored for de | `GET /api/content/writing/head?lang=de` | 200 with `{"eyebrow": "Veröffentlichungen", "heading": "Texte", "intro": "Paper über Session-Typen …"}`, the stored JSON as it is | |
-| WR-HEAD-05 | A fresh database, filled with the starting texts, gives the head in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/writing/head?lang=en`, `de`, `pt` | 200 with the spec's copy, each field non-empty | |
-| WR-HEAD-P-01 | English text on the German page's head is refused. | the built `/de/writing` | the English intro is put in | WR-HEAD-02 goes red | |
-| WR-HEAD-P-02 | A language the site does not have, or a section that does not exist, gets nothing. | `writing/head` stored, with a stray `fr` row | `?lang=fr`, or `writing/nope?lang=en` | 404 with an empty body, no fallback (as SW-HEAD-P-03) | |
+| WR-HEAD-01 | The page opens with its name and one sentence about it. | the built `/en/writing` | the head is read | eyebrow "Published work", `<h1>` "Writing", the intro (`head.intro`, en); the page has exactly one `<h1>` | yes (build, 2026-11-08) |
+| WR-HEAD-02 | The German page reads in German. | the built `/de/writing` | the head is read | "Veröffentlichungen", "Texte", `head.intro` de | yes (build and unit, 2026-11-08) |
+| WR-HEAD-03 | The Portuguese page reads in Portuguese. | the built `/pt/writing` | the head is read | "Publicações", "Textos", `head.intro` pt | yes (build, 2026-11-08) |
+| WR-HEAD-04 | When the site asks for the German head, it gets its three texts exactly as stored. | `writing/head` stored for de | `GET /api/content/writing/head?lang=de` | 200 with `{"eyebrow": "Veröffentlichungen", "heading": "Texte", "intro": "Paper über Session-Typen …"}`, the stored JSON as it is | yes (integration, 2026-11-08) |
+| WR-HEAD-05 | A fresh database, filled with the starting texts, gives the head in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/writing/head?lang=en`, `de`, `pt` | 200 with the spec's copy, each field non-empty | yes (integration, 2026-11-08) |
+| WR-HEAD-P-01 | English text on the German page's head is refused. | the built `/de/writing` | the English intro is put in | WR-HEAD-02 goes red | yes (break in the build) |
+| WR-HEAD-P-02 | A language the site does not have, or a section that does not exist, gets nothing. | `writing/head` stored, with a stray `fr` row | `?lang=fr`, or `writing/nope?lang=en` | 404 with an empty body, no fallback (as SW-HEAD-P-03) | yes (integration: green at first, the table is page-agnostic; a break in ContentService) |
 
 ## 3. The list
 
@@ -246,6 +246,40 @@ The refactor R (D13), on the Software page: `G_pre` is slice 1's G of `software.
 with the head drawn by `PageHead`. `Visitor ↾` is identical in both (`Page?page(lang = l, h1,
 links) . end`, the same eyebrow, `<h1>` and intro), so R changes no behaviour; the Software specs and
 acceptance tests hold it.
+
+**Done 2026-11-08** (`bed9007` to `4eb34fe`). Red first, each for its own reason: A `ENOENT` on
+`de/writing/index.html`; B1 `expected: 200 but was: 404` in en, de, pt; S1 "Missing expected
+rejection"; U1 `expected 'APP-NOT-FOUND' to be 'APP-WRITING'`, with the route-list tests red too this
+time (Software's were not run red first); U2 `expected '' to be 'Alexandre Zua Caldeira — writing
+heading de'`; U3 `expected [] to deeply equal [ 'writing eyebrow de' ]`; U4 `NullInjectorError`;
+A7 SHELL-04's D19 test, its example `/de/writing#x` now a built page. Green at first and shown to
+bite, each break in the built page restored from a copy (md5 checked): B2 (the language check
+removed and the query ignoring the section, both WR-HEAD-P-02 rows red), A2 (`pt` moved out:
+WR-PAGE-P-01), A3 (the `pt` alternate to `/pt/home`), A4 (the German title "— Writing"), A5 (the
+German intro on `pt`), A6 (the home hero's sentence in the Writing chunk), A's WR-HEAD-P-01 (the
+English intro on `de`), A7's WR-PAGE-P-02 (a link to `/writing`). R was green before and after:
+the Software specs, the unit suite and the Software acceptance tests on the build.
+
+Results: unit 255 passed, 5 skipped (40 files); scripts 11/11; `acceptance` 63/63;
+`acceptance:nginx` 12/12; backend, one class at a time: `WritingSeedIntegrationTest` 3,
+`ContentSectionIntegrationTest` 6, and the other seed classes with the new seed file
+(`SoftwareSeed` 15, `SharedSeed` 3, `HomeHeroSeed` 3); the build prerenders 26 routes. Not run:
+`HomeHeroIntegrationTest` (untouched, no seed) and the browser tests (slice 3; this slice adds no
+link or control to the pages they read).
+
+Leftovers, not built:
+- **SHELL-12** (`zc-nav-mobile.spec.ts`) timed out in 3 of 8 whole-suite runs today, under a load
+  average of 13 on 8 cores, and passed alone and in the next run. Its `vi.waitFor` waits the
+  default 1 s for focus after the drawer closes. A longer wait there is a small fix, for the
+  developer to decide.
+- **The head at 390, 768 and 1280 px,** in light and dark, on the preview: styled from the
+  Software page's head, not measured.
+- **The Portuguese copy** (D9): "Publicações", "Textos" and the intro, for the developer's review on
+  the preview.
+- **The initial bundle** is 511.49 kB against the 500 kB warning budget (510.65 kB after D20 in
+  `software.md`).
+- **`software.md`'s slice 1 note** still names the classes `sw-head*`; they are `page-head*` since
+  R (D13).
 
 ## Decisions
 

@@ -22,8 +22,9 @@ Build output: `dist/zuacaldeira-com/browser/` (prerendered static HTML).
 
 **Content snapshot.** `npm run content` (`scripts/fetch-content.mjs`) asks the content API for
 every page, section and language and writes one file per page, `src/app/content/generated/<page>.json`
-(git-ignored). Each page's route file (`pages/home/home.routes.ts`, `pages/software/software.routes.ts`)
-imports its own as `@page-content/<page>` and provides it (`HOME_CONTENT`, `SOFTWARE_CONTENT`), so a
+(git-ignored). Each page's route file (`pages/home/home.routes.ts`, `pages/software/software.routes.ts`,
+`pages/writing/writing.routes.ts`) imports its own as `@page-content/<page>` and provides it
+(`HOME_CONTENT`, `SOFTWARE_CONTENT`, `WRITING_CONTENT`), so a
 page downloads only its own text (D20, D21 in `docs/examples/software.md`). Text several pages read
 is a page of its own, `shared` (`shared.json`, `@page-content/shared`, `SHARED_CONTENT`; today the
 paper's labels at `shared/paper`, read by the shared `common/theorem-band/`, D30), provided by each
@@ -60,10 +61,12 @@ src/app/
 
 Routes defined in `src/app/app.routes.ts`. All lazy-loaded:
 - `/` is the prerendered English home itself, not a redirect (D1 in `docs/examples/home.md`)
-- `/en/...`, `/de/...`, `/pt/...`: `home`, `about`, `software`, `research`, `running`, `contact`
-  under each language prefix. The prefix sets the language, `<html lang>` and the `hreflang`
+- `/en/...`, `/de/...`, `/pt/...`: `home`, `about`, `software`, `research`, `writing`, `running`,
+  `contact` under each language prefix. The prefix sets the language, `<html lang>` and the `hreflang`
   alternates. `software` (`docs/examples/software.md`) is in the menu, before Research (D13), and
   in the sitemap (18 pages). The menus mark the page you are on with `aria-current="page"` (D34).
+  `writing` (`docs/examples/writing.md`) is built but not yet in the menu or the sitemap (its
+  slice 3). Both pages' heads are the shared `common/page-head/` (D13 in `writing.md`).
 - `/404` and `**`: the English 404 page; nginx serves its copy `404.html` with status 404
   (HOME-PAGE-06)
 - The old paths (`/home`, `/about`, `/research`, `/running`, `/contact`) answer `301` to their
@@ -166,7 +169,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 39 test files, 255 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 40 test files, 260 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
