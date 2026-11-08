@@ -506,6 +506,42 @@ test('SW-HOW-01: three steps say how the work is done, after More work', () => {
   });
 });
 
+test('SW-HOW-03: the German and Portuguese strip is translated, except the type', () => {
+  assert.deepEqual(
+    { de: howOf(page('de/software')), pt: howOf(page('pt/software')) },
+    {
+      de: {
+        heading: ['Wie ich arbeite'],
+        steps: [
+          ['Erst das Protokoll', 'Das Verhalten wird als Beispiele vereinbart und als Session-Typ aufgeschrieben, bevor es Code gibt.'],
+          [
+            'Testgetrieben, Schritt für Schritt',
+            'Jeder Test scheitert erst sichtbar aus dem richtigen Grund, dann wird er grün; dann wird aufgeräumt und committet.',
+          ],
+          [
+            'Jeder verbotene Pfad einmal rot',
+            'Was das Protokoll ausschließt, bekommt auch einen Test, und jeder solche Test wird einmal absichtlich gebrochen, um zu zeigen, dass er greift.',
+          ],
+        ],
+      },
+      pt: {
+        heading: ['Como trabalho'],
+        steps: [
+          ['Primeiro o protocolo', 'O comportamento é acordado em exemplos e escrito como um tipo de sessão antes de haver código.'],
+          [
+            'Testes primeiro, um passo de cada vez',
+            'Cada teste é visto a falhar pela razão certa e depois posto a passar; depois o código é arrumado e vai para commit.',
+          ],
+          [
+            'Cada caminho proibido visto a vermelho',
+            'O que o protocolo exclui também tem um teste, e cada um desses testes é partido uma vez de propósito, para provar que deteta a falha.',
+          ],
+        ],
+      },
+    },
+  );
+});
+
 const HOW_CAPTIONS = {
   en: 'From this site, as a checked global type: the page gives the visitor its links, the visitor asks nginx, and nginx answers 200. There is no redirect branch (SHELL-04).',
   de: 'Von dieser Website, als geprüfter globaler Typ: Die Seite gibt dem Besucher ihre Links, der Besucher fragt nginx, und nginx antwortet mit 200. Einen Umleitungszweig gibt es nicht (SHELL-04).',
