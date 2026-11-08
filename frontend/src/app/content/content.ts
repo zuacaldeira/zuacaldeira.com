@@ -42,14 +42,26 @@ export interface SoftwareLead {
   readonly stack: string;
 }
 
-/** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
-export interface ContentSnapshot {
-  readonly home: { readonly hero: Readonly<Record<Language, HomeHero>> };
-  readonly software: {
-    readonly head: Readonly<Record<Language, SoftwareHead>>;
-    readonly lead: Readonly<Record<Language, SoftwareLead>>;
-  };
+/** The home page's text, `@page-content/home` (D21). */
+export interface HomeContent {
+  readonly hero: Readonly<Record<Language, HomeHero>>;
 }
 
-/** Provided in app.config.ts from content.generated.json; specs provide their own. */
-export const CONTENT = new InjectionToken<ContentSnapshot>('CONTENT');
+/** The Software page's text, `@page-content/software` (D21). */
+export interface SoftwareContent {
+  readonly head: Readonly<Record<Language, SoftwareHead>>;
+  readonly lead: Readonly<Record<Language, SoftwareLead>>;
+}
+
+/** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
+export interface ContentSnapshot {
+  readonly home: HomeContent;
+  readonly software: SoftwareContent;
+}
+
+/**
+ * Each page's text, provided by its route from `@page-content/<page>`, so a page downloads only
+ * its own (D20, D21); specs provide theirs with `provideTestContent()`.
+ */
+export const HOME_CONTENT = new InjectionToken<HomeContent>('HOME_CONTENT');
+export const SOFTWARE_CONTENT = new InjectionToken<SoftwareContent>('SOFTWARE_CONTENT');

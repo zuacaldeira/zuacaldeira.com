@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { CONTENT } from '../../../content/content';
+import { HOME_CONTENT } from '../../../content/content';
 import { I18nService } from '../../../services/i18n.service';
 import { NavItem } from '../../../models/models';
 import { pagePath } from '../../../models/i18n';
@@ -23,9 +23,9 @@ import { LatticeWall } from './lattice-wall/lattice-wall';
 })
 export class Hero {
   private readonly i18n = inject(I18nService);
-  private readonly content = inject(CONTENT);
+  private readonly content = inject(HOME_CONTENT);
   readonly t = this.i18n.translations;
-  readonly headline = computed(() => this.content.home.hero[this.i18n.language()].headline);
+  readonly headline = computed(() => this.content.hero[this.i18n.language()].headline);
   readonly link = (page: NavItem['page']) => pagePath(this.i18n.language(), page);
 
   private readonly host = inject(ElementRef);

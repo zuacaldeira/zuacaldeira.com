@@ -4,13 +4,18 @@ import { CanActivateChildFn, Routes } from '@angular/router';
 import { Language, LANGUAGES } from './models/i18n';
 import { I18nService } from './services/i18n.service';
 
-const loadHome = () => import('./pages/home/home').then((m) => m.Home);
+// Pages with text from the content API load it with their route, each only its own (D20, D21).
+// Each route has its own inline `import()`: the build maps a route to the chunks it preloads by
+// its own call, and a shared loader function left the home routes without a preload.
 const loadNotFound = () => import('./pages/not-found/not-found').then((m) => m.NotFound);
 
 const pages: Routes = [
-  { path: 'home', loadComponent: loadHome },
+  { path: 'home', loadChildren: () => import('./pages/home/home.routes').then((m) => m.HOME_ROUTES) },
   { path: 'about', loadComponent: () => import('./pages/about/about').then((m) => m.About) },
-  { path: 'software', loadComponent: () => import('./pages/software/software').then((m) => m.Software) },
+  {
+    path: 'software',
+    loadChildren: () => import('./pages/software/software.routes').then((m) => m.SOFTWARE_ROUTES),
+  },
   { path: 'research', loadComponent: () => import('./pages/research/research').then((m) => m.Research) },
   // 'work' and 'paedagogik' are hidden until their content is fine-tuned. The page
   // components live on under pages/ — restore the routes here and the nav entries in
@@ -51,7 +56,7 @@ export const routes: Routes = [
     path: '',
     pathMatch: 'full',
     canActivate: [() => showInLanguage('en', '/home')],
-    loadComponent: loadHome,
+    loadChildren: () => import('./pages/home/home.routes').then((m) => m.HOME_ROUTES),
   },
   ...LANGUAGES.map((lang) => ({
     path: lang,

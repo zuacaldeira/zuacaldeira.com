@@ -1,6 +1,13 @@
 import { Provider } from '@angular/core';
 import { Language } from '../models/i18n';
-import { CONTENT, ContentSnapshot, HomeHero, SoftwareHead, SoftwareLead } from './content';
+import {
+  ContentSnapshot,
+  HOME_CONTENT,
+  HomeHero,
+  SOFTWARE_CONTENT,
+  SoftwareHead,
+  SoftwareLead,
+} from './content';
 
 const heroIn = (lang: Language): HomeHero => ({
   headline: `headline ${lang}`,
@@ -52,4 +59,7 @@ export const TEST_CONTENT: ContentSnapshot = {
   software: { head: inEvery(softwareHeadIn), lead: inEvery(softwareLeadIn) },
 };
 
-export const provideTestContent = (): Provider => ({ provide: CONTENT, useValue: TEST_CONTENT });
+export const provideTestContent = (): Provider => [
+  { provide: HOME_CONTENT, useValue: TEST_CONTENT.home },
+  { provide: SOFTWARE_CONTENT, useValue: TEST_CONTENT.software },
+];

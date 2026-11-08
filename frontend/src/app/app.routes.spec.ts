@@ -1,6 +1,6 @@
 import { provideTestContent } from './content/content.testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
+import { provideRouter, Router, Routes } from '@angular/router';
 import { DOCUMENT, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -35,7 +35,8 @@ describe('App Routes', () => {
     it('should lazy-load all page routes', () => {
       const pageRoutes = routes.flatMap((r) => r.children ?? []);
       for (const route of pageRoutes) {
-        expect(route.loadComponent, `${route.path} should use loadComponent`).toBeDefined();
+        // A page with text from the content API loads a route file with it (D21).
+        expect(route.loadComponent ?? route.loadChildren, `${route.path} should be lazy`).toBeDefined();
       }
     });
   });
@@ -50,9 +51,10 @@ describe('App Routes', () => {
       ['contact', 'Contact'],
     ])('%s should resolve to %s component', async (path, componentName) => {
       const route = routes.find((r) => r.path === 'en')?.children?.find((r) => r.path === path);
-      expect(route?.loadComponent).toBeDefined();
-      const component = await (route!.loadComponent as () => Promise<unknown>)();
-      expect(component).toBeTruthy();
+      const component = route?.loadComponent
+        ? await (route.loadComponent as () => Promise<unknown>)()
+        : (await (route!.loadChildren as () => Promise<Routes>)())[0].component;
+      expect(component, componentName).toBeTruthy();
     });
   });
 
@@ -101,6 +103,24 @@ describe('App Routes', () => {
       await RouterTestingHarness.create(`/${lang}/home`);
       expect(TestBed.inject(I18nService).language()).toBe(lang);
       expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe(lang);
+    });
+  });
+
+  describe('page text (D21)', () => {
+    // No content at the root: each page's route brings its own, `@page-content/<page>` (in the
+    // specs the small test files of content/testing/).
+    beforeEach(() => {
+      window.matchMedia = vi.fn().mockReturnValue({ matches: false } as MediaQueryList);
+      TestBed.configureTestingModule({ providers: [provideRouter(routes)] });
+    });
+
+    it.each([
+      ['/de/software', 'h1', 'heading de'],
+      ['/pt/home', 'h1', 'headline pt'],
+      ['/', 'h1', 'headline en'],
+    ])('SW-PAGE-14: %s brings its own text with its route', async (url, selector, text) => {
+      const harness = await RouterTestingHarness.create(url);
+      expect(harness.routeNativeElement?.querySelector(selector)?.textContent?.trim()).toBe(text);
     });
   });
 

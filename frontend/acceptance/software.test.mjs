@@ -296,6 +296,41 @@ test('SW-LEAD-08: the case study has no link, as the lab is private and has no w
   assert.deepEqual(links, { en: [], de: [], pt: [] });
 });
 
+// The scripts a page loads at once: its <script src> and modulepreload files, and every file they
+// import statically, followed through (`import("…")` is loaded later, so it is left out).
+const loadedAtOnce = (route) => {
+  const html = page(route);
+  const queue = [...html.matchAll(/<script src="([^"]+\.js)"|<link rel="modulepreload" href="([^"]+\.js)"/g)].map(
+    ([, src, href]) => src ?? href,
+  );
+  const seen = new Set();
+  while (queue.length) {
+    const file = queue.shift();
+    if (seen.has(file)) continue;
+    seen.add(file);
+    const code = readFileSync(join(browser, file), 'utf8');
+    for (const [, imported] of code.matchAll(/(?:from|import)\s*"\.\/([^"]+\.js)"/g)) queue.push(imported);
+  }
+  return [...seen];
+};
+
+const holding = (route, sentence) =>
+  loadedAtOnce(route).filter((file) => readFileSync(join(browser, file), 'utf8').includes(sentence));
+
+test('SW-PAGE-14 (D20): each page downloads only its own text', () => {
+  // Its own text is there, so the files read are the ones that hold page text.
+  assert.notDeepEqual(holding('en/home', 'I build software, and prove its protocols hold.'), []);
+  assert.notDeepEqual(holding('en/software', 'A monitor that holds a coding agent to its TDD protocol'), []);
+  assert.deepEqual(
+    {
+      // ASCII only: the minifier escapes characters such as `·` in the scripts.
+      home: holding('en/home', 'A monitor that holds a coding agent to its TDD protocol'),
+      software: holding('en/software', 'I build software, and prove its protocols hold.'),
+    },
+    { home: [], software: [] },
+  );
+});
+
 for (const [id, lang, eyebrow, intro] of [
   [
     'SW-HEAD-01',

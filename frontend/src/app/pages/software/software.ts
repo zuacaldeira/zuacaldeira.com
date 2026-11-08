@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { CONTENT } from '../../content/content';
+import { SOFTWARE_CONTENT } from '../../content/content';
 import { I18nService } from '../../services/i18n.service';
 import { WorkLead } from './work-lead/work-lead';
 
@@ -12,7 +12,7 @@ import { WorkLead } from './work-lead/work-lead';
   styleUrl: './software.css',
 })
 export class Software {
-  readonly head = inject(CONTENT).software.head[inject(I18nService).language()];
+  readonly head = inject(SOFTWARE_CONTENT).head[inject(I18nService).language()];
 
   constructor() {
     // The name is not translated, so it stays here, not in the content (D9, D11).

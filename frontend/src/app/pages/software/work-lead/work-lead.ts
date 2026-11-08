@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { SessionType } from '../../../common/session-type/session-type';
 import { codeSpans } from '../../../content/code-spans';
-import { CONTENT } from '../../../content/content';
+import { SOFTWARE_CONTENT } from '../../../content/content';
 import { I18nService } from '../../../services/i18n.service';
 
 /**
@@ -21,7 +21,7 @@ const RUN_LINE =
   styleUrl: './work-lead.css',
 })
 export class WorkLead {
-  readonly lead = inject(CONTENT).software.lead[inject(I18nService).language()];
+  readonly lead = inject(SOFTWARE_CONTENT).lead[inject(I18nService).language()];
   readonly protocol = codeSpans(this.lead.protocol);
   readonly live = codeSpans(this.lead.live);
   readonly run = RUN_LINE;

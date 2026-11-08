@@ -6,7 +6,10 @@
     "outDir": "./out-tsc/spec",
     "types": [
       "vitest/globals"
-    ]
+    ],
+    "paths": {
+      "@page-content/*": ["./src/app/content/testing/*"]
+    }
   },
   "include": [
     "src/**/*.d.ts",
