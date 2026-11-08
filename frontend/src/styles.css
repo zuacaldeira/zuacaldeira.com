@@ -71,6 +71,15 @@
   --zc-foot-fg: var(--zc-bg-warm);
   --zc-foot-gold: #d9a94a;
   --zc-foot-on-gold: #1a1205;
+
+  /* The theorem band (home-spec.md, "Theorem band colours", D32): the accent with on-accent text on
+     light glazes (about 9.8:1), the raised surface with heading text on dark ones (about 12:1); the
+     filled button swaps them. SW-PROOF-05 C measures them in the browser. */
+  --zc-on-accent: #f7fafc;
+  --zc-band-bg: var(--zc-accent);
+  --zc-band-fg: var(--zc-on-accent);
+  --zc-band-btn: var(--zc-on-accent);
+  --zc-band-btn-fg: var(--zc-accent);
 }
 
 /* Night glaze: the tile fires darker, the blue lifts to read against it. */
@@ -107,6 +116,14 @@ html.dark-theme {
 
   --zc-foot-bg: var(--zc-bg-light);
   --zc-foot-fg: var(--zc-text-heading);
+
+  /* Dark glazes: the lifted accent would glare as a slab, so the band takes the raised surface; the
+     filled button is the accent with on-accent text (about 7.5:1). */
+  --zc-on-accent: #0b1526;
+  --zc-band-bg: var(--zc-bg-light);
+  --zc-band-fg: var(--zc-text-heading);
+  --zc-band-btn: var(--zc-accent);
+  --zc-band-btn-fg: var(--zc-on-accent);
 }
 
 /* Global reset */

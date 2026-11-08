@@ -683,8 +683,9 @@ The page is read-only: no repeat, stale-token or race rows.
 
 Taken in slice 6's plan on 2026-11-08, following the home spec (the developer may change them):
 
-- **D32. The band's colours** are new tokens, as `home-spec.md` names them: `--zc-on-accent`,
-  `--band-bg`, `--band-fg`, `--band-btn`, `--band-btn-fg` (light: the accent with on-accent text;
+- **D32. The band's colours** are new tokens, as `home-spec.md` names them, prefixed like the
+  footer's (`--zc-foot-*`): `--zc-on-accent`, `--zc-band-bg`, `--zc-band-fg`, `--zc-band-btn`,
+  `--zc-band-btn-fg` (light: the accent with on-accent text;
   dark: the raised surface with heading text), checked in the browser by C. Its buttons are plain
   `<a>`, 44 px tall, radius 2 px, filled and outlined, not Material (home spec, `Button`).
 - **D33. The home route** provides `SHARED_CONTENT` when the home band is built; today the home

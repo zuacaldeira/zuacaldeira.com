@@ -1,9 +1,9 @@
-/* The theorem band (home-spec.md, "Theorem band colours", D32): the --band-* tokens, set by the
+/* The theorem band (home-spec.md, "Theorem band colours", D32): the --zc-band-* tokens, set by the
    theme. Notation in IBM Plex Mono, the statement in Fraunces. */
 .band {
   padding-block: clamp(40px, 6vw, 80px);
-  background: var(--band-bg);
-  color: var(--band-fg);
+  background: var(--zc-band-bg);
+  color: var(--zc-band-fg);
 }
 
 .band__in {
@@ -54,24 +54,24 @@
   align-items: center;
   min-height: 44px;
   padding-inline: var(--zc-space-4);
-  border: 2px solid var(--band-btn);
+  border: 2px solid var(--zc-band-btn);
   border-radius: 2px;
   font-weight: 500;
   text-decoration: none;
 }
 
 .band__btn--filled {
-  background: var(--band-btn);
-  color: var(--band-btn-fg);
+  background: var(--zc-band-btn);
+  color: var(--zc-band-btn-fg);
 }
 
 .band__btn--outlined {
   background: transparent;
-  color: var(--band-fg);
+  color: var(--zc-band-fg);
 }
 
 .band__btn:focus-visible {
-  outline: 2px solid var(--band-fg);
+  outline: 2px solid var(--zc-band-fg);
   outline-offset: 2px;
 }
 
