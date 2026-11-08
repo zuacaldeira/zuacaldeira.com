@@ -53,6 +53,11 @@
   color: var(--zc-text-body);
 }
 
+.sw-how__type {
+  margin-top: var(--zc-space-8);
+  max-width: 48rem;
+}
+
 @media (min-width: 900px) {
   .sw-how__steps {
     grid-template-columns: repeat(3, 1fr);

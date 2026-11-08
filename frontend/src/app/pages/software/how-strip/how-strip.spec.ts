@@ -31,4 +31,14 @@ describe('HowStrip', () => {
       ['03', 'step 3 de', 'sentence 3 de'],
     ]);
   });
+
+  it('SW-HOW-02: should show the links protocol exactly as checked, one line, never translated, with its caption', () => {
+    const el = render('pt');
+    const pre = el.querySelector('pre');
+    expect(pre?.getAttribute('translate')).toBe('no');
+    expect(pre?.textContent).toBe(
+      'Page -> Visitor : {links: Visitor -> Nginx : {get: Nginx -> Visitor : {ok200: end}}}',
+    );
+    expect(text(pre?.closest('figure')?.querySelector('figcaption'))).toBe('how caption pt');
+  });
 });
