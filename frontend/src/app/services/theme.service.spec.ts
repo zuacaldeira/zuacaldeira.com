@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { PLATFORM_ID, RendererFactory2 } from '@angular/core';
 import { ThemeService } from './theme.service';
+import themeRule from './theme-rule.cases.json';
 
 function createService(platformId: string = 'browser'): ThemeService {
   TestBed.configureTestingModule({
@@ -14,6 +15,21 @@ describe('ThemeService', () => {
     localStorage.clear();
     document.documentElement.classList.remove('dark-theme');
     window.matchMedia = vi.fn().mockReturnValue({ matches: false } as MediaQueryList);
+  });
+
+  // The site's rule, one table shared with the page head's script (THEME-10, D25): the build test
+  // runs that script over the same cases (frontend/acceptance/theme.test.mjs).
+  describe('THEME-10: the rule shared with the page head', () => {
+    it.each(themeRule)(
+      'saved $saved on a dark device: $deviceDark gives dark: $dark',
+      ({ saved, deviceDark, dark }) => {
+        if (saved !== null) localStorage.setItem('zc-theme', saved);
+        window.matchMedia = vi.fn().mockReturnValue({ matches: deviceDark } as MediaQueryList);
+        const service = createService();
+        expect(service.isDarkMode()).toBe(dark);
+        expect(document.documentElement.classList.contains('dark-theme')).toBe(dark);
+      },
+    );
   });
 
   describe('default state', () => {

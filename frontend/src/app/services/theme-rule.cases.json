@@ -1,0 +1,9 @@
+[
+  { "saved": "dark", "deviceDark": false, "dark": true },
+  { "saved": "dark", "deviceDark": true, "dark": true },
+  { "saved": "light", "deviceDark": true, "dark": false },
+  { "saved": "light", "deviceDark": false, "dark": false },
+  { "saved": null, "deviceDark": true, "dark": true },
+  { "saved": null, "deviceDark": false, "dark": false },
+  { "saved": "blue", "deviceDark": true, "dark": true }
+]
