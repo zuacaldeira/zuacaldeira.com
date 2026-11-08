@@ -3,11 +3,12 @@ import { Title } from '@angular/platform-browser';
 import { SOFTWARE_CONTENT } from '../../content/content';
 import { I18nService } from '../../services/i18n.service';
 import { WorkLead } from './work-lead/work-lead';
+import { WorkRows } from './work-rows/work-rows';
 
 /** The Software page (docs/examples/software.md; build spec docs/mockups/software/software-spec.md). */
 @Component({
   selector: 'app-software',
-  imports: [WorkLead],
+  imports: [WorkLead, WorkRows],
   templateUrl: './software.html',
   styleUrl: './software.css',
 })

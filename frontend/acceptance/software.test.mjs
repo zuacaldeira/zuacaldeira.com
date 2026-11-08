@@ -379,6 +379,47 @@ test('SW-LEAD-06: the lead holds the light and the dark screenshot, with the pag
   }
 });
 
+// The "More work" section of a page: its heading and its rows, each an <article>.
+const work = (html) => sections(html).find(({ cls }) => cls.split(' ').includes('sw-work'))?.inner ?? '';
+const workRows = (html) =>
+  [...work(html).matchAll(/<article\b[^>]*>(.*?)<\/article>/gs)].map(([, row]) => ({
+    kicker: texts(row, 'p', 'sw-work__kicker')[0],
+    title: texts(row, 'h3')[0],
+    text: texts(row, 'p', 'sw-work__text')[0],
+    stack: texts(row, 'p', 'sw-work__stack')[0],
+  }));
+
+const EN_ROWS = [
+  {
+    kicker: 'Verification tool',
+    title: 'reticulateP',
+    text: 'Builds the state space of a session type and checks that it forms a lattice. It turned the ICE 2026 paper’s 108 benchmark protocols into lattices, is one of the paper’s two independent tool implementations, and checks every session type on this site.',
+    stack: 'Python',
+  },
+  {
+    kicker: 'Web application',
+    title: 'Kita Dienstplan',
+    text: 'Shift planning for the team of Kita Casa Azul, a bilingual Portuguese-German kindergarten in Berlin: an Angular front end and a Spring Boot back end, with role-based access.',
+    stack: 'Angular · Spring Boot · Java · PostgreSQL',
+  },
+  {
+    kicker: 'Website',
+    title: 'Casa Azul website',
+    text: 'The website of Kita Casa Azul, the bilingual Portuguese-German kindergarten in Berlin, prerendered with Angular so every page loads as plain HTML.',
+    stack: 'Angular · Angular Material · SSR prerendering · TypeScript',
+  },
+];
+
+test('SW-WORK-01: three more pieces follow the lead, in a fixed order', () => {
+  const html = page('en/software');
+  assert.deepEqual(
+    sections(html).map(({ cls }) => cls).slice(0, 3),
+    ['sw-head', 'sw-lead', 'sw-work'],
+    'More work does not follow the lead',
+  );
+  assert.deepEqual({ heading: texts(work(html), 'h2'), rows: workRows(html) }, { heading: ['More work'], rows: EN_ROWS });
+});
+
 // The scripts a page loads at once: its <script src> and modulepreload files, and every file they
 // import statically, followed through (`import("…")` is loaded later, so it is left out).
 const loadedAtOnce = (route) => {
