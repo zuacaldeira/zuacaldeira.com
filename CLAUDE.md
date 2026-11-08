@@ -33,8 +33,9 @@ URL. Specs never read the file: they use `provideTestContent()` from `content/co
 - **Angular 21** with SSR prerendering (`@angular/ssr`), no runtime server — all routes prerendered to static HTML
 - **Standalone components** throughout (no NgModules)
 - **Lazy-loaded routes** via `loadComponent()` in `app.routes.ts`
-- **Content:** the home hero comes from the content API through the build's snapshot; the rest
-  still lives in `ContentService` and the i18n files
+- **Content:** the home hero (table `home_hero`) and the Software page (table `content_section`,
+  one JSON object per page, section and language) come from the content API through the build's
+  snapshot; the rest still lives in `ContentService` and the i18n files
 
 ### Folder Layout
 
@@ -51,8 +52,10 @@ src/app/
 
 Routes defined in `src/app/app.routes.ts`. All lazy-loaded:
 - `/` is the prerendered English home itself, not a redirect (D1 in `docs/examples/home.md`)
-- `/en/...`, `/de/...`, `/pt/...`: `home`, `about`, `research`, `running`, `contact` under each
-  language prefix. The prefix sets the language, `<html lang>` and the `hreflang` alternates.
+- `/en/...`, `/de/...`, `/pt/...`: `home`, `about`, `software`, `research`, `running`, `contact`
+  under each language prefix. The prefix sets the language, `<html lang>` and the `hreflang`
+  alternates. `software` is being built slice by slice (`docs/examples/software.md`): it has no
+  navigation link and no sitemap entry until its last slice.
 - `/404` and `**`: the English 404 page; nginx serves its copy `404.html` with status 404
   (HOME-PAGE-06)
 - The old paths (`/home`, `/about`, `/research`, `/running`, `/contact`) answer `301` to their
@@ -151,7 +154,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 30 test files, 217 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 31 test files, 221 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
