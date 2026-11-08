@@ -341,7 +341,16 @@ html.sources .src{display:block}
 .how__steps li{display:flex;flex-direction:column;gap:var(--zc-space-2);counter-increment:s;padding-top:var(--zc-space-4);border-top:2px solid var(--zc-azul)}
 .how__steps li::before{content:counter(s);font-family:var(--zc-font-mono);font-size:.875rem;color:var(--zc-ochre-text)}
 .how__steps h3{font-family:var(--zc-font-heading);font-weight:600;font-size:1.25rem;line-height:1.2;color:var(--zc-text-heading)}
-.how__type{margin-top:var(--zc-space-8);display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);gap:var(--zc-space-6);align-items:center}
+.how__type{margin-top:var(--zc-space-8);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:var(--zc-space-6);align-items:center}
+/* The checked global type is one line; it may wrap, at spaces only. */
+pre.st[data-st="links"]{white-space:pre-wrap;overflow-wrap:normal;word-break:normal}
+.shot{margin:0;display:flex;flex-direction:column;gap:8px}
+.shot__a{display:block;border:1px solid var(--zc-border-light);box-shadow:var(--zc-shadow-md);line-height:0}
+.shot img{display:block;width:100%;height:auto}
+.shot img.shot--dark{display:none}
+html[data-mode="dark"] .shot--light{display:none}
+html[data-mode="dark"] .shot--dark{display:block}
+.shot figcaption{font-family:var(--zc-font-mono);font-size:.75rem;color:var(--zc-text-muted)}
 .how pre.st{background:var(--zc-bg-warm)}
 .read .how__steps{grid-template-columns:minmax(0,1fr)}
 .read .how__type{grid-template-columns:minmax(0,1fr)}
@@ -534,7 +543,10 @@ function paint(){
   r.setProperty('--foot-fg',dark?th.hex.heading:th.hex.bg);
   r.setProperty('--band-bg',dark?th.hex.raised:th.hex.accent);r.setProperty('--band-fg',dark?th.hex.heading:th.hex.onAccent);r.setProperty('--band-btn',dark?th.hex.accent:th.hex.onAccent);r.setProperty('--band-btn-fg',dark?th.hex.onAccent:th.hex.accent);
   document.documentElement.style.colorScheme=dark?'dark':'light';
+  document.documentElement.dataset.mode=th.mode;
+  document.querySelectorAll('[data-img]').forEach(a=>a.href=IMG_BASE+(dark?'dark':'light')+'.png');
 }
+const IMG_BASE='../../../frontend/public/assets/software/reticulab-live-';
 const q0=new URLSearchParams(location.hash.slice(1));
 for(const k of['lang','state','opt'])if(q0.get(k))view[k]=q0.get(k);
 if(q0.get('t'))view.minutes=+q0.get('t');
@@ -593,12 +605,15 @@ const ICON={living:'<path d="M12 2 22 12 12 22 2 12zm0 3.4V18.6L18.6 12z"/>',lig
 const ST={
  run:'Run = &{runTest: +{RED: Code,\n                   WRONG_RED: Fix,\n                   GREEN: Green}}',
  zua:'Zua = &{software: end}\n   || &{research: end}\n   || &{running: end}',
- links:'G_post =\n  Page → Visitor : links(hrefs) .\n  Visitor → Nginx : get(href) .\n  Nginx → Visitor : ok200(page) .\n  end'
+ /* Exactly the checked line (reticulateP 7d20ba416, as a global type); it wraps by CSS only. */
+ links:'Page -> Visitor : {links: Visitor -> Nginx : {get: Nginx -> Visitor : {ok200: end}}}'
 };
+const IMG='../../../frontend/public/assets/software/reticulab-live-';
 /* Where each piece of content comes from (shown with "Sources"). Lab notes are English only. */
 const SRC={
  lab:'Zua, 2026-11-08, facts from zuacaldeira/tdd-lab (private)',
- run:'tdd-lab workflow type, excerpt as Zua gave it; Code, Fix, Green are further equations',
+ run:'tdd-lab types/agent/workflow/ext-generic.st, line 10 word for word; checked with reticulateP 7d20ba416 (2026-11-08): 56 states, 89 transitions, lattice',
+ shot:'reticulab serve, session 68601dc0, while it built HOME-PAGE-05 (Zua, 2026-11-08); frontend/public/assets/software/',
  site:'Zua, 2026-11-08: shell and footer built under the monitor; docs/examples/shell.md',
  ret:'docs/tdd.md; frontend/scripts/lattice-wall/README.md; home band evidence line (home.html)',
  zua:'docs/notation/zua.st; shell.md D33: checked, 8 states, 12 transitions, lattice',
@@ -606,7 +621,8 @@ const SRC={
  casa:'ContentService.projects; i18n/en.ts about text',
  emb:'ContentService.projects (no links there)',
  how:'docs/tdd.md and docs/examples/*.md: examples first, red for the right reason, P rows shown to bite',
- links:'docs/examples/shell.md, SHELL-04, G_post (multiparty notation of the examples)',
+ links:'SHELL-04 links protocol as a global type, checked with reticulateP 7d20ba416 (Zua, 2026-11-08)',
+ intro:'draft by ui-design-peer from the hero line (HOME-HERO-03), for Zua to review',
  proof:'home band (home.html): Theorem 15 and the evidence line'
 };
 
@@ -618,7 +634,10 @@ pt:{skip:'Saltar para o conteúdo principal',nav:[['software','software'],['rese
 const PAGE={
 en:{
  eyebrow:'Selected work', h1:'Software',
- phTag:'Placeholder', intro:'One sentence on how I build, for Zua to write.',
+ phTag:'Placeholder', draftTag:'Draft', intro:'Software I have built, and how I hold it to its protocol: written down first, checked, then built test-first.',
+ runCap:'A line of the workflow type, word for word.',
+ shotAlt:'The monitor’s live view while the agent built this site’s redirects for old links: on the left, what is being built, in plain sentences, each marked “passed at once” or “failed first, then passed”; on the right, the agent’s map of its 56-state type, at its end.',
+ shotCap:'The live view while the agent built this site’s redirects for old links.',
  onPage:'On this page',
  qL:'The question', bL:'What I built', pL:'The protocol behind it', vL:'The live view', rL:'The result', sL:'Stack',
  k1:'Case study · AI agents', t1:'A monitor that holds a coding agent to its TDD protocol', s1:'In use on this site since November 2026',
@@ -654,14 +673,17 @@ en:{
  h1t:'Protocol first', h1d:'The behaviour is agreed as examples and written as a session type before any code exists.',
  h2t:'Test-first, one step at a time', h2d:'Each test is seen to fail for the right reason, then made to pass; then the code is tidied and committed.',
  h3t:'Every forbidden path shown red', h3d:'What the protocol rules out gets a test too, and each such test is broken once on purpose, to prove it bites.',
- howCap:'From this site: the links protocol once the redirect branch was removed (SHELL-04). Every link now answers 200 directly.',
+ howCap:'From this site, as a checked global type: the page gives the visitor its links, the visitor asks nginx, and nginx answers 200. There is no redirect branch (SHELL-04).',
  proofK:'Why the protocols hold', proofP:'From the paper — Session Type State Spaces Form Lattices · ICE 2026',
  evidence:'Checked on 108 benchmark protocols from networking, databases, distributed systems and AI. Mechanised in Lean 4, with two independent tool implementations.',
  read:'Read the paper (PDF)', allResearch:'All research'
 },
 de:{
  eyebrow:'Ausgewählte Arbeiten', h1:'Software',
- phTag:'Platzhalter', intro:'Ein Satz dazu, wie ich baue; schreibt Zua.',
+ phTag:'Platzhalter', draftTag:'Entwurf', intro:'Software, die ich gebaut habe, und wie ich sie an ihr Protokoll binde: zuerst aufgeschrieben, geprüft, dann testgetrieben gebaut.',
+ runCap:'Eine Zeile des Ablauftyps, wörtlich.',
+ shotAlt:'Die Live-Ansicht des Monitors, während der Agent die Weiterleitungen alter Links dieser Website baute: links, was gebaut wird, in einfachen Sätzen, jeweils als „sofort bestanden“ oder „erst gescheitert, dann bestanden“ markiert; rechts die Karte des Agenten in seinem Typ mit 56 Zuständen, an dessen Ende.',
+ shotCap:'Die Live-Ansicht, während der Agent die Weiterleitungen alter Links dieser Website baute.',
  onPage:'Auf dieser Seite',
  qL:'Die Frage', bL:'Was ich gebaut habe', pL:'Das Protokoll dahinter', vL:'Die Live-Ansicht', rL:'Das Ergebnis', sL:'Stack',
  k1:'Fallstudie · KI-Agenten', t1:'Ein Monitor, der einen Coding-Agenten an sein TDD-Protokoll bindet', s1:'Auf dieser Website im Einsatz seit November 2026',
@@ -697,7 +719,7 @@ de:{
  h1t:'Erst das Protokoll', h1d:'Das Verhalten wird als Beispiele vereinbart und als Session-Typ aufgeschrieben, bevor es Code gibt.',
  h2t:'Testgetrieben, Schritt für Schritt', h2d:'Jeder Test scheitert erst sichtbar aus dem richtigen Grund, dann wird er grün; dann wird aufgeräumt und committet.',
  h3t:'Jeder verbotene Pfad einmal rot', h3d:'Was das Protokoll ausschließt, bekommt auch einen Test, und jeder solche Test wird einmal absichtlich gebrochen, um zu zeigen, dass er greift.',
- howCap:'Von dieser Website: das Link-Protokoll, nachdem der Umleitungszweig entfernt wurde (SHELL-04). Jeder Link antwortet jetzt direkt mit 200.',
+ howCap:'Von dieser Website, als geprüfter globaler Typ: Die Seite gibt dem Besucher ihre Links, der Besucher fragt nginx, und nginx antwortet mit 200. Einen Umleitungszweig gibt es nicht (SHELL-04).',
  proofK:'Warum die Protokolle halten', proofP:'Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026',
  evidence:'Geprüft an 108 Benchmark-Protokollen aus Netzwerken, Datenbanken, verteilten Systemen und KI. In Lean 4 mechanisiert, mit zwei unabhängigen Werkzeug-Implementierungen.',
  read:'Paper lesen (PDF)', allResearch:'Zur Forschung'
@@ -723,16 +745,20 @@ const runFig=()=>`<figure class="runfig"><svg viewBox="0 0 400 230" role="img" a
  <text class="halo" x="262" y="128">+GREEN</text><text x="262" y="128">+GREEN</text>
  <text x="50" y="214" text-anchor="middle">Code</text><text x="200" y="214" text-anchor="middle">Fix</text><text x="350" y="214" text-anchor="middle">Green</text>
 </svg><figcaption>${P.fig1}</figcaption></figure>`;
-const shotBox=()=>`<div class="phbox"><span class="ann">${P.phTag}</span><span>${P.shot1}</span></div>`;
+const shotBox=()=>`<figure class="shot"><a href="${IMG}light.png" class="shot__a" data-img>
+ <img class="shot--light" src="${IMG}light.png" width="1440" height="900" alt="${P.shotAlt}">
+ <img class="shot--dark" src="${IMG}dark.png" width="1440" height="900" alt="${P.shotAlt}"></a>
+ <figcaption>${P.shotCap}</figcaption>${src('shot')}</figure>`;
+const draft=x=>`<span class="ph"><span class="ann">${P.draftTag}</span>${x}</span>`;
 const head=(toc)=>`<section class="sw-head"><div class="col">
- <p class="eyebrow">${P.eyebrow}</p><h1>${P.h1}</h1><p class="intro">${ph(P.intro)}</p>
+ <p class="eyebrow">${P.eyebrow}</p><h1>${P.h1}</h1><p class="intro">${draft(P.intro)}</p>${src('intro')}
  ${toc?`<nav aria-label="${P.onPage}"><ul class="toc">${[['w-monitor',P.k1.split(' · ')[0]+': '+(LG==='de'?'TDD-Monitor':'TDD monitor')],['w-ret',P.t2],['w-kita',P.t3],['w-casa',P.t4],['how',P.howH]].map(([id,x])=>`<li><a href="#${id}">${x}</a></li>`).join('')}</ul></nav>`:''}
 </div></section>`;
-const leadLinks=()=>`<div class="links">${ph(P.post1)}</div>`;
+const leadLinks=()=>'';
 const leadBlocks=(withFig)=>`<div class="blocks">
  ${blk(P.qL,`<p>${P.q1}</p>`)}
  ${blk(P.bL,`<p>${P.b1}</p><p style="margin-top:var(--zc-space-3)">${P.b1b}</p>`)}
- ${blk(P.pL,`${pre('run')}${src('run')}<p style="margin-top:var(--zc-space-3)">${P.p1}</p>`)}
+ ${blk(P.pL,`${pre('run')}<p class="stcap">${P.runCap}</p>${src('run')}<p style="margin-top:var(--zc-space-3)">${P.p1}</p>`)}
  ${withFig?runFig():''}
  ${blk(P.vL,`<p>${P.v1}</p>`)}
  ${blk(P.rL,`<p>${P.r1}</p>${src('site')}`)}
@@ -741,7 +767,7 @@ const leadBlocks=(withFig)=>`<div class="blocks">
 </div>`;
 const lnk=(href,x)=>`<a href="${href}">${x}</a>`;
 const others=()=>[
- {id:'w-ret',k:P.k2,t:P.t2,d:P.d2,q:P.q2,r:P.r2,stack:P.stack2,s:'ret',links:lnk(PDF,P.paper)+ph(P.repoPh),extra:`${pre('zua')}<p class="stcap">${P.c2}</p>${src('zua')}`},
+ {id:'w-ret',k:P.k2,t:P.t2,d:P.d2,q:P.q2,r:P.r2,stack:P.stack2,s:'ret',links:lnk(PDF,P.paper),extra:`${pre('zua')}<p class="stcap">${P.c2}</p>${src('zua')}`},
  {id:'w-kita',k:P.k3,t:P.t3,d:P.d3,q:P.q3,r:P.r3,stack:P.stack3,s:'kita',links:lnk('https://github.com/zuacaldeira/kita-dienstplan',P.repo)},
  {id:'w-casa',k:P.k4,t:P.t4,d:P.d4,q:P.q4,r:P.r4,stack:P.stack4,s:'casa',links:lnk('https://casa-azul-berlin.de',P.live)+lnk('https://github.com/zuacaldeira/ca-website',P.repo)}
 ];
@@ -773,7 +799,7 @@ function opt1(){
    <div><p>${o.d}</p>${src(o.s)}</div>
    <div class="row__meta"><p class="stack">${o.stack}</p><div class="links">${o.links}</div></div>
   </li>`).join('')}
- </ul><p class="also">${P.also}</p>${src('emb')}</div></section>
+ </ul></div></section>
  ${how()}${proof()}`;
 }
 function opt2(){
