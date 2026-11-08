@@ -371,6 +371,20 @@ Decided by the developer on 2026-11-08, after slice 2 (its leftover on the initi
   before, on slice 2's build: the initial bundle is 519.27 kB (the build's "Initial total", raw),
   `main-*.js` 88.5 kB, and `main-*.js` holds the home hero and the Software page's texts in all three
   languages, so `/en/home` downloads the Software page's text too.
+- **D21. How (2026-11-08): the short name `@page-content/<page>`.** The snapshot script writes one
+  file per page (`src/app/content/generated/<page>.json`, git-ignored). `tsconfig.app.json` points
+  `@page-content/*` at those files, `tsconfig.spec.json` at small test files
+  (`src/app/content/testing/<page>.ts`, from today's test text), so the specs and CI's order stay as
+  they are. Each page's route file imports its text and provides it to the page (`HOME_CONTENT`,
+  `SOFTWARE_CONTENT`). Its test: SW-PAGE-14, below.
+
+| ID | English |
+|----|---------|
+| SW-PAGE-14 | Each page downloads only its own text: the home page carries none of the Software page's, and the Software page none of the home page's. |
+
+| ID | Given | When | Then | Covered |
+|----|-------|------|------|---------|
+| SW-PAGE-14 | the built site | the files `/en/home` and `/en/software` load at once are read (`<script>`, `modulepreload`, and their static imports) | none of `/en/home`'s holds a Software text ("Case study · AI agents"), none of `/en/software`'s the home hero's sentence ("I build software, and prove its protocols hold.") | |
 
 Agreed with the developer on 2026-11-08:
 
