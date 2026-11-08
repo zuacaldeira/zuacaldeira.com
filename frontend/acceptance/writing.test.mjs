@@ -31,6 +31,34 @@ const head = (html) => ({
 
 const LANGS = ['en', 'de', 'pt'];
 
+// The page's sections, by class, in page order.
+const sections = (html) =>
+  [...html.matchAll(/<section\b[^>]*class="([^"]*)"[^>]*>(.*?)<\/section>/gs)].map(([, cls, inner]) => ({
+    cls,
+    inner,
+  }));
+
+// The list (D14): its texts, each <li> of its <ul>.
+const list = (html) => sections(html).find(({ cls }) => cls.split(' ').includes('wr-texts'))?.inner ?? '';
+const items = (html) => [...list(html).matchAll(/<li\b[^>]*>(.*?)<\/li>/gs)].map(([, inner]) => inner);
+
+const TITLES = [
+  'Session Type State Spaces Form Lattices',
+  'Modular Session Types for Distributed Object-Oriented Programming',
+  'Dynamic Interfaces',
+  'ConGu, Checking Java Classes Against Property-Driven Algebraic Specifications',
+];
+
+test('WR-LIST-01 (D3): the four papers follow the head, newest first', () => {
+  const html = page('en/writing');
+  assert.deepEqual(
+    sections(html).map(({ cls }) => cls).slice(0, 2),
+    ['page-head', 'wr-texts'],
+    'the list does not follow the head',
+  );
+  assert.deepEqual(items(html).map((item) => texts(item, 'h3')[0]), TITLES);
+});
+
 test('WR-PAGE-01: the Writing page is built in every language, each with its lang attribute', () => {
   const missing = LANGS.filter((lang) => !existsSync(join(browser, lang, 'writing', 'index.html')));
   assert.deepEqual(missing, [], 'languages without a built Writing page');
