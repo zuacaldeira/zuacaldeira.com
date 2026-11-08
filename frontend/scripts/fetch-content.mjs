@@ -2,7 +2,10 @@
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
-const SECTIONS = [['home', 'hero']];
+const SECTIONS = [
+  ['home', 'hero'],
+  ['software', 'head'],
+];
 const LANGUAGES = ['en', 'de', 'pt'];
 
 export async function fetchContent(api) {
