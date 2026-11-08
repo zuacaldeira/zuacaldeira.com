@@ -75,6 +75,38 @@ class ContentSectionIntegrationTest {
         assertMissing(get("/api/content/software/nope?lang=en"));
     }
 
+    private static final String DE_WRITING_HEAD = """
+            {"eyebrow": "Veröffentlichungen", "heading": "Texte", "intro": "Paper über Session-Typen und über \
+            Werkzeuge, die Code gegen seine Spezifikation prüfen, die neuesten zuerst. Jeder Eintrag führt dorthin, \
+            wo der Text liegt."}""";
+
+    @Test
+    @DisplayName("WR-HEAD-04 answers the stored German head of the Writing page as it is")
+    void answersTheStoredWritingHead() throws Exception {
+        store("writing", "head", "de", DE_WRITING_HEAD);
+
+        HttpResponse<String> response = get("/api/content/writing/head?lang=de");
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(json(response.body())).isEqualTo(json(DE_WRITING_HEAD));
+    }
+
+    @Test
+    @DisplayName("WR-HEAD-P-02 answers 404 for the Writing head in a language the site does not have, even with a stray row")
+    void refusesTheWritingHeadInAnUnsupportedLanguage() throws Exception {
+        store("writing", "head", "fr", DE_WRITING_HEAD);
+
+        assertMissing(get("/api/content/writing/head?lang=fr"));
+    }
+
+    @Test
+    @DisplayName("WR-HEAD-P-02 answers 404 for a section of the Writing page that is not stored")
+    void treatsAnUnknownWritingSectionAsMissing() throws Exception {
+        store("writing", "head", "en", DE_WRITING_HEAD);
+
+        assertMissing(get("/api/content/writing/nope?lang=en"));
+    }
+
     private static void assertMissing(HttpResponse<String> response) {
         assertThat(response.statusCode()).isEqualTo(404);
         assertThat(response.body()).isEmpty();
