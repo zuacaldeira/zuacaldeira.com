@@ -33,6 +33,17 @@ test('SW-PAGE-01: the Software page is built in every language, each with its la
   }
 });
 
+test('SW-PAGE-02: the German Software page links to its version in every language, English as default', () => {
+  const alternates = [...page('de/software').matchAll(/<link rel="alternate" hreflang="([^"]*)" href="([^"]*)">/g)]
+    .map(([, hreflang, href]) => `${hreflang} ${href}`);
+  assert.deepEqual(alternates, [
+    'en https://zuacaldeira.com/en/software',
+    'de https://zuacaldeira.com/de/software',
+    'pt https://zuacaldeira.com/pt/software',
+    'x-default https://zuacaldeira.com/en/software',
+  ]);
+});
+
 test('SW-HEAD-02: the German Software page opens in German: eyebrow, one <h1>, the intro', () => {
   const html = page('de/software');
   assert.match(html, /<html lang="de"/);
