@@ -12,9 +12,17 @@ export interface HomeHero {
   readonly latticeCaption: string;
 }
 
+/** One language's head of the Software page, `GET /api/content/software/head?lang=xx` (D11). */
+export interface SoftwareHead {
+  readonly eyebrow: string;
+  readonly heading: string;
+  readonly intro: string;
+}
+
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
 export interface ContentSnapshot {
   readonly home: { readonly hero: Readonly<Record<Language, HomeHero>> };
+  readonly software: { readonly head: Readonly<Record<Language, SoftwareHead>> };
 }
 
 /** Provided in app.config.ts from content.generated.json; specs provide their own. */
