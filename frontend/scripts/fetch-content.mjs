@@ -8,6 +8,7 @@ const SECTIONS = [
   ['software', 'head'],
   ['software', 'lead'],
   ['software', 'work'],
+  ['software', 'how'],
 ];
 const LANGUAGES = ['en', 'de', 'pt'];
 

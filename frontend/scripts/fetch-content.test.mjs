@@ -12,6 +12,7 @@ const heroIn = (lang) => ({ headline: `headline ${lang}`, lede: `lede ${lang}` }
 const headIn = (lang) => ({ eyebrow: `eyebrow ${lang}`, heading: 'Software', intro: `intro ${lang}` });
 const leadIn = (lang) => ({ kicker: `kicker ${lang}`, labels: { question: `question ${lang}` } });
 const workIn = (lang) => ({ heading: `heading ${lang}`, rows: [{ id: 'reticulatep' }] });
+const howIn = (lang) => ({ heading: `heading ${lang}`, steps: [{ title: `title ${lang}` }] });
 
 // Answers GET /api/content/{page}/{section}?lang=xx from `stored`; anything else is 404.
 async function fakeApi(stored) {
@@ -33,6 +34,7 @@ test('the snapshot holds every section of every language as the API answers it',
       head: { en: headIn('en'), de: headIn('de'), pt: headIn('pt') },
       lead: { en: leadIn('en'), de: leadIn('de'), pt: leadIn('pt') },
       work: { en: workIn('en'), de: workIn('de'), pt: workIn('pt') },
+      how: { en: howIn('en'), de: howIn('de'), pt: howIn('pt') },
     },
   };
   const api = await fakeApi(stored);
@@ -83,6 +85,19 @@ test('SW-PAGE-09: a Software work missing in de stops the build, naming page, se
 
   await assert.rejects(fetchContent(api.url), {
     message: 'No content for page software, section work, language de (404)',
+  });
+});
+
+test('SW-PAGE-09: a Software how missing in pt stops the build, naming page, section and language', async (t) => {
+  const all = (make) => ({ en: make('en'), de: make('de'), pt: make('pt') });
+  const api = await fakeApi({
+    home: { hero: all(heroIn) },
+    software: { head: all(headIn), lead: all(leadIn), work: all(workIn), how: { en: howIn('en'), de: howIn('de') } },
+  });
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'No content for page software, section how, language pt (404)',
   });
 });
 
