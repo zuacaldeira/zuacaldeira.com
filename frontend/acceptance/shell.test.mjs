@@ -74,12 +74,14 @@ test('SHELL-04: every link inside the site on every built page keeps its languag
   assert.deepEqual([...new Set(wrong)], []);
 });
 
-// The language links: every `<a>` with `hreflang`, as "hreflang href", with " current" when it
-// carries `aria-current`. The header's codes and the footer's names give the same lines.
+// The language links: every `<a>` with `hreflang` in a `LanguageLinks`, as "hreflang href", with
+// " current" when it carries `aria-current`. The header's codes and the footer's names give the same
+// lines. Other links may carry `hreflang` too: the Writing page's papers say they are English.
 const languageLinks = (html) =>
   [
     ...new Set(
-      [...html.matchAll(/<a\b[^>]*>/g)]
+      [...html.matchAll(/<app-language-links\b[^>]*>(.*?)<\/app-language-links>/gs)]
+        .flatMap(([, inner]) => [...inner.matchAll(/<a\b[^>]*>/g)])
         .map(([tag]) => tag)
         .filter((tag) => /\shreflang="/.test(tag))
         .map((tag) => {
