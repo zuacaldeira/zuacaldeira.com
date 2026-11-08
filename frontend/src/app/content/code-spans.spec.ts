@@ -10,4 +10,14 @@ describe('codeSpans', () => {
       { text: ').', code: false },
     ]);
   });
+
+  it('D18: should keep a text without backticks whole, and add no empty words around notation', () => {
+    expect(codeSpans('A line of the workflow type, word for word.')).toEqual([
+      { text: 'A line of the workflow type, word for word.', code: false },
+    ]);
+    expect(codeSpans('`reticulab serve`, a small web app')).toEqual([
+      { text: 'reticulab serve', code: true },
+      { text: ', a small web app', code: false },
+    ]);
+  });
 });
