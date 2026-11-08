@@ -70,6 +70,14 @@ test('WR-PAGE-06 (SHELL-11): the menu reads Software, Research, Writing, About, 
   );
 });
 
+test('WR-PAGE-07 (D34 in software.md): the menu shows Textos as the page you are on, and only it', () => {
+  const links = menu(page('pt/writing'));
+  assert.deepEqual(
+    links.filter((link) => link.includes('/pt/writing') || link.endsWith('(current)')),
+    ['Textos → /pt/writing (current)'],
+  );
+});
+
 test('WR-LIST-01 (D3): the four papers follow the head, newest first', () => {
   const html = page('en/writing');
   assert.deepEqual(

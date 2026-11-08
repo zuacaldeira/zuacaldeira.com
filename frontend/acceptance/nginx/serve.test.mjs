@@ -73,7 +73,7 @@ const sitemapPaths = () => {
 
 test('HOME-PAGE-09: every URL in the sitemap answers 200 with no redirect', async () => {
   const paths = sitemapPaths();
-  assert.equal(paths.length, 18, 'the sitemap does not list the 18 pages (SW-PAGE-04)');
+  assert.equal(paths.length, 21, 'the sitemap does not list the 21 pages (SW-PAGE-04, WR-PAGE-04)');
   for (const path of paths) await assertServedDirectly(path);
 });
 
@@ -106,6 +106,14 @@ test('SW-PAGE-06: the Software page opens straight away in every language; with 
     assert.ok(html.includes(`<html lang="${lang}"`), `/${lang}/software is not the ${lang} page`);
   }
   await assertMovedTo('/de/software/', '/de/software');
+});
+
+test('WR-PAGE-05: the Writing page opens straight away in every language; with a slash, one 301', async () => {
+  for (const lang of ['en', 'de', 'pt']) {
+    const html = await assertServedDirectly(`/${lang}/writing`);
+    assert.ok(html.includes(`<html lang="${lang}"`), `/${lang}/writing is not the ${lang} page`);
+  }
+  await assertMovedTo('/de/writing/', '/de/writing');
 });
 
 test('HOME-PAGE-05: the old /home answers 301 to /en/home', async () => {
