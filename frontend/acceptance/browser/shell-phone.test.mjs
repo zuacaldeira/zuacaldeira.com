@@ -201,23 +201,23 @@ const readMenu = (page) =>
   });
 
 const MENU = {
-  en: { name: 'Menu', nav: 'Main', labels: ['Home', 'About', 'Software', 'Research', 'Running', 'Contact'] },
+  en: { name: 'Menu', nav: 'Main', labels: ['Software', 'Research', 'Writing', 'About', 'Contact'] },
   de: {
     name: 'Menü',
     nav: 'Hauptnavigation',
-    labels: ['Startseite', 'Über mich', 'Software', 'Forschung', 'Laufen', 'Kontakt'],
+    labels: ['Software', 'Forschung', 'Texte', 'Über mich', 'Kontakt'],
   },
   pt: {
     name: 'Menu',
     nav: 'Navegação principal',
-    labels: ['Início', 'Sobre', 'Software', 'Investigação', 'Corrida', 'Contacto'],
+    labels: ['Software', 'Investigação', 'Textos', 'Sobre', 'Contacto'],
   },
 };
-// Software before Research since slice 7 of the Software page (D13, SW-PAGE-10).
-const PAGES = ['home', 'about', 'software', 'research', 'running', 'contact'];
+// SHELL-11 and D16 in writing.md: the desktop menu's four pages, then Contact.
+const PAGES = ['software', 'research', 'writing', 'about', 'contact'];
 
 for (const lang of ['en', 'de', 'pt']) {
-  test(`SHELL-08 A1: on a phone, /${lang}/home's menu slides in from the right, named, with six links, each 44 px high`, async () => {
+  test(`SHELL-08 A1: on a phone, /${lang}/home's menu slides in from the right, named, with five links, each 44 px high`, async () => {
     const menu = await withMenu(`/${lang}/home`, readMenu);
     assert.deepEqual(
       {
