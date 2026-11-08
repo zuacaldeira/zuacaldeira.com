@@ -65,24 +65,24 @@ its example. "In plain words" says what each case means for a visitor, in Englis
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| WR-LIST-01 | The four papers are listed, newest first. | the built `/en/writing` | the list after the head is read | a `<ul>` of four texts, in order: Session Type State Spaces Form Lattices (2026), Modular Session Types for Distributed Object-Oriented Programming (2010), Dynamic Interfaces (2009), ConGu, Checking Java Classes Against Property-Driven Algebraic Specifications (2007) (D3) | |
-| WR-LIST-02 | Each text shows its year, kind, title, authors and venue. | the same | each text is read | the spec's table: year, kind (`texts.kinds.*`, en), `<h3>` title, the authors in the order published, the venue as "short · full" | |
-| WR-LIST-03 | The author's own name stands out in each author list. | the same | the authors are read | exactly one name per text is in `<b>`: "Alexandre Zua Caldeira", "Alexandre Z. Caldeira", "Alexandre Z. Caldeira", "Alexandre Caldeira", as published | |
-| WR-LIST-04 | The newest paper says it is the camera-ready copy, to appear in EPTCS. | any language | the texts are read | only the ICE text has a note: en "Camera-ready · to appear in EPTCS", de "Druckfassung · erscheint in EPTCS", pt "Versão final · a publicar na EPTCS" | |
-| WR-LIST-05 | The ICE paper opens as a PDF from this site. | any language | the ICE text's link is read | exactly one link, labelled `texts.read` (en "Read (PDF)", de "Lesen (PDF)", pt "Ler (PDF)"), to `/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf` from the site root, same tab, `hreflang="en"`; the file is in the build | |
-| WR-LIST-06 | The older papers link to where they are published, in a new tab, and say so. | any language | the other three links are read | POPL → `https://doi.org/10.1145/1706299.1706335` "ACM Digital Library (DOI)"; FOOL → `https://eprints.gla.ac.uk/47911/` "eprints.gla.ac.uk"; ConGu → `https://repositorio.ulisboa.pt/handle/10451/14164` "repositorio.ulisboa.pt"; each `target="_blank"`, `rel="noopener noreferrer"`, `hreflang="en"`, its name ending with the page language's `texts.newTab` ("öffnet in einem neuen Tab" on `/de/writing`), the `↗` hidden from screen readers | |
-| WR-LIST-07 | On the German page, the labels are German; titles, names and venues stay as published. | the built `/de/writing` | the list is read | kinds "Workshop-Paper", "Konferenz-Paper", "Technischer Bericht"; titles, authors, venues, years and link targets identical to `/en/writing`; each title `translate="no"` and `lang="en"` | |
-| WR-LIST-08 | The Portuguese page does the same in Portuguese. | the built `/pt/writing` | the list is read | kinds "Artigo de workshop", "Artigo de conferência", "Relatório técnico"; the rest as WR-LIST-07 | |
-| WR-LIST-09 | German and Portuguese readers are told each paper is in English. | `/de/writing`, `/pt/writing` | each text is read | each of the four shows "Auf Englisch" (de) or "Em inglês" (pt); `/en/writing` shows no such line (D10) | |
-| WR-LIST-10 | A text shows no summary or abstract. | any language | the texts are read | no abstract text from `ContentService.publications` and no other sentence than the fields above (D4) | |
-| WR-LIST-11 | The training papers are not on the page. | any language | the page is read | none of the four `facharbeiten` titles or PDFs appear (D2) | |
-| WR-LIST-12 | When the site asks for the Portuguese list, it gets its labels and the four texts as stored. | `writing/texts` stored for pt | `GET /api/content/writing/texts?lang=pt` | 200 with the stored JSON as it is (D11's shape) | |
-| WR-LIST-13 | A fresh database, filled with the starting texts, gives the list in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/writing/texts?lang=en`, `de`, `pt` | 200; en is the spec's copy and table; de and pt have the same four items with the same ids, years, titles, authors, venues and targets, every label non-empty | |
-| WR-LIST-P-01 | A different order, or a fifth text, is refused. | the built page | ConGu is moved first, or a training paper is added | WR-LIST-01 goes red | |
-| WR-LIST-P-02 | A translated title or a translated venue is refused. | the built `/de/writing` | the title reads "Zustandsräume von Session-Typen bilden Verbände" | WR-LIST-07 goes red | |
-| WR-LIST-P-03 | English labels on a German page are refused. | the built `/de/writing` | a kind reads "Workshop paper" | WR-LIST-07 goes red | |
-| WR-LIST-P-04 | An outside link that does not say it opens a new tab is refused. | the built `/de/writing` | the hidden "(öffnet in einem neuen Tab)" is taken out of the FOOL link | WR-LIST-06 goes red | |
-| WR-LIST-P-05 | An abstract put back under a text is refused. | the built page | the POPL abstract's first sentence is put in | WR-LIST-10 goes red | |
+| WR-LIST-01 | The four papers are listed, newest first. | the built `/en/writing` | the list after the head is read | a `<ul>` of four texts, in order: Session Type State Spaces Form Lattices (2026), Modular Session Types for Distributed Object-Oriented Programming (2010), Dynamic Interfaces (2009), ConGu, Checking Java Classes Against Property-Driven Algebraic Specifications (2007) (D3) | yes (build and unit, 2026-11-08) |
+| WR-LIST-02 | Each text shows its year, kind, title, authors and venue. | the same | each text is read | the spec's table: year, kind (`texts.kinds.*`, en), `<h3>` title, the authors in the order published, the venue as "short · full" | yes (build and unit, 2026-11-08) |
+| WR-LIST-03 | The author's own name stands out in each author list. | the same | the authors are read | exactly one name per text is in `<b>`: "Alexandre Zua Caldeira", "Alexandre Z. Caldeira", "Alexandre Z. Caldeira", "Alexandre Caldeira", as published | yes (build and unit, 2026-11-08) |
+| WR-LIST-04 | The newest paper says it is the camera-ready copy, to appear in EPTCS. | any language | the texts are read | only the ICE text has a note: en "Camera-ready · to appear in EPTCS", de "Druckfassung · erscheint in EPTCS", pt "Versão final · a publicar na EPTCS" | yes (build and unit, 2026-11-08) |
+| WR-LIST-05 | The ICE paper opens as a PDF from this site. | any language | the ICE text's link is read | exactly one link, labelled `texts.read` (en "Read (PDF)", de "Lesen (PDF)", pt "Ler (PDF)"), to `/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf` from the site root, same tab, `hreflang="en"`; the file is in the build | yes (build and unit, 2026-11-08) |
+| WR-LIST-06 | The older papers link to where they are published, in a new tab, and say so. | any language | the other three links are read | POPL → `https://doi.org/10.1145/1706299.1706335` "ACM Digital Library (DOI)"; FOOL → `https://eprints.gla.ac.uk/47911/` "eprints.gla.ac.uk"; ConGu → `https://repositorio.ulisboa.pt/handle/10451/14164` "repositorio.ulisboa.pt"; each `target="_blank"`, `rel="noopener noreferrer"`, `hreflang="en"`, its name ending with the page language's `texts.newTab` ("öffnet in einem neuen Tab" on `/de/writing`), the `↗` hidden from screen readers | yes (build and unit, 2026-11-08) |
+| WR-LIST-07 | On the German page, the labels are German; titles, names and venues stay as published. | the built `/de/writing` | the list is read | kinds "Workshop-Paper", "Konferenz-Paper", "Technischer Bericht"; titles, authors, venues, years and link targets identical to `/en/writing`; each title `translate="no"` and `lang="en"` | yes (build and unit, 2026-11-08) |
+| WR-LIST-08 | The Portuguese page does the same in Portuguese. | the built `/pt/writing` | the list is read | kinds "Artigo de workshop", "Artigo de conferência", "Relatório técnico"; the rest as WR-LIST-07 | yes (build, 2026-11-08) |
+| WR-LIST-09 | German and Portuguese readers are told each paper is in English. | `/de/writing`, `/pt/writing` | each text is read | each of the four shows "Auf Englisch" (de) or "Em inglês" (pt); `/en/writing` shows no such line (D10) | yes (build and unit, 2026-11-08) |
+| WR-LIST-10 | A text shows no summary or abstract. | any language | the texts are read | no abstract text from `ContentService.publications` and no other sentence than the fields above (D4) | yes (build, 2026-11-08) |
+| WR-LIST-11 | The training papers are not on the page. | any language | the page is read | none of the four `facharbeiten` titles or PDFs appear (D2) | yes (build, 2026-11-08) |
+| WR-LIST-12 | When the site asks for the Portuguese list, it gets its labels and the four texts as stored. | `writing/texts` stored for pt | `GET /api/content/writing/texts?lang=pt` | 200 with the stored JSON as it is (D11's shape) | yes (integration, 2026-11-08) |
+| WR-LIST-13 | A fresh database, filled with the starting texts, gives the list in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/writing/texts?lang=en`, `de`, `pt` | 200; en is the spec's copy and table; de and pt have the same four items with the same ids, years, titles, authors, venues and targets, every label non-empty | yes (integration, 2026-11-08) |
+| WR-LIST-P-01 | A different order, or a fifth text, is refused. | the built page | ConGu is moved first, or a training paper is added | WR-LIST-01 goes red | yes (break in the build) |
+| WR-LIST-P-02 | A translated title or a translated venue is refused. | the built `/de/writing` | the title reads "Zustandsräume von Session-Typen bilden Verbände" | WR-LIST-07 goes red | yes (break in the build) |
+| WR-LIST-P-03 | English labels on a German page are refused. | the built `/de/writing` | a kind reads "Workshop paper" | WR-LIST-07 goes red | yes (break in the build) |
+| WR-LIST-P-04 | An outside link that does not say it opens a new tab is refused. | the built `/de/writing` | the hidden "(öffnet in einem neuen Tab)" is taken out of the FOOL link | WR-LIST-06 goes red | yes (break in the build) |
+| WR-LIST-P-05 | An abstract put back under a text is refused. | the built page | the POPL abstract's first sentence is put in | WR-LIST-10 goes red | yes (break in the build) |
 
 ## In the browser (after the build, `npm run acceptance:browser`)
 
@@ -382,6 +382,40 @@ API ↾     = Build?get . Build!{ ok200 . end , missing404 . end }
 | forbidden: a sentence not in the list's fields | `list[…]` carries only the fields | WR-LIST-P-05 |
 
 The page is read-only: no repeat, stale-token or race rows.
+
+**Done 2026-11-08** (`4e249c3` to `45358f5`). Red first, each for its own reason: A on slice 1's
+build ("the list does not follow the head"); B1 `expected: 200 but was: 404` in en, de, pt; S1
+"Missing expected rejection"; U1 no `<h2>` (after a stub); U2 no `<b>`; U3 no note; U4 no link; U5
+no outside link; U6 no `lang` and no `translate="no"`; U7 no `APP-TEXT-ROWS`. Green at first and
+shown to bite, each break in a built page restored from a copy (md5 checked): B2 (the service made
+to read the English row: WR-LIST-12 red), A's WR-LIST-P-01 (ConGu first; a fifth text), A2 (the POPL
+abstract under its text: WR-LIST-P-05, both A2 tests red; a co-author in `<b>`), A3 (the English
+note on `pt`), A4 (`target="_blank"` on the German PDF link), A5 (WR-LIST-P-04), A6 (WR-LIST-P-02,
+the German title; WR-LIST-P-03, "Workshop paper" on `de`), A7 (a training PDF on `pt`).
+
+Found on the way: **SHELL-02** read every link with `hreflang` as a language link, and went red on
+`/en/writing` once the papers carried `hreflang="en"` (as the spec asks). It now reads the links in
+`LanguageLinks` only (`6b41de7`), shown to bite (PT on `/de/writing` to `/pt/home`). The other
+readers of `hreflang` (SHELL-04's `siteLinks`, the footer, the phone bar) see no paper link.
+
+Results: unit 263 passed, 5 skipped (41 files); scripts 12/12; `acceptance` 71/71;
+`acceptance:nginx` 12/12; backend, one class at a time: `WritingSeedIntegrationTest` 6,
+`ContentSectionIntegrationTest` 7; the build prerenders 26 routes, initial bundle 511.49 kB (as
+slice 1: the list comes with its route). Not run: the other seed classes (every seed-profile test
+loads all seed files, and `WritingSeedIntegrationTest` loaded them with the new one; their rows are
+untouched), and the browser tests (slice 3).
+
+Leftovers, not built:
+- **The list at 390, 768 and 1280 px,** in light and dark, on the preview: styled from the spec
+  (`text-rows.css`), not measured; its 44 px links and contrast are slice 3's browser checks
+  (WR-PAGE-12, WR-LIST-14).
+- **The Portuguese labels** (D9): the kinds, "Em inglês", "Ler (PDF)", "abre num novo separador"
+  and the ICE note "Versão final · a publicar na EPTCS", for the developer's review on the preview.
+- **SHELL-12** (`zc-nav-mobile.spec.ts`) failed in 3 of 11 whole-suite runs in slice 2 under a load of 8
+  to 10, and passed on each rerun. `f0cf247` lengthened the browser test's wait, not this unit
+  spec's: its `vi.waitFor` still waits the default 1 s. A longer wait there is the developer's call.
+- **The local build lacks `404.html`** until it is copied as `build-site.yml` does;
+  `acceptance:nginx` says so and stops. Not a bug, a step to remember.
 
 ## Decisions
 
