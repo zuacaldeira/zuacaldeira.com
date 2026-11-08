@@ -44,4 +44,20 @@ describe('WorkLead', () => {
     expect(texts(block('label result de'), 'p')).toEqual(['result de']);
     expect(texts(block('label stack de'), 'p')).toEqual(['Python · pytest']);
   });
+
+  it('D18: should show the notation in the protocol and live blocks as code that is never translated', () => {
+    const el = render('de');
+    const paragraphOf = (label: string) =>
+      [...el.querySelectorAll('.sw-lead__block')]
+        .find((b) => b.querySelector('h3')?.textContent?.trim() === label)
+        ?.querySelector('p') as HTMLElement;
+    const protocol = paragraphOf('label protocol de');
+    const live = paragraphOf('label live de');
+    const code = (p: HTMLElement) =>
+      [...p.querySelectorAll('code')].map((c) => `${c.getAttribute('translate')} ${c.textContent}`);
+    expect(code(protocol)).toEqual(['no &{…}', 'no +{…}']);
+    expect(protocol.textContent).toBe('protocol de &{…} and +{…}');
+    expect(code(live)).toEqual(['no reticulab serve']);
+    expect(live.textContent).toBe('reticulab serve live de');
+  });
 });

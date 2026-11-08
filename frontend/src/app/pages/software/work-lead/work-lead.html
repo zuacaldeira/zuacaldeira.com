@@ -15,11 +15,19 @@
     </div>
     <div class="sw-lead__block">
       <h3 class="sw-lead__label">{{ lead.labels.protocol }}</h3>
-      <p>{{ lead.protocol }}</p>
+      <p>
+        @for (span of protocol; track $index) {
+          @if (span.code) {<code translate="no">{{ span.text }}</code>} @else {{{ span.text }}}
+        }
+      </p>
     </div>
     <div class="sw-lead__block">
       <h3 class="sw-lead__label">{{ lead.labels.live }}</h3>
-      <p>{{ lead.live }}</p>
+      <p>
+        @for (span of live; track $index) {
+          @if (span.code) {<code translate="no">{{ span.text }}</code>} @else {{{ span.text }}}
+        }
+      </p>
     </div>
     <div class="sw-lead__block">
       <h3 class="sw-lead__label">{{ lead.labels.result }}</h3>
