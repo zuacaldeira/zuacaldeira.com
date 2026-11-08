@@ -198,6 +198,49 @@ const FOOTER = {
 };
 const CV = { en: 'CV (PDF)', de: 'Lebenslauf (PDF)', pt: 'CV (PDF)' };
 
+// The checked form of the `Zua = …` line (D33), as reticulateP reads it, and the short form the
+// site shows: a one-branch thread `&{x: end}` is written as its label, `||` as `∥`.
+const CHECKED = readFileSync(
+  join(import.meta.dirname, '../../docs/notation/zua.st'),
+  'utf8',
+).trim();
+const short = (checked) =>
+  checked.replace(/&\{\s*([a-z]+)\s*:\s*end\s*\}/g, '$1').replace(/\s*\|\|\s*/g, ' ∥ ');
+const CITY = { en: 'Berlin', de: 'Berlin', pt: 'Berlim' };
+
+// The texts of each footer's bottom row: its spans and links, in order (tags inside them dropped).
+const bottomRows = (html) =>
+  [...html.matchAll(/<footer\b[^>]*>([\s\S]*?)<\/footer>/g)].flatMap(([, footer]) =>
+    [...footer.matchAll(/<div\b[^>]*\bclass="foot__bottom"[^>]*>([\s\S]*?)<\/div>/g)].map(
+      ([, row]) =>
+        [...row.matchAll(/<(span|a)\b[^>]*>([\s\S]*?)<\/\1>/g)].map(([, , inner]) => text(inner)),
+    ),
+  );
+
+test("SHELL-07b: on every built page the footer's bottom row reads the checked Zua line, the languages and the copyright", () => {
+  assert.equal(short(CHECKED), 'Zua = software ∥ research ∥ running');
+  const year = (rows) => rows[0]?.at(-1)?.match(/^© (\d{4}) /)?.[1];
+  const actual = Object.fromEntries(PAGES.map(([route]) => [route, bottomRows(page(route))]));
+  const expected = Object.fromEntries(
+    PAGES.map(([route, lang]) => {
+      const y = year(actual[route]);
+      return [
+        route,
+        [
+          [
+            short(CHECKED),
+            'English',
+            'Deutsch',
+            'Português',
+            `© ${y && Number(y) >= 2026 ? y : 'YYYY ≥ 2026'} Alexandre Zua Caldeira · ${CITY[lang]}`,
+          ],
+        ],
+      ];
+    }),
+  );
+  assert.deepEqual(actual, expected);
+});
+
 test("SHELL-07: on every built page the footer invites a talk, in the page's language, with mail, profiles and CV", () => {
   const actual = Object.fromEntries(PAGES.map(([route]) => [route, footers(page(route))]));
   const expected = Object.fromEntries(

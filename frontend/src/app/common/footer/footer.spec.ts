@@ -96,6 +96,19 @@ describe('Footer', () => {
     expect(pages).toEqual([]);
   });
 
+  const bottomTexts = () =>
+    [
+      ...(fixture.nativeElement as HTMLElement).querySelectorAll(
+        'footer .foot__bottom > span, footer .foot__bottom a',
+      ),
+    ].map((el) => el.textContent?.replace(/\s+/g, ' ').trim());
+
+  it('SHELL-07b (D33): starts the bottom row with the untranslated "Zua = software ∥ research ∥ running" on a German page', async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+    expect(bottomTexts()[0]).toBe('Zua = software ∥ research ∥ running');
+  });
+
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
     await fixture.whenStable();
     const names = [
