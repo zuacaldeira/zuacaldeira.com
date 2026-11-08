@@ -241,6 +241,24 @@ class SoftwareSeedIntegrationTest {
         });
     }
 
+    static Stream<Arguments> proofs() {
+        return Stream.of(
+                Arguments.of("en", "Why the protocols hold"),
+                Arguments.of("de", "Warum die Protokolle halten"),
+                Arguments.of("pt", "Porque é que os protocolos se cumprem"));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("proofs")
+    @DisplayName("SW-PROOF-04 the seed answers the band's own line of the Software page in every language")
+    void answersTheSeededProof(String lang, String kicker) throws Exception {
+        HttpResponse<String> response = get("/api/content/software/proof?lang=" + lang);
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(JsonMapper.builder().build().readValue(response.body(),
+                new TypeReference<Map<String, String>>() {})).isEqualTo(Map.of("kicker", kicker));
+    }
+
     static Stream<String> languagesOfTheLead() {
         return Stream.of("en", "de", "pt");
     }

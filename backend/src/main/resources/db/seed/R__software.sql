@@ -155,4 +155,8 @@ INSERT INTO content_section (page, section, lang, body) VALUES
             JSON_OBJECT('title', 'Primeiro o protocolo', 'text', 'O comportamento é acordado em exemplos e escrito como um tipo de sessão antes de haver código.'),
             JSON_OBJECT('title', 'Testes primeiro, um passo de cada vez', 'text', 'Cada teste é visto a falhar pela razão certa e depois posto a passar; depois o código é arrumado e vai para commit.'),
             JSON_OBJECT('title', 'Cada caminho proibido visto a vermelho', 'text', 'O que o protocolo exclui também tem um teste, e cada um desses testes é partido uma vez de propósito, para provar que deteta a falha.')),
-        'caption', 'Deste site, como tipo global verificado: a página dá ao visitante as suas ligações, o visitante pede ao nginx, e o nginx responde 200. Não há ramo de redirecionamento (SHELL-04).'));
+        'caption', 'Deste site, como tipo global verificado: a página dá ao visitante as suas ligações, o visitante pede ao nginx, e o nginx responde 200. Não há ramo de redirecionamento (SHELL-04).')),
+    -- The proof band's own line (D30); the paper's labels are shared (R__shared.sql).
+    ('software', 'proof', 'en', JSON_OBJECT('kicker', 'Why the protocols hold')),
+    ('software', 'proof', 'de', JSON_OBJECT('kicker', 'Warum die Protokolle halten')),
+    ('software', 'proof', 'pt', JSON_OBJECT('kicker', 'Porque é que os protocolos se cumprem'));
