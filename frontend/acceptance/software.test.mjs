@@ -619,6 +619,25 @@ test('SW-PROOF-02: two buttons lead on, to the paper and to the research page in
   );
 });
 
+// The main menu of a built page (the desktop bar, as prerendered): each link as "label → href",
+// with " (current)" when it carries aria-current="page".
+const menu = (html) =>
+  [...(html.match(/<div\b[^>]*class="desktop-menu-items"[^>]*>(.*?)<\/div>/s)?.[1] ?? '').matchAll(
+    /<a\b([^>]*)>(.*?)<\/a>/gs,
+  )].map(([, attrs, label]) => {
+    const href = attrs.match(/\shref="([^"]*)"/)?.[1];
+    const current = /\saria-current="page"/.test(attrs) ? ' (current)' : '';
+    return `${text(label)} → ${href}${current}`;
+  });
+
+test('SW-PAGE-07: the menu shows Software as the page you are on', () => {
+  const links = menu(page('pt/software'));
+  assert.deepEqual(
+    links.filter((link) => link.includes('/pt/software') || link.endsWith('(current)')),
+    ['Software → /pt/software (current)'],
+  );
+});
+
 const PAPER = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
 const REPO = { en: 'Repository', de: 'Repository', pt: 'Repositório' };
 const READ_PAPER = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };
