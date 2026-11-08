@@ -39,7 +39,7 @@ its example. "In plain words" says what each case means for a visitor, in Englis
 | WR-PAGE-03 | The browser tab names the page in its language. | the built pages | they are read | `<title>` is "Alexandre Zua Caldeira — Writing", "— Texte", "— Textos" | yes (build and unit, 2026-11-08) |
 | WR-PAGE-04 | The sitemap lists the new pages, and only built ones. | the built site | `sitemap.xml` is read | it lists `https://zuacaldeira.com/{en,de,pt}/writing` beside the 18 pages of SW-PAGE-04, 21 in all, and each is a built page (HOME-PAGE-08); the "page not built" examples of SHELL-04 P-04 and SW-PAGE-P-04 move from `/de/writing` to `/de/nope` | |
 | WR-PAGE-05 | In the web server, the new page opens straight away. | the built site in the web image's nginx | `/en/writing`, `/de/writing`, `/pt/writing` are requested | each answers `200` with no redirect (HOME-PAGE-09); `/de/writing/` answers `301` to `/de/writing` (HOME-PAGE-10) | |
-| WR-PAGE-06 | The menu is complete: Software, Research, Writing, About, in the reader's language. | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`, in that order (SHELL-11; Home and Running leave the menu, D13 in `software.md`); pt "textos" → `/pt/writing` | |
+| WR-PAGE-06 | The menu is complete: Software, Research, Writing, About, in the reader's language. | the built `/de/home` | the main navigation is read | it reads Software, Forschung, Texte, Über mich, to `/de/software`, `/de/research`, `/de/writing`, `/de/about`, in that order (SHELL-11; Home and Running leave the menu, D13 in `software.md`); pt "Textos" → `/pt/writing` (D5) | |
 | WR-PAGE-07 | The header shows Writing as the page you are on. | the built `/pt/writing` | the main navigation is read | its writing link goes to `/pt/writing` and carries `aria-current="page"`; no other link does (D34 in `software.md`) | |
 | WR-PAGE-08 | The language links lead to the same page in the other language. | the built `/de/writing` | its language links are read | `EN` → `/en/writing`, `PT` → `/pt/writing`, `DE` current (SHELL-01, 02 on the new page) | yes (build, the shell's tests on the three pages, 2026-11-08) |
 | WR-PAGE-09 | A missing German text stops the build instead of showing English. | no writing content stored for de | the site is built | the build fails, naming page `writing`, the section and `de`; nothing is deployed (as HOME-HERO-06) | yes (the snapshot script, 2026-11-08) |
@@ -417,6 +417,92 @@ Leftovers, not built:
 - **The local build lacks `404.html`** until it is copied as `build-site.yml` does;
   `acceptance:nginx` says so and stops. Not a bug, a step to remember.
 
+## Slice 3: open the page
+
+Test list (crossed off in the "Done" note below as each is committed):
+- **Acceptance (build), the outer test first:** A WR-PAGE-06 on slice 2's build: the built `/de/home`'s
+  main menu reads exactly Software → `/de/software`, Forschung → `/de/research`, Texte →
+  `/de/writing`, Über mich → `/de/about`; en and pt the same (Writing, Textos). It replaces SW-PAGE-10's
+  test in `software.test.mjs`, which pins the old five-link menu (D17).
+- **Unit:**
+  - U1 WR-PAGE-06, the desktop menu on a German page: Software, Forschung, Texte, Über mich, to
+    `/de/…` (`ContentService.navItems`, a new key `nav.writing` in en, de, pt). The older unit tests
+    that pin the old menu change with it (the desktop and phone menu specs, `ContentService`'s).
+  - U2 the phone menu on a German page: Software, Forschung, Texte, Über mich, "⊥ Kontakt" (D16).
+  - U3 WR-PAGE-07, on `/de/writing` the desktop menu's Texte link, and only it, has
+    `aria-current="page"`; expected green at once (`routerLinkActive` is page-agnostic), shown to bite.
+- **Acceptance (build), after the build:**
+  - A2 WR-PAGE-07 on the built `/pt/writing`: Textos → `/pt/writing` is the one link marked current;
+    WR-PAGE-P-03 by a second `aria-current` in a copy of the built page.
+  - A3 WR-PAGE-04: the sitemap lists 21 pages, the three Writing pages among them (HOME-PAGE-07's test,
+    18 → 21); HOME-PAGE-08 still holds; SW-PAGE-P-04's break moves to `/de/nope` in the built sitemap.
+  - A's WR-PAGE-P-04: Forschung before Software, and Laufen put back, each a break in a copy of the
+    built `/de/home`.
+- **nginx (the web image):** N WR-PAGE-05, `/en/writing`, `/de/writing`, `/pt/writing` answer `200` with
+  no redirect, `/de/writing/` answers `301` to `/de/writing`; HOME-PAGE-09's count moves to 21. No
+  config change is expected (the pages are files, as the Software page's).
+- **Browser** (`acceptance/browser/writing-page.test.mjs`, one Chromium, closed after): B1 WR-PAGE-11
+  (390 px, en, de, pt: the page's width 390, nothing in `<main>` ends right of 390); B2 WR-PAGE-12 (390
+  px: every link in `<main>` at least 44 px tall); B3 WR-PAGE-13 (`/de/writing` at 390 and 1280: Tab,
+  Enter, focus on `<main>` on the same page); B4 WR-LIST-14 (`/en/writing` and `/de/writing` at 1280,
+  light and dark: every text in the list at 4.5:1 or more), with the contrast reader of
+  `shell-footer` and `software-band` shared, its third user (their leftover). SHELL-08 A1 and SHELL-05b
+  in `shell-phone.test.mjs` change with the menu; then every browser file runs again, one at a time,
+  because the menu is on every page.
+- **SHELL-11** is covered when A, U1 and A2 are green.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor V as Visitor (and the tests)
+    participant M as Menu (ContentService.navItems, nav.*)
+    participant P as dist/…/l/p/index.html
+    participant S as sitemap.xml
+    participant N as nginx (web image)
+    participant C as Chromium (390, 1280; light, dark)
+    M->>P: Software, Research, Writing, About; the current page marked (U1–U3, A, A2)
+    V->>S: 21 pages, each built (A3)
+    V->>N: GET /l/writing, /l/writing/ (N)
+    N-->>V: 200, no redirect; /l/writing/ → 301 /l/writing
+    V->>C: /l/writing: fits 390, links ≥ 44 px, Tab → skip link → main, list ≥ 4.5:1 (B1–B4)
+```
+
+Session type: the visitor's path from any page, in the convention of `shell.md` (a role that a branch
+never calls just ends there). The menu's items change (Home and Running out, Writing in), so the
+Visitor's choices change: a change of behaviour, not a refactor.
+
+```
+G = Page → Visitor : menu(items = [software, research, writing, about], current = p_l) .
+    Visitor → Nginx : { get(/l/writing) . Nginx → Visitor : ok200(writingPage, lang l) . end ,
+                        get(/l/writing/) . Nginx → Visitor : moved301(/l/writing) .
+                            Visitor → Nginx : get(/l/writing) . Nginx → Visitor : ok200 . end ,
+                        get(/l/q), q ∈ items∖{writing} . Nginx → Visitor : ok200 . end ,
+                        stay . end }
+  Crawler → Nginx : get(/sitemap.xml) . Nginx → Crawler : ok200(21 urls, each built) . end
+
+Visitor ↾ = Page?menu(…) . Nginx!{ get(/l/writing) . Nginx?ok200 . end , get(/l/writing/) .
+            Nginx?moved301 . Nginx!get . Nginx?ok200 . end , get(/l/q) . Nginx?ok200 . end , stay . end }
+Nginx ↾   = Visitor?{ get(/l/writing) . Visitor!ok200 . end , get(/l/writing/) . Visitor!moved301 .
+            Visitor?get . Visitor!ok200 . end , get(/l/q) . Visitor!ok200 . end , stay . end }
+Page ↾    = Visitor!menu(items, current) . end
+```
+
+The phone menu's `menu(…)` is the same with `contact` last (D16), as SHELL-05b refines it.
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1 M → P | `menu(items = [software, research, writing, about], current)` | U1, U2, A |
+| 1, the current page | `current = p_l`, one page | U3, A2 |
+| 2 sitemap | `Crawler … ok200(21 urls, each built)` | A3 |
+| 3–4 nginx | `get(/l/writing)`, `ok200`; `get(/l/writing/)`, `moved301` | N |
+| 5 the page in Chromium | `ok200(writingPage, lang l)` read on a phone, by keyboard, in light and dark | B1–B4 |
+| forbidden: two current links | `current = p_l` | WR-PAGE-P-03 |
+| forbidden: another order, Running back | `items` fixed | WR-PAGE-P-04 |
+| forbidden: a sitemap URL not built | `each built` | SW-PAGE-P-04 (`/de/nope`) |
+| forbidden: a link without the prefix | `items` are `/l/x` (SHELL-04) | WR-PAGE-P-02 (covered) |
+
+The site is read-only: no repeat, stale-token or race rows.
+
 ## Decisions
 
 Answered by the developer on 2026-11-08:
@@ -429,6 +515,16 @@ Answered by the developer on 2026-11-08:
 - **The cases** and the two added wordings (the ICE note, the POPL link) are agreed. The Portuguese
   copy is built as drafted and listed for the developer's review on the preview.
 - **The three slices** as proposed: 1 frame and head, 2 the list, 3 open the page.
+
+Taken in slice 3's plan on 2026-11-08, following SHELL-11 and the developer's menu (the developer
+may change them):
+
+- **D16. The phone menu** follows the desktop menu, Software, Research, Writing, About, and keeps
+  Contact last with its `⊥` (SHELL-05b), because the phone bar has no contact button (SHELL-06).
+  Writing's icon is Material's `article`.
+- **D17. SW-PAGE-10's acceptance test** (the menu "still waits for Writing") is replaced by WR-PAGE-06,
+  which holds Software before Research too; the menu reader moves to `acceptance/menu.mjs` for both
+  page files.
 
 Taken in slice 1's plan on 2026-11-08, following the spec (the developer may change it):
 
