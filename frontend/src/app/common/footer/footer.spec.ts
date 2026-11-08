@@ -125,6 +125,18 @@ describe('Footer', () => {
     expect(bottomTexts().at(-1)).toMatch(/^© \d{4} Alexandre Zua Caldeira · Berlim$/);
   });
 
+  it('SHELL-07b: orders the bottom row notation, language names, copyright', async () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    await fixture.whenStable();
+    expect(bottomTexts().map((t) => t?.replace(/\d{4}/, 'YYYY'))).toEqual([
+      'Zua = software ∥ research ∥ running',
+      'English',
+      'Deutsch',
+      'Português',
+      '© YYYY Alexandre Zua Caldeira · Berlin',
+    ]);
+  });
+
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
     await fixture.whenStable();
     const names = [
