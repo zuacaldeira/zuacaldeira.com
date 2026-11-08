@@ -8,7 +8,15 @@ import { join } from 'node:path';
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
 const page = (route) => readFileSync(join(browser, route, 'index.html'), 'utf8');
 
-const text = (inner) => inner.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+// An element's text as a reader sees it: tags dropped, the entities Angular writes decoded
+// (`&` in notation is written `&amp;`), whitespace collapsed.
+const ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'" };
+const text = (inner) =>
+  inner
+    .replace(/<[^>]+>/g, '')
+    .replace(/&(amp|lt|gt|quot|#39);/g, (entity) => ENTITIES[entity])
+    .replace(/\s+/g, ' ')
+    .trim();
 
 // The texts of every element with this tag (and, if given, this class), in page order. Angular
 // writes its `_ngcontent` attribute before `class`, so the class is looked for anywhere in the tag.
@@ -89,6 +97,52 @@ test('SW-LEAD-01: the first piece after the head is the TDD monitor, told as a c
       status: ['In use on this site since November 2026'],
     },
   );
+});
+
+// The lead's blocks in order: each label (its <h3>) with the texts of its paragraphs.
+const blocks = (html) =>
+  [...lead(html).matchAll(/<div\b[^>]*class="sw-lead__block"[^>]*>(.*?)<\/div>/gs)].map(([, inner]) => [
+    texts(inner, 'h3')[0],
+    texts(inner, 'p'),
+  ]);
+
+const EN_BLOCKS = [
+  [
+    'The question',
+    [
+      'Does a session type make an AI coding agent’s test-driven work better, and in which mode: in pair with the developer, or in batch on an agreed test list? Better means tests that are meaningful for the work, not coverage.',
+    ],
+  ],
+  [
+    'What I built',
+    [
+      'A monitor that watches a TDD agent as it works, through the agent’s hooks, and checks every step against a session type of the TDD workflow: write a test, run it, see it fail for the right reason, make it pass, refactor, commit. Where a type is given, it refuses a step the type does not allow; otherwise it only observes.',
+      'It also reports which parts of the target’s own session types the agent’s tests reach: what the software under test must do, failure paths included.',
+    ],
+  ],
+  [
+    'The protocol behind it',
+    [
+      'What the agent does (&{…}) is kept apart from the results it receives (+{…}). The full workflow type has 56 states and 89 transitions and is a lattice, checked with reticulateP. The variants for sabotage (breaking the code on purpose to show a test bites) and for triangulation are subtypes of it.',
+    ],
+  ],
+  [
+    'The live view',
+    [
+      'reticulab serve, a small read-only web app, follows each session live: what is being built, in plain sentences; the agreed test list, N of M done; the target’s coverage; where the agent is in its type; and a slider to replay the steps.',
+    ],
+  ],
+  [
+    'The result',
+    [
+      'In use on this site since November 2026: every element of its header and footer was built test-first by an agent under the monitor, in pair with me.',
+    ],
+  ],
+  ['Stack', ['Python · pytest · Hypothesis · Server-Sent Events · reticulateP']],
+];
+
+test('SW-LEAD-02: the case study answers five questions in order, then gives its stack', () => {
+  assert.deepEqual(blocks(page('en/software')), EN_BLOCKS);
 });
 
 for (const [id, lang, eyebrow, intro] of [
