@@ -64,13 +64,13 @@ language as its example.
 | SW-LEAD-03 | The German and Portuguese case studies are fully translated. | the built `/de/software` and `/pt/software` | the lead is read | every text is the de or pt copy; no English sentence (P-02) | yes (build, 2026-11-08) |
 | SW-LEAD-04 | The protocol is shown as the real line from the checked workflow type. | any language | the protocol block is read | a `<pre translate="no">` whose text, with whitespace collapsed, is exactly `Run = &{runTest: +{RED: Code, WRONG_RED: Fix, GREEN: Green}}`, the same in en, de and pt, and equal to the recorded checked line (D5); its caption is `lead.runCaption` | yes (build and unit, 2026-11-08; `docs/notation/run.st`, D17) |
 | SW-LEAD-05 | A small drawing shows the one action and its three results. | any language | the figure is read | an SVG with `role="img"` and the translated `lead.figure` as its name and caption; its labels `Run`, `&{runTest}`, `+RED`, `+WRONG_RED`, `+GREEN`, `Code`, `Fix`, `Green` in every language | yes (build and unit, 2026-11-08) |
-| SW-LEAD-06 | A screenshot shows the live view, light or dark to match the page. | `/en/software` in the browser, light and dark theme | the screenshot is read | exactly one image shows: `reticulab-live-light.png` on a light glaze, `-dark.png` on a dark one; its alt text is `lead.shotAlt` in the page's language; it links to the full-size file; its caption is `lead.shotCaption` | yes (browser, light and dark; build and unit, 2026-11-08); that the other image is never downloaded is open (D25) |
+| SW-LEAD-06 | A screenshot shows the live view, light or dark to match the page. | `/en/software` in the browser, light and dark theme | the screenshot is read | exactly one image shows: `reticulab-live-light.png` on a light glaze, `-dark.png` on a dark one; its alt text is `lead.shotAlt` in the page's language; it links to the full-size file; its caption is `lead.shotCaption` | yes (browser, light and dark, the other image never downloaded since D25; build and unit, 2026-11-08) |
 | SW-LEAD-07 | The result says only what is true: in use on this site. | any language | the result is read | `lead.result`; the page makes no claim of better or worse results, and gives no figures for the experiment | yes (build, 2026-11-08: the lead's only numbers are 2026, 56, 89, 2026) |
 | SW-LEAD-08 | The case study has no link to the lab, which is private. | the built pages | the lead's links are read | it has none: no repository, no write-up (D2) | yes (build and unit, 2026-11-08) |
 | SW-LEAD-09 | A fresh database, filled with the starting texts, gives the whole case study in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/lead?lang=en`, `de`, `pt` | 200; en is the spec's copy (D19's shape), and de and pt have the same fields, each non-empty | yes (integration, 2026-11-08) |
 | SW-LEAD-P-01 | A Run line that differs from the checked one is refused. | the built page | its Run line is changed (a label renamed, `WRONG_RED` dropped) or the recorded line changes while the page does not | SW-LEAD-04 goes red | yes (break in the build; break in `run.st`) |
 | SW-LEAD-P-02 | English text on a German or Portuguese case study is refused. | the built `/de/software` | an English block is put in | SW-LEAD-03 goes red | yes (break in the build) |
-| SW-LEAD-P-04 | A screenshot that does not match the theme, or both at once, is refused. | `/en/software` in the browser, light and dark | the dark image shows on a light page, both show, or the hidden one is downloaded too | SW-LEAD-06 goes red | the image shown (break in `monitor-shot.ts`, rebuilt); the download waits for D25 |
+| SW-LEAD-P-04 | A screenshot that does not match the theme, or both at once, is refused. | `/en/software` in the browser, light and dark | the dark image shows on a light page, both show, or the hidden one is downloaded too | SW-LEAD-06 goes red | yes (the image shown: break in `monitor-shot.ts`, rebuilt; the download: red before D25, `downloaded: light,dark`) |
 | SW-LEAD-P-03 | Notation translated on a German page is refused. | the built `/de/software` | the figure reads `+ROT` or the line `Lauf = …` | SW-LEAD-04 or 05 goes red | yes (breaks in the build: the line's `Lauf = …`, `ROT`; the figure's `+ROT`) |
 
 ## 4. More work
@@ -456,6 +456,16 @@ Decided by the developer on 2026-11-08:
   light; C4 (browser) THEME-10: with JavaScript off, the page is light; A (build) THEME-10: the built
   page's head script gives the table's answer for every case; U (unit) THEME-10: `ThemeService` gives
   the same table's answers.
+
+  **Done 2026-11-08.** C2 went red first (`downloaded: light,dark`) and green once the head script was
+  in. A went red on all four pages (no head script). U and C3, C4 were green at first and shown to
+  bite: U by `ThemeService` ignoring the device's setting; C3 by the head script's `addClass` taken
+  out of the built page (both dark cases red); C4 by `class="dark-theme"` on the built `<html>`. C3's
+  first run failed in the test itself (an unawaited `page.evaluate` inside `try … finally`). All the
+  browser tests ran, one file at a time, since the script is on every page: `software-shot` 2/2,
+  `theme-paint` 5/5, `shell-footer` 6/6, `shell-keyboard` 45/45, `shell-phone` 33/33. Unit 239
+  passed, 5 skipped; scripts 6/6; `acceptance` 45/45; `acceptance:nginx` 11/11; the build prerenders
+  23 routes. The design checker's "broken image" warning on `monitor-shot.ts` is left as it is.
 
 Taken in slice 3's plan on 2026-11-08, following the spec (the developer may change them):
 

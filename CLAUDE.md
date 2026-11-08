@@ -89,6 +89,10 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - SSR-safe with `isPlatformBrowser` guard
 - Persists preference to `localStorage`
 - Toggles `.dark-theme` class on `<html>`
+- Before first paint, an inline script in `src/index.html`'s `<head>` sets `.dark-theme` by the same
+  rule (the saved `zc-theme`, else the device's setting), so no page flashes light (THEME-10, D25).
+  The rule is one table, `services/theme-rule.cases.json`, read by the service's spec and by
+  `acceptance/theme.test.mjs`, which runs the built pages' head script: change both together
 
 **ContentService** (`services/content.service.ts`)
 - Static data provider — typed readonly arrays, no HTTP calls
@@ -159,7 +163,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 36 test files, 237 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 36 test files, 244 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 

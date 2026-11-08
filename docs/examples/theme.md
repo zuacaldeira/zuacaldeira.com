@@ -20,7 +20,7 @@ time; none reads a real clock (`docs/tdd.md`).
 | THEME-07 | light or dark is stored | the page loads at any time | the colours do not follow the clock: light is Cobalto, dark is Vidrado nocturno, as today's two themes | |
 | THEME-08 | the visitor asks for reduced motion and the state is living | time passes | the page keeps the glaze it loaded with until the next load | |
 | THEME-09 | the built `/de/home` | it is read | `<html>` carries `data-hero="b"` and `data-band="c"` in the prerendered HTML, before any script runs | |
-| THEME-10 | the built page and a stored or clock-chosen glaze | the page loads | the colours are set by an inline script in `<head>`, before first paint, so the wrong colours never flash; without JavaScript the page shows Cobalto and stays readable | |
+| THEME-10 | the built page and a stored or clock-chosen glaze | the page loads | the colours are set by an inline script in `<head>`, before first paint, so the wrong colours never flash; without JavaScript the page shows Cobalto and stays readable | for today's two themes (build, browser and unit, 2026-11-08, D25 in `software.md`); the living glaze's colours come with the glaze |
 | THEME-11 | a Material component on any page, in any glaze | it renders | it takes the glaze's accent, not teal: `--mat-sys-*` are mapped to the same tokens | |
 
 ## Diagram: first paint
