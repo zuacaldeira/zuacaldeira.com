@@ -11,6 +11,7 @@ import {
   SoftwareHow,
   SoftwareLead,
   SoftwareWork,
+  WRITING_CONTENT,
 } from './content';
 
 const heroIn = (lang: Language): HomeHero => ({
@@ -27,6 +28,12 @@ const softwareHeadIn = (lang: Language): PageHead => ({
   eyebrow: `eyebrow ${lang}`,
   heading: `heading ${lang}`,
   intro: `intro ${lang}`,
+});
+
+const writingHeadIn = (lang: Language): PageHead => ({
+  eyebrow: `writing eyebrow ${lang}`,
+  heading: `writing heading ${lang}`,
+  intro: `writing intro ${lang}`,
 });
 
 const softwareLeadIn = (lang: Language): SoftwareLead => ({
@@ -117,11 +124,13 @@ export const TEST_CONTENT: ContentSnapshot = {
     how: inEvery(softwareHowIn),
     proof: inEvery((lang) => ({ kicker: `proof kicker ${lang}` })),
   },
+  writing: { head: inEvery(writingHeadIn) },
   shared: { paper: inEvery(sharedPaperIn) },
 };
 
 export const provideTestContent = (): Provider => [
   { provide: HOME_CONTENT, useValue: TEST_CONTENT.home },
   { provide: SOFTWARE_CONTENT, useValue: TEST_CONTENT.software },
+  { provide: WRITING_CONTENT, useValue: TEST_CONTENT.writing },
   { provide: SHARED_CONTENT, useValue: TEST_CONTENT.shared },
 ];

@@ -124,10 +124,16 @@ export interface SoftwareContent {
   readonly proof: Readonly<Record<Language, { readonly kicker: string }>>;
 }
 
+/** The Writing page's text, `@page-content/writing` (D21 in software.md; writing.md). */
+export interface WritingContent {
+  readonly head: Readonly<Record<Language, PageHead>>;
+}
+
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
 export interface ContentSnapshot {
   readonly home: HomeContent;
   readonly software: SoftwareContent;
+  readonly writing: WritingContent;
   readonly shared: SharedContent;
 }
 
@@ -137,5 +143,6 @@ export interface ContentSnapshot {
  */
 export const HOME_CONTENT = new InjectionToken<HomeContent>('HOME_CONTENT');
 export const SOFTWARE_CONTENT = new InjectionToken<SoftwareContent>('SOFTWARE_CONTENT');
+export const WRITING_CONTENT = new InjectionToken<WritingContent>('WRITING_CONTENT');
 /** Text several pages read, provided by each route that needs it (D30). */
 export const SHARED_CONTENT = new InjectionToken<SharedContent>('SHARED_CONTENT');
