@@ -648,6 +648,14 @@ test('SW-PAGE-10: the home page’s menu leads to the Software page, before Rese
   ]);
 });
 
+// The production build inlines the font link as @font-face rules, so the page's rules are read.
+test('SW-PAGE-15: the page brings Fraunces at 400 for the band’s theorem, with 500 and 600', () => {
+  const weights = [
+    ...page('en/software').matchAll(/font-family:\s*'Fraunces';[^}]*?font-weight:\s*(\d+)/g),
+  ].map(([, weight]) => weight);
+  assert.deepEqual([...new Set(weights)].toSorted(), ['400', '500', '600']);
+});
+
 const PAPER = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
 const REPO = { en: 'Repository', de: 'Repository', pt: 'Repositório' };
 const READ_PAPER = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };
