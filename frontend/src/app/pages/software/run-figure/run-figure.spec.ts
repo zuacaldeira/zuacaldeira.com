@@ -16,4 +16,9 @@ describe('RunFigure', () => {
     expect(svg?.getAttribute('aria-label')).toBe('Der Schritt Run');
     expect(el.querySelector('figcaption')?.textContent?.trim()).toBe('Der Schritt Run');
   });
+
+  it('SW-LEAD-05: should label the step, its action and its three results in notation, untranslated', () => {
+    const labels = [...render().querySelectorAll('svg text')].map((t) => t.textContent?.trim());
+    expect(labels).toEqual(['Run', '&{runTest}', '+RED', '+WRONG_RED', '+GREEN', 'Code', 'Fix', 'Green']);
+  });
 });

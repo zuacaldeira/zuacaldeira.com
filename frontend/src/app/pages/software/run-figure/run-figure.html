@@ -1,4 +1,25 @@
 <figure class="sw-figure">
-  <svg viewBox="0 0 400 230" role="img" [attr.aria-label]="label()"></svg>
+  <svg viewBox="0 0 400 230" role="img" [attr.aria-label]="label()">
+    <!-- The action: one solid edge down from Run. -->
+    <line class="edge edge--action" x1="200" y1="36" x2="200" y2="96" />
+    <!-- The results: three edges from the action to the next states. -->
+    <path class="edge edge--result" d="M200 96 L70 182" />
+    <path class="edge edge--result" d="M200 96 L200 182" />
+    <path class="edge edge--result" d="M200 96 L330 182" />
+
+    <circle class="node node--run" cx="200" cy="28" r="8" />
+    <circle class="node node--open" cx="70" cy="190" r="8" />
+    <circle class="node node--open" cx="200" cy="190" r="8" />
+    <circle class="node node--open" cx="330" cy="190" r="8" />
+
+    <text class="label" x="214" y="33">Run</text>
+    <text class="label" x="210" y="70">{{ '&{runTest}' }}</text>
+    <text class="label" x="112" y="134" text-anchor="end">+RED</text>
+    <text class="label" x="206" y="150">+WRONG_RED</text>
+    <text class="label" x="288" y="134">+GREEN</text>
+    <text class="label" x="70" y="218" text-anchor="middle">Code</text>
+    <text class="label" x="200" y="218" text-anchor="middle">Fix</text>
+    <text class="label" x="330" y="218" text-anchor="middle">Green</text>
+  </svg>
   <figcaption>{{ label() }}</figcaption>
 </figure>
