@@ -34,7 +34,10 @@ INSERT INTO content_section (page, section, lang, body) VALUES
         'runCaption', 'A line of the workflow type, word for word.',
         'live', '`reticulab serve`, a small read-only web app, follows each session live: what is being built, in plain sentences; the agreed test list, N of M done; the target’s coverage; where the agent is in its type; and a slider to replay the steps.',
         'result', 'In use on this site since November 2026: every element of its header and footer was built test-first by an agent under the monitor, in pair with me.',
-        'stack', 'Python · pytest · Hypothesis · Server-Sent Events · reticulateP')),
+        'stack', 'Python · pytest · Hypothesis · Server-Sent Events · reticulateP',
+        'figure', 'The Run step: one action of the agent, three results it receives.',
+        'shotAlt', 'The monitor’s live view while the agent built this site’s redirects for old links: on the left, what is being built, in plain sentences, each marked “passed at once” or “failed first, then passed”; on the right, the agent’s map of its 56-state type, at its end.',
+        'shotCaption', 'The live view while the agent built this site’s redirects for old links.')),
     ('software', 'lead', 'de', JSON_OBJECT(
         'kicker', 'Fallstudie · KI-Agenten',
         'title', 'Ein Monitor, der einen Coding-Agenten an sein TDD-Protokoll bindet',
@@ -53,7 +56,10 @@ INSERT INTO content_section (page, section, lang, body) VALUES
         'runCaption', 'Eine Zeile des Ablauftyps, wörtlich.',
         'live', '`reticulab serve`, eine kleine Web-App nur zum Lesen, folgt jeder Sitzung live: was gerade gebaut wird, in einfachen Sätzen; die vereinbarte Testliste, N von M erledigt; die Abdeckung des Ziels; wo der Agent in seinem Typ steht; und ein Regler, der die Schritte noch einmal abspielt.',
         'result', 'Auf dieser Website im Einsatz seit November 2026: Jedes Element ihres Kopf- und Fußbereichs hat ein Agent unter dem Monitor testgetrieben gebaut, im Pair mit mir.',
-        'stack', 'Python · pytest · Hypothesis · Server-Sent Events · reticulateP')),
+        'stack', 'Python · pytest · Hypothesis · Server-Sent Events · reticulateP',
+        'figure', 'Der Schritt Run: eine Aktion des Agenten, drei Ergebnisse, die er erhält.',
+        'shotAlt', 'Die Live-Ansicht des Monitors, während der Agent die Weiterleitungen alter Links dieser Website baute: links, was gebaut wird, in einfachen Sätzen, jeweils als „sofort bestanden“ oder „erst gescheitert, dann bestanden“ markiert; rechts die Karte des Agenten in seinem Typ mit 56 Zuständen, an dessen Ende.',
+        'shotCaption', 'Die Live-Ansicht, während der Agent die Weiterleitungen alter Links dieser Website baute.')),
     ('software', 'lead', 'pt', JSON_OBJECT(
         'kicker', 'Estudo de caso · agentes de IA',
         'title', 'Um monitor que prende um agente de programação ao seu protocolo de TDD',
@@ -72,4 +78,7 @@ INSERT INTO content_section (page, section, lang, body) VALUES
         'runCaption', 'Uma linha do tipo do fluxo, palavra por palavra.',
         'live', '`reticulab serve`, uma pequena aplicação web só de leitura, acompanha cada sessão ao vivo: o que está a ser construído, em frases simples; a lista de testes acordada, N de M feitos; a cobertura do alvo; onde o agente está no seu tipo; e um cursor para rever os passos.',
         'result', 'Em uso neste site desde novembro de 2026: cada elemento do seu cabeçalho e rodapé foi construído com os testes primeiro por um agente sob o monitor, em par comigo.',
-        'stack', 'Python · pytest · Hypothesis · Server-Sent Events · reticulateP'));
+        'stack', 'Python · pytest · Hypothesis · Server-Sent Events · reticulateP',
+        'figure', 'O passo Run: uma ação do agente, três resultados que recebe.',
+        'shotAlt', 'A vista ao vivo do monitor enquanto o agente construía os redirecionamentos de ligações antigas deste site: à esquerda, o que está a ser construído, em frases simples, cada uma marcada como «passou à primeira» ou «falhou primeiro, depois passou»; à direita, o mapa do agente no seu tipo de 56 estados, no fim.',
+        'shotCaption', 'A vista ao vivo enquanto o agente construía os redirecionamentos de ligações antigas deste site.'));

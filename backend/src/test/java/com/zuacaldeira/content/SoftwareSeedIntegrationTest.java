@@ -103,7 +103,13 @@ class SoftwareSeedIntegrationTest {
                     + " coverage; where the agent is in its type; and a slider to replay the steps."),
             Map.entry("result", "In use on this site since November 2026: every element of its header and"
                     + " footer was built test-first by an agent under the monitor, in pair with me."),
-            Map.entry("stack", "Python · pytest · Hypothesis · Server-Sent Events · reticulateP"));
+            Map.entry("stack", "Python · pytest · Hypothesis · Server-Sent Events · reticulateP"),
+            Map.entry("figure", "The Run step: one action of the agent, three results it receives."),
+            Map.entry("shotAlt", "The monitor’s live view while the agent built this site’s redirects for old"
+                    + " links: on the left, what is being built, in plain sentences, each marked “passed at"
+                    + " once” or “failed first, then passed”; on the right, the agent’s map of its 56-state"
+                    + " type, at its end."),
+            Map.entry("shotCaption", "The live view while the agent built this site’s redirects for old links."));
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("languagesOfTheLead")
