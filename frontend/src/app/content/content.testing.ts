@@ -12,6 +12,7 @@ import {
   SoftwareLead,
   SoftwareWork,
   WRITING_CONTENT,
+  WritingTexts,
 } from './content';
 
 const heroIn = (lang: Language): HomeHero => ({
@@ -34,6 +35,38 @@ const writingHeadIn = (lang: Language): PageHead => ({
   eyebrow: `writing eyebrow ${lang}`,
   heading: `writing heading ${lang}`,
   intro: `writing intro ${lang}`,
+});
+
+// Two texts: a paper on the site with a note, and an article outside it with a co-author first.
+const writingTextsIn = (lang: Language): WritingTexts => ({
+  inEnglish: `in English ${lang}`,
+  read: `read ${lang}`,
+  newTab: `new tab ${lang}`,
+  kinds: { workshop: `workshop ${lang}`, conference: `conference ${lang}`, report: `report ${lang}` },
+  items: [
+    {
+      id: 'paper',
+      year: 2026,
+      kind: 'workshop',
+      title: 'A Paper',
+      authors: [{ name: 'A. Self', self: true }],
+      venue: 'W 2026 · A Workshop',
+      note: `note ${lang}`,
+      href: '/assets/pdfs/paper.pdf',
+      external: false,
+    },
+    {
+      id: 'article',
+      year: 2010,
+      kind: 'conference',
+      title: 'An Article',
+      authors: [{ name: 'B. Other' }, { name: 'A. Z. Self', self: true }],
+      venue: 'C 2010 · A Conference',
+      href: 'https://example.org/article',
+      label: 'example.org',
+      external: true,
+    },
+  ],
 });
 
 const softwareLeadIn = (lang: Language): SoftwareLead => ({
@@ -124,7 +157,7 @@ export const TEST_CONTENT: ContentSnapshot = {
     how: inEvery(softwareHowIn),
     proof: inEvery((lang) => ({ kicker: `proof kicker ${lang}` })),
   },
-  writing: { head: inEvery(writingHeadIn) },
+  writing: { head: inEvery(writingHeadIn), texts: inEvery(writingTextsIn) },
   shared: { paper: inEvery(sharedPaperIn) },
 };
 

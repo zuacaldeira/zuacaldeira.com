@@ -1,0 +1,24 @@
+<section class="wr-texts">
+  <div class="wr-texts__in">
+    <h2 class="visually-hidden">{{ heading }}</h2>
+    <ul class="wr-texts__list">
+      @for (item of texts.items; track item.id) {
+        <li class="wr-texts__item">
+          <p class="wr-texts__when">
+            <span class="wr-texts__year">{{ item.year }}</span>
+            <span class="wr-texts__kind">{{ texts.kinds[item.kind] }}</span>
+          </p>
+          <div class="wr-texts__body">
+            <h3 class="wr-texts__title">{{ item.title }}</h3>
+            <p class="wr-texts__authors">
+              @for (author of item.authors; track author.name; let last = $last) {
+                {{ author.name }}{{ last ? '' : ', ' }}
+              }
+            </p>
+            <p class="wr-texts__venue">{{ item.venue }}</p>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

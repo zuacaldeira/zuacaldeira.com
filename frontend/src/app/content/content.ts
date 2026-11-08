@@ -124,9 +124,43 @@ export interface SoftwareContent {
   readonly proof: Readonly<Record<Language, { readonly kicker: string }>>;
 }
 
+/** An author of a text, as published; `self` marks the site's author (WR-LIST-03). */
+export interface TextAuthor {
+  readonly name: string;
+  readonly self?: boolean;
+}
+
+/**
+ * One text of the Writing page (D11, D15 in writing.md): all but the note is the same in every
+ * language. A link inside the site reads the list's `read`; one outside reads its own `label`.
+ */
+export interface WritingText {
+  readonly id: string;
+  readonly year: number;
+  /** `workshop`, `conference` or `report`; a string, as the snapshot's JSON types it. */
+  readonly kind: string;
+  readonly title: string;
+  readonly authors: readonly TextAuthor[];
+  readonly venue: string;
+  readonly note?: string;
+  readonly href: string;
+  readonly label?: string;
+  readonly external: boolean;
+}
+
+/** One language's list of the Writing page, `writing/texts` (D11 in writing.md). */
+export interface WritingTexts {
+  readonly inEnglish: string;
+  readonly read: string;
+  readonly newTab: string;
+  readonly kinds: Readonly<Record<string, string>>;
+  readonly items: readonly WritingText[];
+}
+
 /** The Writing page's text, `@page-content/writing` (D21 in software.md; writing.md). */
 export interface WritingContent {
   readonly head: Readonly<Record<Language, PageHead>>;
+  readonly texts: Readonly<Record<Language, WritingTexts>>;
 }
 
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
