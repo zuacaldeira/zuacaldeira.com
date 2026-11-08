@@ -170,9 +170,11 @@ describe('ZcNavMobile', () => {
       expect(document.activeElement).toBe(
         (fixture.nativeElement as HTMLElement).querySelector('main'),
       ),
+      // 5 s, not vitest's 1 s: under load focus came late in 3 of 11 runs (2026-11-08).
+      { timeout: 5000 },
     );
     fixture.nativeElement.remove();
-  });
+  }, 10_000);
 
   it('SHELL-12: a navigation with the menu closed, PT in the bar, leaves focus where it was (D15)', async () => {
     TestBed.configureTestingModule({
