@@ -281,6 +281,108 @@ Leftovers, not built:
 - **`software.md`'s slice 1 note** still names the classes `sw-head*`; they are `page-head*` since
   R (D13).
 
+## Slice 2: the list
+
+Test list (crossed off in the "Done" note below as each is committed):
+- **Backend** (Testcontainers, one class per run):
+  - B1 WR-LIST-13, the seed's `writing/texts` in en, de, pt: en is the spec's copy and table (D11's
+    shape, D15); de and pt the same four items with the same ids, years, kinds, titles, authors,
+    venues, hrefs, labels and `external`, every label non-empty (`WritingSeedIntegrationTest`).
+  - B2 WR-LIST-12, the stored Portuguese list as it is (`ContentSectionIntegrationTest`). The table
+    is page-agnostic, so B2 is expected green at once; it is shown to bite by a break in
+    `ContentService`.
+- **Script:** S1 WR-PAGE-09, `writing/texts` missing in `pt` stops the snapshot, naming page
+  `writing`, section `texts`, language `pt`.
+- **Unit (`TextRows`, D14),** on the test content:
+  - U1 WR-LIST-01, 02: a visually hidden `<h2>` (the page's heading), a `<ul>` with one `<li>` per
+    text in the content's order, each with its year, kind label (`kinds[kind]`), `<h3>` title,
+    authors and venue.
+  - U2 WR-LIST-03: the author with `self` is the one name in `<b>`.
+  - U3 WR-LIST-04: the note shows only on the text that has one.
+  - U4 WR-LIST-05: a link inside the site reads `read`, same tab, `type="application/pdf"`,
+    `hreflang="en"`.
+  - U5 WR-LIST-06: a link outside the site reads its own label, `target="_blank"`,
+    `rel="noopener noreferrer"`, `hreflang="en"`, a visually hidden " (`newTab`)" and an `↗` with
+    `aria-hidden="true"`.
+  - U6 WR-LIST-07, 09: on a German page each title has `lang="en"` and `translate="no"` (authors and
+    venue `translate="no"`) and each text the `inEnglish` line; on an English page no `lang` on the
+    title and no such line (D10).
+  - U7 the Writing page shows `TextRows` after the head.
+- **Acceptance** (`acceptance/writing.test.mjs`, on the build):
+  - A WR-LIST-01, the outer test, declared first: on `/en/writing` the list follows the head, four
+    `<h3>` titles in the agreed order.
+  - A2 WR-LIST-02, 03, 10: each English text reads exactly year, kind, title, authors (own name in
+    `<b>`), venue, the note and the link, nothing else; no abstract sentence on the page.
+  - A3 WR-LIST-04: the ICE note in en, de, pt, on that text only.
+  - A4 WR-LIST-05: the PDF link in each language, its attributes, and the file in the build.
+  - A5 WR-LIST-06: the three outside links in each language, with the page language's `newTab`.
+  - A6 WR-LIST-07, 08, 09: de and pt kinds and the language line; titles, authors, venues, years and
+    targets the same as on `/en/writing`; titles `lang="en"` and `translate="no"`.
+  - A7 WR-LIST-11: no training paper title or PDF on the three pages.
+- **Protocol rows,** each a break in a copy of the built page, then restored: WR-LIST-P-01 (ConGu
+  first; a fifth text, a training paper: A red), P-02 (the German title on `/de/writing`: A6 red),
+  P-03 (a kind "Workshop paper" on `/de/writing`: A6 red), P-04 (the hidden new-tab words taken out
+  of the FOOL link: A5 red), P-05 (the POPL abstract's first sentence under its text: A2 red).
+
+Not in slice 2: no menu link, no sitemap entry, no nginx or browser checks (slice 3).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1–B2
+        participant DB as MySQL 8 (Flyway + seed R__writing.sql)
+        participant API as Content API
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/writing/index.html
+    T->>API: B1, B2: GET writing/texts?lang=l
+    API->>DB: select body where page=writing, section=texts, lang=l
+    F->>API: GET writing/texts?lang=l, for l in en, de, pt
+    API-->>F: 200 {inEnglish, read, newTab, kinds, items} or 404 → the build stops (S1)
+    F->>NG: writing.json (@page-content/writing)
+    NG->>P: TextRows (U1–U7): hidden h2, ul of four li, links
+    T->>P: A, A2–A7, P rows
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → API : get(writing, texts, l) .
+    API → Build : { ok200(texts_l) .
+                    Build → Page : prerender(texts_l) .
+                    Page → Visitor : list[ice2026, popl2010, fool2009, congu2007] .
+                    Visitor → Page : { pdf(ice2026) . end ,
+                                       out(popl2010, newTab_l) . end ,
+                                       out(fool2009, newTab_l) . end ,
+                                       out(congu2007, newTab_l) . end ,
+                                       stay . end } ,
+                    missing404 . Build → CI : fail(writing, texts, l) . end }
+  ids, years, titles, authors, venues, targets: the same for every l
+
+Build ↾   = API!get . API?{ ok200 . Page!prerender . end , missing404 . CI!fail . end }
+Page ↾    = Build?prerender . Visitor!list[…] . Visitor?{ pdf . end , out(…) . end , stay . end }
+Visitor ↾ = Page?list[…] . Page!{ pdf(ice2026) . end , out(popl2010) . end , out(fool2009) . end ,
+                                  out(congu2007) . end , stay . end }
+API ↾     = Build?get . Build!{ ok200 . end , missing404 . end }
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1–2 test → API → DB | `get`, `ok200(texts_l)` | B1 (WR-LIST-13), B2 (WR-LIST-12) |
+| 3–4 F → API | `get` × 3, `{ok200, missing404}` | S1 |
+| 5–6 NG → P | `prerender(texts_l)` | U1–U7 |
+| 7 T → P, the list | `list[ice2026, popl2010, fool2009, congu2007]` | A, A2, A3, A6, A7 |
+| 7 T → P, the links | `{pdf(ice2026), out(…, newTab_l), stay}` | A4, A5, U4, U5 |
+| forbidden: another order, a fifth text | `list[…]` fixed | WR-LIST-P-01 |
+| forbidden: a title or venue translated | the same for every `l` | WR-LIST-P-02 |
+| forbidden: `texts_en` labels on `l = de` | `ok200(texts_l)` | WR-LIST-P-03 |
+| forbidden: `out` without `newTab_l` | `out(…, newTab_l)` | WR-LIST-P-04 |
+| forbidden: a sentence not in the list's fields | `list[…]` carries only the fields | WR-LIST-P-05 |
+
+The page is read-only: no repeat, stale-token or race rows.
+
 ## Decisions
 
 Answered by the developer on 2026-11-08:
@@ -301,6 +403,19 @@ Taken in slice 1's plan on 2026-11-08, following the spec (the developer may cha
   `PageHead` (`SoftwareHead` renamed, the same three fields). The Software page uses it first, as a
   refactor (its built HTML changes only in class names, `sw-head*` to `page-head*`), then the
   Writing page.
+
+Taken in slice 2's plan on 2026-11-08, following the spec and the Software page (the developer may
+change them):
+
+- **D14. One component for the list,** `pages/writing/text-rows/` (`TextRows`, classes `wr-texts*`),
+  as `WorkRows` on the Software page: it draws the section, the hidden `<h2>` and the `<ul>`, one
+  `<li>` per text (the spec's `TextRow`). A separate `TextRow` component would put its own element
+  inside the `<ul>`, which only an `<li>` may be. Its text types: `WritingTexts` (the section),
+  `WritingText` (one text), `TextAuthor` (`name`, `self?`).
+- **D15. The stored values D11 leaves open:** `venue` is one string, "short · full" as the spec's
+  table writes it; `year` a number; `kind` one of `workshop`, `conference`, `report`; `external` a
+  boolean; the English list stores `inEnglish` "In English", which the English page never shows (D10),
+  so WR-LIST-13's "every label non-empty" holds in every language.
 
 Agreed with the developer on 2026-11-08 (all six of ui-design-peer's recommendations):
 
