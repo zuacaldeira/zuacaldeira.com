@@ -573,6 +573,27 @@ test('SW-HOW-02: the strip shows this site’s links protocol exactly as checked
   );
 });
 
+// The theorem band, the shared TheoremBand component (D14, D30).
+const band = (html) => sections(html).find(({ cls }) => cls.split(' ').includes('band'))?.inner ?? '';
+const bandOf = (html) =>
+  Object.fromEntries(
+    ['paper', 'kicker', 'label', 'statement', 'evidence'].map((part) => [part, texts(band(html), 'p', `band__${part}`)]),
+  );
+
+test('SW-PROOF-01: the German page ends on the theorem that makes the protocols hold', () => {
+  const html = page('de/software');
+  assert.equal(sections(html).at(-1)?.cls, 'band', 'the band is not the last section');
+  assert.deepEqual(bandOf(html), {
+    paper: ['Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026'],
+    kicker: ['Warum die Protokolle halten'],
+    label: ['Satz 15 · Reticulate Theorem'],
+    statement: ['For every well-formed session type S, ℒ(S)/≡ is a bounded lattice.'],
+    evidence: [
+      'Geprüft an 108 Benchmark-Protokollen aus Netzwerken, Datenbanken, verteilten Systemen und KI. In Lean 4 mechanisiert, mit zwei unabhängigen Werkzeug-Implementierungen.',
+    ],
+  });
+});
+
 const PAPER = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
 const REPO = { en: 'Repository', de: 'Repository', pt: 'Repositório' };
 const READ_PAPER = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };

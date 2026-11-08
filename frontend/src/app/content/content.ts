@@ -77,7 +77,8 @@ export interface SoftwareHow {
 
 /** A statement quoted from the paper: notation, the same in every language (HOME-PAPER-04, D31). */
 export interface PaperStatement {
-  readonly kind: 'theorem' | 'definition' | 'lemma' | 'proposition';
+  /** `theorem`, `definition`, `lemma` or `proposition`; a string, as the snapshot's JSON types it. */
+  readonly kind: string;
   readonly number: number;
   readonly name?: string;
   readonly text: string;
