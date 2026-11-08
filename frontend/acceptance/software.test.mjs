@@ -145,6 +145,103 @@ test('SW-LEAD-02: the case study answers five questions in order, then gives its
   assert.deepEqual(blocks(page('en/software')), EN_BLOCKS);
 });
 
+const leadOf = (html) => ({
+  kicker: texts(lead(html), 'p', 'sw-lead__kicker'),
+  title: texts(lead(html), 'h2'),
+  status: texts(lead(html), 'p', 'sw-lead__status'),
+  blocks: blocks(html),
+});
+
+const STACK = ['Python · pytest · Hypothesis · Server-Sent Events · reticulateP'];
+
+const TRANSLATED_LEADS = {
+  de: {
+    kicker: ['Fallstudie · KI-Agenten'],
+    title: ['Ein Monitor, der einen Coding-Agenten an sein TDD-Protokoll bindet'],
+    status: ['Auf dieser Website im Einsatz seit November 2026'],
+    blocks: [
+      [
+        'Die Frage',
+        [
+          'Macht ein Session-Typ die testgetriebene Arbeit eines KI-Coding-Agenten besser, und in welchem Modus: im Pair mit dem Entwickler oder im Batch auf einer vereinbarten Testliste? Besser heißt: Tests, die für die Arbeit Bedeutung haben, nicht Abdeckung.',
+        ],
+      ],
+      [
+        'Was ich gebaut habe',
+        [
+          'Ein Monitor, der einem TDD-Agenten über dessen Hooks bei der Arbeit zusieht und jeden Schritt gegen einen Session-Typ des TDD-Ablaufs prüft: Test schreiben, ausführen, aus dem richtigen Grund scheitern sehen, grün machen, refaktorisieren, committen. Ist ein Typ vorgegeben, verweigert er jeden Schritt, den der Typ nicht erlaubt; sonst beobachtet er nur.',
+          'Er zeigt auch, welche Teile der Session-Typen des Ziels die Tests des Agenten erreichen: was die getestete Software tun muss, Fehlerpfade eingeschlossen.',
+        ],
+      ],
+      [
+        'Das Protokoll dahinter',
+        [
+          'Was der Agent tut (&{…}), ist getrennt von den Ergebnissen, die er erhält (+{…}). Der vollständige Ablauftyp hat 56 Zustände und 89 Übergänge und ist ein Verband, geprüft mit reticulateP. Die Varianten für Sabotage (den Code absichtlich brechen, um zu zeigen, dass ein Test greift) und für Triangulation sind Subtypen davon.',
+        ],
+      ],
+      [
+        'Die Live-Ansicht',
+        [
+          'reticulab serve, eine kleine Web-App nur zum Lesen, folgt jeder Sitzung live: was gerade gebaut wird, in einfachen Sätzen; die vereinbarte Testliste, N von M erledigt; die Abdeckung des Ziels; wo der Agent in seinem Typ steht; und ein Regler, der die Schritte noch einmal abspielt.',
+        ],
+      ],
+      [
+        'Das Ergebnis',
+        [
+          'Auf dieser Website im Einsatz seit November 2026: Jedes Element ihres Kopf- und Fußbereichs hat ein Agent unter dem Monitor testgetrieben gebaut, im Pair mit mir.',
+        ],
+      ],
+      ['Stack', STACK],
+    ],
+  },
+  pt: {
+    kicker: ['Estudo de caso · agentes de IA'],
+    title: ['Um monitor que prende um agente de programação ao seu protocolo de TDD'],
+    status: ['Em uso neste site desde novembro de 2026'],
+    blocks: [
+      [
+        'A pergunta',
+        [
+          'Um tipo de sessão torna melhor o trabalho guiado por testes de um agente de programação de IA, e em que modo: em par com o programador, ou em lote, sobre uma lista de testes acordada? Melhor quer dizer testes com significado para o trabalho, não cobertura.',
+        ],
+      ],
+      [
+        'O que construí',
+        [
+          'Um monitor que observa um agente de TDD enquanto trabalha, através dos hooks do agente, e verifica cada passo contra um tipo de sessão do fluxo de TDD: escrever um teste, corrê-lo, vê-lo falhar pela razão certa, pô-lo a passar, refatorar, fazer commit. Quando há um tipo dado, recusa qualquer passo que o tipo não permita; caso contrário, apenas observa.',
+          'Mostra também que partes dos tipos de sessão do próprio alvo os testes do agente alcançam: o que o software em teste tem de fazer, incluindo os caminhos de falha.',
+        ],
+      ],
+      [
+        'O protocolo por trás',
+        [
+          'O que o agente faz (&{…}) fica separado dos resultados que recebe (+{…}). O tipo completo do fluxo tem 56 estados e 89 transições e é um reticulado, verificado com o reticulateP. As variantes para sabotagem (partir o código de propósito para mostrar que um teste deteta a falha) e para triangulação são subtipos dele.',
+        ],
+      ],
+      [
+        'A vista ao vivo',
+        [
+          'reticulab serve, uma pequena aplicação web só de leitura, acompanha cada sessão ao vivo: o que está a ser construído, em frases simples; a lista de testes acordada, N de M feitos; a cobertura do alvo; onde o agente está no seu tipo; e um cursor para rever os passos.',
+        ],
+      ],
+      [
+        'O resultado',
+        [
+          'Em uso neste site desde novembro de 2026: cada elemento do seu cabeçalho e rodapé foi construído com os testes primeiro por um agente sob o monitor, em par comigo.',
+        ],
+      ],
+      ['Tecnologias', STACK],
+    ],
+  },
+};
+
+test('SW-LEAD-03: the German and Portuguese case studies are fully translated, the stack as it is', () => {
+  assert.deepEqual(
+    { de: leadOf(page('de/software')), pt: leadOf(page('pt/software')) },
+    TRANSLATED_LEADS,
+  );
+});
+
 for (const [id, lang, eyebrow, intro] of [
   [
     'SW-HEAD-01',
