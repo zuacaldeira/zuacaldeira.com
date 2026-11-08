@@ -153,6 +153,38 @@ test('WR-LIST-05: the ICE paper opens as a PDF from this site, in this tab, in e
   assert.ok(existsSync(join(browser, PDF)), 'the paper is not in the build');
 });
 
+test('WR-LIST-06: the older papers link to where they are published, in a new tab, and say so in the page language', () => {
+  const newTab = { en: 'opens in a new tab', de: 'öffnet in einem neuen Tab', pt: 'abre num novo separador' };
+  const OUT = [
+    ['ACM Digital Library (DOI)', 'https://doi.org/10.1145/1706299.1706335'],
+    ['eprints.gla.ac.uk', 'https://eprints.gla.ac.uk/47911/'],
+    ['repositorio.ulisboa.pt', 'https://repositorio.ulisboa.pt/handle/10451/14164'],
+  ];
+  const links = Object.fromEntries(
+    LANGS.map((lang) => [lang, items(page(`${lang}/writing`)).slice(1).map(linksOf)]),
+  );
+  assert.deepEqual(
+    links,
+    Object.fromEntries(
+      LANGS.map((lang) => [
+        lang,
+        OUT.map(([label, href]) => [
+          {
+            label,
+            href,
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            type: null,
+            hreflang: 'en',
+            arrow: true,
+            hidden: `(${newTab[lang]})`,
+          },
+        ]),
+      ]),
+    ),
+  );
+});
+
 test('WR-LIST-10 (D4): no abstract is on the Writing page, in any language', () => {
   const abstracts = [
     'We prove that the state space of every well-formed session type',
