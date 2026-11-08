@@ -201,22 +201,23 @@ const readMenu = (page) =>
   });
 
 const MENU = {
-  en: { name: 'Menu', nav: 'Main', labels: ['Home', 'About', 'Research', 'Running', 'Contact'] },
+  en: { name: 'Menu', nav: 'Main', labels: ['Home', 'About', 'Software', 'Research', 'Running', 'Contact'] },
   de: {
     name: 'Menü',
     nav: 'Hauptnavigation',
-    labels: ['Startseite', 'Über mich', 'Forschung', 'Laufen', 'Kontakt'],
+    labels: ['Startseite', 'Über mich', 'Software', 'Forschung', 'Laufen', 'Kontakt'],
   },
   pt: {
     name: 'Menu',
     nav: 'Navegação principal',
-    labels: ['Início', 'Sobre', 'Investigação', 'Corrida', 'Contacto'],
+    labels: ['Início', 'Sobre', 'Software', 'Investigação', 'Corrida', 'Contacto'],
   },
 };
-const PAGES = ['home', 'about', 'research', 'running', 'contact'];
+// Software before Research since slice 7 of the Software page (D13, SW-PAGE-10).
+const PAGES = ['home', 'about', 'software', 'research', 'running', 'contact'];
 
 for (const lang of ['en', 'de', 'pt']) {
-  test(`SHELL-08 A1: on a phone, /${lang}/home's menu slides in from the right, named, with five links, each 44 px high`, async () => {
+  test(`SHELL-08 A1: on a phone, /${lang}/home's menu slides in from the right, named, with six links, each 44 px high`, async () => {
     const menu = await withMenu(`/${lang}/home`, readMenu);
     assert.deepEqual(
       {
