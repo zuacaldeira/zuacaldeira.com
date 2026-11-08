@@ -280,6 +280,15 @@ test('SW-LEAD-04: the lead shows the Run line exactly as checked, the same in ev
   );
 });
 
+test('SW-LEAD-07: the lead gives no figures for the experiment: its only numbers are the date and the type', () => {
+  const numbers = Object.fromEntries(
+    LANGS.map((lang) => [lang, text(lead(page(`${lang}/software`))).match(/\d+(?:[.,]\d+)?%?/g)]),
+  );
+  // The status and the result (November 2026), the workflow type's 56 states and 89 transitions.
+  const expected = ['2026', '56', '89', '2026'];
+  assert.deepEqual(numbers, { en: expected, de: expected, pt: expected });
+});
+
 for (const [id, lang, eyebrow, intro] of [
   [
     'SW-HEAD-01',
