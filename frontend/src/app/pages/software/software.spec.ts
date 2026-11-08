@@ -14,4 +14,16 @@ describe('Software', () => {
     TestBed.createComponent(Software).detectChanges();
     expect(TestBed.inject(Title).getTitle()).toBe('Alexandre Zua Caldeira — heading de');
   });
+
+  it('SW-HEAD-02: should open with the eyebrow, the one <h1> and the intro in the page language', () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    const fixture = TestBed.createComponent(Software);
+    fixture.detectChanges();
+    const page: HTMLElement = fixture.nativeElement;
+    const texts = (selector: string) =>
+      [...page.querySelectorAll(selector)].map((el) => el.textContent?.trim());
+    expect(texts('.sw-head__eyebrow')).toEqual(['eyebrow de']);
+    expect(texts('h1')).toEqual(['heading de']);
+    expect(texts('.sw-head__intro')).toEqual(['intro de']);
+  });
 });

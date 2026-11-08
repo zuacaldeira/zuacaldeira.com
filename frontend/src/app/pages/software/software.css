@@ -1,0 +1,50 @@
+/* The page head, on the home hero's lozenge tile (software-spec.md; home-spec.md, "Tile pattern"). */
+.sw-head {
+  --grout: color-mix(in oklab, var(--zc-edge) 28%, transparent);
+  background-image:
+    repeating-linear-gradient(45deg, transparent 0 31px, var(--grout) 31px 32px),
+    repeating-linear-gradient(-45deg, transparent 0 31px, var(--grout) 31px 32px);
+  padding-block: clamp(40px, 6vw, 80px) clamp(32px, 5vw, 72px);
+}
+
+.sw-head__in {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2vw, 26px);
+}
+
+.sw-head__eyebrow {
+  margin: 0;
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
+  color: var(--zc-ochre-text);
+}
+
+.sw-head__title {
+  margin: 0;
+  font-family: var(--zc-font-heading);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  line-height: 1.03;
+  letter-spacing: -0.025em;
+  color: var(--zc-text-heading);
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+.sw-head__intro {
+  margin: 0;
+  max-width: 40rem;
+  font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+  color: var(--zc-text-body);
+}
+
+@media (max-width: 599.98px) {
+  .sw-head__in {
+    padding-inline: 16px;
+  }
+}
