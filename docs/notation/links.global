@@ -1,0 +1,7 @@
+# This site's links protocol, as shown on the Software page (SW-HOW-02), exactly as on the page.
+# A whole global type: the page gives the visitor its links, the visitor asks nginx, nginx answers
+# 200; there is no redirect branch (SHELL-04 in docs/examples/shell.md).
+# Checked in the lab with the pinned reticulateP (main 7d20ba416) on 2026-11-08: it parses as a
+# global type (D5 in docs/examples/software.md).
+# The tests skip lines starting with # and take the first other line (D17, D29).
+Page -> Visitor : {links: Visitor -> Nginx : {get: Nginx -> Visitor : {ok200: end}}}

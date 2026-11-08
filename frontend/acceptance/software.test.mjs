@@ -506,6 +506,37 @@ test('SW-HOW-01: three steps say how the work is done, after More work', () => {
   });
 });
 
+const HOW_CAPTIONS = {
+  en: 'From this site, as a checked global type: the page gives the visitor its links, the visitor asks nginx, and nginx answers 200. There is no redirect branch (SHELL-04).',
+  de: 'Von dieser Website, als geprüfter globaler Typ: Die Seite gibt dem Besucher ihre Links, der Besucher fragt nginx, und nginx antwortet mit 200. Einen Umleitungszweig gibt es nicht (SHELL-04).',
+  pt: 'Deste site, como tipo global verificado: a página dá ao visitante as suas ligações, o visitante pede ao nginx, e o nginx responde 200. Não há ramo de redirecionamento (SHELL-04).',
+};
+
+test('SW-HOW-02: the strip shows this site’s links protocol exactly as checked, the same in every language (D5)', () => {
+  const checked = checkedLine('links.global');
+  assert.equal(
+    checked,
+    'Page -> Visitor : {links: Visitor -> Nginx : {get: Nginx -> Visitor : {ok200: end}}}',
+    'links.global changed',
+  );
+  const shown = Object.fromEntries(
+    LANGS.map((lang) => {
+      const inner = how(page(`${lang}/software`));
+      const pres = [...inner.matchAll(/<pre\b([^>]*)>(.*?)<\/pre>/gs)].map(([, attrs, body]) => ({
+        translate: attrs.match(/\btranslate="([^"]*)"/)?.[1],
+        text: text(body),
+      }));
+      return [lang, { pres, caption: texts(inner, 'figcaption') }];
+    }),
+  );
+  assert.deepEqual(
+    shown,
+    Object.fromEntries(
+      LANGS.map((lang) => [lang, { pres: [{ translate: 'no', text: checked }], caption: [HOW_CAPTIONS[lang]] }]),
+    ),
+  );
+});
+
 const PAPER = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
 const REPO = { en: 'Repository', de: 'Repository', pt: 'Repositório' };
 const READ_PAPER = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };
