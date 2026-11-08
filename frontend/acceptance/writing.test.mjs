@@ -231,6 +231,21 @@ test('WR-LIST-07, 08, 09 (D10): the labels are translated, the titles, names and
   assert.deepEqual(english.map(({ title }) => title), TITLES);
 });
 
+test('WR-LIST-11 (D2): the training papers are not on the Writing page, in any language', () => {
+  const training = [
+    'Schriftliche Reflexion — Berufliche Identität',
+    'Bronfenbrenner — Lebenswelten und Diversität',
+    'Filmzusammenfassung — Anthroposophie',
+    'reflexion-berufliche-identitaet.pdf',
+    'bronfenbrenner-lebenswelten.pdf',
+    'filmzusammenfassung-anthroposophie',
+  ];
+  const found = LANGS.flatMap((lang) =>
+    training.filter((name) => page(`${lang}/writing`).includes(name)).map((name) => `${lang}: ${name}`),
+  );
+  assert.deepEqual(found, []);
+});
+
 test('WR-LIST-10 (D4): no abstract is on the Writing page, in any language', () => {
   const abstracts = [
     'We prove that the state space of every well-formed session type',
