@@ -26,4 +26,12 @@ describe('Writing', () => {
     expect(texts('h1')).toEqual(['writing heading de']);
     expect(texts('.page-head__intro')).toEqual(['writing intro de']);
   });
+
+  it('WR-LIST-01: should show the list of texts after the head', () => {
+    TestBed.inject(I18nService).setLanguage('en');
+    const fixture = TestBed.createComponent(Writing);
+    fixture.detectChanges();
+    const parts = [...(fixture.nativeElement as HTMLElement).children].map((el) => el.tagName);
+    expect(parts).toEqual(['APP-PAGE-HEAD', 'APP-TEXT-ROWS']);
+  });
 });
