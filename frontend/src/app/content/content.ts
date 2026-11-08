@@ -19,10 +19,36 @@ export interface SoftwareHead {
   readonly intro: string;
 }
 
+/** One language's lead case study of the Software page (D19); notation between backticks (D18). */
+export interface SoftwareLead {
+  readonly kicker: string;
+  readonly title: string;
+  readonly status: string;
+  readonly labels: {
+    readonly question: string;
+    readonly built: string;
+    readonly protocol: string;
+    readonly live: string;
+    readonly result: string;
+    readonly stack: string;
+  };
+  readonly question: string;
+  readonly built: string;
+  readonly built2: string;
+  readonly protocol: string;
+  readonly runCaption: string;
+  readonly live: string;
+  readonly result: string;
+  readonly stack: string;
+}
+
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
 export interface ContentSnapshot {
   readonly home: { readonly hero: Readonly<Record<Language, HomeHero>> };
-  readonly software: { readonly head: Readonly<Record<Language, SoftwareHead>> };
+  readonly software: {
+    readonly head: Readonly<Record<Language, SoftwareHead>>;
+    readonly lead: Readonly<Record<Language, SoftwareLead>>;
+  };
 }
 
 /** Provided in app.config.ts from content.generated.json; specs provide their own. */

@@ -1,0 +1,54 @@
+/* The lead case study (software-spec.md, `WorkLead`). */
+.sw-lead {
+  padding-block: clamp(40px, 6vw, 80px);
+}
+
+.sw-lead__in {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.sw-lead__kicker {
+  margin: 0 0 var(--zc-space-3);
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
+  color: var(--zc-ochre-text);
+}
+
+.sw-lead__title {
+  margin: 0;
+  font-family: var(--zc-font-heading);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(1.9rem, 3.6vw, 2.9rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--zc-text-heading);
+  text-wrap: balance;
+}
+
+.sw-lead__status {
+  display: flex;
+  align-items: center;
+  gap: var(--zc-space-3);
+  margin: var(--zc-space-4) 0 0;
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
+  color: var(--zc-text-body);
+}
+
+/* A decorative ochre lozenge before the status: a graphic, so --zc-ochre, not the text token. */
+.sw-lead__lozenge {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  background: var(--zc-ochre);
+  transform: rotate(45deg);
+}
+
+@media (max-width: 599.98px) {
+  .sw-lead__in {
+    padding-inline: 16px;
+  }
+}
