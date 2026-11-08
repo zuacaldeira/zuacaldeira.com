@@ -22,10 +22,6 @@ describe('Footer', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have the current year', () => {
-    expect(component.currentYear).toBe(new Date().getFullYear());
-  });
-
   const footerText = (selector: string) =>
     (fixture.nativeElement as HTMLElement)
       .querySelector(`footer ${selector}`)
@@ -107,6 +103,20 @@ describe('Footer', () => {
     TestBed.inject(I18nService).setLanguage('de');
     await fixture.whenStable();
     expect(bottomTexts()[0]).toBe('Zua = software ∥ research ∥ running');
+  });
+
+  it('SHELL-07b (D35): ends the bottom row with "© 2027 Alexandre Zua Caldeira · Berlin" on an English page built in 2027', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      vi.setSystemTime(new Date(2027, 0, 1, 12));
+      fixture = TestBed.createComponent(Footer);
+      TestBed.inject(I18nService).setLanguage('en');
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(bottomTexts().at(-1)).toBe('© 2027 Alexandre Zua Caldeira · Berlin');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('SHELL-03: lists the languages written out, English, Deutsch, Português', async () => {
