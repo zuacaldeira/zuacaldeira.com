@@ -82,6 +82,8 @@ language as its example.
 | SW-WORK-03 | Kita Dienstplan links to its repository. | any language | its links are read | exactly one: https://github.com/zuacaldeira/kita-dienstplan, labelled `work.repo` (D8) | |
 | SW-WORK-04 | The Casa Azul website links to the live site and its repository. | any language | its links are read | https://casa-azul-berlin.de, labelled `casa-azul-berlin.de`, and https://github.com/zuacaldeira/ca-website, labelled `work.repo` (D8) | |
 | SW-WORK-05 | The rows are translated; the names and stacks are not. | `/de/software`, `/pt/software` | the rows are read | kicker and text in the page's language; the names reticulateP and Kita Dienstplan and the stacks the same as in en; the Casa Azul title `work.casa.title` translated | |
+| SW-WORK-06 | A fresh database, filled with the starting texts, gives the three pieces in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/work?lang=en`, `de`, `pt` | 200; en is the spec's copy (D26's shape); de and pt have the same rows, ids, names, stacks and links' targets, each text non-empty | |
+| SW-WORK-P-02 | A link to a private repository is refused. | the built page | a repository link is put on the reticulateP row | SW-WORK-02 goes red | |
 | SW-WORK-P-01 | A fourth piece, or a different order, is refused. | the built page | the Embassy line is put back, or Dienstplan moved first | SW-WORK-01 goes red | |
 
 ## 5. How I work
@@ -438,7 +440,79 @@ Leftovers:
   the preview; drawn and styled by eye, the figure's contrast not measured.
 - **Port 8081** was taken again; the build's backend ran on 8091 (stdin override), as in slice 2.
 
+## Slice 4: More work
+
+Test list:
+- **Backend:** B1 SW-WORK-06, the seed's `software/work` in en, de, pt (in `SoftwareSeedIntegrationTest`).
+- **Script:** S1 SW-PAGE-09, a `work` missing in `de` stops the snapshot, naming `software`, `work`, `de`.
+- **Unit (`WorkRows`):** U1 an `<h2>` and one row per piece, in the content's order, each with its
+  kicker, `<h3>` title, text and stack (SW-WORK-01); U2 each row's links, label and target
+  (SW-WORK-02 to 04); U3 a link outside the site opens in a new tab with `rel="noopener noreferrer"`,
+  as the footer's do, and the paper does not (D27).
+- **Acceptance (build):** A SW-WORK-01, the outer test (en: the section after the lead, three rows in
+  order: reticulateP, Kita Dienstplan, Casa Azul website); A2 SW-WORK-02 to 04 (each row's links in
+  en, de, pt; the paper's file is in the build); A3 SW-WORK-05 (de and pt: kicker, text and the Casa
+  Azul title translated; names, stacks and targets the same as in en).
+- **Protocol rows:** SW-WORK-P-01 (the Embassy line put back as a fourth row; Kita Dienstplan moved
+  first; A red), SW-WORK-P-02 (a repository link on the reticulateP row; A2 red).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1
+        participant DB as MySQL 8 (seed R__software.sql)
+        participant API as Content API
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/software/index.html
+    T->>API: B1: GET software/work?lang=l
+    F->>API: GET software/work?lang=l, for l in en, de, pt
+    API-->>F: 200 work_l, or 404 → the build stops (S1)
+    F->>NG: software.json
+    NG->>P: WorkRows (U1–U3): heading, rows in order, links
+    T->>P: A, A2, A3, P rows
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → API : get(software, work, l) .
+    API → Build : { ok200(work_l) .
+                    Build → Page : prerender(work_l) .
+                    Page → Visitor : work(heading, rows[reticulateP, kitaDienstplan, casaAzul]) .
+                    Visitor → Page : { paper . end , repo(kitaDienstplan) . end ,
+                                       site(casaAzul) . end , repo(casaAzul) . end , stay . end } ,
+                    missing404 . Build → CI : fail(software, work, l) . end }
+
+Visitor ↾ = Page?work(…) . Page!{ paper . end , repo(kita) . end , site(casa) . end ,
+                                  repo(casa) . end , stay . end }
+Page ↾    = Build?prerender . Visitor!work(…) . Visitor?{ … }
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1 test → API | `get`, `ok200(work_l)` | B1 |
+| 2–3 F → API | `get` × 3, `{ok200, missing404}` | S1 |
+| 5 NG → P | `prerender(work_l)` | U1–U3 |
+| 6 test → P | `work(heading, rows[…])` | A, A3 |
+| 6, the links | the Visitor's choice `{paper, repo(kita), site(casa), repo(casa), stay}` | A2, U2, U3 |
+| forbidden: a fourth row, or another order | `rows[reticulateP, kitaDienstplan, casaAzul]` | SW-WORK-P-01 |
+| forbidden: `repo(reticulateP)` | not a branch of the choice (D2) | SW-WORK-P-02 |
+
+The page is read-only: no repeat, stale-token or race rows.
+
 ## Decisions
+
+Taken in slice 4's plan on 2026-11-08, following the spec (the developer may change them):
+
+- **D26. `software/work`** is one object: `heading` and `rows`, an array in the page's order, each row
+  `id`, `kicker`, `title`, `text`, `stack` and `links` (`label`, `href`). The names reticulateP and Kita
+  Dienstplan, the stacks and the targets are the same in every language; the Casa Azul title is
+  translated (`work.casa.title`).
+- **D27. Links outside the site** (GitHub, casa-azul-berlin.de) open in a new tab with `rel="noopener
+  noreferrer"`, as the footer's GitHub and LinkedIn do; the paper's PDF opens in the same tab.
 
 Decided by the developer on 2026-11-08:
 
