@@ -120,4 +120,26 @@ describe('ZcDesktopMenuItems on a page of the site', () => {
     const current = [...(fixture.nativeElement as HTMLElement).querySelectorAll('a[aria-current="page"]')];
     expect(current.map((a) => a.getAttribute('href'))).toEqual(['/de/software']);
   });
+
+  it('WR-PAGE-07: marks Texte as the page you are on, on /de/writing, and only it', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter(
+          ['software', 'research', 'writing', 'about'].map((page) => ({
+            path: `de/${page}`,
+            component: AnyPage,
+          })),
+        ),
+      ],
+    }).overrideComponent(ZcDesktopMenuItems, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('de');
+    const fixture = TestBed.createComponent(ZcDesktopMenuItems);
+    await TestBed.inject(Router).navigateByUrl('/de/writing');
+    await fixture.whenStable();
+
+    const current = [...(fixture.nativeElement as HTMLElement).querySelectorAll('a[aria-current="page"]')];
+    expect(current.map((a) => `${a.textContent?.trim()} → ${a.getAttribute('href')}`)).toEqual([
+      'Texte → /de/writing',
+    ]);
+  });
 });
