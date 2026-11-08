@@ -66,6 +66,13 @@ stateDiagram-v2
 
 ## Decisions
 
+Decided by the developer on 2026-11-08 (D25 in `docs/examples/software.md`):
+
+- **THEME-10 is built first for today's two themes,** light and dark (`html.dark-theme`): an inline
+  script in `index.html`'s `<head>` applies the site's rule (the saved choice `zc-theme`, else the
+  device's setting) before first paint. One table of cases, `theme-rule.cases.json`, holds the rule
+  for the script and for `ThemeService`. The living glaze extends the same script when it is built.
+
 Agreed with the developer on 2026-11-02:
 
 - **The living glaze as the study has it,** and **living is the default state.** Light and

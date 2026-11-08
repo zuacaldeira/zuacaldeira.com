@@ -440,14 +440,22 @@ Leftovers:
 
 ## Decisions
 
-Open, for the developer (2026-11-08):
+Decided by the developer on 2026-11-08:
 
-- **D25. The light screenshot downloaded on a dark page.** Options: (1, recommended) a few lines of
-  script in `index.html`'s `<head>` set `html.dark-theme` before the page paints, by the same rule as
-  `ThemeService` (saved choice, else the system's), so the right image loads and dark pages no longer
-  flash light first, on every page; a test ties the script's rule to the service's; (2) leave it:
-  about 150 kB more on dark pages, C keeps checking only the image shown; (3) CSS only, by the
-  system's setting: wrong for a visitor whose saved choice differs from the system's.
+- **D25. The light screenshot downloaded on a dark page: option 1.** A few lines of script in
+  `index.html`'s `<head>` set `html.dark-theme` before the page paints, by the site's own rule (the
+  saved choice, `zc-theme`, else the device's setting), so a dark page downloads only the dark image
+  and no page flashes light first. A test keeps the script's rule and `ThemeService`'s the same: one
+  table of cases (`theme-rule.cases.json`), read by the service's spec and by a build test that runs
+  the built page's script over it. This is THEME-10 in `docs/examples/theme.md` for today's two
+  themes (the living glaze is not built). The design checker's "broken image" warning stays as it is.
+
+  Test list: C2 (browser, the outer test, declared) SW-LEAD-06: a dark page downloads only the dark
+  screenshot, the check C left open, red first; C3 (browser) THEME-10: with Angular's script blocked,
+  `<html>` already has `dark-theme` on a dark device, and not on a dark device whose saved choice is
+  light; C4 (browser) THEME-10: with JavaScript off, the page is light; A (build) THEME-10: the built
+  page's head script gives the table's answer for every case; U (unit) THEME-10: `ThemeService` gives
+  the same table's answers.
 
 Taken in slice 3's plan on 2026-11-08, following the spec (the developer may change them):
 
