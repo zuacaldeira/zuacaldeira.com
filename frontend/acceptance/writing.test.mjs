@@ -49,6 +49,15 @@ test('WR-PAGE-02: the German Writing page links to its version in every language
   ]);
 });
 
+test('WR-PAGE-03: the browser tab names the Writing page in its language', () => {
+  const titles = LANGS.map((lang) => page(`${lang}/writing`).match(/<title>(.*?)<\/title>/)?.[1]);
+  assert.deepEqual(titles, [
+    'Alexandre Zua Caldeira — Writing',
+    'Alexandre Zua Caldeira — Texte',
+    'Alexandre Zua Caldeira — Textos',
+  ]);
+});
+
 test('WR-HEAD-02: the German Writing page opens in German: eyebrow, one <h1>, the intro', () => {
   const html = page('de/writing');
   assert.match(html, /<html lang="de"/);
