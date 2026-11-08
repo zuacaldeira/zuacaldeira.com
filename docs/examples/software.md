@@ -100,15 +100,15 @@ language as its example.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| SW-PROOF-01 | The page ends on the theorem that makes the protocols hold. | the built `/de/software` | the band is read | "Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026", "Warum die Protokolle halten", the statement "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice." (untranslated), the home band's German evidence line | |
-| SW-PROOF-02 | Two buttons lead on: the paper, and the research page in the same language. | any language | its buttons are read | "Read the paper (PDF)" / "Paper lesen (PDF)" / "Ler o artigo (PDF)" → the paper's PDF; "All research" / "Zur Forschung" / "Toda a investigação" → `/xx/research` | |
+| SW-PROOF-01 | The page ends on the theorem that makes the protocols hold. | the built `/de/software` | the band is read | "Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026", "Warum die Protokolle halten", the statement "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice." (untranslated), the home band's German evidence line | yes (build and unit, 2026-11-08; the label "Satz 15 · Reticulate Theorem" too) |
+| SW-PROOF-02 | Two buttons lead on: the paper, and the research page in the same language. | any language | its buttons are read | "Read the paper (PDF)" / "Paper lesen (PDF)" / "Ler o artigo (PDF)" → the paper's PDF; "All research" / "Zur Forschung" / "Toda a investigação" → `/xx/research` | yes (build and unit, 2026-11-08) |
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| SW-PROOF-03 | A fresh database, filled with the starting texts, gives the paper's shared labels in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/shared/paper?lang=en`, `de`, `pt` | 200 with HOME-PAGE-09's fields (D30), each label non-empty; `paperTitle`, `year`, `pdfUrl` and `statements` (Theorem 15 alone, D31) the same in every language | |
-| SW-PROOF-04 | The band's own line comes from the Software page's content in every language. | the same | `GET /api/content/software/proof?lang=en`, `de`, `pt` | 200 with `kicker`: "Why the protocols hold", "Warum die Protokolle halten", "Porque é que os protocolos se cumprem" | |
-| SW-PROOF-05 | The band's text is easy to read in light and dark. | `/en/software` in the browser, light and dark | the band's texts are measured | each is at 4.5:1 or more against what is behind it | |
-| SW-PROOF-P-01 | A translated theorem is refused. | the built `/de/software` | the statement reads "Für jeden wohlgeformten Session-Typ S …" | SW-PROOF-01 goes red | |
+| SW-PROOF-03 | A fresh database, filled with the starting texts, gives the paper's shared labels in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/shared/paper?lang=en`, `de`, `pt` | 200 with HOME-PAPER-09's fields (D30), each label non-empty; `paperTitle`, `year`, `pdfUrl` and `statements` (Theorem 15 alone, D31) the same in every language | yes (integration, 2026-11-08) |
+| SW-PROOF-04 | The band's own line comes from the Software page's content in every language. | the same | `GET /api/content/software/proof?lang=en`, `de`, `pt` | 200 with `kicker`: "Why the protocols hold", "Warum die Protokolle halten", "Porque é que os protocolos se cumprem" | yes (integration, 2026-11-08) |
+| SW-PROOF-05 | The band's text is easy to read in light and dark. | `/en/software` in the browser, light and dark | the band's texts are measured | each is at 4.5:1 or more against what is behind it | yes (browser, 1280, light and dark, 2026-11-08) |
+| SW-PROOF-P-01 | A translated theorem is refused. | the built `/de/software` | the statement reads "Für jeden wohlgeformten Session-Typ S …" | SW-PROOF-01 goes red | yes (break in the build) |
 
 ## In the browser (after the build, `npm run acceptance:browser`)
 
@@ -680,6 +680,35 @@ Page ↾    = Build?prerender . Visitor!band(…) . Visitor?{ … }
 | forbidden: the home text on the Software page | `paper_l` from `shared.json`, not `home.json` | SW-PAGE-14 |
 
 The page is read-only: no repeat, stale-token or race rows.
+
+**Done 2026-11-08.** Red first: A on slice 5's build (the band is not the last section); B1 and B2
+404 in all three languages; S1 and S2 "Missing expected rejection"; U1 no paper line (after a stub);
+U2 no label, statement or evidence; U3 no buttons; U4 `NullInjectorError` for `SHARED_CONTENT` once
+the band was on the page, green when the Software route provided `@page-content/shared`. Declared to
+the monitor: A as `writeAcceptance`, every break and restore. Green at first and shown to bite: A
+(SW-PROOF-P-01: the German statement), A2 (the research button to `/en/research` on `pt`), C (the
+light band's text set to `--zc-text-muted` in the source, rebuilt). SW-PAGE-14 stayed green: the
+Software page still downloads no home text.
+
+Two slips, each fixed in its own commit: U4's commit was made before the whole suite's result was
+read, and `software.spec.ts` failed there (NG0201, the band's router link needed `provideRouter`);
+and the first build failed its `satisfies` check, because the snapshot's JSON types a statement's
+`kind` as `string`, not the literal union (now `string`).
+
+Results: unit 247 passed, 5 skipped (39 files); scripts 10/10; `acceptance` 53/53;
+`acceptance:nginx` 11/11; browser `software-band` 2/2 and `software-shot` 2/2 (the shell's browser
+tests read the home pages, whose tokens did not change); backend `./mvnw verify` 31 integration
+tests; the build prerenders 23 routes; initial bundle 511.13 kB (510.81 before: the new tokens in
+the global styles).
+
+Leftovers:
+- **The home band** reuses `TheoremBand` and `shared/paper` when it is built: its route provides
+  `SHARED_CONTENT` then (D33), and the three other statements come from the paper (D31).
+- **The contrast reader** is now in two browser tests (footer, band); a third user would be the
+  time to share it.
+- **The band at 390 and 768 px,** and the Fraunces 400 the spec asks for the statement (not loaded
+  yet: `index.html` links Fraunces 500 and 600 only), are for the developer on the preview.
+- **Port 8081** was taken again; the build's backend ran on 8091 (stdin override).
 
 Taken in slice 6's plan on 2026-11-08, following the home spec (the developer may change them):
 

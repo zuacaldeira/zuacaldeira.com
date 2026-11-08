@@ -24,7 +24,10 @@ Build output: `dist/zuacaldeira-com/browser/` (prerendered static HTML).
 every page, section and language and writes one file per page, `src/app/content/generated/<page>.json`
 (git-ignored). Each page's route file (`pages/home/home.routes.ts`, `pages/software/software.routes.ts`)
 imports its own as `@page-content/<page>` and provides it (`HOME_CONTENT`, `SOFTWARE_CONTENT`), so a
-page downloads only its own text (D20, D21 in `docs/examples/software.md`). Without the files the build
+page downloads only its own text (D20, D21 in `docs/examples/software.md`). Text several pages read
+is a page of its own, `shared` (`shared.json`, `@page-content/shared`, `SHARED_CONTENT`; today the
+paper's labels at `shared/paper`, read by the shared `common/theorem-band/`, D30), provided by each
+route that needs it. Without the files the build
 fails. `tsconfig.spec.json` points `@page-content/*` at `src/app/content/testing/`, so the specs never
 need the fetched files. The API
 is the build's own backend, from the repo root: `docker compose -f compose.build.yml up --build
@@ -163,7 +166,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 38 test files, 249 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 39 test files, 252 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
