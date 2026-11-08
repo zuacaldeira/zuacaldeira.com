@@ -20,6 +20,7 @@ export const SITE_PAGES: readonly string[] = [
   'about',
   'software',
   'research',
+  'writing',
   'running',
   'contact',
 ];

@@ -18,7 +18,7 @@ describe('App Routes', () => {
     it.each(['en', 'de', 'pt'])('should give %s its own route tree', (lang) => {
       const tree = routes.find((r) => r.path === lang);
       const paths = tree?.children?.map((r) => r.path);
-      expect(paths).toEqual(['home', 'about', 'software', 'research', 'running', 'contact']);
+      expect(paths).toEqual(['home', 'about', 'software', 'research', 'writing', 'running', 'contact']);
     });
 
     it('SHELL-09: should have the pages the language links know, SITE_PAGES', () => {
@@ -47,6 +47,7 @@ describe('App Routes', () => {
       ['about', 'About'],
       ['software', 'Software'],
       ['research', 'Research'],
+      ['writing', 'Writing'],
       ['running', 'Running'],
       ['contact', 'Contact'],
     ])('%s should resolve to %s component', async (path, componentName) => {
@@ -95,6 +96,13 @@ describe('App Routes', () => {
       TestBed.inject(I18nService).setLanguage('en');
       const harness = await RouterTestingHarness.create('/de/software');
       expect(harness.routeNativeElement?.tagName).toBe('APP-SOFTWARE');
+      expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe('de');
+    });
+
+    it('WR-PAGE-01: should show /de/writing as the Writing page, in German', async () => {
+      TestBed.inject(I18nService).setLanguage('en');
+      const harness = await RouterTestingHarness.create('/de/writing');
+      expect(harness.routeNativeElement?.tagName).toBe('APP-WRITING');
       expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe('de');
     });
 

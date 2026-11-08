@@ -17,6 +17,10 @@ const pages: Routes = [
     loadChildren: () => import('./pages/software/software.routes').then((m) => m.SOFTWARE_ROUTES),
   },
   { path: 'research', loadComponent: () => import('./pages/research/research').then((m) => m.Research) },
+  {
+    path: 'writing',
+    loadChildren: () => import('./pages/writing/writing.routes').then((m) => m.WRITING_ROUTES),
+  },
   // 'work' and 'paedagogik' are hidden until their content is fine-tuned. The page
   // components live on under pages/ — restore the routes here and the nav entries in
   // ContentService to bring them back.
