@@ -1,10 +1,9 @@
 # Examples: Writing page
 
-Status: **cases drafted for the developer, 2026-11-08.** Content decisions D1 to D7 were agreed
-with the developer on 2026-11-08, and the layout and copy (D8 to D10) the same day. D11 and D12 are
-proposals for the build. The cases below become tdd-peer's test list once the developer agrees
-them. The Portuguese copy is a draft nobody has read: it is built as drafted and reviewed on the
-preview (D9).
+Status: **agreed with the developer on 2026-11-08:** D1 to D10, then the cases, the two added
+wordings (the ICE note, the POPL link), D11, D12, the menu in slice 3 and the three slices. The
+Portuguese copy is a draft nobody has read: it is built as drafted and listed for the developer's
+review on the preview (D9).
 
 The Writing page in three languages, at `/en/writing`, `/de/writing` and `/pt/writing`. Design:
 `docs/mockups/writing/writing-spec.md` (option 1, one quiet list), with the mock-up and screenshots
@@ -146,7 +145,7 @@ Page ↾    = Build?prerender . Visitor!page(…) . Visitor?{ … }
 
 The page is read-only: no repeat, stale-token or race rows.
 
-## Slices (proposed)
+## Slices (agreed 2026-11-08)
 
 As on the Software page, each slice ships on `next` with the route live but **no menu link and no
 sitemap entry** until slice 3, so a merge of `next` mid-way leaves the page out of reach.
@@ -165,7 +164,109 @@ sitemap entry** until slice 3, so a merge of `next` mid-way leaves the page out 
 Not in these slices: the Research page linking to this list instead of its own copy (D1), and the
 home page's writing section; each comes with its page.
 
+## Slice 1: frame + head
+
+Test list (crossed off in the "Done" note below as each is committed):
+- **Backend** (Testcontainers, one class per run):
+  - B1 WR-HEAD-05, the seed answers the agreed head in en, de, pt (`WritingSeedIntegrationTest`).
+  - B2 WR-HEAD-04, the stored German head as it is, and WR-HEAD-P-02, `fr` with a stray row and
+    `writing/nope` answer 404 (`ContentSectionIntegrationTest`). The table is page-agnostic (D11),
+    so B2 is expected green at once; it is shown to bite by a break in `ContentService`.
+- **Script:** S1 WR-PAGE-09, the snapshot asks for `writing/head` in each language, and a 404 for
+  `de` stops it naming page `writing`, section `head`, language `de`.
+- **Refactor first (D13):** R the Software page's head becomes the shared `PageHead` component; the
+  Software specs and acceptance tests stay green (only their class selectors move).
+- **Unit:**
+  - U1 WR-PAGE-01, the route `/de/writing` shows the Writing page in German (`SITE_PAGES` too, so the
+    language links know it, WR-PAGE-08).
+  - U2 WR-PAGE-03, the title `Alexandre Zua Caldeira — ${heading}` (D11).
+  - U3 WR-HEAD-02, the head from `WRITING_CONTENT` on a German page.
+  - U4 WR-PAGE-10, `/de/writing` brings its own text with its route (no content at the root).
+- **Acceptance** (`acceptance/writing.test.mjs`):
+  - A WR-HEAD-02, the outer test, declared first.
+  - A2 WR-PAGE-01, A3 WR-PAGE-02, A4 WR-PAGE-03, A5 WR-HEAD-01 and 03, A6 WR-PAGE-10.
+  - A7 the three pages join `PAGES` in `shell.test.mjs` (WR-PAGE-08, SHELL-04, SHELL-07b on the new
+    pages); SHELL-04's D19 example `/de/writing#x` moves to `/de/nope#x`.
+- **Protocol rows:** WR-PAGE-P-01 (a built page moved out), WR-PAGE-P-02 (a link to `/writing`),
+  WR-HEAD-P-01 (the English intro on `/de/writing`), WR-HEAD-P-02 (B2); each green row shown red
+  by its break, then restored.
+
+Not in slice 1: no menu link, no sitemap entry, no nginx or browser checks (slice 3).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1–B2
+        participant DB as MySQL 8 (Flyway + seed R__writing.sql)
+        participant API as Content API
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/writing/index.html
+    T->>API: B1, B2: GET writing/head?lang=l
+    API->>DB: select body where page=writing, section=head, lang=l
+    F->>API: GET writing/head?lang=l, for l in en, de, pt
+    API-->>F: 200 {eyebrow, heading, intro} or 404 → the build stops (S1)
+    F->>NG: writing.json (@page-content/writing)
+    NG->>P: route /l/writing (U1): lang, alternates, title (U2), PageHead (R, U3), own chunk (U4)
+    T->>P: A, A2–A7, P rows
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → API : get(writing, head, l) .
+    API → Build : { ok200(head_l) .
+                    Build → Page : prerender(l, title, alternates, head_l) .
+                    Page → Visitor : page(lang = l, h1, links) . end ,
+                    missing404 . Build → CI : fail(writing, head, l) . end }
+
+Build ↾   = API!get . API?{ ok200 . Page!prerender . end , missing404 . CI!fail . end }
+Page ↾    = Build?prerender . Visitor!page(lang = l, h1, links) . end
+Visitor ↾ = Page?page(lang = l, h1, links) . end
+API ↾     = Build?get . Build!{ ok200 . end , missing404 . end }
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1–2 test → API → DB | `get`, `ok200(head_l)` | B1, B2 (WR-HEAD-04) |
+| 1 with `fr` or `writing/nope` | `missing404` | B2 (WR-HEAD-P-02) |
+| 3–4 F → API | `get` × 3, `{ok200, missing404}` | S1 |
+| 5–6 NG → P | `prerender(l, title, alternates, head_l)` | U1, U2, U3, U4 |
+| 7 T → P | `page(lang, h1, links)` | A, A2–A7 |
+| forbidden: a page missing for some `l` | `prerender` for every `l` | WR-PAGE-P-01 |
+| forbidden: `head_en` on an `l = de` page | `ok200(head_l)` | WR-HEAD-P-01 |
+| forbidden: a link to `/writing` | `links ⊆ /l/x` (SHELL-04) | WR-PAGE-P-02 |
+
+The build is read-only: no repeat, stale-token or race rows.
+
+The refactor R (D13), on the Software page: `G_pre` is slice 1's G of `software.md` with
+`prerender(l, title, alternates, head_l)` drawn by the page's own markup; `G_post` is the same G
+with the head drawn by `PageHead`. `Visitor ↾` is identical in both (`Page?page(lang = l, h1,
+links) . end`, the same eyebrow, `<h1>` and intro), so R changes no behaviour; the Software specs and
+acceptance tests hold it.
+
 ## Decisions
+
+Answered by the developer on 2026-11-08:
+
+- **D11: a,** the stored list's shape as proposed below.
+- **D12: a,** the texts come from the content API, like the Software page;
+  `ContentService.publications` stays for the Research page until it links here.
+- **The menu** changes in slice 3, as SHELL-11 says: Software, Forschung, Texte, Über mich; Home
+  and Running leave the menu.
+- **The cases** and the two added wordings (the ICE note, the POPL link) are agreed. The Portuguese
+  copy is built as drafted and listed for the developer's review on the preview.
+- **The three slices** as proposed: 1 frame and head, 2 the list, 3 open the page.
+
+Taken in slice 1's plan on 2026-11-08, following the spec (the developer may change it):
+
+- **D13. One head for both pages.** The spec asks for the Software page's head "shared, not
+  copied": it becomes `common/page-head/` (`PageHead`, input `head`), with its text type
+  `PageHead` (`SoftwareHead` renamed, the same three fields). The Software page uses it first, as a
+  refactor (its built HTML changes only in class names, `sw-head*` to `page-head*`), then the
+  Writing page.
 
 Agreed with the developer on 2026-11-08 (all six of ui-design-peer's recommendations):
 
