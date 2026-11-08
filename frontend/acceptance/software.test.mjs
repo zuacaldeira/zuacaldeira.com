@@ -333,6 +333,52 @@ test('SW-LEAD-05: a small drawing shows the one action and its three results, it
   );
 });
 
+const SHOTS = {
+  en: {
+    alt: 'The monitor’s live view while the agent built this site’s redirects for old links: on the left, what is being built, in plain sentences, each marked “passed at once” or “failed first, then passed”; on the right, the agent’s map of its 56-state type, at its end.',
+    caption: 'The live view while the agent built this site’s redirects for old links.',
+  },
+  de: {
+    alt: 'Die Live-Ansicht des Monitors, während der Agent die Weiterleitungen alter Links dieser Website baute: links, was gebaut wird, in einfachen Sätzen, jeweils als „sofort bestanden“ oder „erst gescheitert, dann bestanden“ markiert; rechts die Karte des Agenten in seinem Typ mit 56 Zuständen, an dessen Ende.',
+    caption: 'Die Live-Ansicht, während der Agent die Weiterleitungen alter Links dieser Website baute.',
+  },
+  pt: {
+    alt: 'A vista ao vivo do monitor enquanto o agente construía os redirecionamentos de ligações antigas deste site: à esquerda, o que está a ser construído, em frases simples, cada uma marcada como «passou à primeira» ou «falhou primeiro, depois passou»; à direita, o mapa do agente no seu tipo de 56 estados, no fim.',
+    caption: 'A vista ao vivo enquanto o agente construía os redirecionamentos de ligações antigas deste site.',
+  },
+};
+
+test('SW-LEAD-06: the lead holds the light and the dark screenshot, with the page language’s alt text', () => {
+  const shots = Object.fromEntries(
+    LANGS.map((lang) => {
+      const inner = lead(page(`${lang}/software`)).match(/<figure\b[^>]*class="sw-shot"[^>]*>(.*?)<\/figure>/s)?.[1] ?? '';
+      const images = [...inner.matchAll(/<img\b([^>]*)>/g)].map(([, attrs]) => ({
+        src: attrs.match(/\ssrc="([^"]*)"/)?.[1],
+        alt: text(attrs.match(/\salt="([^"]*)"/)?.[1] ?? ''),
+        loading: attrs.match(/\sloading="([^"]*)"/)?.[1],
+      }));
+      return [lang, { images, caption: texts(inner, 'figcaption') }];
+    }),
+  );
+  const image = (lang, mode) => ({
+    src: `/assets/software/reticulab-live-${mode}.png`,
+    alt: SHOTS[lang].alt,
+    loading: 'lazy',
+  });
+  assert.deepEqual(
+    shots,
+    Object.fromEntries(
+      LANGS.map((lang) => [
+        lang,
+        { images: [image(lang, 'light'), image(lang, 'dark')], caption: [SHOTS[lang].caption] },
+      ]),
+    ),
+  );
+  for (const mode of ['light', 'dark']) {
+    assert.ok(existsSync(join(browser, `assets/software/reticulab-live-${mode}.png`)), `${mode} is not built`);
+  }
+});
+
 // The scripts a page loads at once: its <script src> and modulepreload files, and every file they
 // import statically, followed through (`import("…")` is loaded later, so it is left out).
 const loadedAtOnce = (route) => {
