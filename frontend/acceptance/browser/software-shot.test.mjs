@@ -58,7 +58,7 @@ after(async () => {
 });
 
 for (const theme of ['light', 'dark']) {
-  test(`SW-LEAD-06 C: on /en/software (1280, ${theme}), exactly one screenshot shows, the ${theme} one`, async () => {
+  test(`SW-LEAD-06 C: on /en/software (1280, ${theme}), only the ${theme} screenshot shows and is downloaded`, async () => {
     const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, colorScheme: theme });
     try {
       const page = await context.newPage();
@@ -88,9 +88,8 @@ for (const theme of ['light', 'dark']) {
           .map((img) => img.getAttribute('src').match(/reticulab-live-(light|dark)\.png$/)[1]),
       );
       assert.deepEqual(shown, [theme]);
-      // Open (D24): on a dark page the light image is downloaded too, before the theme is set;
-      // `requested` is recorded for that check, which waits for the developer's decision.
-      void requested;
+      // The other image is never downloaded: the theme is set before first paint (D25, THEME-10).
+      assert.deepEqual(requested, [theme], `downloaded: ${requested}`);
     } finally {
       await context.close();
     }
