@@ -84,9 +84,10 @@ test('HOME-PAGE-07: the sitemap lists none of the old paths, which answer 301 (D
 });
 
 // Without the trailing slash, as the hreflang links (D41); `/` is the same page as /en/home (D40).
-test('HOME-PAGE-07: the sitemap lists every page in en, de and pt, and nothing else (D40, D41)', () => {
+// SW-PAGE-04: the Software page joined it on 2026-11-08, 18 pages in all.
+test('HOME-PAGE-07, SW-PAGE-04: the sitemap lists every page in en, de and pt, and nothing else (D40, D41)', () => {
   const expected = ['en', 'de', 'pt'].flatMap((lang) =>
-    ['home', 'about', 'research', 'running', 'contact'].map((page) => `${SITE}/${lang}/${page}`),
+    ['home', 'about', 'software', 'research', 'running', 'contact'].map((page) => `${SITE}/${lang}/${page}`),
   );
   assert.deepEqual(sitemapUrls().toSorted(), expected.toSorted());
 });

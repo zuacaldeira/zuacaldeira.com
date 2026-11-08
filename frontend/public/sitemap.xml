@@ -2,16 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://zuacaldeira.com/en/home</loc></url>
   <url><loc>https://zuacaldeira.com/en/about</loc></url>
+  <url><loc>https://zuacaldeira.com/en/software</loc></url>
   <url><loc>https://zuacaldeira.com/en/research</loc></url>
   <url><loc>https://zuacaldeira.com/en/running</loc></url>
   <url><loc>https://zuacaldeira.com/en/contact</loc></url>
   <url><loc>https://zuacaldeira.com/de/home</loc></url>
   <url><loc>https://zuacaldeira.com/de/about</loc></url>
+  <url><loc>https://zuacaldeira.com/de/software</loc></url>
   <url><loc>https://zuacaldeira.com/de/research</loc></url>
   <url><loc>https://zuacaldeira.com/de/running</loc></url>
   <url><loc>https://zuacaldeira.com/de/contact</loc></url>
   <url><loc>https://zuacaldeira.com/pt/home</loc></url>
   <url><loc>https://zuacaldeira.com/pt/about</loc></url>
+  <url><loc>https://zuacaldeira.com/pt/software</loc></url>
   <url><loc>https://zuacaldeira.com/pt/research</loc></url>
   <url><loc>https://zuacaldeira.com/pt/running</loc></url>
   <url><loc>https://zuacaldeira.com/pt/contact</loc></url>
