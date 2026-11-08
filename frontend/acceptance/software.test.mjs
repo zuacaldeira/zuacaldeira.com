@@ -60,3 +60,22 @@ test('SW-HEAD-02: the German Software page opens in German: eyebrow, one <h1>, t
     ],
   });
 });
+
+for (const [id, lang, eyebrow, intro] of [
+  [
+    'SW-HEAD-01',
+    'en',
+    'Selected work',
+    'Software I have built, and how I hold it to its protocol: written down first, checked, then built test-first.',
+  ],
+  [
+    'SW-HEAD-03',
+    'pt',
+    'Trabalhos selecionados',
+    'Software que construí, e como o prendo ao seu protocolo: primeiro escrito, depois verificado, depois construído com os testes primeiro.',
+  ],
+]) {
+  test(`${id}: the ${lang} Software page opens with its eyebrow, one <h1> and the intro`, () => {
+    assert.deepEqual(head(page(`${lang}/software`)), { eyebrow: [eyebrow], h1: ['Software'], intro: [intro] });
+  });
+}
