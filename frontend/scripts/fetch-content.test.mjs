@@ -3,8 +3,10 @@
 // Run: npm run test:scripts. Examples: docs/examples/home.md.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { fetchContent } from './fetch-content.mjs';
+import { join } from 'node:path';
+import { fetchContent, writeSnapshot } from './fetch-content.mjs';
 
 const heroIn = (lang) => ({ headline: `headline ${lang}`, lede: `lede ${lang}` });
 const headIn = (lang) => ({ eyebrow: `eyebrow ${lang}`, heading: 'Software', intro: `intro ${lang}` });
@@ -67,6 +69,18 @@ test('SW-PAGE-09: a Software lead missing in pt stops the build, naming page, se
   await assert.rejects(fetchContent(api.url), {
     message: 'No content for page software, section lead, language pt (404)',
   });
+});
+
+test('SW-PAGE-14 (D21): the snapshot is written as one file per page, each with only its own sections', (t) => {
+  const dir = mkdtempSync(join(import.meta.dirname, '.tmp-snapshot-'));
+  t.after(() => rmSync(dir, { recursive: true, force: true }));
+  const snapshot = { home: { hero: { en: heroIn('en') } }, software: { head: { en: headIn('en') } } };
+
+  writeSnapshot(snapshot, dir);
+
+  assert.deepEqual(readdirSync(dir).toSorted(), ['home.json', 'software.json']);
+  assert.deepEqual(JSON.parse(readFileSync(join(dir, 'home.json'), 'utf8')), snapshot.home);
+  assert.deepEqual(JSON.parse(readFileSync(join(dir, 'software.json'), 'utf8')), snapshot.software);
 });
 
 test('HOME-HERO-17: an API that cannot be reached stops the build, naming its URL', async () => {

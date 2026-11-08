@@ -6,8 +6,11 @@
 /out-tsc
 /bazel-out
 
-# The build's content snapshot (scripts/fetch-content.mjs, D25)
+# The build's content snapshot (scripts/fetch-content.mjs, D25), one file per page (D21)
 /src/app/content/content.generated.json
+/src/app/content/generated/
+# The snapshot test's temporary folders
+/scripts/.tmp-*
 
 # Node
 /node_modules
