@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { holding } from './loaded.mjs';
 
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
 const page = (route) => readFileSync(join(browser, route, 'index.html'), 'utf8');
@@ -90,3 +91,17 @@ for (const [id, lang, eyebrow, h1, intro] of [
     assert.deepEqual(head(page(`${lang}/writing`)), { eyebrow: [eyebrow], h1: [h1], intro: [intro] });
   });
 }
+
+test('WR-PAGE-10 (D20 in software.md): the Writing page downloads only its own text', () => {
+  // Its own text is there, so the files read are the ones that hold page text (ASCII sentences).
+  const own = 'Papers on session types, and on tools that check code against its specification, newest first.';
+  assert.notDeepEqual(holding('en/writing', own), []);
+  assert.deepEqual(
+    {
+      home: holding('en/writing', 'I build software, and prove its protocols hold.'),
+      software: holding('en/writing', 'A monitor that holds a coding agent to its TDD protocol'),
+      fromHome: holding('en/home', own),
+    },
+    { home: [], software: [], fromHome: [] },
+  );
+});

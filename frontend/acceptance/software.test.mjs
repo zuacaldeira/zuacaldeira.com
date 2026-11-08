@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { holding } from './loaded.mjs';
 
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
 const page = (route) => readFileSync(join(browser, route, 'index.html'), 'utf8');
@@ -684,27 +685,6 @@ test('SW-WORK-02 to 04: the paper for reticulateP, the repositories and the live
   );
   assert.ok(existsSync(join(browser, PAPER)), 'the paper is not in the build');
 });
-
-// The scripts a page loads at once: its <script src> and modulepreload files, and every file they
-// import statically, followed through (`import("…")` is loaded later, so it is left out).
-const loadedAtOnce = (route) => {
-  const html = page(route);
-  const queue = [...html.matchAll(/<script src="([^"]+\.js)"|<link rel="modulepreload" href="([^"]+\.js)"/g)].map(
-    ([, src, href]) => src ?? href,
-  );
-  const seen = new Set();
-  while (queue.length) {
-    const file = queue.shift();
-    if (seen.has(file)) continue;
-    seen.add(file);
-    const code = readFileSync(join(browser, file), 'utf8');
-    for (const [, imported] of code.matchAll(/(?:from|import)\s*"\.\/([^"]+\.js)"/g)) queue.push(imported);
-  }
-  return [...seen];
-};
-
-const holding = (route, sentence) =>
-  loadedAtOnce(route).filter((file) => readFileSync(join(browser, file), 'utf8').includes(sentence));
 
 test('SW-PAGE-14 (D20): each page downloads only its own text', () => {
   // Its own text is there, so the files read are the ones that hold page text.
