@@ -1,0 +1,163 @@
+/* The Writing page's list (writing-spec.md, `TextRow`): one column on a phone and a tablet; from
+   900 px three columns, year and kind / the text / the language line and the link. */
+.wr-texts {
+  padding-block: clamp(32px, 5vw, 64px) clamp(40px, 6vw, 80px);
+}
+
+.wr-texts__in {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.wr-texts__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wr-texts__item {
+  display: grid;
+  gap: var(--zc-space-2);
+  padding-block: var(--zc-space-6);
+  border-top: 1px solid var(--zc-border-light);
+}
+
+.wr-texts__item:last-child {
+  border-bottom: 1px solid var(--zc-border-light);
+}
+
+.wr-texts__when {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--zc-space-3);
+}
+
+.wr-texts__year {
+  font-family: var(--zc-font-mono);
+  font-weight: 500;
+  font-size: 1.25rem;
+  color: var(--zc-text-heading);
+}
+
+.wr-texts__kind,
+.wr-texts__venue,
+.wr-texts__note,
+.wr-texts__lang {
+  font-family: var(--zc-font-mono);
+  font-size: 0.8125rem;
+}
+
+.wr-texts__kind {
+  color: var(--zc-ochre-text);
+}
+
+.wr-texts__body > * {
+  margin: 0;
+}
+
+.wr-texts__title {
+  font-family: var(--zc-font-heading);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: 1.375rem;
+  line-height: 1.18;
+  text-wrap: balance;
+  color: var(--zc-text-heading);
+}
+
+.wr-texts__authors {
+  margin-top: var(--zc-space-2);
+  font-family: var(--zc-font-body);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--zc-text-body);
+}
+
+.wr-texts__authors b {
+  font-weight: 600;
+  color: var(--zc-text-heading);
+}
+
+.wr-texts__body > .wr-texts__venue {
+  margin-top: var(--zc-space-2);
+  color: var(--zc-text-muted);
+  overflow-wrap: anywhere;
+}
+
+/* A decorative ochre lozenge before the note, as the Software page's status line: a graphic, so
+   --zc-ochre, not the text token. */
+.wr-texts__body > .wr-texts__note {
+  margin-top: var(--zc-space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--zc-space-2);
+  color: var(--zc-text-body);
+}
+
+.wr-texts__note::before {
+  content: '';
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--zc-ochre);
+  transform: rotate(45deg);
+}
+
+.wr-texts__more > * {
+  margin: 0;
+}
+
+.wr-texts__lang {
+  color: var(--zc-text-muted);
+}
+
+/* Links are underlined and at least 44 px tall (writing-spec.md). */
+.wr-texts__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--zc-font-body);
+  font-weight: 500;
+  color: var(--zc-azul);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.wr-texts__arrow {
+  margin-inline-start: 0.3em;
+  font-family: var(--zc-font-mono);
+  text-decoration: none;
+}
+
+@media (min-width: 900px) {
+  .wr-texts__item {
+    grid-template-columns: 9rem 1fr minmax(0, 15rem);
+    gap: clamp(24px, 3vw, 48px);
+  }
+
+  .wr-texts__when {
+    flex-direction: column;
+    gap: var(--zc-space-2);
+  }
+}
+
+@media (max-width: 599.98px) {
+  .wr-texts__in {
+    padding-inline: 16px;
+  }
+}

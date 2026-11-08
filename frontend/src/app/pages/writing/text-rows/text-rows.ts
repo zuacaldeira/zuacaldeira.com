@@ -6,6 +6,7 @@ import { I18nService } from '../../../services/i18n.service';
 @Component({
   selector: 'app-text-rows',
   templateUrl: './text-rows.html',
+  styleUrl: './text-rows.css',
 })
 export class TextRows {
   private readonly lang = inject(I18nService).language();
