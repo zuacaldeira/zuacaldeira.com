@@ -102,6 +102,7 @@ const everything = () => {
     home: { hero: all(heroIn) },
     shared: { paper: all(paperIn) },
     software: { head: all(headIn), lead: all(leadIn), work: all(workIn), how: all(howIn), proof: all(proofIn) },
+    writing: { head: all(headIn) },
   };
 };
 
@@ -124,6 +125,17 @@ test('SW-PAGE-09: the Software band missing in de stops the build, naming page, 
 
   await assert.rejects(fetchContent(api.url), {
     message: 'No content for page software, section proof, language de (404)',
+  });
+});
+
+test('WR-PAGE-09: a Writing head missing in de stops the build, naming page, section and language', async (t) => {
+  const stored = everything();
+  delete stored.writing.head.de;
+  const api = await fakeApi(stored);
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'No content for page writing, section head, language de (404)',
   });
 });
 
