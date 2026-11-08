@@ -93,6 +93,7 @@ language as its example.
 | SW-HOW-01 | Three steps say how the work is done. | the built `/en/software` | the section is read | `<h2>` "How I work", an ordered list of three: Protocol first, Test-first one step at a time, Every forbidden path shown red, each with its sentence (`how.*`) | |
 | SW-HOW-02 | The strip shows this site's own links protocol, exactly as checked. | any language | its session type is read | a `<pre translate="no">` whose text is exactly `Page -> Visitor : {links: Visitor -> Nginx : {get: Nginx -> Visitor : {ok200: end}}}`, the same in every language, equal to the recorded checked line (D5); the caption `how.caption` | |
 | SW-HOW-03 | The strip is translated, except the type. | `/de/software`, `/pt/software` | the section is read | headings, steps and caption in the page's language | |
+| SW-HOW-04 | A fresh database, filled with the starting texts, gives the strip in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/how?lang=en`, `de`, `pt` | 200; en is the spec's copy (D28's shape); de and pt have three steps and a caption, each text non-empty | |
 | SW-HOW-P-01 | The old arrow notation in the strip is refused. | the built page | the type reads `Page → Visitor : links(hrefs) . …` | SW-HOW-02 goes red | |
 
 ## 6. Proof
@@ -521,7 +522,80 @@ Leftovers:
   links' 44 px height is measured in the browser with SW-PAGE-12 (slice 7).
 - **Port 8081** was taken again; the build's backend ran on 8091 (stdin override).
 
+## Slice 5: How I work
+
+Test list:
+- **Backend:** B1 SW-HOW-04, the seed's `software/how` in en, de, pt (in `SoftwareSeedIntegrationTest`).
+- **Script:** S1 SW-PAGE-09, a `how` missing in `pt` stops the snapshot, naming `software`, `how`, `pt`.
+- **Unit (`HowStrip`):** U1 an `<h2>` and an `<ol>` of three steps, in order, each with its number,
+  `<h3>` and sentence (SW-HOW-01); U2 the links protocol in a `SessionType`: a `<pre translate="no">`
+  holding exactly the checked line, one line that wraps at spaces, with the caption (SW-HOW-02).
+- **Acceptance (build):** A SW-HOW-01, the outer test (en: the section after More work, its heading
+  and three steps); A2 SW-HOW-02 (the global type in en, de, pt is exactly `links.global`'s checked
+  line, which is pinned to the agreed one; the caption in the page's language); A3 SW-HOW-03 (de and
+  pt: heading, steps and caption translated).
+- **Protocol rows:** SW-HOW-P-01 (the old `Page → Visitor : links(hrefs) . …` in the built
+  `/de/software`; a branch renamed in `links.global`; A2 red).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1
+        participant DB as MySQL 8 (seed R__software.sql)
+        participant API as Content API
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant LG as docs/notation/links.global (checked in the lab, D5)
+    participant P as dist/…/l/software/index.html
+    T->>API: B1: GET software/how?lang=l
+    F->>API: GET software/how?lang=l, for l in en, de, pt
+    API-->>F: 200 how_l, or 404 → the build stops (S1)
+    F->>NG: software.json
+    NG->>P: HowStrip (U1, U2): heading, three steps, SessionType with the global type
+    T->>LG: read the checked line, pinned to the agreed one
+    T->>P: A, A2, A3, P rows
+```
+
+Session type. Convention: a role that a branch never calls just ends there. The global type is
+notation in the template, like the Run line (D19); only the test reads `links.global`.
+
+```
+G = Build → API : get(software, how, l) .
+    API → Build : { ok200(how_l) .
+                    Build → Page : prerender(how_l, links) .
+                    Page → Visitor : how(heading, steps[protocol, testFirst, forbiddenRed],
+                                         type = links, caption) . end ,
+                    missing404 . Build → CI : fail(software, how, l) . end }
+  links = checked(links.global), the same for every l
+
+Visitor ↾ = Page?how(…) . end
+Page ↾    = Build?prerender . Visitor!how(…) . end
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1 test → API | `get`, `ok200(how_l)` | B1 |
+| 2–3 F → API | `get` × 3, `{ok200, missing404}` | S1 |
+| 5 NG → P | `prerender(how_l, links)` | U1, U2 |
+| 6 test → links.global | `links = checked(links.global)` | A2 (the pin) |
+| 7 test → P | `how(heading, steps, caption)` | A, A3 |
+| 7, the type | `type = links` | A2 |
+| forbidden: another notation, or a changed file | `links = checked(links.global)` | SW-HOW-P-01 |
+| forbidden: the type translated | `links` the same for every `l` | A2 |
+
+The page is read-only: no repeat, stale-token or race rows.
+
 ## Decisions
+
+Taken in slice 5's plan on 2026-11-08, following the spec and D5 (the developer may change them):
+
+- **D28. `software/how`** is one object: `heading`, `steps` (three, each `title` and `text`, in the
+  page's order) and `caption`. The step's number is drawn by the page, not stored.
+- **D29. `links.global`** holds the global type as shown on the page, after `#` comment lines that
+  say where and how it was checked (D5), read the same way as `run.st` (D17). It is a whole global
+  type, not a line of a bigger one.
 
 Taken in slice 4's plan on 2026-11-08, following the spec (the developer may change them):
 
