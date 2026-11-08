@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -131,6 +132,74 @@ class SoftwareSeedIntegrationTest {
             if (value instanceof String text) {
                 assertThat(text).isNotBlank();
             }
+        });
+    }
+
+    private static final String PAPER = "/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf";
+
+    /** The spec's English "More work" (D26's shape): three rows in the page's order. */
+    private static final Map<String, Object> EN_WORK = Map.of(
+            "heading", "More work",
+            "rows", List.of(
+                    Map.of("id", "reticulatep",
+                            "kicker", "Verification tool",
+                            "title", "reticulateP",
+                            "text", "Builds the state space of a session type and checks that it forms a lattice."
+                                    + " It turned the ICE 2026 paper’s 108 benchmark protocols into lattices, is one"
+                                    + " of the paper’s two independent tool implementations, and checks every session"
+                                    + " type on this site.",
+                            "stack", "Python",
+                            "links", List.of(Map.of("label", "Read the paper (PDF)", "href", PAPER))),
+                    Map.of("id", "kita-dienstplan",
+                            "kicker", "Web application",
+                            "title", "Kita Dienstplan",
+                            "text", "Shift planning for the team of Kita Casa Azul, a bilingual Portuguese-German"
+                                    + " kindergarten in Berlin: an Angular front end and a Spring Boot back end, with"
+                                    + " role-based access.",
+                            "stack", "Angular · Spring Boot · Java · PostgreSQL",
+                            "links", List.of(Map.of("label", "Repository",
+                                    "href", "https://github.com/zuacaldeira/kita-dienstplan"))),
+                    Map.of("id", "casa-azul",
+                            "kicker", "Website",
+                            "title", "Casa Azul website",
+                            "text", "The website of Kita Casa Azul, the bilingual Portuguese-German kindergarten in"
+                                    + " Berlin, prerendered with Angular so every page loads as plain HTML.",
+                            "stack", "Angular · Angular Material · SSR prerendering · TypeScript",
+                            "links", List.of(
+                                    Map.of("label", "casa-azul-berlin.de", "href", "https://casa-azul-berlin.de"),
+                                    Map.of("label", "Repository",
+                                            "href", "https://github.com/zuacaldeira/ca-website")))));
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("languagesOfTheLead")
+    @DisplayName("SW-WORK-06 the seed answers the three pieces of More work in every language, none empty")
+    @SuppressWarnings("unchecked")
+    void answersTheSeededWork(String lang) throws Exception {
+        HttpResponse<String> response = get("/api/content/software/work?lang=" + lang);
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        Map<String, Object> work = JsonMapper.builder().build().readValue(response.body(),
+                new TypeReference<Map<String, Object>>() {});
+        if (lang.equals("en")) {
+            assertThat(work).isEqualTo(EN_WORK);
+        }
+        assertThat((String) work.get("heading")).isNotBlank();
+        List<Map<String, Object>> rows = (List<Map<String, Object>>) work.get("rows");
+        List<Map<String, Object>> enRows = (List<Map<String, Object>>) EN_WORK.get("rows");
+        // The same pieces in the same order; names (but Casa Azul's), stacks and targets untranslated.
+        assertThat(rows).extracting(row -> row.get("id")).isEqualTo(enRows.stream().map(r -> r.get("id")).toList());
+        assertThat(rows).extracting(row -> row.get("stack")).isEqualTo(enRows.stream().map(r -> r.get("stack")).toList());
+        assertThat(rows.subList(0, 2)).extracting(row -> row.get("title")).containsExactly("reticulateP", "Kita Dienstplan");
+        assertThat(rows).extracting(row -> ((List<Map<String, String>>) row.get("links")).stream()
+                        .map(link -> link.get("href")).toList())
+                .isEqualTo(enRows.stream().map(r -> ((List<Map<String, String>>) r.get("links")).stream()
+                        .map(link -> link.get("href")).toList()).toList());
+        assertThat(rows).allSatisfy(row -> {
+            assertThat((String) row.get("kicker")).isNotBlank();
+            assertThat((String) row.get("title")).isNotBlank();
+            assertThat((String) row.get("text")).isNotBlank();
+            assertThat((List<Map<String, String>>) row.get("links"))
+                    .allSatisfy(link -> assertThat(link.get("label")).isNotBlank());
         });
     }
 

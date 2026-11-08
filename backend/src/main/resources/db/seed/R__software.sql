@@ -81,4 +81,56 @@ INSERT INTO content_section (page, section, lang, body) VALUES
         'stack', 'Python · pytest · Hypothesis · Server-Sent Events · reticulateP',
         'figure', 'O passo Run: uma ação do agente, três resultados que recebe.',
         'shotAlt', 'A vista ao vivo do monitor enquanto o agente construía os redirecionamentos de ligações antigas deste site: à esquerda, o que está a ser construído, em frases simples, cada uma marcada como «passou à primeira» ou «falhou primeiro, depois passou»; à direita, o mapa do agente no seu tipo de 56 estados, no fim.',
-        'shotCaption', 'A vista ao vivo enquanto o agente construía os redirecionamentos de ligações antigas deste site.'));
+        'shotCaption', 'A vista ao vivo enquanto o agente construía os redirecionamentos de ligações antigas deste site.')),
+    -- More work (D26): three rows in the page's order; names, stacks and targets the same in every language.
+    ('software', 'work', 'en', JSON_OBJECT(
+        'heading', 'More work',
+        'rows', JSON_ARRAY(
+            JSON_OBJECT('id', 'reticulatep', 'kicker', 'Verification tool', 'title', 'reticulateP',
+                'text', 'Builds the state space of a session type and checks that it forms a lattice. It turned the ICE 2026 paper’s 108 benchmark protocols into lattices, is one of the paper’s two independent tool implementations, and checks every session type on this site.',
+                'stack', 'Python',
+                'links', JSON_ARRAY(JSON_OBJECT('label', 'Read the paper (PDF)', 'href', '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf'))),
+            JSON_OBJECT('id', 'kita-dienstplan', 'kicker', 'Web application', 'title', 'Kita Dienstplan',
+                'text', 'Shift planning for the team of Kita Casa Azul, a bilingual Portuguese-German kindergarten in Berlin: an Angular front end and a Spring Boot back end, with role-based access.',
+                'stack', 'Angular · Spring Boot · Java · PostgreSQL',
+                'links', JSON_ARRAY(JSON_OBJECT('label', 'Repository', 'href', 'https://github.com/zuacaldeira/kita-dienstplan'))),
+            JSON_OBJECT('id', 'casa-azul', 'kicker', 'Website', 'title', 'Casa Azul website',
+                'text', 'The website of Kita Casa Azul, the bilingual Portuguese-German kindergarten in Berlin, prerendered with Angular so every page loads as plain HTML.',
+                'stack', 'Angular · Angular Material · SSR prerendering · TypeScript',
+                'links', JSON_ARRAY(
+                    JSON_OBJECT('label', 'casa-azul-berlin.de', 'href', 'https://casa-azul-berlin.de'),
+                    JSON_OBJECT('label', 'Repository', 'href', 'https://github.com/zuacaldeira/ca-website')))))),
+    ('software', 'work', 'de', JSON_OBJECT(
+        'heading', 'Weitere Arbeiten',
+        'rows', JSON_ARRAY(
+            JSON_OBJECT('id', 'reticulatep', 'kicker', 'Verifikationswerkzeug', 'title', 'reticulateP',
+                'text', 'Baut den Zustandsraum eines Session-Typs und prüft, ob er einen Verband bildet. Es hat die 108 Benchmark-Protokolle des ICE-2026-Papers in Verbände übersetzt, ist eine der beiden unabhängigen Werkzeug-Implementierungen des Papers und prüft jeden Session-Typ auf dieser Website.',
+                'stack', 'Python',
+                'links', JSON_ARRAY(JSON_OBJECT('label', 'Paper lesen (PDF)', 'href', '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf'))),
+            JSON_OBJECT('id', 'kita-dienstplan', 'kicker', 'Webanwendung', 'title', 'Kita Dienstplan',
+                'text', 'Dienstplanung für das Team der Kita Casa Azul, einer zweisprachigen portugiesisch-deutschen Kita in Berlin: ein Angular-Frontend und ein Spring-Boot-Backend, mit rollenbasiertem Zugriff.',
+                'stack', 'Angular · Spring Boot · Java · PostgreSQL',
+                'links', JSON_ARRAY(JSON_OBJECT('label', 'Repository', 'href', 'https://github.com/zuacaldeira/kita-dienstplan'))),
+            JSON_OBJECT('id', 'casa-azul', 'kicker', 'Website', 'title', 'Website der Casa Azul',
+                'text', 'Die Website der Kita Casa Azul, der zweisprachigen portugiesisch-deutschen Kita in Berlin, mit Angular vorgerendert, sodass jede Seite als reines HTML lädt.',
+                'stack', 'Angular · Angular Material · SSR prerendering · TypeScript',
+                'links', JSON_ARRAY(
+                    JSON_OBJECT('label', 'casa-azul-berlin.de', 'href', 'https://casa-azul-berlin.de'),
+                    JSON_OBJECT('label', 'Repository', 'href', 'https://github.com/zuacaldeira/ca-website')))))),
+    ('software', 'work', 'pt', JSON_OBJECT(
+        'heading', 'Outros trabalhos',
+        'rows', JSON_ARRAY(
+            JSON_OBJECT('id', 'reticulatep', 'kicker', 'Ferramenta de verificação', 'title', 'reticulateP',
+                'text', 'Constrói o espaço de estados de um tipo de sessão e verifica que forma um reticulado. Transformou em reticulados os 108 protocolos de referência do artigo ICE 2026, é uma das duas implementações independentes do artigo e verifica cada tipo de sessão deste site.',
+                'stack', 'Python',
+                'links', JSON_ARRAY(JSON_OBJECT('label', 'Ler o artigo (PDF)', 'href', '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf'))),
+            JSON_OBJECT('id', 'kita-dienstplan', 'kicker', 'Aplicação web', 'title', 'Kita Dienstplan',
+                'text', 'Planeamento de turnos para a equipa da Kita Casa Azul, um jardim de infância bilingue português-alemão em Berlim: frontend em Angular e backend em Spring Boot, com acesso por funções.',
+                'stack', 'Angular · Spring Boot · Java · PostgreSQL',
+                'links', JSON_ARRAY(JSON_OBJECT('label', 'Repositório', 'href', 'https://github.com/zuacaldeira/kita-dienstplan'))),
+            JSON_OBJECT('id', 'casa-azul', 'kicker', 'Site', 'title', 'Site da Casa Azul',
+                'text', 'O site da Kita Casa Azul, o jardim de infância bilingue português-alemão em Berlim, pré-renderizado com Angular, para que cada página carregue como HTML simples.',
+                'stack', 'Angular · Angular Material · SSR prerendering · TypeScript',
+                'links', JSON_ARRAY(
+                    JSON_OBJECT('label', 'casa-azul-berlin.de', 'href', 'https://casa-azul-berlin.de'),
+                    JSON_OBJECT('label', 'Repositório', 'href', 'https://github.com/zuacaldeira/ca-website'))))));
