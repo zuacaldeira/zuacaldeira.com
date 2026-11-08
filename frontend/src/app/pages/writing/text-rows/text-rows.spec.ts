@@ -54,4 +54,21 @@ describe('TextRows', () => {
     );
     expect(notes).toEqual([['note pt'], []]);
   });
+
+  const attrs = (a: Element, ...names: string[]) =>
+    Object.fromEntries(names.map((name) => [name, a.getAttribute(name)]));
+
+  it('WR-LIST-05: should link a text on the site with the read label, in this tab, as an English PDF', () => {
+    const links = [...render('de').querySelectorAll('ul > li')[0].querySelectorAll('a')];
+    expect(links.map((a) => ({ text: text(a), ...attrs(a, 'href', 'target', 'rel', 'type', 'hreflang') }))).toEqual([
+      {
+        text: 'read de',
+        href: '/assets/pdfs/paper.pdf',
+        target: null,
+        rel: null,
+        type: 'application/pdf',
+        hreflang: 'en',
+      },
+    ]);
+  });
 });

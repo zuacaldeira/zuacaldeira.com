@@ -24,6 +24,13 @@
               <p class="wr-texts__note">{{ item.note }}</p>
             }
           </div>
+          <div class="wr-texts__more">
+            @if (!item.external) {
+              <a class="wr-texts__link" [href]="item.href" type="application/pdf" hreflang="en">{{
+                texts.read
+              }}</a>
+            }
+          </div>
         </li>
       }
     </ul>
