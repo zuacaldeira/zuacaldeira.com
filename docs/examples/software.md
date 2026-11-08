@@ -90,11 +90,11 @@ language as its example.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| SW-HOW-01 | Three steps say how the work is done. | the built `/en/software` | the section is read | `<h2>` "How I work", an ordered list of three: Protocol first, Test-first one step at a time, Every forbidden path shown red, each with its sentence (`how.*`) | |
-| SW-HOW-02 | The strip shows this site's own links protocol, exactly as checked. | any language | its session type is read | a `<pre translate="no">` whose text is exactly `Page -> Visitor : {links: Visitor -> Nginx : {get: Nginx -> Visitor : {ok200: end}}}`, the same in every language, equal to the recorded checked line (D5); the caption `how.caption` | |
-| SW-HOW-03 | The strip is translated, except the type. | `/de/software`, `/pt/software` | the section is read | headings, steps and caption in the page's language | |
-| SW-HOW-04 | A fresh database, filled with the starting texts, gives the strip in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/how?lang=en`, `de`, `pt` | 200; en is the spec's copy (D28's shape); de and pt have three steps and a caption, each text non-empty | |
-| SW-HOW-P-01 | The old arrow notation in the strip is refused. | the built page | the type reads `Page → Visitor : links(hrefs) . …` | SW-HOW-02 goes red | |
+| SW-HOW-01 | Three steps say how the work is done. | the built `/en/software` | the section is read | `<h2>` "How I work", an ordered list of three: Protocol first, Test-first one step at a time, Every forbidden path shown red, each with its sentence (`how.*`) | yes (build and unit, 2026-11-08) |
+| SW-HOW-02 | The strip shows this site's own links protocol, exactly as checked. | any language | its session type is read | a `<pre translate="no">` whose text is exactly `Page -> Visitor : {links: Visitor -> Nginx : {get: Nginx -> Visitor : {ok200: end}}}`, the same in every language, equal to the recorded checked line (D5); the caption `how.caption` | yes (build and unit, 2026-11-08; `docs/notation/links.global`, D29) |
+| SW-HOW-03 | The strip is translated, except the type. | `/de/software`, `/pt/software` | the section is read | headings, steps and caption in the page's language | yes (build, 2026-11-08) |
+| SW-HOW-04 | A fresh database, filled with the starting texts, gives the strip in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/how?lang=en`, `de`, `pt` | 200; en is the spec's copy (D28's shape); de and pt have three steps and a caption, each text non-empty | yes (integration, 2026-11-08) |
+| SW-HOW-P-01 | The old arrow notation in the strip is refused. | the built page | the type reads `Page → Visitor : links(hrefs) . …` | SW-HOW-02 goes red | yes (break in the build; and a `moved301` branch added in `links.global`) |
 
 ## 6. Proof
 
@@ -586,6 +586,23 @@ Page ↾    = Build?prerender . Visitor!how(…) . end
 | forbidden: the type translated | `links` the same for every `l` | A2 |
 
 The page is read-only: no repeat, stale-token or race rows.
+
+**Done 2026-11-08.** Red first: A on slice 4's build ("How I work does not follow More work"); B1
+404 in all three languages; S1 "Missing expected rejection"; U1 no heading (after a stub; a first
+run did not compile, because a fixture edit had not applied: the slice-4 insert had left `const
+inEvery =<T>(` without its space, now fixed); U2 no `<pre>`. Declared to the monitor: A as
+`writeAcceptance`, every break and restore. Green at first and shown to bite: A2 (SW-HOW-P-01: the
+old arrow notation in the built `/de/software`; a `moved301` branch in `links.global`, red at the
+pin), A3 (the English "Protocol first" on `pt`).
+
+Results: unit 244 passed, 5 skipped (38 files); scripts 8/8; `acceptance` 51/51;
+`acceptance:nginx` 11/11; browser `software-shot` 2/2; backend `./mvnw verify` 25 integration
+tests; the build prerenders 23 routes; initial bundle 510.81 kB.
+
+Leftovers:
+- **The type at 390 px** wraps at its spaces (`pre-wrap`); how it reads on a phone, and the three
+  steps in a row from 900 px, are for the developer on the preview.
+- **Port 8081** was taken again; the build's backend ran on 8091 (stdin override).
 
 ## Decisions
 
