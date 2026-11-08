@@ -39,6 +39,9 @@ language as its example.
 | SW-PAGE-08 | The language links lead to the same page in the other language. | the built `/de/software` | its language links are read | `EN` → `/en/software`, `PT` → `/pt/software`, `DE` current (SHELL-01, 02 on the new page) | yes (build, the shell's tests on the three pages, 2026-11-08) |
 | SW-PAGE-09 | A missing German text stops the build instead of showing English. | no software content stored for de | the site is built | the build fails, naming page `software`, the section and `de`; nothing is deployed (as HOME-HERO-06, D4 in `home.md`) | yes (the snapshot script, 2026-11-08) |
 | SW-PAGE-10 | The page is in the main navigation, and the menu still waits only for Writing. | the built `/de/home` | the main navigation is read | it holds Software → `/de/software`; SHELL-11 is covered except Texte → `/de/writing` | |
+| SW-PAGE-15 | The theorem on the band is set in the light weight the design asks for. | the built pages | the font link in `<head>` is read | it asks for Fraunces at weight 400 as well as 500 and 600 (home-spec.md, "Fonts") | |
+| SW-PAGE-P-03 | Two links marked as the current page are refused. | the built `/pt/software` | a second menu link carries `aria-current="page"` | SW-PAGE-07 goes red | |
+| SW-PAGE-P-04 | A sitemap that names a page not built is refused. | the built site | `/de/writing` is put into the sitemap | SW-PAGE-04 (HOME-PAGE-08) goes red | |
 | SW-PAGE-P-01 | A software page in only one or two languages is refused. | the build | a language's software page is missing | SW-PAGE-01 goes red, naming the language | yes (break in the build: `pt` moved out) |
 | SW-PAGE-P-02 | A link to the Software page that drops the language is refused. | any built page | a link to `/software` (no prefix) is read | SHELL-04 goes red (an old path, P-01) | yes (break in the build) |
 
