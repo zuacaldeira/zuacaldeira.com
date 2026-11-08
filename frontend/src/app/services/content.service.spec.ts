@@ -9,8 +9,14 @@ describe('ContentService', () => {
   });
 
   describe('navItems', () => {
-    it('should have 6 navigation items (Software since slice 7, D13)', () => {
-      expect(service.navItems).toHaveLength(6);
+    it('WR-PAGE-06 (SHELL-11): lists Software, Research, Writing, About, then Contact', () => {
+      expect(service.navItems.map((item) => item.page)).toEqual([
+        'software',
+        'research',
+        'writing',
+        'about',
+        'contact',
+      ]);
     });
 
     it('should not link to the hidden work and paedagogik pages', () => {
@@ -32,12 +38,8 @@ describe('ContentService', () => {
       }
     });
 
-    it('should include Home as first item, the home page', () => {
-      expect(service.navItems[0]).toEqual({ label: 'Home', page: 'home', icon: 'home' });
-    });
-
-    it('should include Contact as last item', () => {
-      expect(service.navItems[service.navItems.length - 1].page).toBe('contact');
+    it('should include Software as first item, with its icon', () => {
+      expect(service.navItems[0]).toEqual({ label: 'Software', page: 'software', icon: 'code' });
     });
   });
 

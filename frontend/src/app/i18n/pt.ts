@@ -6,6 +6,7 @@ export const pt: Translations = {
     about: 'Sobre',
     software: 'Software',
     research: 'Investigação',
+    writing: 'Textos',
     work: 'Trabalho',
     paedagogik: 'Pedagogia',
     running: 'Corrida',

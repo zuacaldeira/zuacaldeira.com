@@ -14,13 +14,13 @@ import {
 })
 export class ContentService {
   readonly navItems: readonly NavItem[] = [
-    { label: 'Home', page: 'home', icon: 'home' },
-    { label: 'About', page: 'about', icon: 'person' },
-    // Software before Research; the rest waits for the Writing page (D13, SHELL-11).
+    // SHELL-11: Software, Research, Writing, About; Home and Running are not in the menu (D13 in
+    // software.md). Contact is the desktop bar's button and the phone menu's last link (D16 in writing.md).
     { label: 'Software', page: 'software', icon: 'code' },
     { label: 'Research', page: 'research', icon: 'science' },
+    { label: 'Writing', page: 'writing', icon: 'article' },
+    { label: 'About', page: 'about', icon: 'person' },
     // Work and Pädagogik are hidden until their content is fine-tuned; see app.routes.ts.
-    { label: 'Running', page: 'running', icon: 'directions_run' },
     { label: 'Contact', page: 'contact', icon: 'mail' },
   ];
 

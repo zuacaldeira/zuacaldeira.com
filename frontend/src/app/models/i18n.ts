@@ -72,6 +72,7 @@ export interface Translations {
     about: string;
     software: string;
     research: string;
+    writing: string;
     work: string;
     paedagogik: string;
     running: string;

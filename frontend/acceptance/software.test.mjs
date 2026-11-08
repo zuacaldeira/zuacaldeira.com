@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { holding } from './loaded.mjs';
+import { menu } from './menu.mjs';
 
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
 const page = (route) => readFileSync(join(browser, route, 'index.html'), 'utf8');
@@ -620,17 +621,6 @@ test('SW-PROOF-02: two buttons lead on, to the paper and to the research page in
   );
 });
 
-// The main menu of a built page (the desktop bar, as prerendered): each link as "label → href",
-// with " (current)" when it carries aria-current="page".
-const menu = (html) =>
-  [...(html.match(/<div\b[^>]*class="desktop-menu-items"[^>]*>(.*?)<\/div>/s)?.[1] ?? '').matchAll(
-    /<a\b([^>]*)>(.*?)<\/a>/gs,
-  )].map(([, attrs, label]) => {
-    const href = attrs.match(/\shref="([^"]*)"/)?.[1];
-    const current = /\saria-current="page"/.test(attrs) ? ' (current)' : '';
-    return `${text(label)} → ${href}${current}`;
-  });
-
 test('SW-PAGE-07: the menu shows Software as the page you are on', () => {
   const links = menu(page('pt/software'));
   assert.deepEqual(
@@ -639,15 +629,7 @@ test('SW-PAGE-07: the menu shows Software as the page you are on', () => {
   );
 });
 
-test('SW-PAGE-10: the home page’s menu leads to the Software page, before Research', () => {
-  assert.deepEqual(menu(page('de/home')), [
-    'Startseite → /de/home (current)',
-    'Über mich → /de/about',
-    'Software → /de/software',
-    'Forschung → /de/research',
-    'Laufen → /de/running',
-  ]);
-});
+// SW-PAGE-10's menu (Software before Research) is WR-PAGE-06's now, in writing.test.mjs (D17).
 
 // The production build inlines the font link as @font-face rules, so the page's rules are read.
 test('SW-PAGE-15: the page brings Fraunces at 400 for the band’s theorem, with 500 and 600', () => {

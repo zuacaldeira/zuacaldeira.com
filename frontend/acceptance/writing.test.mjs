@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { holding } from './loaded.mjs';
+import { menu } from './menu.mjs';
 
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
 const page = (route) => readFileSync(join(browser, route, 'index.html'), 'utf8');
@@ -48,6 +49,26 @@ const TITLES = [
   'Dynamic Interfaces',
   'ConGu, Checking Java Classes Against Property-Driven Algebraic Specifications',
 ];
+
+// SHELL-11: the menu as the developer settled it (2026-11-08); Home and Running leave it (D13 in
+// software.md). The home page is no menu item, so nothing in it is current there.
+const MENU = {
+  en: ['Software', 'Research', 'Writing', 'About'],
+  de: ['Software', 'Forschung', 'Texte', 'Über mich'],
+  pt: ['Software', 'Investigação', 'Textos', 'Sobre'],
+};
+
+test('WR-PAGE-06 (SHELL-11): the menu reads Software, Research, Writing, About, in each language', () => {
+  assert.deepEqual(
+    Object.fromEntries(LANGS.map((lang) => [lang, menu(page(`${lang}/home`))])),
+    Object.fromEntries(
+      LANGS.map((lang) => [
+        lang,
+        ['software', 'research', 'writing', 'about'].map((p, i) => `${MENU[lang][i]} → /${lang}/${p}`),
+      ]),
+    ),
+  );
+});
 
 test('WR-LIST-01 (D3): the four papers follow the head, newest first', () => {
   const html = page('en/writing');

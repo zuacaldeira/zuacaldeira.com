@@ -22,9 +22,9 @@ describe('ZcSidenavMenuItems', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have 6 translated nav items', () => {
+  it('should have 5 translated nav items', () => {
     const items = component.navItems();
-    expect(items).toHaveLength(6);
+    expect(items).toHaveLength(5);
   });
 
   it('SHELL-04: links to the pages in Portuguese on a Portuguese page, /pt/about', async () => {
@@ -34,22 +34,21 @@ describe('ZcSidenavMenuItems', () => {
       a.getAttribute('href'),
     );
     expect(hrefs).toEqual([
-      '/pt/home',
-      '/pt/about',
       '/pt/software',
       '/pt/research',
-      '/pt/running',
+      '/pt/writing',
+      '/pt/about',
       '/pt/contact',
     ]);
   });
 
-  it('SHELL-05b: on a German page only Contact carries the ⊥, "⊥ Kontakt"', async () => {
+  it('WR-PAGE-06, SHELL-05b (D16): on a German page reads Software, Forschung, Texte, Über mich, "⊥ Kontakt"', async () => {
     TestBed.inject(I18nService).setLanguage('de');
     await fixture.whenStable();
     const titles = [
       ...(fixture.nativeElement as HTMLElement).querySelectorAll('[matListItemTitle]'),
     ].map((title) => title.textContent?.replace(/\s+/g, ' ').trim());
-    expect(titles).toEqual(['Startseite', 'Über mich', 'Software', 'Forschung', 'Laufen', '⊥ Kontakt']);
+    expect(titles).toEqual(['Software', 'Forschung', 'Texte', 'Über mich', '⊥ Kontakt']);
   });
 
   it("SHELL-05b: hides Contact's ⊥ from screen readers, the only hidden text in the list", async () => {
@@ -67,7 +66,7 @@ describe('ZcSidenavMenuItems', () => {
     const i18nService = TestBed.inject(I18nService);
     i18nService.setLanguage('pt');
     const items = component.navItems();
-    expect(items[0].label).toBe('Início');
+    expect(items[2].label).toBe('Textos');
   });
 });
 
