@@ -594,6 +594,31 @@ test('SW-PROOF-01: the German page ends on the theorem that makes the protocols 
   });
 });
 
+test('SW-PROOF-02: two buttons lead on, to the paper and to the research page in the same language', () => {
+  const ALL = { en: 'All research', de: 'Zur Forschung', pt: 'Toda a investigação' };
+  const READ = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };
+  const buttons = Object.fromEntries(
+    LANGS.map((lang) => [
+      lang,
+      [...band(page(`${lang}/software`)).matchAll(/<a\b[^>]*\shref="([^"]*)"[^>]*>(.*?)<\/a>/gs)].map(
+        ([, href, label]) => `${text(label)} → ${href}`,
+      ),
+    ]),
+  );
+  assert.deepEqual(
+    buttons,
+    Object.fromEntries(
+      LANGS.map((lang) => [
+        lang,
+        [
+          `${READ[lang]} → /assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf`,
+          `${ALL[lang]} → /${lang}/research`,
+        ],
+      ]),
+    ),
+  );
+});
+
 const PAPER = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
 const REPO = { en: 'Repository', de: 'Repository', pt: 'Repositório' };
 const READ_PAPER = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };
