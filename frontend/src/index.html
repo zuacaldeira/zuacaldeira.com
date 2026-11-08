@@ -4,6 +4,16 @@
     <meta charset="utf-8" />
     <title>Alexandre Caldeira — Researcher. Developer. Educator. Runner.</title>
     <base href="/" />
+    <!-- The theme before first paint (THEME-10, D25): the saved choice, else the device's setting,
+         the rule ThemeService applies once Angular runs (both read theme-rule.cases.json in tests). -->
+    <script>
+      try {
+        var zcTheme = localStorage.getItem('zc-theme');
+        if (zcTheme === 'dark' || (zcTheme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark-theme');
+        }
+      } catch (e) {}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
