@@ -242,6 +242,44 @@ test('SW-LEAD-03: the German and Portuguese case studies are fully translated, t
   );
 });
 
+// The checked line of a notation file: like reticulateP's fixture loader, skip `#` lines and
+// blank ones, take the first other line (D17).
+const checkedLine = (file) =>
+  readFileSync(join(import.meta.dirname, '../../docs/notation', file), 'utf8')
+    .split('\n')
+    .map((line) => line.trim())
+    .find((line) => line && !line.startsWith('#'));
+
+const RUN_CAPTIONS = {
+  en: 'A line of the workflow type, word for word.',
+  de: 'Eine Zeile des Ablauftyps, wörtlich.',
+  pt: 'Uma linha do tipo do fluxo, palavra por palavra.',
+};
+
+test('SW-LEAD-04: the lead shows the Run line exactly as checked, the same in every language (D5)', () => {
+  const checked = checkedLine('run.st');
+  assert.equal(checked, 'Run = &{runTest: +{RED: Code, WRONG_RED: Fix, GREEN: Green}}', 'run.st changed');
+  const shown = Object.fromEntries(
+    LANGS.map((lang) => {
+      const inner = lead(page(`${lang}/software`));
+      const pres = [...inner.matchAll(/<pre\b([^>]*)>(.*?)<\/pre>/gs)].map(([, attrs, body]) => ({
+        translate: attrs.match(/\btranslate="([^"]*)"/)?.[1],
+        text: text(body),
+      }));
+      return [lang, { pres, caption: texts(inner, 'figcaption') }];
+    }),
+  );
+  assert.deepEqual(
+    shown,
+    Object.fromEntries(
+      LANGS.map((lang) => [
+        lang,
+        { pres: [{ translate: 'no', text: checked }], caption: [RUN_CAPTIONS[lang]] },
+      ]),
+    ),
+  );
+});
+
 for (const [id, lang, eyebrow, intro] of [
   [
     'SW-HEAD-01',
