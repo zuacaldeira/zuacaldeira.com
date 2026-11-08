@@ -20,6 +20,7 @@
           @if (span.code) {<code translate="no">{{ span.text }}</code>} @else {{{ span.text }}}
         }
       </p>
+      <app-session-type [text]="run" [caption]="lead.runCaption" />
     </div>
     <div class="sw-lead__block">
       <h3 class="sw-lead__label">{{ lead.labels.live }}</h3>

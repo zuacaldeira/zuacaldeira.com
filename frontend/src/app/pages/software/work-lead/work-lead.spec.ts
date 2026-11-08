@@ -45,6 +45,19 @@ describe('WorkLead', () => {
     expect(texts(block('label stack de'), 'p')).toEqual(['Python · pytest']);
   });
 
+  it('SW-LEAD-04: should show the Run line in the protocol block, over three lines at its commas', () => {
+    const el = render('de');
+    const protocol = [...el.querySelectorAll('.sw-lead__block')].find(
+      (b) => b.querySelector('h3')?.textContent?.trim() === 'label protocol de',
+    ) as HTMLElement;
+    expect(protocol.querySelector('pre')?.textContent).toBe(
+      'Run = &{runTest: +{RED: Code,\n' +
+        '                   WRONG_RED: Fix,\n' +
+        '                   GREEN: Green}}',
+    );
+    expect(protocol.querySelector('figcaption')?.textContent?.trim()).toBe('runCaption de');
+  });
+
   it('D18: should show the notation in the protocol and live blocks as code that is never translated', () => {
     const el = render('de');
     const paragraphOf = (label: string) =>
