@@ -713,6 +713,83 @@ Leftovers:
   yet: `index.html` links Fraunces 500 and 600 only), are for the developer on the preview.
 - **Port 8081** was taken again; the build's backend ran on 8091 (stdin override).
 
+## Slice 7: open the page
+
+Test list:
+- **Unit:** U1 SW-PAGE-10, the desktop menu on a German page: Startseite, Über mich, Software,
+  Forschung, Laufen, Software before Forschung (D13); U2 SW-PAGE-07, on `/de/software` its link, and
+  only it, carries `aria-current="page"` (D34); U3 the phone menu lists Software before Research and
+  marks the current page the same way.
+- **Acceptance (build):** A SW-PAGE-07, the outer test (the built `/pt/software`: the menu's Software
+  link → `/pt/software` with `aria-current="page"`, no other menu link); A2 SW-PAGE-10 (the built
+  `/de/home`: Software → `/de/software`, before Forschung); A3 SW-PAGE-04 (the sitemap: the 18 pages,
+  each built; HOME-PAGE-07's test moves from 15 to 18); A4 SW-PAGE-15 (the font link asks for
+  Fraunces 400), a step of its own.
+- **nginx (the web image):** N SW-PAGE-06, `/en/software`, `/de/software`, `/pt/software` answer `200`
+  with no redirect, `/de/software/` answers `301` to `/de/software`; HOME-PAGE-09's count moves to 18.
+- **Browser (each file one Chromium, closed after):** B1 SW-PAGE-11 (390 px, en, de, pt: no horizontal
+  scroll, no `<pre>` scrolls sideways); B2 SW-PAGE-12 (390 px: every link and button in `<main>` at
+  least 44 px tall); B3 SW-PAGE-13 (`/de/software` at 390 and 1280: Tab, then Enter, moves focus to
+  `<main>` on the same page), in a new `software-phone.test.mjs`. `shell-phone.test.mjs` (the phone
+  menu's links, SHELL-08) is updated for Software and runs again; `shell-keyboard`, `shell-footer`,
+  `software-shot`, `software-band`, `theme-paint` run again because the menu is on every page.
+- **Protocol rows:** SW-PAGE-P-03 (a second menu link marked current, A red), SW-PAGE-P-04
+  (`/de/writing` in the sitemap, A3 red).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor V as Visitor (and the tests)
+    participant M as Menu (ContentService.navItems, i18n nav)
+    participant P as dist/…/l/software/index.html
+    participant S as sitemap.xml
+    participant N as nginx (web image)
+    M->>P: Software before Research, the current page marked (U1–U3, A, A2)
+    V->>S: the 18 pages, each built (A3)
+    V->>N: GET /l/software (N)
+    N-->>V: 200, no redirect; /l/software/ → 301 /l/software
+    V->>P: Chromium 390: fits, links ≥ 44 px, Tab → skip link → main (B1–B3)
+```
+
+Session type: the visitor's path from any page, in the convention of `shell.md` (a role that a
+branch never calls just ends there). Before this slice the menu had no Software link; the change is
+in what the visitor can choose, so it is a change of behaviour, not a refactor.
+
+```
+G = Page → Visitor : menu(items = [home, about, software, research, running], current = p_l) .
+    Visitor → Nginx : { get(/l/software) . Nginx → Visitor : ok200(softwarePage, lang l) . end ,
+                        get(/l/software/) . Nginx → Visitor : moved301(/l/software) .
+                            Visitor → Nginx : get(/l/software) . Nginx → Visitor : ok200 . end ,
+                        stay . end }
+  Crawler → Nginx : get(/sitemap.xml) . Nginx → Crawler : ok200(18 urls, each built) . end
+
+Visitor ↾ = Page?menu(…) . Nginx!{ get(/l/software) . Nginx?ok200 . end , get(/l/software/) .
+            Nginx?moved301 . Nginx!get . Nginx?ok200 . end , stay . end }
+Nginx ↾   = Visitor?{ get(/l/software) . Visitor!ok200 . end , get(/l/software/) . Visitor!moved301 .
+            Visitor?get . Visitor!ok200 . end , stay . end }
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1 M → P | `menu(items, current)` | U1–U3, A, A2 |
+| 2 sitemap | `Crawler … ok200(18 urls, each built)` | A3 |
+| 3–4 nginx | `get(/l/software)`, `ok200`; `get(/l/software/)`, `moved301` | N |
+| 5 the page in Chromium | `ok200(softwarePage, lang l)` read on a phone and by keyboard | B1–B3 |
+| forbidden: two current links | `current = p_l`, one page | SW-PAGE-P-03 |
+| forbidden: a sitemap URL not built | `each built` | SW-PAGE-P-04 |
+| forbidden: a link without the prefix | `items` are `/l/x` (SHELL-04) | SW-PAGE-P-02 (covered) |
+
+The site is read-only: no repeat, stale-token or race rows.
+
+## Decisions
+
+Taken in slice 7's plan on 2026-11-08 (the developer may change them):
+
+- **D34. The menus mark the current page with `aria-current="page"`,** on every page, as the
+  language links do, and show it with the language codes' ochre underline (the spec). Today only a
+  class marks it.
+- **D35. The label** is a new `nav.software` key: "Software" in en, de and pt.
+
 Taken in slice 6's plan on 2026-11-08, following the home spec (the developer may change them):
 
 - **D32. The band's colours** are new tokens, as `home-spec.md` names them, prefixed like the
