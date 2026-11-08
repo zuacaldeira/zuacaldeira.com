@@ -11,7 +11,7 @@ const page = (route) => readFileSync(join(browser, route, 'index.html'), 'utf8')
 // Every built page with its language; `/` and the 404 page are English (D1 in home.md, SHELL-09).
 const PAGES = [
   ...['en', 'de', 'pt'].flatMap((lang) =>
-    ['home', 'about', 'software', 'research', 'running', 'contact'].map((name) => [
+    ['home', 'about', 'software', 'research', 'writing', 'running', 'contact'].map((name) => [
       `${lang}/${name}`,
       lang,
     ]),
@@ -55,7 +55,7 @@ test('SHELL-04 (D19): a link to a spot on the same page passes; a # link to anot
           '/de/research#main-content',
           '/#main-content',
           '/en/research#main-content',
-          '/de/writing#x',
+          '/de/nope#x',
         ]),
         'de/research',
         'de',
@@ -64,7 +64,7 @@ test('SHELL-04 (D19): a link to a spot on the same page passes; a # link to anot
     {
       root: [],
       notFound: [],
-      research: ['de/research → /', 'de/research → /en/research', 'de/research → /de/writing'],
+      research: ['de/research → /', 'de/research → /en/research', 'de/research → /de/nope'],
     },
   );
 });

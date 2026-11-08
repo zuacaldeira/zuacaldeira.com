@@ -127,7 +127,9 @@ run and shown to bite: test 4 by reading the language once when the menu is made
 removing `routerLinkActive`.
 
 From 2026-11-08 `/de/software` is built (`software.md`, slice 1), so P-04's example of a page not
-built is `/de/writing` from then on.
+built is `/de/writing` from then on. Later the same day `/de/writing` is built too (`writing.md`,
+slice 1): the example is `/de/nope`, a page that will never be built, and D19's test reads
+`/de/nope#x`.
 
 Leftovers, not built:
 - The desktop menu's `routerLinkActiveOptions` (`exact` for Home) no longer changes anything: with
