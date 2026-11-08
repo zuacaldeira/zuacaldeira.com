@@ -32,16 +32,16 @@ language as its example.
 | SW-PAGE-01 | The Software page exists in all three languages. | the software content in en, de and pt | the site is built | `/en/software/index.html`, `/de/software/index.html`, `/pt/software/index.html` exist, with `<html lang="en">`, `"de"`, `"pt"` | yes (build and unit, 2026-11-08) |
 | SW-PAGE-02 | Search engines learn that the three pages are one page in three languages. | the built `/de/software` | it is read | `<link rel="alternate">` for `hreflang` en, de, pt to `https://zuacaldeira.com/{en,de,pt}/software`, and `x-default` to `/en/software` | yes (build, 2026-11-08) |
 | SW-PAGE-03 | The browser tab names the page. | the built pages | they are read | `<title>` is "Alexandre Zua Caldeira — Software" in en, de and pt (D9) | yes (build and unit, 2026-11-08) |
-| SW-PAGE-04 | The sitemap lists the new pages, and only built ones. | the built site | `sitemap.xml` is read | it lists `https://zuacaldeira.com/{en,de,pt}/software` beside the 15 pages of HOME-PAGE-07, 18 in all, and each is a built page (HOME-PAGE-08) | |
+| SW-PAGE-04 | The sitemap lists the new pages, and only built ones. | the built site | `sitemap.xml` is read | it lists `https://zuacaldeira.com/{en,de,pt}/software` beside the 15 pages of HOME-PAGE-07, 18 in all, and each is a built page (HOME-PAGE-08) | yes (build, 2026-11-08) |
 | SW-PAGE-05 | "See selected work" on the home page now opens the Software page, not the 404 page. | the built `/de/home` | its links are read | the hero's "Ausgewählte Arbeiten" and the lattice's `software` go to `/de/software`, which is built (SHELL-04 now accepts it; its P-04 example moves to `/de/writing`) | moved to the v2 hero (D12): the home page has no such link yet; HOME-HERO-01, 03 and 09 hold it |
-| SW-PAGE-06 | In the web server, the new page opens straight away. | the built site in the web image's nginx | `/en/software`, `/de/software`, `/pt/software` are requested | each answers `200`, not the 404 page, with no redirect (HOME-PAGE-09); `/de/software/` answers `301` to `/de/software` (HOME-PAGE-10) | |
-| SW-PAGE-07 | The header shows "Software" as the page you are on. | the built `/pt/software` | the main navigation is read | its "software" link goes to `/pt/software` and carries `aria-current="page"`; no other link does | |
+| SW-PAGE-06 | In the web server, the new page opens straight away. | the built site in the web image's nginx | `/en/software`, `/de/software`, `/pt/software` are requested | each answers `200`, not the 404 page, with no redirect (HOME-PAGE-09); `/de/software/` answers `301` to `/de/software` (HOME-PAGE-10) | yes (web image's nginx, 2026-11-08; on `next` after the push, by hand) |
+| SW-PAGE-07 | The header shows "Software" as the page you are on. | the built `/pt/software` | the main navigation is read | its "software" link goes to `/pt/software` and carries `aria-current="page"`; no other link does | yes (build and unit, desktop and phone menus, 2026-11-08, D34) |
 | SW-PAGE-08 | The language links lead to the same page in the other language. | the built `/de/software` | its language links are read | `EN` → `/en/software`, `PT` → `/pt/software`, `DE` current (SHELL-01, 02 on the new page) | yes (build, the shell's tests on the three pages, 2026-11-08) |
 | SW-PAGE-09 | A missing German text stops the build instead of showing English. | no software content stored for de | the site is built | the build fails, naming page `software`, the section and `de`; nothing is deployed (as HOME-HERO-06, D4 in `home.md`) | yes (the snapshot script, 2026-11-08) |
-| SW-PAGE-10 | The page is in the main navigation, and the menu still waits only for Writing. | the built `/de/home` | the main navigation is read | it holds Software → `/de/software`; SHELL-11 is covered except Texte → `/de/writing` | |
-| SW-PAGE-15 | The theorem on the band is set in the light weight the design asks for. | the built pages | the font link in `<head>` is read | it asks for Fraunces at weight 400 as well as 500 and 600 (home-spec.md, "Fonts") | |
-| SW-PAGE-P-03 | Two links marked as the current page are refused. | the built `/pt/software` | a second menu link carries `aria-current="page"` | SW-PAGE-07 goes red | |
-| SW-PAGE-P-04 | A sitemap that names a page not built is refused. | the built site | `/de/writing` is put into the sitemap | SW-PAGE-04 (HOME-PAGE-08) goes red | |
+| SW-PAGE-10 | The page is in the main navigation, and the menu still waits only for Writing. | the built `/de/home` | the main navigation is read | it holds Software → `/de/software`; SHELL-11 is covered except Texte → `/de/writing` | yes (build and unit, 2026-11-08): Software before Forschung; SHELL-11's Texte and its order wait for Writing (D13) |
+| SW-PAGE-15 | The theorem on the band is set in the light weight the design asks for. | the built pages | the font link in `<head>` is read | it asks for Fraunces at weight 400 as well as 500 and 600 (home-spec.md, "Fonts") | yes (build, 2026-11-08: the production build inlines the link, so the page's `@font-face` rules are read) |
+| SW-PAGE-P-03 | Two links marked as the current page are refused. | the built `/pt/software` | a second menu link carries `aria-current="page"` | SW-PAGE-07 goes red | yes (break in the build) |
+| SW-PAGE-P-04 | A sitemap that names a page not built is refused. | the built site | `/de/writing` is put into the sitemap | SW-PAGE-04 (HOME-PAGE-08) goes red | yes (break in the built sitemap) |
 | SW-PAGE-P-01 | A software page in only one or two languages is refused. | the build | a language's software page is missing | SW-PAGE-01 goes red, naming the language | yes (break in the build: `pt` moved out) |
 | SW-PAGE-P-02 | A link to the Software page that drops the language is refused. | any built page | a link to `/software` (no prefix) is read | SHELL-04 goes red (an old path, P-01) | yes (break in the build) |
 
@@ -117,9 +117,9 @@ language as its example.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| SW-PAGE-11 | The page fits a phone: nothing runs off the side. | a phone at 390 px, `/en/software`, `/de/software`, `/pt/software` | the page is measured | no horizontal scroll; no `<pre>` scrolls sideways | |
-| SW-PAGE-12 | Every link on the page is easy to tap. | the same | the page's links and buttons are measured | each is at least 44 px tall | |
-| SW-PAGE-13 | Keyboard users get to the content first. | `/de/software`, 390 and 1280 px | Tab, then Enter | the skip link goes to `<main>` on the same page (SHELL-10 on the new page) | |
+| SW-PAGE-11 | The page fits a phone: nothing runs off the side. | a phone at 390 px, `/en/software`, `/de/software`, `/pt/software` | the page is measured | no horizontal scroll; no `<pre>` scrolls sideways | yes (browser, 2026-11-08) |
+| SW-PAGE-12 | Every link on the page is easy to tap. | the same | the page's links and buttons are measured | each is at least 44 px tall | yes (browser, 2026-11-08: those in `<main>`; the bar's are SHELL-06's, the menu's SHELL-08's) |
+| SW-PAGE-13 | Keyboard users get to the content first. | `/de/software`, 390 and 1280 px | Tab, then Enter | the skip link goes to `<main>` on the same page (SHELL-10 on the new page) | yes (browser, 2026-11-08) |
 
 ## Diagram: SW-PAGE (the page frame, at build time)
 
@@ -780,6 +780,35 @@ Nginx ↾   = Visitor?{ get(/l/software) . Visitor!ok200 . end , get(/l/software
 | forbidden: a link without the prefix | `items` are `/l/x` (SHELL-04) | SW-PAGE-P-02 (covered) |
 
 The site is read-only: no repeat, stale-token or race rows.
+
+**Done 2026-11-08; the page is open.** Red first: A on slice 6's build (no Software link, nothing
+marked current); U1 four links, not five; U2 and U3 no `aria-current`; A3 the three software URLs
+missing from the sitemap; A4 Fraunces 400 missing (a first version read the font link, which the
+production build inlines away: `undefined`, the wrong reason, fixed before the red was taken).
+Declared to the monitor: A as `writeAcceptance`, every break and restore. Green at first and shown
+to bite: A (SW-PAGE-P-03), A2 (the Software link taken out of the built `/de/home`), A3's
+SW-PAGE-P-04 (`/de/writing` in the built sitemap), N (the built `pt/software` moved out), B1 and B2
+(SessionType not wrapping, the work links without 44 px, in the source, rebuilt), B3 (the desktop
+bar's skip link as a bare `#main-content`, in the source, rebuilt; a break of `main`'s `id` in the
+built page did not bite, the shell is rendered again after hydration).
+
+Older tests that pinned the five-link menu changed with D13: seven unit tests (desktop, phone,
+`ContentService`), SHELL-08 A1 and SHELL-05b in the browser, HOME-PAGE-07 (15 → 18 URLs) and
+HOME-PAGE-09's count in nginx (changed before a run, so its red on 15 was not seen; the first commit
+message said otherwise and was corrected before any push).
+
+Results: unit 250 passed, 5 skipped (39 files); scripts 10/10; `acceptance` 56/56;
+`acceptance:nginx` 12/12; browser, one Chromium per file: `software-phone` 6/6, `shell-phone` 33/33,
+`shell-keyboard` 45/45, `shell-footer` 6/6, `software-shot` 2/2, `software-band` 2/2, `theme-paint`
+5/5; the build prerenders 23 routes; initial bundle 511.39 kB. The backend was not touched.
+
+Leftovers:
+- **SHELL-11** still waits for the Writing page: Texte, and its order (Software, Forschung, Texte,
+  Über mich, without Home and Running, D13).
+- **SW-PAGE-06 on `next`** (`curl` after the push), by hand, as HOME-PAGE-05's test 8.
+- **The menu's ochre underline** on the current page, and Software's place in it, at 768 and 1280 px:
+  for the developer on the preview.
+- **The Portuguese copy** of the whole page is still a draft nobody has read (D16).
 
 ## Decisions
 
