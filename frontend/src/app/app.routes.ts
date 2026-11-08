@@ -10,6 +10,7 @@ const loadNotFound = () => import('./pages/not-found/not-found').then((m) => m.N
 const pages: Routes = [
   { path: 'home', loadComponent: loadHome },
   { path: 'about', loadComponent: () => import('./pages/about/about').then((m) => m.About) },
+  { path: 'software', loadComponent: () => import('./pages/software/software').then((m) => m.Software) },
   { path: 'research', loadComponent: () => import('./pages/research/research').then((m) => m.Research) },
   // 'work' and 'paedagogik' are hidden until their content is fine-tuned. The page
   // components live on under pages/ — restore the routes here and the nav entries in

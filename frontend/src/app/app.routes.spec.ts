@@ -18,7 +18,7 @@ describe('App Routes', () => {
     it.each(['en', 'de', 'pt'])('should give %s its own route tree', (lang) => {
       const tree = routes.find((r) => r.path === lang);
       const paths = tree?.children?.map((r) => r.path);
-      expect(paths).toEqual(['home', 'about', 'research', 'running', 'contact']);
+      expect(paths).toEqual(['home', 'about', 'software', 'research', 'running', 'contact']);
     });
 
     it('SHELL-09: should have the pages the language links know, SITE_PAGES', () => {
@@ -44,6 +44,7 @@ describe('App Routes', () => {
     it.each([
       ['home', 'Home'],
       ['about', 'About'],
+      ['software', 'Software'],
       ['research', 'Research'],
       ['running', 'Running'],
       ['contact', 'Contact'],
@@ -86,6 +87,13 @@ describe('App Routes', () => {
     ])('HOME-PAGE-06: should show %s as %s (D32)', async (url, tagName) => {
       const harness = await RouterTestingHarness.create(url);
       expect(harness.routeNativeElement?.tagName).toBe(tagName);
+    });
+
+    it('SW-PAGE-01: should show /de/software as the Software page, in German', async () => {
+      TestBed.inject(I18nService).setLanguage('en');
+      const harness = await RouterTestingHarness.create('/de/software');
+      expect(harness.routeNativeElement?.tagName).toBe('APP-SOFTWARE');
+      expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe('de');
     });
 
     it.each(['de', 'pt'])('HOME-PAGE-01: should set the language from the /%s prefix', async (lang) => {

@@ -15,7 +15,14 @@ export const LANGUAGE_NAMES: Record<Language, string> = {
 };
 
 /** The pages each language has, as the routes name them (`app.routes.ts`). */
-export const SITE_PAGES: readonly string[] = ['home', 'about', 'research', 'running', 'contact'];
+export const SITE_PAGES: readonly string[] = [
+  'home',
+  'about',
+  'software',
+  'research',
+  'running',
+  'contact',
+];
 
 /** The path of a page in a language, `/de/about`: links inside the site never drop the prefix. */
 export function pagePath(lang: Language, page: string): string {
