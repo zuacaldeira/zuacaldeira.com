@@ -420,6 +420,60 @@ test('SW-WORK-01: three more pieces follow the lead, in a fixed order', () => {
   assert.deepEqual({ heading: texts(work(html), 'h2'), rows: workRows(html) }, { heading: ['More work'], rows: EN_ROWS });
 });
 
+const TRANSLATED_WORK = {
+  de: {
+    heading: ['Weitere Arbeiten'],
+    rows: [
+      {
+        kicker: 'Verifikationswerkzeug',
+        title: 'reticulateP',
+        text: 'Baut den Zustandsraum eines Session-Typs und prüft, ob er einen Verband bildet. Es hat die 108 Benchmark-Protokolle des ICE-2026-Papers in Verbände übersetzt, ist eine der beiden unabhängigen Werkzeug-Implementierungen des Papers und prüft jeden Session-Typ auf dieser Website.',
+        stack: EN_ROWS[0].stack,
+      },
+      {
+        kicker: 'Webanwendung',
+        title: 'Kita Dienstplan',
+        text: 'Dienstplanung für das Team der Kita Casa Azul, einer zweisprachigen portugiesisch-deutschen Kita in Berlin: ein Angular-Frontend und ein Spring-Boot-Backend, mit rollenbasiertem Zugriff.',
+        stack: EN_ROWS[1].stack,
+      },
+      {
+        kicker: 'Website',
+        title: 'Website der Casa Azul',
+        text: 'Die Website der Kita Casa Azul, der zweisprachigen portugiesisch-deutschen Kita in Berlin, mit Angular vorgerendert, sodass jede Seite als reines HTML lädt.',
+        stack: EN_ROWS[2].stack,
+      },
+    ],
+  },
+  pt: {
+    heading: ['Outros trabalhos'],
+    rows: [
+      {
+        kicker: 'Ferramenta de verificação',
+        title: 'reticulateP',
+        text: 'Constrói o espaço de estados de um tipo de sessão e verifica que forma um reticulado. Transformou em reticulados os 108 protocolos de referência do artigo ICE 2026, é uma das duas implementações independentes do artigo e verifica cada tipo de sessão deste site.',
+        stack: EN_ROWS[0].stack,
+      },
+      {
+        kicker: 'Aplicação web',
+        title: 'Kita Dienstplan',
+        text: 'Planeamento de turnos para a equipa da Kita Casa Azul, um jardim de infância bilingue português-alemão em Berlim: frontend em Angular e backend em Spring Boot, com acesso por funções.',
+        stack: EN_ROWS[1].stack,
+      },
+      {
+        kicker: 'Site',
+        title: 'Site da Casa Azul',
+        text: 'O site da Kita Casa Azul, o jardim de infância bilingue português-alemão em Berlim, pré-renderizado com Angular, para que cada página carregue como HTML simples.',
+        stack: EN_ROWS[2].stack,
+      },
+    ],
+  },
+};
+
+test('SW-WORK-05: the rows are translated; the names and the stacks are not', () => {
+  const shown = (lang) => ({ heading: texts(work(page(`${lang}/software`)), 'h2'), rows: workRows(page(`${lang}/software`)) });
+  assert.deepEqual({ de: shown('de'), pt: shown('pt') }, TRANSLATED_WORK);
+});
+
 const PAPER = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
 const REPO = { en: 'Repository', de: 'Repository', pt: 'Repositório' };
 const READ_PAPER = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };
