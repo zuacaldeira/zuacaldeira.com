@@ -17,6 +17,15 @@ const texts = (html, tag, cls) =>
     .filter(([, attrs]) => !cls || new RegExp(`class="[^"]*\\b${cls}\\b`).test(attrs))
     .map(([, , inner]) => text(inner));
 
+// The page's sections in order, each as its class and inner HTML (sections do not nest here).
+const sections = (html) =>
+  [...html.matchAll(/<section\b[^>]*class="([^"]*)"[^>]*>(.*?)<\/section>/gs)].map(([, cls, inner]) => ({
+    cls,
+    inner,
+  }));
+
+const lead = (html) => sections(html).find(({ cls }) => cls.split(' ').includes('sw-lead'))?.inner ?? '';
+
 const head = (html) => ({
   eyebrow: texts(html, 'p', 'sw-head__eyebrow'),
   h1: texts(html, 'h1'),
@@ -59,6 +68,27 @@ test('SW-HEAD-02: the German Software page opens in German: eyebrow, one <h1>, t
       'Software, die ich gebaut habe, und wie ich sie an ihr Protokoll binde: zuerst aufgeschrieben, geprüft, dann testgetrieben gebaut.',
     ],
   });
+});
+
+test('SW-LEAD-01: the first piece after the head is the TDD monitor, told as a case study', () => {
+  const html = page('en/software');
+  assert.deepEqual(
+    sections(html).map(({ cls }) => cls).slice(0, 2),
+    ['sw-head', 'sw-lead'],
+    'the lead does not follow the head',
+  );
+  assert.deepEqual(
+    {
+      kicker: texts(lead(html), 'p', 'sw-lead__kicker'),
+      title: texts(lead(html), 'h2'),
+      status: texts(lead(html), 'p', 'sw-lead__status'),
+    },
+    {
+      kicker: ['Case study · AI agents'],
+      title: ['A monitor that holds a coding agent to its TDD protocol'],
+      status: ['In use on this site since November 2026'],
+    },
+  );
 });
 
 for (const [id, lang, eyebrow, intro] of [
