@@ -863,6 +863,9 @@ Leftovers, not built:
 - **The initial bundle** is 512.27 kB against the 500 kB warning budget.
 - `i18n/de.ts`, `en.ts`, `pt.ts` are still not Prettier-clean (7 lines each, the same before the element).
 
+**Reviewed 2026-11-08.** After `3e6a33f` was pushed and deployed, the developer reviewed the footer's
+bottom row (SHELL-07b) on next.zuacaldeira.com: "Great!". No change asked for.
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
@@ -958,6 +961,12 @@ Agreed with the developer on 2026-11-08, for SHELL-07b (D27's bottom row):
 - **D35, the clock in the unit test:** `vi.setSystemTime` in the spec; the footer keeps the build's
   clock, no change to production code for it.
 - **D36, the ID** is SHELL-07b, as SHELL-05b.
+
+Decided by the developer on 2026-11-08:
+
+- **D37, the CV (D26) waits for a future CV builder.** The CV, business cards, email and other
+  communications follow the site's design language, so the CV is made by a builder, not dropped in
+  as a file.
 
 Agreed with the developer on 2026-11-06, for SHELL-07:
 
