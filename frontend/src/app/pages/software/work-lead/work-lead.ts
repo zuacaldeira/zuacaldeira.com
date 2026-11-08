@@ -3,6 +3,8 @@ import { SessionType } from '../../../common/session-type/session-type';
 import { codeSpans } from '../../../content/code-spans';
 import { SOFTWARE_CONTENT } from '../../../content/content';
 import { I18nService } from '../../../services/i18n.service';
+import { MonitorShot } from '../monitor-shot/monitor-shot';
+import { RunFigure } from '../run-figure/run-figure';
 
 /**
  * The Run line of the lab's checked workflow type, word for word (docs/notation/run.st, D5, D17),
@@ -16,7 +18,7 @@ const RUN_LINE =
 /** The lead case study of the Software page: the TDD monitor (software-spec.md, `WorkLead`). */
 @Component({
   selector: 'app-work-lead',
-  imports: [SessionType],
+  imports: [SessionType, RunFigure, MonitorShot],
   templateUrl: './work-lead.html',
   styleUrl: './work-lead.css',
 })

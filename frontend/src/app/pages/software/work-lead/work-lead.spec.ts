@@ -58,8 +58,21 @@ describe('WorkLead', () => {
     expect(protocol.querySelector('figcaption')?.textContent?.trim()).toBe('runCaption de');
   });
 
-  it('SW-LEAD-08 (D2): should have no link: the lab is private and has no write-up yet', () => {
-    expect(render('en').querySelectorAll('a')).toHaveLength(0);
+  it('SW-LEAD-05, 06: should hold the Run figure and the screenshot beside the text, with the lead texts', () => {
+    const side = render('de').querySelector('aside.sw-lead__side') as HTMLElement;
+    expect(side?.querySelector('svg')?.getAttribute('aria-label')).toBe('figure de');
+    expect([...side.querySelectorAll('img')].map((img) => img.getAttribute('alt'))).toEqual([
+      'shotAlt de',
+      'shotAlt de',
+    ]);
+    expect(texts(side, 'figcaption')).toEqual(['figure de', 'shotCaption de']);
+  });
+
+  it('SW-LEAD-08 (D2, D23): should link only to the screenshot files: the lab is private, no write-up', () => {
+    expect([...render('en').querySelectorAll('a')].map((a) => a.getAttribute('href'))).toEqual([
+      '/assets/software/reticulab-live-light.png',
+      '/assets/software/reticulab-live-dark.png',
+    ]);
   });
 
   it('D18: should show the notation in the protocol and live blocks as code that is never translated', () => {

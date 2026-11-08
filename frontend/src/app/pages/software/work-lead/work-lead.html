@@ -4,6 +4,8 @@
     <h2 class="sw-lead__title">{{ lead.title }}</h2>
     <p class="sw-lead__status"><span class="sw-lead__lozenge" aria-hidden="true"></span>{{ lead.status }}</p>
 
+    <div class="sw-lead__grid">
+    <div class="sw-lead__text">
     <div class="sw-lead__block">
       <h3 class="sw-lead__label">{{ lead.labels.question }}</h3>
       <p>{{ lead.question }}</p>
@@ -37,6 +39,14 @@
     <div class="sw-lead__block">
       <h3 class="sw-lead__label">{{ lead.labels.stack }}</h3>
       <p class="sw-lead__stack" translate="no">{{ lead.stack }}</p>
+    </div>
+    </div>
+
+    <!-- Beside the text from 900 px, after it on a phone: the figure, then the screenshot. -->
+    <aside class="sw-lead__side">
+      <app-run-figure [label]="lead.figure" />
+      <app-monitor-shot [alt]="lead.shotAlt" [caption]="lead.shotCaption" />
+    </aside>
     </div>
   </div>
 </section>

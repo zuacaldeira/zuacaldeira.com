@@ -40,6 +40,10 @@ export interface SoftwareLead {
   readonly live: string;
   readonly result: string;
   readonly stack: string;
+  /** The Run figure's name and caption (D22). */
+  readonly figure: string;
+  readonly shotAlt: string;
+  readonly shotCaption: string;
 }
 
 /** The home page's text, `@page-content/home` (D21). */

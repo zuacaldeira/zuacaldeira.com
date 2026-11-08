@@ -45,6 +45,9 @@ const softwareLeadIn = (lang: Language): SoftwareLead => ({
   live: `\`reticulab serve\` live ${lang}`,
   result: `result ${lang}`,
   stack: 'Python · pytest',
+  figure: `figure ${lang}`,
+  shotAlt: `shotAlt ${lang}`,
+  shotCaption: `shotCaption ${lang}`,
 });
 
 const inEvery = <T>(make: (lang: Language) => T): Record<Language, T> => ({

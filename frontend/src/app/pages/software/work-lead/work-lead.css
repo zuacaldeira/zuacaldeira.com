@@ -47,6 +47,33 @@
   transform: rotate(45deg);
 }
 
+/* One column on a phone and a tablet; from 900 px the text (1.35fr) beside a sticky side column. */
+.sw-lead__grid {
+  display: grid;
+  gap: var(--zc-space-8);
+}
+
+.sw-lead__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zc-space-8);
+  min-width: 0;
+}
+
+@media (min-width: 900px) {
+  .sw-lead__grid {
+    grid-template-columns: 1.35fr 1fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+
+  .sw-lead__side {
+    position: sticky;
+    top: 88px;
+    margin-top: var(--zc-space-8);
+  }
+}
+
 .sw-lead__block {
   max-width: 44rem;
   margin-top: var(--zc-space-8);
