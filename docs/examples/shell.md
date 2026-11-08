@@ -50,6 +50,11 @@ the home hero, because the hero's page needs them.
 | SHELL-07-P-03 | the same | its footer is read | a second footer, a second heading in it or a second mail link, or none, is refused | yes (break in the build: a second heading, a second mail link, none) |
 | SHELL-07-P-04 | the same | its footer is read | any link but the mail link, GitHub, LinkedIn, CV and the three language names (the old page menu, Strava) is refused | yes (build: red before, the menu and Strava) |
 | SHELL-07-P-05 | the same | its footer is read | a mail link whose text and `mailto:` address disagree is refused | yes (break in the build) |
+| SHELL-07b | every built page (`/` and `/404` as English) | the footer's bottom row is read | it reads, in order, `Zua = software ∥ research ∥ running` (the same in every language, short(checked) of `docs/notation/zua.st`, D33), English, Deutsch, Português, and "© ‹the build's year› Alexandre Zua Caldeira · Berlin" (pt "· Berlim", D34) | |
+| SHELL-07b-P-01 | a German or Portuguese page | the bottom row is read | a translated notation line (`Zua = Software ∥ Forschung ∥ Laufen`) is refused | |
+| SHELL-07b-P-02 | any built page | the bottom row is read | a shown line other than short(checked) is refused: ASCII `\|\|`, a fourth thread, or a checked file changed while the page is not | |
+| SHELL-07b-P-03 | any built page | the bottom row is read | a © line other than the page language's is refused: "Alexandre Caldeira" (red before), no year, "Berlim" on a German page | |
+| SHELL-07b-P-04 | any built page | its footer is read | a second bottom row, a second © line, or none, is refused | |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -769,6 +774,63 @@ Leftovers, not built:
 (SHELL-07) on next.zuacaldeira.com: "great". No change asked for. The CV file (D26) and the bottom row
 (D27) stay as leftovers.
 
+## Diagram: SHELL-07b (the footer's bottom row, at build time)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Test as Acceptance test (shell.test.mjs)
+    participant ST as docs/notation/zua.st (checked, D33)
+    participant Build as Angular build (prerender)
+    participant Page as dist/…/l/p/index.html
+    Test->>ST: read checked, short(checked) = "Zua = software ∥ research ∥ running"
+    Test->>Build: When the site is built
+    Build->>Page: bottom row: notation · language names · "© " year " Alexandre Zua Caldeira · " city(l)
+    Test->>Page: Then exactly one row, one © line (P-04)
+    Test->>Page: the notation is short(checked), not translated (P-01, P-02)
+    Test->>Page: the last text is the © line in l (P-03)
+    Note over Test,Page: reticulateP is outside the boundary: run in the lab on zua.st, its result recorded in D33c
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → Footer : year(y) .
+    Footer → Visitor : bottom( notation = short(Zua), langs[en, de, pt],
+                               copyright = "© " · y · " Alexandre Zua Caldeira · " · city(l) ) .
+    Visitor → Footer : { language(L) . end      (SHELL-02, SHELL-03) ,
+                         leave . end }
+  Zua   = &{software: end} || &{research: end} || &{running: end}    (checked: 8 states, 12 transitions, lattice)
+  short : &{x: end} ↦ x ,  || ↦ ∥
+
+Visitor ↾ = Footer ? bottom(…) . Footer ! { language(L) . end , leave . end }
+Footer ↾  = Build ? year(y) . Visitor ! bottom(…) . Visitor ? { language(L) . end , leave . end }
+```
+
+Forbidden by G: a translated notation (P-01), a notation other than short(Zua) (P-02), a copyright
+not in `l` or without the name or year (P-03), `bottom` twice or not at all (P-04). No state, token or
+race, so no repeat or stale rows.
+
+| Diagram arrow | Step in G | Rows |
+|---|---|---|
+| 1 read the checked form, short | `notation = short(Zua)` | A, P-02 (break in the file) |
+| 3 prerender the row | `Build → Footer : year(y)`, `bottom(…)` | U2 (the clock), A |
+| 4 one row, one © | `bottom` once | A, P-04 |
+| 5 notation | `notation`, the same in every `l` | A, U1, P-01, P-02 |
+| `langs` | `langs[en, de, pt]` | SHELL-03, U4 (order) |
+| 6 last text | `copyright … city(l)` | A, U2, U3, P-03 |
+| `language(L)` | SHELL-02 and SHELL-03, unchanged | (covered) |
+
+Test list. Acceptance A (`frontend/acceptance/shell.test.mjs`): on every built page (the 15, `/` and
+`/404` as English) the footer has one `.foot__bottom`, its texts exactly [short(checked of
+`docs/notation/zua.st`), English, Deutsch, Português, `© YYYY Alexandre Zua Caldeira · city(l)`], YYYY
+four digits, at least 2026. Unit (`footer.spec.ts`): U1 on a German page the row starts with
+`Zua = software ∥ research ∥ running`; U2 with the clock at 2027 (`vi.setSystemTime`) an English page
+reads "© 2027 Alexandre Zua Caldeira · Berlin" (replaces "should have the current year"); U3 a
+Portuguese page reads "… · Berlim"; U4 the order is notation, language names, ©. P-01, P-02 and P-04
+by declared breaks in the built `de/home/index.html` (P-02 also once in `zua.st`), each restored, md5
+checked; P-03 red before. Browser C (`shell-footer`) run once again: it reads every text in the footer.
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
@@ -830,8 +892,40 @@ rule; the site's own texts stay in en, de and pt).
 | SHELL-07-P-03 | A page has one footer, with one heading and one email link. |
 | SHELL-07-P-04 | The footer links only to email, the profiles, the CV and the languages. |
 | SHELL-07-P-05 | The email link writes to the address it shows. |
+| SHELL-07b | The footer's last row shows Zua's three threads as a session type, the same in every language, then the languages, and the copyright with the full name and Berlin. |
+| SHELL-07b-P-01 | The footer's session type is notation and is never translated. |
+| SHELL-07b-P-02 | The session type in the footer is always the short form of the one that was checked. |
+| SHELL-07b-P-03 | The copyright line names Alexandre Zua Caldeira, the year and the city, in the page's language. |
+| SHELL-07b-P-04 | The footer has exactly one bottom row with one copyright line. |
 
 ## Decisions
+
+Agreed with the developer on 2026-11-08, for SHELL-07b (D27's bottom row):
+
+- **D33, the checked form** is kept in `docs/notation/zua.st`, exactly the checked line
+  `Zua = &{software: end} || &{research: end} || &{running: end}`. The site shows its short form,
+  short(checked): a one-branch thread `&{x: end}` is written as its label `x`, and `||` as `∥`
+  (U+2225), nothing else changes: `Zua = software ∥ research ∥ running`. The acceptance test reads the
+  file and applies short(), so the shown line cannot drift from the checked one. The hero's line
+  (HOME-HERO-04) reuses the file later.
+- **D33b,** this form replaces the checked form of D13 in `home.md` (note there): its labels are the
+  hero figure's atoms (HOME-HERO-08).
+- **D33c, the check** was made in the tdd-lab with the lab's pinned reticulateP (main `7d20ba416`, the
+  `reticulate` command) on 2026-11-08, **checked in the lab**, not from this repo. Its output:
+  ```
+  Session type: &{software: end} || &{research: end} || &{running: end}
+  States: 8  |  Transitions: 12  |  SCCs: 8
+  Lattice check: ✓ IS a lattice
+    Top reachable:    ✓
+    Bottom reachable: ✓
+    All meets exist:  ✓
+    All joins exist:  ✓
+  ```
+- **D34, the city** is a key `footer.city`: en and de "Berlin", pt "Berlim" (as the hero's lede). The
+  name and "©" stay in the template, never translated.
+- **D35, the clock in the unit test:** `vi.setSystemTime` in the spec; the footer keeps the build's
+  clock, no change to production code for it.
+- **D36, the ID** is SHELL-07b, as SHELL-05b.
 
 Agreed with the developer on 2026-11-06, for SHELL-07:
 

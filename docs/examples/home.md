@@ -466,7 +466,9 @@ Agreed with the developer on 2026-11-02:
 - **D13. The lattice's labels and the `Zua = …` line are notation:** never translated. Checked
   with reticulateP on 2026-11-02 as `Zua = Software || Research || Running`, with
   `Software = &{build: end}`, `Research = &{prove: end}`, `Running = &{run: end}`: 8 states,
-  12 transitions, a lattice.
+  12 transitions, a lattice. **Replaced on 2026-11-08** (D33 and D33b in `shell.md`): the checked
+  form is now `docs/notation/zua.st`, `Zua = &{software: end} || &{research: end} || &{running: end}`,
+  whose labels are the figure's atoms; the shown line is its short form. The hero's line reuses it.
 - **D14. German and Portuguese wording:** the drafts in this file and in `shell.md` are agreed.
 - **D15. Links to pages that do not exist yet** (`/software`, `/writing`) stay. `next` shows the
   404 page until those pages are built; `main` gets the new home only once they exist.
