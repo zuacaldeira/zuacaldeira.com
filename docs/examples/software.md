@@ -77,14 +77,14 @@ language as its example.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| SW-WORK-01 | Three more pieces follow, in a fixed order. | the built `/en/software` | the section is read | `<h2>` "More work", then three rows, in order: reticulateP, Kita Dienstplan, Casa Azul website, each with its kicker, `<h3>` title, text and stack (spec) | |
-| SW-WORK-02 | reticulateP links to the paper, not to its private repository. | any language | the reticulateP row's links are read | exactly one: the paper's PDF, labelled `work.ret.paper` | |
-| SW-WORK-03 | Kita Dienstplan links to its repository. | any language | its links are read | exactly one: https://github.com/zuacaldeira/kita-dienstplan, labelled `work.repo` (D8) | |
-| SW-WORK-04 | The Casa Azul website links to the live site and its repository. | any language | its links are read | https://casa-azul-berlin.de, labelled `casa-azul-berlin.de`, and https://github.com/zuacaldeira/ca-website, labelled `work.repo` (D8) | |
-| SW-WORK-05 | The rows are translated; the names and stacks are not. | `/de/software`, `/pt/software` | the rows are read | kicker and text in the page's language; the names reticulateP and Kita Dienstplan and the stacks the same as in en; the Casa Azul title `work.casa.title` translated | |
-| SW-WORK-06 | A fresh database, filled with the starting texts, gives the three pieces in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/work?lang=en`, `de`, `pt` | 200; en is the spec's copy (D26's shape); de and pt have the same rows, ids, names, stacks and links' targets, each text non-empty | |
-| SW-WORK-P-02 | A link to a private repository is refused. | the built page | a repository link is put on the reticulateP row | SW-WORK-02 goes red | |
-| SW-WORK-P-01 | A fourth piece, or a different order, is refused. | the built page | the Embassy line is put back, or Dienstplan moved first | SW-WORK-01 goes red | |
+| SW-WORK-01 | Three more pieces follow, in a fixed order. | the built `/en/software` | the section is read | `<h2>` "More work", then three rows, in order: reticulateP, Kita Dienstplan, Casa Azul website, each with its kicker, `<h3>` title, text and stack (spec) | yes (build and unit, 2026-11-08) |
+| SW-WORK-02 | reticulateP links to the paper, not to its private repository. | any language | the reticulateP row's links are read | exactly one: the paper's PDF, labelled `work.ret.paper` | yes (build and unit, 2026-11-08) |
+| SW-WORK-03 | Kita Dienstplan links to its repository. | any language | its links are read | exactly one: https://github.com/zuacaldeira/kita-dienstplan, labelled `work.repo` (D8) | yes (build and unit, 2026-11-08) |
+| SW-WORK-04 | The Casa Azul website links to the live site and its repository. | any language | its links are read | https://casa-azul-berlin.de, labelled `casa-azul-berlin.de`, and https://github.com/zuacaldeira/ca-website, labelled `work.repo` (D8) | yes (build and unit, 2026-11-08; outside links in a new tab, D27) |
+| SW-WORK-05 | The rows are translated; the names and stacks are not. | `/de/software`, `/pt/software` | the rows are read | kicker and text in the page's language; the names reticulateP and Kita Dienstplan and the stacks the same as in en; the Casa Azul title `work.casa.title` translated | yes (build, 2026-11-08) |
+| SW-WORK-06 | A fresh database, filled with the starting texts, gives the three pieces in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/software/work?lang=en`, `de`, `pt` | 200; en is the spec's copy (D26's shape); de and pt have the same rows, ids, names, stacks and links' targets, each text non-empty | yes (integration, 2026-11-08) |
+| SW-WORK-P-02 | A link to a private repository is refused. | the built page | a repository link is put on the reticulateP row | SW-WORK-02 goes red | yes (break in the build) |
+| SW-WORK-P-01 | A fourth piece, or a different order, is refused. | the built page | the Embassy line is put back, or Dienstplan moved first | SW-WORK-01 goes red | yes (break in the build, both) |
 
 ## 5. How I work
 
@@ -502,6 +502,24 @@ Page ↾    = Build?prerender . Visitor!work(…) . Visitor?{ … }
 | forbidden: `repo(reticulateP)` | not a branch of the choice (D2) | SW-WORK-P-02 |
 
 The page is read-only: no repeat, stale-token or race rows.
+
+**Done 2026-11-08.** Red first: A on slice 3's build ("More work does not follow the lead"); B1 404
+in all three languages; S1 "Missing expected rejection"; U1 no heading (after a stub); U2 no links;
+U3 no `target` or `rel`. Declared to the monitor: A as `writeAcceptance`, every break and restore.
+Green at first and shown to bite: SW-WORK-P-01 (the Embassy line as a fourth row; Kita Dienstplan
+put first), A2 (SW-WORK-P-02: a repository link on reticulateP), A3 (the English Casa Azul title on
+`pt`). The `<h3>` first had `translate="no"`, taken off before the commit: the Casa Azul title is
+translated text.
+
+Results: unit 242 passed, 5 skipped (37 files); scripts 7/7; `acceptance` 48/48;
+`acceptance:nginx` 11/11; browser `software-shot` 2/2 (its page changed; the shell's browser tests
+read the home pages only); backend `./mvnw verify` 22 integration tests; the build prerenders 23
+routes; initial bundle 510.81 kB.
+
+Leftovers:
+- **The rows at 390, 768 and 1280 px,** in light and dark: for the developer on the preview; the
+  links' 44 px height is measured in the browser with SW-PAGE-12 (slice 7).
+- **Port 8081** was taken again; the build's backend ran on 8091 (stdin override).
 
 ## Decisions
 
