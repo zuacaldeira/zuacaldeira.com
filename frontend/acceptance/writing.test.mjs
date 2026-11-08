@@ -38,6 +38,17 @@ test('WR-PAGE-01: the Writing page is built in every language, each with its lan
   }
 });
 
+test('WR-PAGE-02: the German Writing page links to its version in every language, English as default', () => {
+  const alternates = [...page('de/writing').matchAll(/<link rel="alternate" hreflang="([^"]*)" href="([^"]*)">/g)]
+    .map(([, hreflang, href]) => `${hreflang} ${href}`);
+  assert.deepEqual(alternates, [
+    'en https://zuacaldeira.com/en/writing',
+    'de https://zuacaldeira.com/de/writing',
+    'pt https://zuacaldeira.com/pt/writing',
+    'x-default https://zuacaldeira.com/en/writing',
+  ]);
+});
+
 test('WR-HEAD-02: the German Writing page opens in German: eyebrow, one <h1>, the intro', () => {
   const html = page('de/writing');
   assert.match(html, /<html lang="de"/);
