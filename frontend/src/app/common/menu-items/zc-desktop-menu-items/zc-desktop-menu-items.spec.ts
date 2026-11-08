@@ -101,4 +101,24 @@ describe('ZcDesktopMenuItems on a page of the site', () => {
     const current = [...(fixture.nativeElement as HTMLElement).querySelectorAll('a.active-link')];
     expect(current.map((a) => a.getAttribute('href'))).toEqual(['/de/about']);
   });
+
+  it('SW-PAGE-07 (D34): tells screen readers that Software is the page you are on, and only it', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter(
+          ['home', 'about', 'software', 'research', 'running'].map((page) => ({
+            path: `de/${page}`,
+            component: AnyPage,
+          })),
+        ),
+      ],
+    }).overrideComponent(ZcDesktopMenuItems, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('de');
+    const fixture = TestBed.createComponent(ZcDesktopMenuItems);
+    await TestBed.inject(Router).navigateByUrl('/de/software');
+    await fixture.whenStable();
+
+    const current = [...(fixture.nativeElement as HTMLElement).querySelectorAll('a[aria-current="page"]')];
+    expect(current.map((a) => a.getAttribute('href'))).toEqual(['/de/software']);
+  });
 });

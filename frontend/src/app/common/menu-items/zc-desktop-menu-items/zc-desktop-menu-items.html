@@ -3,6 +3,7 @@
     <a
       [routerLink]="item.link"
       routerLinkActive="active-link"
+      ariaCurrentWhenActive="page"
       [routerLinkActiveOptions]="{ exact: item.page === 'home' }"
     >
       {{ item.label }}

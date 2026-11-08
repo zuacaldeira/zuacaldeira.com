@@ -19,8 +19,14 @@ a {
     border-color var(--zc-transition-base);
 }
 
-a:hover,
-a.active-link {
+a:hover {
   color: var(--nav-fg, var(--zc-text-heading));
   border-bottom-color: var(--nav-fg, var(--zc-accent));
+}
+
+/* The page you are on: aria-current="page" (D34), underlined in ochre as the current language
+   code is (software-spec.md), not by colour alone. */
+a[aria-current='page'] {
+  color: var(--nav-fg, var(--zc-text-heading));
+  border-bottom-color: var(--zc-ochre);
 }
