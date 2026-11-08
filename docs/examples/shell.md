@@ -50,11 +50,11 @@ the home hero, because the hero's page needs them.
 | SHELL-07-P-03 | the same | its footer is read | a second footer, a second heading in it or a second mail link, or none, is refused | yes (break in the build: a second heading, a second mail link, none) |
 | SHELL-07-P-04 | the same | its footer is read | any link but the mail link, GitHub, LinkedIn, CV and the three language names (the old page menu, Strava) is refused | yes (build: red before, the menu and Strava) |
 | SHELL-07-P-05 | the same | its footer is read | a mail link whose text and `mailto:` address disagree is refused | yes (break in the build) |
-| SHELL-07b | every built page (`/` and `/404` as English) | the footer's bottom row is read | it reads, in order, `Zua = software ∥ research ∥ running` (the same in every language, short(checked) of `docs/notation/zua.st`, D33), English, Deutsch, Português, and "© ‹the build's year› Alexandre Zua Caldeira · Berlin" (pt "· Berlim", D34) | |
-| SHELL-07b-P-01 | a German or Portuguese page | the bottom row is read | a translated notation line (`Zua = Software ∥ Forschung ∥ Laufen`) is refused | |
-| SHELL-07b-P-02 | any built page | the bottom row is read | a shown line other than short(checked) is refused: ASCII `\|\|`, a fourth thread, or a checked file changed while the page is not | |
-| SHELL-07b-P-03 | any built page | the bottom row is read | a © line other than the page language's is refused: "Alexandre Caldeira" (red before), no year, "Berlim" on a German page | |
-| SHELL-07b-P-04 | any built page | its footer is read | a second bottom row, a second © line, or none, is refused | |
+| SHELL-07b | every built page (`/` and `/404` as English) | the footer's bottom row is read | it reads, in order, `Zua = software ∥ research ∥ running` (the same in every language, short(checked) of `docs/notation/zua.st`, D33), English, Deutsch, Português, and "© ‹the build's year› Alexandre Zua Caldeira · Berlin" (pt "· Berlim", D34) | yes (build, every page, and unit, 2026-11-08) |
+| SHELL-07b-P-01 | a German or Portuguese page | the bottom row is read | a translated notation line (`Zua = Software ∥ Forschung ∥ Laufen`) is refused | yes (break in the build) |
+| SHELL-07b-P-02 | any built page | the bottom row is read | a shown line other than short(checked) is refused: ASCII `\|\|`, a fourth thread, or a checked file changed while the page is not | yes (break in the build, both; break in `zua.st`) |
+| SHELL-07b-P-03 | any built page | the bottom row is read | a © line other than the page language's is refused: "Alexandre Caldeira" (red before), no year, "Berlim" on a German page | yes (build: red before; break in the build, both) |
+| SHELL-07b-P-04 | any built page | its footer is read | a second bottom row, a second © line, or none, is refused | yes (break in the build, all three) |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -763,7 +763,8 @@ Leftovers, not built:
   `next` until the developer adds it, with no phone number or street address (D26, D16).
 - **The bottom row** of the mock-up, `Zua = software ∥ research ∥ running` and "© … Alexandre Zua
   Caldeira · Berlin", is a later example (D27); the `Zua = …` line needs reticulateP on its shown form.
-  Today's row reads "© 2026 Alexandre Caldeira", the year from the build's clock.
+  Today's row reads "© 2026 Alexandre Caldeira", the year from the build's clock. (Built as SHELL-07b,
+  2026-11-08.)
 - **The footer at 768 px and its look** are for the developer on the preview; C measures 1280 only
   (the colours are the same tokens at every width).
 - **The footer's language names** sit 8 px inside the column's edge (their padding, as in the mock-up).
@@ -830,6 +831,37 @@ reads "© 2027 Alexandre Zua Caldeira · Berlin" (replaces "should have the curr
 Portuguese page reads "… · Berlim"; U4 the order is notation, language names, ©. P-01, P-02 and P-04
 by declared breaks in the built `de/home/index.html` (P-02 also once in `zua.st`), each restored, md5
 checked; P-03 red before. Browser C (`shell-footer`) run once again: it reads every text in the footer.
+
+**Done 2026-11-08.** A went red on all 17 pages with no `Zua = …` line and `'© 2026 Alexandre
+Caldeira'` for `'© 2026 Alexandre Zua Caldeira · Berlin'` (P-03 red before). Its first run read no row
+at all, because Angular writes its `_ngcontent` attribute before `class`; the reader was fixed before
+the red was taken. It went green after the unit tests, each red first except U4: U1 `expected 'English'`
+(the row began with the languages), green with the line in the template; U2 `expected '© 2027 Alexandre
+Caldeira'` with the clock at 2027, green by faking "Berlin" in the template; U3 `expected '… · Berlin'`
+on a Portuguese page, triangulated into the key `footer.city`. U4 (the order) was green on its first run
+and bit with the © line moved before the languages (U2, U3 and U4 red). "should have the current year",
+which compared the footer with the real clock, gave way to U2.
+
+Each P row was a declared break, restored from a copy with the md5 checked, and A went red on each with
+the line it names: P-01 `'Zua = Software ∥ Forschung ∥ Laufen'`; P-02 `||` in the page, a fourth thread
+in the page (`'… ∥ running ∥ teaching'`) and a fourth thread in `zua.st` only. That last one went red at
+the test's first assertion, which pins short(checked) to the agreed line before any page is read; the
+pages' comparison would have refused it too. P-03 "Berlim" on `de/home` and no year (`'© Alexandre Zua
+Caldeira · Berlin'`); P-04 a second row, a second © line, and none (`'de/home': []`).
+
+Unit 212 passed, 5 skipped; `acceptance` 26/26; browser 6/6 (`shell-footer`, which measures every text
+in the footer, the new row included); the build prerenders 20 routes. `shell-phone` and `shell-keyboard`
+were not run: the element changes only the footer's bottom row, which they do not read.
+
+Leftovers, not built:
+- **The row at 390 and 768 px** (it wraps: `flex-wrap`), and how `∥` looks in Plex Mono at 0.75 rem:
+  for the developer on the preview. C measures 1280 only.
+- **Screen readers** may read `∥` as "parallel to" or skip it; the line is notation, left as it is.
+- **The hero's `Zua = …` line** (HOME-HERO-04) is not built; when it is, it reads `docs/notation/zua.st`
+  as this test does (D33).
+- **`short()` lives in the acceptance test.** A second user (the hero) would be the moment to share it.
+- **The initial bundle** is 512.27 kB against the 500 kB warning budget.
+- `i18n/de.ts`, `en.ts`, `pt.ts` are still not Prettier-clean (7 lines each, the same before the element).
 
 ## Width of the header
 
