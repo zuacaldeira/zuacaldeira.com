@@ -47,4 +47,54 @@ describe('ResearchWall', () => {
       { hint: 'wall hint pt', hot: [] },
     ]);
   });
+
+  describe('drawing in', () => {
+    // A stand-in for the browser's observer: the test says when the wall is in view.
+    class FakeObserver {
+      static last?: FakeObserver;
+      readonly observed: Element[] = [];
+      constructor(
+        readonly report: (entries: { isIntersecting: boolean; target: Element }[]) => void,
+        readonly options: { threshold?: number },
+      ) {
+        FakeObserver.last = this;
+      }
+      observe(el: Element) {
+        this.observed.push(el);
+      }
+      unobserve() {}
+      disconnect() {}
+    }
+
+    beforeEach(() => (FakeObserver.last = undefined));
+    afterEach(() => vi.unstubAllGlobals());
+
+    const drawn = (wall: HTMLElement) => wall.querySelector('svg')!.classList.contains('in');
+
+    it('RS-MOTION-01, RS-MOTION-P-02: should draw the wall in once a quarter of it is in view, and not before', async () => {
+      vi.stubGlobal('IntersectionObserver', FakeObserver);
+      const { fixture, wall } = show('en');
+      await fixture.whenStable();
+      expect(FakeObserver.last, 'an observer watches the wall').toBeDefined();
+      const observer = FakeObserver.last!;
+      const svg = wall.querySelector('svg')!;
+      const steps = [drawn(wall)];
+      observer.report([{ isIntersecting: false, target: svg }]);
+      steps.push(drawn(wall));
+      observer.report([{ isIntersecting: true, target: svg }]);
+      steps.push(drawn(wall));
+      expect({ watched: observer.observed, threshold: observer.options.threshold, steps }).toEqual({
+        watched: [svg],
+        threshold: 0.25,
+        steps: [false, false, true],
+      });
+    });
+
+    it('RS-MOTION-01 (D13): should draw the wall at once where the browser cannot tell what is in view', async () => {
+      vi.stubGlobal('IntersectionObserver', undefined);
+      const { fixture, wall } = show('en');
+      await fixture.whenStable();
+      expect(drawn(wall)).toBe(true);
+    });
+  });
 });

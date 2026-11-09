@@ -1,4 +1,4 @@
-import { Component, afterNextRender, inject, signal } from '@angular/core';
+import { Component, DestroyRef, ElementRef, afterNextRender, inject, signal } from '@angular/core';
 import { RESEARCH_CONTENT } from '../../../content/content';
 import { I18nService } from '../../../services/i18n.service';
 
@@ -19,7 +19,29 @@ export class ResearchWall {
   private hot?: Element;
 
   constructor() {
-    afterNextRender(() => this.hint.set(this.wall.hint));
+    const host: HTMLElement = inject(ElementRef).nativeElement;
+    let observer: IntersectionObserver | undefined;
+    afterNextRender(() => {
+      this.hint.set(this.wall.hint);
+      // The lines wait hidden only under html.motion (D13); `in` draws them, once a quarter of the
+      // wall is in view, or at once where the browser cannot tell (RS-MOTION-01, RS-MOTION-P-02).
+      const svg = host.querySelector('svg')!;
+      if (typeof IntersectionObserver === 'undefined') {
+        svg.classList.add('in');
+        return;
+      }
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries.filter((e) => e.isIntersecting)) {
+            entry.target.classList.add('in');
+            observer?.unobserve(entry.target);
+          }
+        },
+        { threshold: 0.25 },
+      );
+      observer.observe(svg);
+    });
+    inject(DestroyRef).onDestroy(() => observer?.disconnect());
   }
 
   /** Pointing at a tile names its protocol and thickens its lines (RS-MOTION-04). */
