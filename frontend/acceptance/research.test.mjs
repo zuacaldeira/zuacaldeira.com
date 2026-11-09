@@ -705,6 +705,15 @@ test('RS-MORE-03: on de and pt the words around the links are translated, Resear
   );
 });
 
+test('RS-MORE-04 (Q3): no other profile, ResearchGate alone, in any language', () => {
+  const OTHERS = ['ORCID', 'orcid.org', 'DBLP', 'dblp.org', 'Google Scholar', 'scholar.google'];
+  const found = LANGS.flatMap((lang) => {
+    const html = main(page(`${lang}/research`));
+    return OTHERS.filter((name) => html.includes(name)).map((name) => `${lang}: ${name}`);
+  });
+  assert.deepEqual(found, []);
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
