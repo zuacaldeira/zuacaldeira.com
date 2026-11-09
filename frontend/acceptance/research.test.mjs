@@ -220,6 +220,20 @@ test('RS-WALL-02: the German wall says what it is and which construction it draw
   );
 });
 
+test('RS-WALL-07 (D17): the German caption ends with its key, in a span of its own', () => {
+  const figcaption = (figures(page('de/research'))[0] ?? '').match(/<figcaption\b[^>]*>(.*?)<\/figcaption>/s)?.[1] ?? '';
+  const parts = figcaption.split(/(<span\b[^>]*class="rs-wall__key"[^>]*>.*?<\/span>)/s);
+  assert.deepEqual(
+    { caption: text(parts[0] ?? ''), key: texts(figcaption, 'span', 'rs-wall__key'), after: text(parts[2] ?? '') },
+    {
+      caption:
+        '74 verschiedene Verbände, gezeichnet aus 104 der 108 Protokolle des Papers auf Stufe R2′, einer feineren Konstruktion als der des Papers.',
+      key: ['Ocker: nicht distributiv, 47 der 74.'],
+      after: '',
+    },
+  );
+});
+
 test('RS-WALL-04: each tile carries its protocol’s name as published, the same in every language', () => {
   const names = Object.fromEntries(
     LANGS.map((lang) => [lang, tiles(figures(page(`${lang}/research`))[0] ?? '').map(({ name }) => name)]),
