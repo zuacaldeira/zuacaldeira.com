@@ -13,6 +13,7 @@ const SECTIONS = [
   ['writing', 'head'],
   ['writing', 'texts'],
   ['research', 'head'],
+  ['research', 'wall'],
   // Text several pages read, written as shared.json (D30).
   ['shared', 'paper'],
 ];

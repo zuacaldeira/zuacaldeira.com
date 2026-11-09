@@ -15,7 +15,8 @@ const workIn = (lang) => ({ heading: `heading ${lang}`, rows: [{ id: 'reticulate
 const howIn = (lang) => ({ heading: `heading ${lang}`, steps: [{ title: `title ${lang}` }] });
 const paperIn = (lang) => ({ eyebrow: `eyebrow ${lang}`, year: 2026 });
 const proofIn = (lang) => ({ kicker: `kicker ${lang}` });
-const textsIn = (lang) => ({ read: `read ${lang}`, items: [{ id: 'ice2026', year: 2026 }] });
+const wallIn = (lang) => ({ label: `label ${lang}`, caption: `caption ${lang}`, hint: `hint ${lang}` });
+const textsIn = (lang) =>({ read: `read ${lang}`, items: [{ id: 'ice2026', year: 2026 }] });
 
 // Answers GET /api/content/{page}/{section}?lang=xx from `stored`; anything else is 404.
 async function fakeApi(stored) {
@@ -104,7 +105,7 @@ const everything = () => {
     shared: { paper: all(paperIn) },
     software: { head: all(headIn), lead: all(leadIn), work: all(workIn), how: all(howIn), proof: all(proofIn) },
     writing: { head: all(headIn), texts: all(textsIn) },
-    research: { head: all(headIn) },
+    research: { head: all(headIn), wall: all(wallIn) },
   };
 };
 
@@ -160,6 +161,17 @@ test('RS-PAGE-05: a Research head missing in de stops the build, naming page, se
 
   await assert.rejects(fetchContent(api.url), {
     message: 'No content for page research, section head, language de (404)',
+  });
+});
+
+test('RS-PAGE-05: the Research wall missing in pt stops the build, naming page, section and language', async (t) => {
+  const stored = everything();
+  delete stored.research.wall.pt;
+  const api = await fakeApi(stored);
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'No content for page research, section wall, language pt (404)',
   });
 });
 
