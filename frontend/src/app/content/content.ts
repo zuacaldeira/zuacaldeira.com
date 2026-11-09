@@ -198,6 +198,20 @@ export interface ResearchContent {
   /** What it proves: its heading; the statements are `shared/paper`'s (D3). */
   readonly results: Readonly<Record<Language, { readonly heading: string }>>;
   readonly checked: Readonly<Record<Language, ResearchChecked>>;
+  readonly tool: Readonly<Record<Language, ResearchTool>>;
+}
+
+/**
+ * One language's tool, `research/tool` (D2): reticulateP in the Software row's terms, its text the
+ * Software row's word for word (D6), one link inside the site in the page's language (D22).
+ */
+export interface ResearchTool {
+  readonly heading: string;
+  readonly kicker: string;
+  readonly title: string;
+  readonly text: string;
+  readonly stack: string;
+  readonly link: WorkLink;
 }
 
 /**

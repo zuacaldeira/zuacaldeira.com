@@ -194,6 +194,14 @@ export const TEST_CONTENT: ContentSnapshot = {
       figures: ['108', '93', '15', 'Lean 4'].map((value) => ({ value, label: `label ${value} ${lang}` })),
       rung: `rung ${lang}`,
     })),
+    tool: inEvery((lang) => ({
+      heading: `tool heading ${lang}`,
+      kicker: `tool kicker ${lang}`,
+      title: 'reticulateP',
+      text: `tool text ${lang}`,
+      stack: 'Python',
+      link: { label: `tool link ${lang}`, href: `/${lang}/software` },
+    })),
   },
   shared: { paper: inEvery(sharedPaperIn) },
 };
