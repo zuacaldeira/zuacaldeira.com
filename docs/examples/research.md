@@ -1,8 +1,8 @@
 # Examples: Research page
 
-Status: **hold lifted (2026-11-09): option A chosen; proposed by ui-design-peer for the
-developer's agreement:** the cases, the four slices and D1 to D10 below. R1 to R8 (R4 replaced),
-Q1 to Q5 and the choice of option A are answered.
+Status: **agreed with the developer on 2026-11-09:** the 71 cases, the four slices and D1 to D10
+below, as ui-design-peer proposed them (answers under "Decisions"). R1 to R8 (R4 replaced), Q1 to
+Q5 and the choice of option A are answered. Slice 1 is being built.
 
 The Research page in three languages, at `/en/research`, `/de/research` and `/pt/research`: a landing
 page for the ICE 2026 paper (R1 b). Design: `docs/mockups/research/research-spec.md`, with the
@@ -245,7 +245,7 @@ while the visitor may already point or follow a link, and nothing depends on the
 
 The page is read-only: no repeat, stale-token or race rows.
 
-## Slices (proposed)
+## Slices (agreed 2026-11-09)
 
 The route, menu link and sitemap entry exist already, so every slice is reachable on `next` as soon
 as it is pushed. `next` is not merged into `main` until slice 4 is done (D5).
@@ -268,6 +268,93 @@ as it is pushed. `next` is not merged into `main` until slice 4 is done (D5).
    RS-TOOL-01 to 03, P-01; RS-SHOT-01; RS-MORE-01 to 04, P-01; RS-COLOR-02 to 04; RS-PAGE-09 to 12.
 
 Not in these slices: RS-SHOT-02 (with the image), What's next (D1), Cite (Q5).
+
+## Slice 1: frame + head
+
+Test list (crossed off in the "Done" note below as each is committed):
+- **Acceptance, the outer tests** (`acceptance/research.test.mjs`), declared first and red on
+  today's build of the old page:
+  - A1 RS-HEAD-02, the German page opens with "Ein Paper · ICE 2026", one `<h1>` "Forschung" and
+    the German intro.
+  - A2 RS-PAGE-07, the old page is gone from `<main>`: no "Publications", no POPL, FOOL or ConGu
+    title or abstract, no `mat-card`, `mat-button` or `mat-stroked-button`.
+- **Backend** (Testcontainers, one class per run):
+  - B1 RS-HEAD-05, the seed answers the agreed head in en, de, pt, none empty
+    (`ResearchSeedIntegrationTest`, new seed `R__research.sql`).
+  - B2 RS-HEAD-04, the stored German head as it is (`ContentSectionIntegrationTest`). The table is
+    page-agnostic (D11 in `software.md`), so B2 is expected green at once; it is shown to bite by a
+    break in `ContentService`.
+- **Script:** S1 RS-PAGE-05, the snapshot asks for `research/head` in each language, and a 404 for
+  `de` stops it, naming page `research`, section `head`, language `de`.
+- **Unit:**
+  - U1 RS-HEAD-02, the page shows `PageHead` with the head from `RESEARCH_CONTENT` on a German page,
+    and nothing else (the old markup goes here: RS-PAGE-07).
+  - U2 RS-PAGE-02, the title `Alexandre Zua Caldeira — ${heading}`.
+  - U3 RS-PAGE-01 and RS-PAGE-06 (D11), `/de/research` brings its own text with its route
+    (`research.routes.ts`, `loadChildren`; no content at the root), in German.
+- **Cleanup (D7, D12):** the old page's template, styles and spec, and the `research` block of
+  `Translations` in `en`, `de`, `pt`; the compiler and the suite hold it.
+- **Acceptance, after the build:** A3 RS-PAGE-01 (three pages, their `lang`, each with
+  `app-page-head`), A4 RS-PAGE-02, A5 RS-PAGE-03, A6 RS-PAGE-04, A7 RS-HEAD-01 and 03 (exactly one
+  `<h1>`), A8 RS-PAGE-06 (own text loaded; not the home hero's sentence, the Software lead's title or
+  the Writing intro; and the Research intro not in the home page's files), A9 RS-PAGE-08 (no "What's
+  next" in any language; `<main>`'s sections are the head alone in this slice, the later slices add
+  theirs in the order of D1).
+- **Protocol rows:** RS-PAGE-P-01 (a built language moved out: A3), RS-PAGE-P-02 (the POPL title put
+  back in `<main>`: A2), RS-HEAD-P-01 (the English intro on `/de/research`: A1); each row that is
+  green at first is shown red by its break in the built page, then restored.
+
+Not in slice 1: the wall and everything after the head (slices 2 to 4); `shared/paper` on this page
+(slice 3, D11); browser checks (slice 4). The route, menu link, current marker, sitemap entry and
+nginx exist already, so the page is reachable on `next` once pushed (D5: no merge before slice 4).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1–B2
+        participant DB as MySQL 8 (Flyway + seed R__research.sql)
+        participant API as Content API
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/research/index.html
+    T->>API: B1, B2: GET research/head?lang=l
+    API->>DB: select body where page=research, section=head, lang=l
+    F->>API: GET research/head?lang=l, for l in en, de, pt
+    API-->>F: 200 {eyebrow, heading, intro} or 404 → the build stops (S1)
+    F->>NG: research.json (@page-content/research)
+    NG->>P: route /l/research (U3): lang, alternates, title (U2), PageHead only (U1), own chunk (U3)
+    T->>P: A1–A9, P rows
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → API : get(research, head, l) .
+    API → Build : { ok200(head_l) .
+                    Build → Page : prerender(l, title_l, alternates, current(research), head_l) .
+                    Page → Visitor : page(lang = l, h1, links) . end ,
+                    missing404 . Build → CI : fail(research, head, l) . end }
+
+Build ↾   = API!get . API?{ ok200 . Page!prerender . end , missing404 . CI!fail . end }
+Page ↾    = Build?prerender . Visitor!page(lang = l, h1, links) . end
+Visitor ↾ = Page?page(lang = l, h1, links) . end
+API ↾     = Build?get . Build!{ ok200 . end , missing404 . end }
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1–2 test → API → DB | `get`, `ok200(head_l)` | B1, B2 (RS-HEAD-04, 05) |
+| 3–4 F → API | `get` × 3, `{ok200, missing404}` | S1 (RS-PAGE-05) |
+| 5–6 F → NG → P | `prerender(l, title_l, alternates, current(research), head_l)` | U1, U2, U3 |
+| 7 T → P | `page(lang = l, h1, links)` | A1–A9 |
+| forbidden: a page missing for some `l` | `prerender` for every `l` | RS-PAGE-P-01 |
+| forbidden: `head_en` on an `l = de` page | `ok200(head_l)` | RS-HEAD-P-01 |
+| forbidden: the old page's publications in `page(…)` | `page` holds the head alone | RS-PAGE-P-02 |
+
+The build is read-only: no repeat, stale-token or race rows. The old page is not a refactor: what
+the visitor sees changes, so there is no `G_pre`/`G_post` claim; A2 and RS-PAGE-P-02 hold the change.
 
 ## Decisions
 
@@ -340,3 +427,23 @@ to D7 hold as first proposed; D2 and D5 changed with option A; D8 to D10 are new
 - **D10. The BICA screenshot is built only when the image exists:** until then "The tool" has no
   frame and no placeholder (RS-SHOT-01). With the image come its alt text and caption in en, de and
   pt, as their own change (RS-SHOT-02).
+
+Answered by the developer on 2026-11-09, for the build:
+
+- **The cases, the slices, D1 to D10: agreed as proposed.** In particular D8 (the Research wall is a
+  second output of the hero wall's script; the hero's wall is not touched) and D9 (the wall's numbers
+  are written into the sentences, and a test holds them to the data).
+- **The drafts are built as drafted** (the eyebrow, intro, headings and labels, and the German and
+  Portuguese copy) and listed for the developer's review on the preview (Q4).
+- **The BICA screenshot waits for the developer** (D10): nothing for it is built now.
+- **`next` is not merged into `main` before slice 4** (D5): the site goes live only when the whole
+  site is built.
+
+Taken while planning slice 1 (2026-11-09, tdd-peer; the developer may change them):
+
+- **D11. `RS-PAGE-06` in two halves.** Slice 1 checks the page's own text and that no other page's
+  text is loaded; that `shared/paper` is loaded too comes in slice 3, the first slice that reads it.
+  Until then the route provides `RESEARCH_CONTENT` only, so the page does not download text it does
+  not show.
+- **D12. The whole `research` block of `Translations` goes,** not only D7's four keys: with the old
+  page gone, `research.title` has no reader either. `nav.research` stays.
