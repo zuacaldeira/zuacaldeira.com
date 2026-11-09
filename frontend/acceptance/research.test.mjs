@@ -190,6 +190,36 @@ test('RS-WALL-01 (D8): after the intro, one figure shows the 74 lattices in orde
   );
 });
 
+// The wall's words on a built page: the SVG's label, the caption, and the hint as prerendered.
+const wallWords = (html) => {
+  const figure = figures(html)[0] ?? '';
+  return {
+    label: figure.match(/<svg\b[^>]*\saria-label="([^"]*)"/)?.[1] ?? null,
+    caption: texts(figure, 'figcaption')[0] ?? null,
+    hint: texts(figure, 'p')[0] ?? null,
+  };
+};
+
+test('RS-WALL-02: the German wall says what it is and which construction it draws', () => {
+  const { label, caption } = wallWords(page('de/research'));
+  assert.deepEqual(
+    {
+      label,
+      caption,
+      labelNames: ['R2′', '74'].filter((words) => label?.includes(words)),
+      captionNames: ['R2′', '74', '104', '108', '47'].filter((words) => caption?.includes(words)),
+    },
+    {
+      label:
+        'Die 74 verschiedenen Verbände der Benchmark-Protokolle des Papers auf Stufe R2′, nach Größe geordnet; die 47 nicht distributiven in Ocker.',
+      caption:
+        '74 verschiedene Verbände, gezeichnet aus 104 der 108 Protokolle des Papers auf Stufe R2′, einer feineren Konstruktion als der des Papers. Ocker: nicht distributiv, 47 der 74.',
+      labelNames: ['R2′', '74'],
+      captionNames: ['R2′', '74', '104', '108', '47'],
+    },
+  );
+});
+
 // The classes the head's inline scripts put on <html> before first paint, run as theme.test.mjs runs
 // them, on a device that does or does not ask for reduced motion.
 const htmlClassesAtFirstPaint = (html, { reducedMotion }) => {
