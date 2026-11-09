@@ -663,6 +663,17 @@ test('RS-TOOL-02: the tool has one link, to the Software page in the same langua
   assert.deepEqual(links, [{ label: 'reticulateP auf der Software-Seite', href: '/de/software', target: null }]);
 });
 
+test('RS-SHOT-01 (D10): until the screenshot exists, the tool shows no frame, image or placeholder', () => {
+  const found = LANGS.flatMap((lang) => {
+    const inner = section(page(`${lang}/research`), 'rs-tool');
+    return [
+      ...[/<figure\b/, /<img\b/].filter((tag) => tag.test(inner)).map(String),
+      ...['BICA', 'Screenshot', 'placeholder'].filter((word) => text(inner).includes(word)),
+    ].map((what) => `${lang}: ${what}`);
+  });
+  assert.deepEqual(found, []);
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
