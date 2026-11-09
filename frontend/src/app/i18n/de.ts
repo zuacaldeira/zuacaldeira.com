@@ -36,14 +36,6 @@ export const de: Translations = {
     beyondP1:
       'Ich bin Hobbyläufer und trainiere durch die Berliner Jahreszeiten. Vom Silvesterlauf bis zum Berlin-Marathon — das Laufen hält mich geerdet und gibt allem anderen Struktur.',
   },
-  research: {
-    title: 'Forschung',
-    subtitle:
-      'Session Types für sichere nebenläufige Programmierung — von objektorientierten Protokollen zur Verbandstheorie.',
-    profilesHeading: 'Forschungsprofile',
-    publicationsHeading: 'Publikationen',
-    paperLink: 'Paper',
-  },
   work: {
     title: 'Arbeit',
     subtitle: 'Softwareprojekte — Angular, Spring Boot und das Casa-Azul-Ökosystem.',

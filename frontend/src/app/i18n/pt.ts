@@ -36,14 +36,6 @@ export const pt: Translations = {
     beyondP1:
       'Sou corredor amador, treinando ao longo das estações de Berlim. Do Silvesterlauf à Maratona de Berlim, a corrida mantém-me equilibrado e dá estrutura a tudo o resto.',
   },
-  research: {
-    title: 'Investigação',
-    subtitle:
-      'Session Types para programação concorrente segura — dos protocolos orientados a objetos à teoria dos reticulados.',
-    profilesHeading: 'Perfis de Investigação',
-    publicationsHeading: 'Publicações',
-    paperLink: 'Artigo',
-  },
   work: {
     title: 'Trabalho',
     subtitle: 'Projetos de software — Angular, Spring Boot e o ecossistema Casa Azul.',

@@ -97,13 +97,6 @@ export interface Translations {
     beyondHeading: string;
     beyondP1: string;
   };
-  research: {
-    title: string;
-    subtitle: string;
-    profilesHeading: string;
-    publicationsHeading: string;
-    paperLink: string;
-  };
   work: {
     title: string;
     subtitle: string;

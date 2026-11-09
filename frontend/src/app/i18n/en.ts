@@ -36,14 +36,6 @@ export const en: Translations = {
     beyondP1:
       "I'm an amateur runner, training through Berlin's seasons. From the Silvesterlauf to the Berlin Marathon, running keeps me grounded and gives structure to everything else.",
   },
-  research: {
-    title: 'Research',
-    subtitle:
-      'Session Types for safe concurrent programming — from object-oriented protocols to lattice theory.',
-    profilesHeading: 'Research Profiles',
-    publicationsHeading: 'Publications',
-    paperLink: 'Paper',
-  },
   work: {
     title: 'Work',
     subtitle: 'Software projects — Angular, Spring Boot, and the Casa Azul ecosystem.',
