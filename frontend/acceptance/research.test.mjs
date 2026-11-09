@@ -497,6 +497,17 @@ test('RS-RES-03, 04: on de and pt the labels are translated; the statements’ n
   );
 });
 
+test('RS-RES-06 (D20): with four statements stored, the Software band still shows the theorem alone', () => {
+  const band = section(page('de/software'), 'band');
+  assert.deepEqual(
+    {
+      labels: texts(band, 'p', 'band__label'),
+      others: STATEMENTS.slice(1).map(([, body]) => body).filter((body) => text(band).includes(body)),
+    },
+    { labels: ['Satz 15 · Reticulate Theorem'], others: [] },
+  );
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
