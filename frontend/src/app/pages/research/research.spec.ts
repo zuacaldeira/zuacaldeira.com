@@ -25,7 +25,12 @@ describe('Research', () => {
     expect(texts('.page-head__eyebrow')).toEqual(['research eyebrow de']);
     expect(texts('h1')).toEqual(['research heading de']);
     expect(texts('.page-head__intro')).toEqual(['research intro de']);
-    expect([...page.children].map((el) => el.tagName)).toEqual(['APP-PAGE-HEAD']);
+    // RS-PAGE-08: the head, the paper, what it proves; slice 4 adds the rest.
+    expect([...page.children].map((el) => el.tagName)).toEqual([
+      'APP-PAGE-HEAD',
+      'APP-PAPER-CARD',
+      'APP-PAPER-RESULTS',
+    ]);
   });
 
   it('RS-WALL-01 (D15): should show the wall in the head, right after the intro', () => {

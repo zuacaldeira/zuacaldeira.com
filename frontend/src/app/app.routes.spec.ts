@@ -138,6 +138,8 @@ describe('App Routes', () => {
       expect(harness.routeNativeElement?.tagName).toBe('APP-RESEARCH');
       expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe('de');
       expect(harness.routeNativeElement?.querySelector('h1')?.textContent?.trim()).toBe('research heading de');
+      // D18: the paper's shared text comes with the route too (its title on the card).
+      expect(harness.routeNativeElement?.querySelector('.rs-paper h2')?.textContent?.trim()).toBe('Paper Title');
     });
   });
 
