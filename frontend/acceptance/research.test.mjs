@@ -674,6 +674,20 @@ test('RS-SHOT-01 (D10): until the screenshot exists, the tool shows no frame, im
   assert.deepEqual(found, []);
 });
 
+test('RS-MORE-02: the profile opens in a new tab, and says so in the page language', () => {
+  const link = section(page('de/research'), 'rs-more').match(/<a\b([^>]*target="_blank"[^>]*)>(.*?)<\/a>/s);
+  const [, attrs = '', body = ''] = link ?? [];
+  assert.deepEqual(
+    {
+      href: attr(attrs, 'href'),
+      rel: attr(attrs, 'rel'),
+      arrow: /<span\b[^>]*aria-hidden="true"[^>]*>↗<\/span>/.test(body),
+      hidden: texts(body, 'span', 'visually-hidden'),
+    },
+    { href: RESEARCHGATE, rel: 'noopener noreferrer', arrow: true, hidden: ['(öffnet in einem neuen Tab)'] },
+  );
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
