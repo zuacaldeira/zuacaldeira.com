@@ -1,0 +1,28 @@
+<section class="rs-results">
+  <div class="rs-results__in">
+    <h2 class="rs-results__heading">{{ heading }}</h2>
+    @if (theorem; as statement) {
+      <blockquote class="rs-results__theorem">
+        <ng-container *ngTemplateOutlet="quoted; context: { $implicit: statement }" />
+      </blockquote>
+    }
+    <div class="rs-results__more">
+      @for (statement of others; track statement.number) {
+        <blockquote class="rs-results__statement">
+          <ng-container *ngTemplateOutlet="quoted; context: { $implicit: statement }" />
+        </blockquote>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- A statement: its label in the page's language, the name and the text as published (D4). -->
+<ng-template #quoted let-statement>
+  <p class="rs-results__label">
+    {{ kindWord(statement.kind) }} {{ statement.number }} ·
+    <span translate="no">{{ statement.name }}</span>
+  </p>
+  <p class="rs-results__text" translate="no" [attr.lang]="english ? null : 'en'">
+    {{ statement.text }}
+  </p>
+</ng-template>
