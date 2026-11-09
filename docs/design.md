@@ -56,6 +56,13 @@ Open, for the developer:
   - Lattice edges use `--zc-edge` (held at 3:1 or more), not the decorative grout.
 - **Type:** Fraunces for display, Archivo for body text, IBM Plex Mono for notation, venue
   names and data. Loaded from Google Fonts in `frontend/src/index.html`.
+- **Notation fonts** (agreed 2026-11-09): none of the three families holds the site's 12 symbols
+  `₁ ₂ ℒ → ↗ ↠ ∥ ≅ ≡ ≤ ⊤ ⊥`, so devices drew them in whatever system font they had. Each font
+  token is now its main family → Noto Sans Math → STIX Two Text, both from Google Fonts and
+  loaded only for those symbols (`&text=`). Noto Sans Math draws ten of them; it lacks `₁ ₂`,
+  which STIX Two Text draws (a serif, beside the Fraunces statements). Letters stay in Fraunces,
+  Archivo and Plex Mono. Rejected: Noto Sans for the subscripts (sans beside Fraunces), and
+  writing `s1`, `s2` with lowered digits (the text would no longer match the paper).
 - **Hero:** the Website v2 hero: the sentence "I build software, and prove its protocols
   hold." with the 2³ lattice of `Zua = software ∥ research ∥ running`. It replaces the
   photographic hero, follows the glaze, and has no fixed colours. It sits on the study's
