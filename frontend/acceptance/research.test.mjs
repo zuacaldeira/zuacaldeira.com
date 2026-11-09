@@ -28,6 +28,34 @@ const head = (html) => ({
   intro: texts(html, 'p', 'page-head__intro'),
 });
 
+// The page's own content: its <main>, without the shell around it.
+const main = (html) => html.match(/<main\b[^>]*>(.*?)<\/main>/s)?.[1] ?? '';
+
+// The old page (D7): its list of publications and its Material cards and buttons.
+const OLD = [
+  'Publications',
+  'Publikationen',
+  'Publicações',
+  'Modular Session Types for Distributed Object-Oriented Programming',
+  'Dynamic Interfaces',
+  'ConGu, Checking Java Classes Against Property-Driven Algebraic Specifications',
+  'Session types allow communication protocols to be specified type-theoretically',
+  'We define a small class-based object-oriented language',
+  'ConGu is a tool that supports the checking of Java classes',
+];
+const MATERIAL = [/<mat-card\b/, /\smat-button\b/, /\smat-stroked-button\b/];
+
+test('RS-PAGE-07 (D7): the old page is gone: no list of publications, no Material cards or buttons', () => {
+  const found = ['en', 'de', 'pt'].flatMap((lang) => {
+    const html = main(page(`${lang}/research`));
+    return [
+      ...OLD.filter((words) => text(html).includes(words)),
+      ...MATERIAL.filter((tag) => tag.test(html)).map(String),
+    ].map((found) => `${lang}: ${found}`);
+  });
+  assert.deepEqual(found, []);
+});
+
 test('RS-HEAD-02: the German Research page opens in German: eyebrow, one <h1>, the intro', () => {
   const html = page('de/research');
   assert.match(html, /<html lang="de"/);
