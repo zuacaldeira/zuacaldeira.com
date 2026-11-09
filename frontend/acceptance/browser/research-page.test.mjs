@@ -69,6 +69,24 @@ const open = async (path, width, colorScheme = 'light') => {
   return { context, page };
 };
 
+for (const lang of ['en', 'de', 'pt']) {
+  test(`RS-PAGE-09: /${lang}/research fits a 390 px phone: no sideways scroll, nothing in main past 390`, async () => {
+    const { context, page } = await open(`/${lang}/research`, 390);
+    try {
+      const measured = await page.evaluate(() => ({
+        page: document.documentElement.scrollWidth,
+        past: [...document.querySelectorAll('main *')]
+          .filter((el) => el.getClientRects().length > 0 && !el.closest('.visually-hidden'))
+          .filter((el) => el.getBoundingClientRect().right > 390.5)
+          .map((el) => `${el.tagName.toLowerCase()}.${el.getAttribute('class')} ${Math.round(el.getBoundingClientRect().right)}`),
+      }));
+      assert.deepEqual(measured, { page: 390, past: [] });
+    } finally {
+      await context.close();
+    }
+  });
+}
+
 test('BUG-RS-01 (RS-MORE-02): the new-tab words of the ResearchGate link are for screen readers, not on screen', async () => {
   const { context, page } = await open('/de/research', 1280);
   try {
