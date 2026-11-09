@@ -136,6 +136,40 @@ for (const lang of ['en', 'de']) {
   }
 }
 
+// A token's colour as the page resolves it: a probe painted with it, its computed colour.
+const tokens = (page, names) =>
+  page.evaluate((names) => {
+    const probe = document.createElement('div');
+    document.body.append(probe);
+    const resolved = Object.fromEntries(
+      names.map((name) => {
+        probe.style.color = `var(${name})`;
+        return [name, getComputedStyle(probe).color];
+      }),
+    );
+    probe.remove();
+    return resolved;
+  }, names);
+
+for (const theme of ['light', 'dark']) {
+  test(`RS-COLOR-02, 03 (D23): on /en/research (1280, ${theme}), the tool on the raised glaze, 15's rule ochre`, async () => {
+    const { context, page } = await open('/en/research', 1280, theme);
+    try {
+      const t = await tokens(page, ['--zc-bg-light', '--zc-azul', '--zc-ochre']);
+      const shown = await page.evaluate(() => ({
+        tool: getComputedStyle(document.querySelector('section.rs-tool')).backgroundColor,
+        rules: [...document.querySelectorAll('.rs-checks__figure')].map((el) => getComputedStyle(el).borderTopColor),
+      }));
+      assert.deepEqual(shown, {
+        tool: t['--zc-bg-light'],
+        rules: [t['--zc-azul'], t['--zc-azul'], t['--zc-ochre'], t['--zc-azul']],
+      });
+    } finally {
+      await context.close();
+    }
+  });
+}
+
 test('BUG-RS-01 (RS-MORE-02): the new-tab words of the ResearchGate link are for screen readers, not on screen', async () => {
   const { context, page } = await open('/de/research', 1280);
   try {
