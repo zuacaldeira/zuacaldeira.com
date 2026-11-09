@@ -2,7 +2,8 @@
 
 Status: **agreed with the developer on 2026-11-09:** the 71 cases, the four slices and D1 to D10
 below, as ui-design-peer proposed them (answers under "Decisions"). R1 to R8 (R4 replaced), Q1 to
-Q5 and the choice of option A are answered. Slice 1 is being built.
+Q5 and the choice of option A are answered. Slice 1 is done and accepted (2026-11-09); slice 2 is
+being built.
 
 The Research page in three languages, at `/en/research`, `/de/research` and `/pt/research`: a landing
 page for the ICE 2026 paper (R1 b). Design: `docs/mockups/research/research-spec.md`, with the
@@ -385,6 +386,139 @@ Leftovers, not built:
   page would make it worth one helper.
 - **The initial bundle** is 510.58 kB against the 500 kB warning budget (511.49 kB before).
 
+## Slice 2: the wall
+
+Test list (crossed off in the "Done" note below as each is committed):
+- **Acceptance, the outer tests,** declared first and red on today's build (slice 1's):
+  - A1 RS-WALL-01 (`acceptance/research.test.mjs`): on `/en/research`, after the intro, one
+    `<figure>` whose SVG has `role="img"` and 74 tiles `g.t` in render.py's order (each tile's
+    `data-name`, in the order of `lattices.json` sorted by states, then edges), 47 of them `g.t.nd`.
+  - A2 RS-MOTION-01, 02 at first paint (`acceptance/research.test.mjs`, the head's scripts run as
+    `theme.test.mjs` runs them): `<html>` gets `motion` when reduced motion does not match, and not
+    when it does (D13).
+- **Script** (`scripts/research-wall.test.mjs`, in `npm run test:scripts`):
+  - S1 RS-WALL-03: render.py's Research output equals the checked-in `research-wall.html` byte for
+    byte, and its hero output still equals the hero's file (D8, D14).
+  - S2 RS-PAGE-05 for the wall: the snapshot asks for `research/wall` in each language, and a 404
+    for `pt` stops it, naming page `research`, section `wall`, language `pt`.
+- **Backend:** B1 RS-WALL-02, 06 at the source: the seed answers `research/wall` (label, caption,
+  hint) in en, de and pt as the spec's copy, none empty (`ResearchSeedIntegrationTest`).
+- **Unit:**
+  - U1 RS-WALL-01: the Research page shows the wall inside its head, after the intro (`PageHead`
+    projects it, D15; Software's and Writing's specs stay green unchanged).
+  - U2 RS-WALL-02: `ResearchWall` labels its SVG with `wall.label` and captions it with
+    `wall.caption`, in the page's language.
+  - U3 RS-MOTION-04: once the page runs, the hint reads `wall.hint`; pointing at a tile puts its
+    `data-name` in the hint and marks the tile `hot`; leaving the wall restores the hint and
+    unmarks the tile.
+  - U4 RS-MOTION-01: the wall gets `in` when a quarter of it comes into view, and only then (a fake
+    `IntersectionObserver`); without one it gets `in` at once (D13).
+- **Styles, reviewed by eye, not test-first:** the two columns of the head (one column under 900 px),
+  the wall's colours from the tokens, the draw-in rules under `html.motion` only.
+- **Acceptance, after the build:** A3 RS-WALL-02 (the German label and caption, each naming "R2′"
+  and "74", the caption also "104", "108" and "47"), A4 RS-WALL-04 (tile 1 GoF Facade, the last
+  Raft Leader Election, the 74 names the same on the three pages), A5 RS-WALL-06 (D16: every number
+  in the label and the caption, in en, de and pt, is the data's or the paper's 108), A6
+  RS-MOTION-03 (the 74 tiles in the prerendered HTML; every rule that hides a line or a state is
+  under `html.motion`; the hint is empty before a script runs).
+- **Browser** (`acceptance/browser/research-wall.test.mjs`, one Chromium, closed after):
+  - W1 RS-MOTION-01: at 1440 with motion, `<html>` has `motion`, the wall gets `in`, the first
+    tile's `--d` is below the last's, and after 2 s every line's `stroke-dashoffset` is 0.
+  - W2 RS-MOTION-02: with reduced motion, no `motion`, every line's `stroke-dashoffset` 0 at once,
+    no transition.
+  - W3 RS-MOTION-03: with JavaScript off, every line's `stroke-dashoffset` 0 and every state shown.
+  - W4 RS-MOTION-04: the pointer over "Two-Phase Commit" puts its name in the hint and thickens its
+    lines; off the wall, `wall.hint` again; the hint `aria-hidden`; no tile focusable.
+- **Protocol rows:** RS-WALL-P-01 ("R2′" taken out of the German caption: A3), RS-WALL-P-02 (one
+  tile removed from the checked-in file: S1 and A1), RS-WALL-P-03 ("47" changed to "15" in the
+  German caption: A5), RS-MOTION-P-01 (the hiding rule without `html.motion`: A6), and two new ones
+  from G:
+  - RS-MOTION-P-02, a wall drawn before it is in view: no `in` while the observer reports it out of
+    view (U4).
+  - RS-MOTION-P-03, a name or a pointing sentence without pointing or without a script: the
+    prerendered hint is empty (A6), and after the page runs it reads `wall.hint`, not a name (U3).
+
+  Each row that is green at first is shown red by its break, then restored.
+
+Not in slice 2: the rung note and its 50 (slice 4, D16), the wall's contrast (RS-COLOR-04, slice 4),
+the caption's ochre words (open, see D16's note).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    participant R as render.py (lattices.json, R2′)
+    box Real: compose.build.yml, Testcontainers in B1
+        participant API as Content API (seed R__research.sql)
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/research/index.html
+    participant B as Chromium (W1–W4)
+    T->>R: S1: regenerate both walls, compare byte for byte
+    R-->>NG: research-wall.html (the template: figure, 74 tiles, bindings)
+    T->>API: B1: GET research/wall?lang=l
+    F->>API: GET research/{head,wall}?lang=l, for l in en, de, pt
+    API-->>F: 200 {label, caption, hint} or 404 → the build stops (S2)
+    F->>NG: research.json
+    NG->>P: PageHead + ResearchWall (U1, U2): label_l, caption_l, the hint empty
+    T->>P: A1, A3–A6: tiles, order, names, counts, the hiding rules
+    T->>P: A2: the head script sets motion unless reduced
+    B->>P: load: motion? → in at 25 % (U4, W1) or complete at once (W2, W3)
+    B->>P: point at a tile → its name; leave → the hint (U3, W4)
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → Render : render(lattices) . Render → Build : wall(74 tiles, order, names) .
+    Build → API : get(research, wall, l) .
+    API → Build : { ok200(wall_l) .
+                    Build → Page : prerender(l, head_l, wall, label_l, caption_l, hint = "") .
+                    Page → Visitor : page(h1, figure(wall, label_l, caption_l)) .
+                    Page → Visitor : { motion . Page → Visitor : hidden .
+                                         Visitor → Page : inView(25 %) .
+                                         Page → Visitor : draw(smallest first) . W ,
+                                       still . W } ,
+                    missing404 . Build → CI : fail(research, wall, l) . end }
+W = Page → Visitor : hint(hint_l) .
+    μX . Visitor → Page : { point(tile) . Page → Visitor : name(tile) . X ,
+                            leave . Page → Visitor : hint(hint_l) . X ,
+                            go . end }
+  still = reduced motion or no JavaScript (then W's hint is never sent: the hint stays empty);
+  the tiles, their order and names are the same for every l
+
+Visitor ↾ = Page?page . Page?{ motion . Page?hidden . Page!inView . Page?draw . W_V , still . W_V }
+W_V       = Page?hint . μX . Page!{ point . Page?name . X , leave . Page?hint . X , go . end }
+Wall ↾    = (ResearchWall, the unit under change) Build?prerender .
+            Visitor!{ motion . Visitor?inView . Visitor!draw . W_W , still . W_W }
+W_W       = Visitor!hint . μX . Visitor?{ point . Visitor!name . X , leave . Visitor!hint . X , go . end }
+Render ↾  = Build?render . Build!wall . end
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1–2 T → R, R → NG | `render(lattices)`, `wall(74 tiles, order, names)` | S1 (RS-WALL-03) |
+| 3–5 T/F → API | `get(research, wall, l)`, `{ok200, missing404}` | B1, S2 |
+| 6–7 F → NG → P | `prerender(l, head_l, wall, label_l, caption_l, hint = "")` | U1, U2, A1, A3, A4, A5 |
+| 8 T → P, tiles and rules | `page(h1, figure(…))`; `still` with the wall complete | A1, A4, A6 (RS-MOTION-03) |
+| 9 T → P, head script | the choice `{motion, still}` | A2 |
+| 10 B → P, load | `motion . hidden . inView . draw`, or `still` | U4, W1, W2, W3 |
+| 11 B → P, pointing | `W`: `hint`, `point . name`, `leave . hint` | U3, W4 |
+| forbidden: wall numbers without "R2′", or not the data's | `label_l`, `caption_l` | RS-WALL-P-01, P-03 |
+| forbidden: a wall that is not render.py's output | `Render → Build : wall` | RS-WALL-P-02 |
+| forbidden: hidden in `still` | `still . W`, the wall complete | RS-MOTION-P-01 |
+| forbidden: `draw` before `inView` | `hidden . inView . draw` in that order | RS-MOTION-P-02 |
+| forbidden: `name` or `hint` before the page runs, or `name` without `point` | `hint = ""` in `prerender`; `W` opens with `hint(hint_l)` | RS-MOTION-P-03 |
+
+No repeat, stale-token or race rows: pointing is a loop by design (a repeated `point` names the new
+tile), and the wall holds no state a second call could break.
+
+The refactor in U1 (D15), on the Software and Writing pages: `G_pre` is their slice 1 G with
+`PageHead` drawing eyebrow, `<h1>` and intro; `G_post` is the same with an empty `<ng-content />`
+after the intro. `Visitor ↾` is identical (`Page?page(lang = l, h1, links) . end`), held by their
+specs and acceptance tests, unchanged.
+
 ## Decisions
 
 Answered by the developer on 2026-11-08:
@@ -476,3 +610,29 @@ Taken while planning slice 1 (2026-11-09, tdd-peer; the developer may change the
   not show.
 - **D12. The whole `research` block of `Translations` goes,** not only D7's four keys: with the old
   page gone, `research.title` has no reader either. `nav.research` stays.
+
+Answered by the developer on 2026-11-09, after slice 1: **slice 1 is accepted; D11 and D12 stand.**
+`next` is pushed at `2122948`.
+
+Taken while planning slice 2 (2026-11-09, tdd-peer; the developer may change them):
+
+- **D13. `motion` is set before first paint, by the head's inline script** (the one that sets the
+  theme, D25 in `software.md`): `html.motion` unless `prefers-reduced-motion: reduce` matches. Set
+  later, by Angular, the prerendered wall would show complete, vanish and draw in again. The
+  `IntersectionObserver` and the pointing live in `ResearchWall` and run once Angular has taken
+  over; where the browser has no `IntersectionObserver`, the wall gets `in` at once. Without
+  JavaScript the head script does not run, so the wall is complete (RS-MOTION-03).
+- **D14. The wall's template is render.py's second output, whole:** `research-wall.html` holds the
+  `<figure>`, the SVG with its 74 tiles, and the Angular bindings for the label, caption and hint,
+  so the generated file is the component's template as D8 names it, and nothing in it is
+  hand-written. The hero's output is unchanged byte for byte, and the regeneration test holds both.
+- **D15. `PageHead` takes projected content after its intro** (`<ng-content />`), and the Research
+  page sets the host class `page-head--wall` for the two columns. Software and Writing project
+  nothing, so their heads do not change (the refactor's `Visitor ↾` is the same).
+- **D16. RS-WALL-06 grows with the texts that hold the numbers:** slice 2 holds `wall.label`
+  (74, 47) and `wall.caption` (74, 104, 47, and the paper's 108) to the data in en, de and pt;
+  `checked.rung` (93, 15, 108 and the data's 47, 74, 50, 104) joins in slice 4 with its text. The
+  test computes 50 from the start.
+- **Open, for the developer:** the spec sets "Ochre: not distributive" in the caption in
+  `--zc-ochre-text`, but the stored caption is one plain string (`wall: {label, caption, hint}`).
+  Slice 2 shows it plain; how to mark it is a content-shape question (see the slice's leftovers).
