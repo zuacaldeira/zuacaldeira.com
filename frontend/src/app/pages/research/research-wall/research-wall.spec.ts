@@ -24,4 +24,27 @@ describe('ResearchWall', () => {
       caption: wall.querySelector('figure figcaption')?.textContent?.trim(),
     }).toEqual({ role: 'img', label: 'wall label de', caption: 'wall caption de' });
   });
+
+  it('RS-MOTION-04, RS-MOTION-P-03: should name the tile pointed at, and bring the hint back on leaving the wall', async () => {
+    const { fixture, wall } = show('pt');
+    await fixture.whenStable();
+    const hint = () => wall.querySelector('figure p[aria-hidden="true"]')?.textContent?.trim();
+    const hot = () => [...wall.querySelectorAll('g.hot')].map((g) => g.getAttribute('data-name'));
+    const shown = [{ hint: hint(), hot: hot() }];
+
+    const tile = wall.querySelector('g[data-name="Two-Phase Commit"]')!;
+    tile.querySelector('line')!.dispatchEvent(new Event('pointerover', { bubbles: true }));
+    fixture.detectChanges();
+    shown.push({ hint: hint(), hot: hot() });
+
+    wall.querySelector('svg')!.dispatchEvent(new Event('pointerleave'));
+    fixture.detectChanges();
+    shown.push({ hint: hint(), hot: hot() });
+
+    expect(shown).toEqual([
+      { hint: 'wall hint pt', hot: [] },
+      { hint: 'Two-Phase Commit', hot: ['Two-Phase Commit'] },
+      { hint: 'wall hint pt', hot: [] },
+    ]);
+  });
 });
