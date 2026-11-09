@@ -146,13 +146,16 @@ test('RS-PAGE-06 (D11): the Research page downloads its own text, and no other p
 const sections = (inner) =>
   [...inner.matchAll(/<section\b[^>]*class="([^"]*)"/g)].map(([, cls]) => cls.split(' ')[0]);
 
-// The sections' order is held by RS-RES-01, 02's test, and grows with slice 4.
-test('RS-PAGE-08 (D1): no "What\'s next" while it has no text, in any language', () => {
+test('RS-PAGE-08 (D1): no "What\'s next"; the sections are head, paper, results, checks, tool, more', () => {
   const next = ["What's next", 'What’s next', 'Wie es weitergeht', 'O que vem a seguir'];
   const shown = Object.fromEntries(
-    LANGS.map((lang) => [lang, next.filter((words) => text(main(page(`${lang}/research`))).includes(words))]),
+    LANGS.map((lang) => {
+      const html = main(page(`${lang}/research`));
+      return [lang, { sections: sections(html), next: next.filter((words) => text(html).includes(words)) }];
+    }),
   );
-  assert.deepEqual(shown, Object.fromEntries(LANGS.map((lang) => [lang, []])));
+  const ORDER = ['page-head', 'rs-paper', 'rs-results', 'rs-checks', 'rs-tool', 'rs-more'];
+  assert.deepEqual(shown, Object.fromEntries(LANGS.map((lang) => [lang, { sections: ORDER, next: [] }])));
 });
 
 // The wall's data (D8): the distinct lattices at rung R2′, in render.py's order (states, then edges).
@@ -451,17 +454,17 @@ const statements = (results) =>
     texts(inner, 'p', 'rs-results__text')[0],
   ]);
 
-test('RS-RES-01, 02, RS-PAGE-08: after the paper, what it proves: the theorem, then the three, all open', () => {
+test('RS-RES-01, 02: after the paper, what it proves: the theorem, then the three, all open', () => {
   const html = page('en/research');
   const results = section(html, 'rs-results');
   assert.deepEqual(
     {
-      sections: sections(main(html)),
+      after: sections(main(html))[2],
       heading: texts(results, 'h2'),
       statements: statements(results),
       folded: /<details\b/.test(results),
     },
-    { sections: ['page-head', 'rs-paper', 'rs-results'], heading: ['What it proves'], statements: STATEMENTS, folded: false },
+    { after: 'rs-results', heading: ['What it proves'], statements: STATEMENTS, folded: false },
   );
 });
 
