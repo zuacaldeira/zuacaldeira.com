@@ -1,0 +1,75 @@
+/* What it proves, on the theorem band (research-spec.md, "Components"; D32 in software.md): the
+   band's tokens, the theorem in display type, the three others in a row under a rule. */
+.rs-results {
+  padding-block: clamp(40px, 6vw, 80px);
+  background: var(--zc-band-bg);
+  color: var(--zc-band-fg);
+}
+
+.rs-results__in {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.rs-results__heading {
+  margin: 0 0 var(--zc-space-6);
+  font-family: var(--zc-font-heading);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  line-height: 1.12;
+  color: var(--zc-band-fg);
+}
+
+.rs-results blockquote {
+  margin: 0;
+}
+
+.rs-results__label {
+  margin: 0 0 var(--zc-space-2);
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
+}
+
+.rs-results__text {
+  margin: 0;
+  font-family: var(--zc-font-heading);
+}
+
+.rs-results__theorem {
+  max-width: 52rem;
+}
+
+.rs-results__theorem .rs-results__text {
+  font-weight: 400;
+  font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.rs-results__more {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--zc-space-8);
+  margin-top: clamp(32px, 4vw, 48px);
+  padding-top: var(--zc-space-6);
+  border-top: 1px solid color-mix(in srgb, var(--zc-band-fg) 40%, transparent);
+}
+
+.rs-results__statement .rs-results__text {
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 900px) {
+  .rs-results__more {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 599.98px) {
+  .rs-results__in {
+    padding-inline: 16px;
+  }
+}

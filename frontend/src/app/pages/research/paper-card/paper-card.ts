@@ -10,6 +10,7 @@ import { I18nService } from '../../../services/i18n.service';
 @Component({
   selector: 'app-paper-card',
   templateUrl: './paper-card.html',
+  styleUrl: './paper-card.css',
 })
 export class PaperCard {
   private readonly lang = inject(I18nService).language();

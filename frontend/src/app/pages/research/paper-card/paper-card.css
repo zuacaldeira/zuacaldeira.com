@@ -1,0 +1,180 @@
+/* The paper card (research-spec.md, "Components" and "Layout per width"): on the warm ground, parted
+   from the head by a rule; the card on the surface with its ochre top; two columns from 900 px. */
+.rs-paper {
+  padding-block: clamp(40px, 6vw, 80px);
+  background: var(--zc-bg-warm);
+  border-top: 1px solid var(--zc-border-light);
+}
+
+.rs-paper__in {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.rs-paper__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--zc-space-6);
+  padding: clamp(24px, 3vw, 40px);
+  background: var(--zc-bg-white);
+  border: 1px solid var(--zc-border-light);
+  border-top: 3px solid var(--zc-ochre);
+}
+
+.rs-paper__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zc-space-3);
+  min-width: 0;
+}
+
+.rs-paper__main > *,
+.rs-paper__side > * {
+  margin: 0;
+}
+
+.rs-paper__when,
+.rs-paper__venue,
+.rs-paper__note,
+.rs-paper__label,
+.rs-paper__lang {
+  font-family: var(--zc-font-mono);
+  font-size: 0.8125rem;
+}
+
+.rs-paper__year {
+  font-weight: 500;
+  color: var(--zc-text-heading);
+}
+
+.rs-paper__kind,
+.rs-paper__label {
+  color: var(--zc-ochre-text);
+}
+
+.rs-paper__label {
+  font-weight: 500;
+}
+
+.rs-paper__title {
+  font-family: var(--zc-font-heading);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+  line-height: 1.1;
+  color: var(--zc-text-heading);
+  text-wrap: balance;
+}
+
+.rs-paper__author {
+  font-size: 0.9375rem;
+  color: var(--zc-text-body);
+}
+
+.rs-paper__author b {
+  font-weight: 600;
+}
+
+.rs-paper__venue {
+  color: var(--zc-text-muted);
+  overflow-wrap: anywhere;
+}
+
+/* The note as on the Writing page: an ochre lozenge before it. */
+.rs-paper__note {
+  display: flex;
+  align-items: center;
+  gap: var(--zc-space-2);
+  color: var(--zc-text-body);
+}
+
+.rs-paper__note::before {
+  content: '';
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--zc-ochre);
+  transform: rotate(45deg);
+}
+
+/* The site's filled button: cobalt, never a Material button; 44 px or taller. */
+.rs-paper__pdf {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: var(--zc-space-2);
+  padding: 10px 22px;
+  border: 1px solid var(--zc-azul);
+  border-radius: 2px;
+  background: var(--zc-azul);
+  color: var(--zc-on-accent);
+  font-family: var(--zc-font-body);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.rs-paper__pdf:hover {
+  background: var(--zc-azul-deep);
+  border-color: var(--zc-azul-deep);
+}
+
+.rs-paper__pdf:focus-visible {
+  outline: 2px solid var(--zc-azul);
+  outline-offset: 2px;
+}
+
+/* The abstract, after a rule: below on a phone, beside from 900 px. */
+.rs-paper__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--zc-space-2);
+  min-width: 0;
+  padding-top: var(--zc-space-6);
+  border-top: 1px solid var(--zc-border-light);
+}
+
+.rs-paper__lang {
+  color: var(--zc-text-muted);
+}
+
+.rs-paper__abstract {
+  margin: var(--zc-space-2) 0 0;
+}
+
+.rs-paper__abstract p {
+  margin: 0;
+  max-width: 65ch;
+  font-family: var(--zc-font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--zc-text-body);
+}
+
+@media (min-width: 900px) {
+  .rs-paper__card {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+    gap: clamp(32px, 5vw, 72px);
+  }
+
+  .rs-paper__side {
+    padding-top: 0;
+    padding-left: clamp(32px, 5vw, 72px);
+    border-top: 0;
+    border-left: 1px solid var(--zc-border-light);
+  }
+}
+
+@media (max-width: 599.98px) {
+  .rs-paper__in {
+    padding-inline: 16px;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .rs-paper__card {
+    padding: 16px;
+  }
+}

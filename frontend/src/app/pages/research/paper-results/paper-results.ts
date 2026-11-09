@@ -12,6 +12,7 @@ import { I18nService } from '../../../services/i18n.service';
   selector: 'app-paper-results',
   imports: [NgTemplateOutlet],
   templateUrl: './paper-results.html',
+  styleUrl: './paper-results.css',
 })
 export class PaperResults {
   private readonly lang = inject(I18nService).language();
