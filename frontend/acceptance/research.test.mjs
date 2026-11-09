@@ -462,6 +462,41 @@ test('RS-RES-01, 02, RS-PAGE-08: after the paper, what it proves: the theorem, t
   );
 });
 
+test('RS-RES-03, 04: on de and pt the labels are translated; the statements’ names and texts are not', () => {
+  const read = (lang) => {
+    const results = section(page(`${lang}/research`), 'rs-results');
+    return {
+      heading: texts(results, 'h2'),
+      labels: statements(results).map(([label]) => label),
+      texts: statements(results).map(([, body]) => body),
+      marks: [...results.matchAll(/<p\b([^>]*class="rs-results__text"[^>]*)>/g)].map(([, attrs]) => [
+        attr(attrs, 'translate'),
+        attr(attrs, 'lang'),
+      ]),
+    };
+  };
+  const names = STATEMENTS.map(([label]) => label.split(' · ')[1]);
+  const marked = Array(4).fill(['no', 'en']);
+  const englishTexts = STATEMENTS.map(([, body]) => body);
+  assert.deepEqual(
+    { de: read('de'), pt: read('pt') },
+    {
+      de: {
+        heading: ['Was es beweist'],
+        labels: ['Satz 15', 'Definition 6', 'Lemma 8', 'Proposition 18'].map((kind, i) => `${kind} · ${names[i]}`),
+        texts: englishTexts,
+        marks: marked,
+      },
+      pt: {
+        heading: ['O que prova'],
+        labels: ['Teorema 15', 'Definição 6', 'Lema 8', 'Proposição 18'].map((kind, i) => `${kind} · ${names[i]}`),
+        texts: englishTexts,
+        marks: marked,
+      },
+    },
+  );
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
