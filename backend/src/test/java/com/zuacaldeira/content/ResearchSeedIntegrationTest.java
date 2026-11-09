@@ -201,6 +201,36 @@ class ResearchSeedIntegrationTest {
                 .allSatisfy(text -> assertThat((String) text).isNotBlank());
     }
 
+    static Stream<Arguments> tools() {
+        return Stream.of(
+                Arguments.of("en", "The tool", "Verification tool", "reticulateP on the Software page"),
+                Arguments.of("de", "Das Werkzeug", "Verifikationswerkzeug", "reticulateP auf der Software-Seite"),
+                Arguments.of("pt", "A ferramenta", "Ferramenta de verificação", "O reticulateP na página de software"));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("tools")
+    @DisplayName("RS-TOOL-01, 02, 03 the seed answers the tool in every language, its text the Software row's word for word")
+    @SuppressWarnings("unchecked")
+    void answersTheSeededTool(String lang, String heading, String kicker, String linkLabel) throws Exception {
+        HttpResponse<String> response = get("/api/content/research/tool?lang=" + lang);
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        Map<String, Object> tool = JsonMapper.builder().build().readValue(response.body(),
+                new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> work = JsonMapper.builder().build().readValue(
+                get("/api/content/software/work?lang=" + lang).body(), new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> reticulateP = ((List<Map<String, Object>>) work.get("rows")).stream()
+                .filter(row -> "reticulatep".equals(row.get("id"))).findFirst().orElseThrow();
+        assertThat(tool).isEqualTo(Map.of(
+                "heading", heading,
+                "kicker", kicker,
+                "title", "reticulateP",
+                "text", reticulateP.get("text"),
+                "stack", "Python",
+                "link", Map.of("label", linkLabel, "href", "/" + lang + "/software")));
+    }
+
     private HttpResponse<String> get(String path) throws Exception {
         HttpRequest request = HttpRequest.newBuilder(URI.create("http://localhost:" + port + path)).build();
         try (HttpClient client = HttpClient.newHttpClient()) {

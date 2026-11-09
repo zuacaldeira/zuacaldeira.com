@@ -97,3 +97,29 @@ INSERT INTO content_section (page, section, lang, body) VALUES
             JSON_OBJECT('value', '15', 'label', 'não distributivos'),
             JSON_OBJECT('value', 'Lean 4', 'label', 'prova mecanizada')),
         'rung', 'Os 93 e 15 são a contagem do próprio artigo sobre os seus 108 protocolos. A parede desenha o mesmo corpus no nível R2′, que mantém a estrutura dos protocolos recursivos: aí 47 dos 74 reticulados distintos não são distributivos, e 50 dos 104 protocolos caem num deles.'));
+
+-- The tool (D2): reticulateP in the Software row's shape. Its text is the Software page's
+-- reticulateP row's, copied word for word (D6, each page downloads only its own text); RS-TOOL-03
+-- holds the two equal: change both together. The link stays inside the site, in the page's language.
+INSERT INTO content_section (page, section, lang, body) VALUES
+    ('research', 'tool', 'en', JSON_OBJECT(
+        'heading', 'The tool',
+        'kicker', 'Verification tool',
+        'title', 'reticulateP',
+        'text', 'Builds the state space of a session type and checks that it forms a lattice. It turned the ICE 2026 paper’s 108 benchmark protocols into lattices, is one of the paper’s two independent tool implementations, and checks every session type on this site.',
+        'stack', 'Python',
+        'link', JSON_OBJECT('label', 'reticulateP on the Software page', 'href', '/en/software'))),
+    ('research', 'tool', 'de', JSON_OBJECT(
+        'heading', 'Das Werkzeug',
+        'kicker', 'Verifikationswerkzeug',
+        'title', 'reticulateP',
+        'text', 'Baut den Zustandsraum eines Session-Typs und prüft, ob er einen Verband bildet. Es hat die 108 Benchmark-Protokolle des ICE-2026-Papers in Verbände übersetzt, ist eine der beiden unabhängigen Werkzeug-Implementierungen des Papers und prüft jeden Session-Typ auf dieser Website.',
+        'stack', 'Python',
+        'link', JSON_OBJECT('label', 'reticulateP auf der Software-Seite', 'href', '/de/software'))),
+    ('research', 'tool', 'pt', JSON_OBJECT(
+        'heading', 'A ferramenta',
+        'kicker', 'Ferramenta de verificação',
+        'title', 'reticulateP',
+        'text', 'Constrói o espaço de estados de um tipo de sessão e verifica que forma um reticulado. Transformou em reticulados os 108 protocolos de referência do artigo ICE 2026, é uma das duas implementações independentes do artigo e verifica cada tipo de sessão deste site.',
+        'stack', 'Python',
+        'link', JSON_OBJECT('label', 'O reticulateP na página de software', 'href', '/pt/software')));
