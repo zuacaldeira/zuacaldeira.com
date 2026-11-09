@@ -6,16 +6,18 @@ import { PageHead } from '../../common/page-head/page-head';
 import { ResearchWall } from './research-wall/research-wall';
 import { PaperCard } from './paper-card/paper-card';
 import { PaperResults } from './paper-results/paper-results';
+import { PaperChecks } from './paper-checks/paper-checks';
 
 /** The Research page (docs/examples/research.md; build spec docs/mockups/research/research-spec.md). */
 @Component({
   selector: 'app-research',
-  imports: [PageHead, ResearchWall, PaperCard, PaperResults],
+  imports: [PageHead, ResearchWall, PaperCard, PaperResults, PaperChecks],
   template: `<app-page-head [head]="head" class="page-head--wall">
       <app-research-wall />
     </app-page-head>
     <app-paper-card />
-    <app-paper-results />`,
+    <app-paper-results />
+    <app-paper-checks />`,
   styleUrl: './research.css',
 })
 export class Research {
