@@ -189,6 +189,11 @@ export const TEST_CONTENT: ContentSnapshot = {
       abstract: 'We prove a thing.',
     })),
     results: inEvery((lang) => ({ heading: `results heading ${lang}` })),
+    checked: inEvery((lang) => ({
+      heading: `checked heading ${lang}`,
+      figures: ['108', '93', '15', 'Lean 4'].map((value) => ({ value, label: `label ${value} ${lang}` })),
+      rung: `rung ${lang}`,
+    })),
   },
   shared: { paper: inEvery(sharedPaperIn) },
 };

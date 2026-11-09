@@ -1,0 +1,15 @@
+<section class="rs-checks">
+  <div class="rs-checks__in">
+    <h2 class="rs-checks__heading">{{ checked.heading }}</h2>
+    <dl class="rs-checks__figures">
+      @for (figure of checked.figures; track figure.value) {
+        <div class="rs-checks__figure">
+          <dt class="rs-checks__value" translate="no">{{ figure.value }}</dt>
+          <dd class="rs-checks__label">{{ figure.label }}</dd>
+        </div>
+      }
+    </dl>
+    <p class="rs-checks__evidence">{{ evidence }}</p>
+    <p class="rs-checks__rung">{{ checked.rung }}</p>
+  </div>
+</section>

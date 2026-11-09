@@ -197,6 +197,17 @@ export interface ResearchContent {
   readonly paper: Readonly<Record<Language, ResearchPaper>>;
   /** What it proves: its heading; the statements are `shared/paper`'s (D3). */
   readonly results: Readonly<Record<Language, { readonly heading: string }>>;
+  readonly checked: Readonly<Record<Language, ResearchChecked>>;
+}
+
+/**
+ * One language's "How it was checked", `research/checked` (D2): the paper's four figures (their
+ * values the same in every language) and the rung note, whose R2′ numbers RS-WALL-06 holds to the data.
+ */
+export interface ResearchChecked {
+  readonly heading: string;
+  readonly figures: readonly { readonly value: string; readonly label: string }[];
+  readonly rung: string;
 }
 
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
