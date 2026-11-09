@@ -408,6 +408,27 @@ test('RS-PAPER-03, 04 (R2): the abstract word for word under its label, in Engli
   });
 });
 
+test('RS-PAPER-05: title, author and venue stay as published on every page, marked so', () => {
+  const published = (lang) => {
+    const card = section(page(`${lang}/research`), 'rs-paper');
+    const tag = (pattern) => card.match(pattern) ?? [];
+    const [, h2Attrs = '', h2 = ''] = tag(/<h2\b([^>]*)>(.*?)<\/h2>/s);
+    const [, authorAttrs = '', author = ''] = tag(/<p\b([^>]*class="rs-paper__author"[^>]*)>(.*?)<\/p>/s);
+    const [, venueAttrs = '', venue = ''] = tag(/<p\b([^>]*class="rs-paper__venue"[^>]*)>(.*?)<\/p>/s);
+    return {
+      fields: [text(h2), text(author), text(venue)],
+      translate: [h2Attrs, authorAttrs, venueAttrs].map((attrs) => attr(attrs, 'translate')),
+      titleLang: attr(h2Attrs, 'lang'),
+    };
+  };
+  const en = published('en');
+  assert.deepEqual(
+    { de: published('de'), pt: published('pt') },
+    { de: { ...en, titleLang: 'en' }, pt: { ...en, titleLang: 'en' } },
+  );
+  assert.deepEqual(en.translate, ['no', 'no', 'no']);
+});
+
 // The four statements of the paper (the spec's table, D3): label and text, as on the English page.
 const STATEMENTS = [
   ['Theorem 15 · Reticulate Theorem', 'For every well-formed session type S, ℒ(S)/≡ is a bounded lattice.'],
