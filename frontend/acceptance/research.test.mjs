@@ -81,6 +81,27 @@ test('RS-HEAD-02: the German Research page opens in German: eyebrow, one <h1>, t
   });
 });
 
+for (const [id, lang, eyebrow, h1, intro] of [
+  [
+    'RS-HEAD-01',
+    'en',
+    'One paper · ICE 2026',
+    'Research',
+    'The state space of every well-formed session type forms a lattice. This page is the paper that proves it: what it shows, how it was checked, and the tool behind it.',
+  ],
+  [
+    'RS-HEAD-03',
+    'pt',
+    'Um artigo · ICE 2026',
+    'Investigação',
+    'O espaço de estados de todo o tipo de sessão bem formado forma um reticulado. Esta página apresenta o artigo que o prova: o que mostra, como foi verificado e a ferramenta por trás dele.',
+  ],
+]) {
+  test(`${id}: the ${lang} Research page opens with its eyebrow, one <h1> and the intro`, () => {
+    assert.deepEqual(head(page(`${lang}/research`)), { eyebrow: [eyebrow], h1: [h1], intro: [intro] });
+  });
+}
+
 test('RS-PAGE-02: the browser tab names the Research page in its language', () => {
   const titles = LANGS.map((lang) => page(`${lang}/research`).match(/<title>(.*?)<\/title>/)?.[1]);
   assert.deepEqual(titles, [
