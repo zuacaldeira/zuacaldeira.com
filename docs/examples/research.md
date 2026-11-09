@@ -1,11 +1,8 @@
 # Examples: Research page
 
-Status: **on hold (2026-11-09): R4 is reopened.** The developer found the mock-up "too monotone",
-"all the same blunt color, no dynamics", and asked for graphics (lattices from the wall or the
-paper, or a screenshot of the BICA plugin marking an out-of-order call in an IDE). The mock-up now
-offers options A, B and C for graphics, colour and motion (`docs/mockups/research/index.html`). The
-cases, the slices and D1 to D7 below wait for that choice and are not agreed. R1 to R8 (2026-11-08)
-and Q1 to Q5 (2026-11-09) are answered; R4 a ("no figure") no longer holds.
+Status: **hold lifted (2026-11-09): option A chosen; proposed by ui-design-peer for the
+developer's agreement:** the cases, the four slices and D1 to D10 below. R1 to R8 (R4 replaced),
+Q1 to Q5 and the choice of option A are answered.
 
 The Research page in three languages, at `/en/research`, `/de/research` and `/pt/research`: a landing
 page for the ICE 2026 paper (R1 b). Design: `docs/mockups/research/research-spec.md`, with the
@@ -17,11 +14,14 @@ Sections, in build order:
 1. **Page frame** (`RS-PAGE-nn`): the new page behind the existing route: title, own text, the old
    page gone.
 2. **Head** (`RS-HEAD-nn`): eyebrow, `<h1>`, intro.
-3. **The paper** (`RS-PAPER-nn`): the card with the abstract and the PDF.
-4. **What it proves** (`RS-RES-nn`): the four statements.
-5. **How it was checked** (`RS-CHECK-nn`): four figures and the evidence.
-6. **The tool** (`RS-TOOL-nn`): reticulateP.
-7. **More research** (`RS-MORE-nn`): the Writing link and ResearchGate.
+3. **The wall** (`RS-WALL-nn`): the 74 R2′ lattices beside the head, its label, caption and rung note.
+4. **The paper** (`RS-PAPER-nn`): the card with the abstract and the PDF.
+5. **What it proves** (`RS-RES-nn`): the four statements.
+6. **How it was checked** (`RS-CHECK-nn`): four figures and the evidence.
+7. **The tool** (`RS-TOOL-nn`): reticulateP; the BICA screenshot later (`RS-SHOT-nn`).
+8. **More research** (`RS-MORE-nn`): the Writing link and ResearchGate.
+9. **Colour and motion** (`RS-COLOR-nn`, `RS-MOTION-nn`): the sections' grounds, the wall drawing
+   in, pointing, reduced motion and no JavaScript.
 
 Not in this file: the header, language links and footer (`shell.md`), the colours (`theme.md`).
 All wording is in the spec's copy table, en, de and pt; a case names a key and gives a language as
@@ -62,7 +62,25 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-HEAD-05 | A fresh database, filled with the starting texts, gives the head in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/research/head?lang=en`, `de`, `pt` | 200 with the spec's copy, each field non-empty | |
 | RS-HEAD-P-01 | English text on the German page's head is refused. | the built `/de/research` | the English intro is put in | RS-HEAD-02 goes red | |
 
-## 3. The paper
+## 3. The wall
+
+The wall draws `frontend/scripts/lattice-wall/lattices.json`, the paper's corpus at rung R2′, which
+is not the paper's own construction (`scripts/lattice-wall/README.md`). Its counts are R2′ class and
+protocol counts, and every place that shows them says so.
+
+| ID | In plain words | Given | When | Then | Covered |
+|----|----------------|-------|------|------|---------|
+| RS-WALL-01 | Beside the heading, the page shows the paper's 74 distinct lattices as one tile panel, the 47 that are not distributive in ochre. | the built `/en/research` | the head is read | after the intro, one `<figure>` whose SVG has `role="img"` and 74 tiles (`g.t`), in render.py's order (states, then edges), 47 of them `g.t.nd` | |
+| RS-WALL-02 | The panel says what it is, and which construction it draws, in the page's language. | the built `/de/research` | the wall's label and caption are read | the SVG's `aria-label` is `wall.label` de and the `<figcaption>` is `wall.caption` de; both name "R2′" and "74", the caption also "104", "108" and "47" | |
+| RS-WALL-03 | The panel is the data, drawn: regenerating it gives the same file. | `lattices.json` and the checked-in wall file | `render.py` is run for the Research wall | its output equals the checked-in file byte for byte (D8) | |
+| RS-WALL-04 | Each tile carries the name of its protocol, as published, in every language. | the built `/en/research` and `/pt/research` | the tiles are read | tile 1 has `data-name="GoF Facade"`, the last `data-name="Raft Leader Election"`; the 74 names are identical on the three pages | |
+| RS-WALL-05 | Under the figures, one sentence tells the paper's count from the wall's. | the built `/en/research` | the checks section is read | after the evidence sentence, `checked.rung` en: "The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, …"; de and pt the same in their language | |
+| RS-WALL-06 | Every R2′ number on the page agrees with the data, in every language. | `lattices.json` and the stored `wall` and `checked.rung` in en, de, pt | the numbers are computed from the data and read from the texts | 74 classes, 47 not distributive, 104 protocols (four excluded from 108), 50 in a non-distributive class; each stored text holds exactly these numbers (D9) | |
+| RS-WALL-P-01 | Wall numbers shown without their rung are refused. | the built `/de/research` | "R2′" is taken out of the caption | RS-WALL-02 goes red | |
+| RS-WALL-P-02 | A hand-edited wall is refused. | the checked-in wall file | one tile is removed | RS-WALL-03 and RS-WALL-01 go red | |
+| RS-WALL-P-03 | A wall count that no longer matches the data is refused. | the stored `wall.caption` de | "47" is changed to "15" | RS-WALL-06 goes red | |
+
+## 4. The paper
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
@@ -76,7 +94,7 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-PAPER-P-01 | A translated abstract is refused. | the built `/de/research` | the abstract's first sentence is put in German | RS-PAPER-04 goes red | |
 | RS-PAPER-P-02 | The PDF opening in a new tab is refused. | the built `/de/research` | `target="_blank"` is put on the button | RS-PAPER-02 goes red | |
 
-## 4. What it proves
+## 5. What it proves
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
@@ -89,7 +107,7 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-RES-P-01 | A translated statement is refused. | the built `/de/research` | Lemma 8's text is put in German | RS-RES-03 goes red | |
 | RS-RES-P-02 | Results folded away are refused. | the built `/en/research` | the three are put inside a `<details>` | RS-RES-02 goes red | |
 
-## 5. How it was checked
+## 6. How it was checked
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
@@ -99,7 +117,7 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-CHECK-04 | A fresh database gives the figures in every language, the values the same in each. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/research/checked?lang=en`, `de`, `pt` | 200; four figures, values identical in the three, every label non-empty | |
 | RS-CHECK-P-01 | A changed number on one language's page is refused. | the built `/de/research` | `93` is changed to `94` | RS-CHECK-03 goes red | |
 
-## 6. The tool
+## 7. The tool
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
@@ -108,7 +126,7 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-TOOL-03 | The tool's text says the same as on the Software page. | an empty MySQL with Flyway and the `seed` profile | `research/tool` and `software/work` are read in en, de and pt | `tool.text` equals the reticulateP row's `text` in each language (D6) | |
 | RS-TOOL-P-01 | A link to a private repository is refused. | the built page | a repository link is put on the tool | RS-TOOL-02 goes red | |
 
-## 7. More research
+## 8. More research
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
@@ -118,6 +136,32 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-MORE-04 | No other profile links. | any language | the page is read | no ORCID, DBLP or Google Scholar link or text (Q3) | |
 | RS-MORE-P-01 | An outside link that does not say it opens a new tab is refused. | the built `/de/research` | the hidden new-tab words are taken out of the ResearchGate link | RS-MORE-02 goes red | |
 
+## 9. The BICA screenshot (later)
+
+| ID | In plain words | Given | When | Then | Covered |
+|----|----------------|-------|------|------|---------|
+| RS-SHOT-01 | Until the screenshot exists, the tool section shows no empty frame. | the built pages, no BICA image in the repository | "The tool" is read | it holds the reticulateP row only: no frame, no placeholder text, no `<img>` (D10) | |
+| RS-SHOT-02 | Once Zua sends it, the screenshot of the BICA plugin marking an out-of-order call sits beside reticulateP, described in the page's language. | the image and its alt text and caption in en, de, pt | "The tool" is read | a `<figure>` with the `<img>` (its width and height set, `alt` in the page's language) and its `<figcaption>`; waits for the image, built as its own change | waits for the image |
+
+## 10. Colour
+
+| ID | In plain words | Given | When | Then | Covered |
+|----|----------------|-------|------|------|---------|
+| RS-COLOR-01 | "What it proves" stands on the theorem band, as on Home and Software. | `/en/research` in the browser, light and dark | the results section is measured | its background is `--zc-band-bg` (the accent in light, the raised glaze in dark) and its texts `--zc-band-fg` | |
+| RS-COLOR-02 | "The tool" stands on the raised glaze. | the same | the tool section is measured | its background is `--zc-bg-light` | |
+| RS-COLOR-03 | The "not distributive" figure carries the wall's ochre; the others carry cobalt. | the same | the four figures' top rules are measured | 15's is `--zc-ochre`; 108's, 93's and Lean 4's are `--zc-azul` | |
+| RS-COLOR-04 | The lattices and the band's text are easy to see in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the wall's lines and the band's texts are measured | every lattice line at 3:1 or more against its ground (the mock-up's lowest: 3.2 light, 3.38 dark); every band text at 4.5:1 or more | |
+
+## 11. Motion
+
+| ID | In plain words | Given | When | Then | Covered |
+|----|----------------|-------|------|------|---------|
+| RS-MOTION-01 | When the page opens, the wall draws itself in, smallest lattice first. | `/en/research` at 1440 in the browser, motion allowed | the page loads and the wall is in view | `<html>` has `motion`, the wall gets `in`; the first tile's lines start before the last tile's (their `--d` rises with the tile's index); after 2 s every line's `stroke-dashoffset` is 0 | |
+| RS-MOTION-02 | With reduced motion, the wall is complete at once and nothing moves. | the same with `prefers-reduced-motion: reduce` | the page loads | `<html>` has no `motion`; at once every line's `stroke-dashoffset` is 0 and no transition runs | |
+| RS-MOTION-03 | Without JavaScript, the wall is complete. | the built `/en/research`, its scripts not run | the prerendered page is read (and shown in Chromium with JavaScript off) | the 74 tiles are in the HTML; no rule hides a line unless `<html>` has `motion`, which only the script sets | |
+| RS-MOTION-04 | Pointing at a tile names its protocol; leaving the wall brings the sentence back. | `/en/research` at 1440 in the browser | the pointer moves over the tile "Two-Phase Commit", then off the wall | the hint reads "Two-Phase Commit" and that tile's lines thicken; then the hint reads `wall.hint` en again; the hint is `aria-hidden` and no tile is focusable | |
+| RS-MOTION-P-01 | A wall hidden until a script runs is refused. | the built page | the hiding rule loses its `html.motion` condition | RS-MOTION-03 goes red | |
+
 ## In the browser (after the build, `npm run acceptance:browser`)
 
 | ID | In plain words | Given | When | Then | Covered |
@@ -125,9 +169,10 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-PAGE-09 | The page fits a phone: nothing runs off the side. | a phone at 390 px, `/en/research`, `/de/research`, `/pt/research` | the page is measured | no horizontal scroll; no element in `<main>` ends right of 390 px | |
 | RS-PAGE-10 | Every link and the button are easy to tap. | the same | the links in `<main>` are measured | each is at least 44 px tall | |
 | RS-PAGE-11 | Keyboard users get to the content first. | `/de/research`, 390 and 1280 px | Tab, then Enter | the skip link goes to `<main>` on the same page (SHELL-10 on the new page) | |
-| RS-PAGE-12 | The page's text is easy to read in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the texts in `<main>` are measured | each at 4.5:1 or more against what is behind it (the mock-up's lowest: 4.91 light, 5.36 dark), with the shared contrast reader | |
+| RS-PAGE-12 | The page's text is easy to read in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the texts in `<main>` are measured | each at 4.5:1 or more against what is behind it (option A's mock-up lowest: 4.59 light, the ochre kicker on the raised glaze; 4.77 dark), with the shared contrast reader | |
 
 ## Diagram: the build (all slices)
+
 
 ```mermaid
 sequenceDiagram
@@ -137,16 +182,18 @@ sequenceDiagram
         participant DB as MySQL 8 (seed R__research.sql, R__shared.sql)
         participant API as Content API
     end
+    participant R as render.py (lattices.json, R2′)
     participant F as fetch-content.mjs
     participant NG as ng build (prerender)
     participant P as dist/…/l/research/index.html
-    T->>API: GET research/{head,paper,results,checked,tool,more}, shared/paper ?lang=l
+    T->>R: regenerate the Research wall, compare with the checked-in file (RS-WALL-03)
+    T->>API: GET research/{head,wall,paper,results,checked,tool,more}, shared/paper ?lang=l
     F->>API: the same, for l in en, de, pt
     API-->>F: 200, or 404 → the build stops (RS-PAGE-05)
     F->>NG: research.json (@page-content/research), shared.json
-    NG->>P: route /l/research: title, PageHead, PaperCard, PaperResults, PaperChecks, tool, more
-    T->>P: build tests: RS-PAGE, HEAD, PAPER, RES, CHECK, TOOL, MORE
-    T->>P: Chromium, one file at a time: RS-PAGE-09 to 12
+    NG->>P: route /l/research: title, head + ResearchWall, PaperCard, PaperResults (band), PaperChecks, tool, more
+    T->>P: build tests: RS-PAGE, HEAD, WALL, PAPER, RES, CHECK, TOOL, MORE, SHOT-01, MOTION-03
+    T->>P: Chromium, one file at a time: RS-PAGE-09 to 12, RS-COLOR, RS-MOTION-01, 02, 04
 ```
 
 Session type (the visitor's path), in the convention of `shell.md`:
@@ -154,30 +201,44 @@ Session type (the visitor's path), in the convention of `shell.md`:
 ```
 G = Build → API : get(research, s, l) .
     API → Build : { ok200(s_l) .
-                    Build → Page : prerender(head_l, paper_l, results_l, checked_l, tool_l, more_l) .
-                    Page → Visitor : page(lang l, h1, paper, statements[thm15, def6, lem8, prop18],
-                                          figures[108, 93, 15, lean4], tool, more) .
-                    Visitor → Page : { pdf(ice2026) . end ,
+                    Build → Page : prerender(head_l, wall(lattices, wall_l), paper_l, results_l,
+                                             checked_l, tool_l, more_l) .
+                    Page → Visitor : page(lang l, h1, wall[74], paper, statements[thm15, def6, lem8, prop18],
+                                          figures[108, 93, 15, lean4], rung_l, tool, more) .
+                    Page → Visitor : { motion . draw(wall, smallest first) . end ,
+                                       still . end } .
+                    Visitor → Page : { point(tile) . Page → Visitor : name(tile) . end ,
+                                       pdf(ice2026) . end ,
                                        software(l) . end ,
                                        writing(l) . end ,
                                        out(researchGate, newTab_l) . end ,
                                        stay . end } ,
                     missing404 . Build → CI : fail(research, s, l) . end }
-  title, author, venue, abstract, statements, figure values, targets: the same for every l
+  title, author, venue, abstract, statements, figure values, tiles and their names, targets:
+  the same for every l; still = reduced motion or no JavaScript, the wall complete
 
-Visitor ↾ = Page?page(…) . Page!{ pdf . end , software . end , writing . end , out . end , stay . end }
-Page ↾    = Build?prerender . Visitor!page(…) . Visitor?{ … }
+Visitor ↾ = Page?page(…) . Page?{ motion . Page?draw . end , still . end } .
+            Page!{ point . Page?name . end , pdf . end , software . end , writing . end , out . end , stay . end }
+Page ↾    = Build?prerender . Visitor!page(…) . Visitor!{ … } . Visitor?{ … }
 ```
+
+(The two choices are written one after the other for reading; in the browser the drawing runs
+while the visitor may already point or follow a link, and nothing depends on their order.)
 
 | Arrow | Step in G | Rows |
 |---|---|---|
-| 1, 3 test/F → API | `get`, `{ok200, missing404}` | RS-HEAD-04, 05; RS-PAPER-06, 07; RS-RES-05; RS-CHECK-04; RS-TOOL-03; RS-PAGE-05 |
-| 5 NG → P | `prerender(…)` | RS-PAGE-01 to 04, 06 to 08; RS-HEAD-01 to 03 |
-| 6 the page | `page(…)` | RS-PAPER-01, 03 to 05; RS-RES-01 to 04, 06; RS-CHECK-01 to 03; RS-TOOL-01; RS-MORE-01, 03, 04 |
-| 6 the links | the Visitor's choice `{pdf, software, writing, out, stay}` | RS-PAPER-02, RS-TOOL-02, RS-MORE-01, 02 |
-| 7 in Chromium | `page(…)` read on a phone, by keyboard, in light and dark | RS-PAGE-09 to 12 |
+| 1 test → render.py | `wall(lattices, …)`: the drawing is the data | RS-WALL-03, 06 |
+| 2, 4 test/F → API | `get`, `{ok200, missing404}` | RS-HEAD-04, 05; RS-PAPER-06, 07; RS-RES-05; RS-CHECK-04; RS-TOOL-03; RS-PAGE-05; RS-WALL-06 |
+| 6 NG → P | `prerender(…)` | RS-PAGE-01 to 04, 06 to 08; RS-HEAD-01 to 03; RS-WALL-01, 02, 04, 05; RS-SHOT-01; RS-MOTION-03 |
+| 7 the page | `page(…)` | RS-PAPER-01, 03 to 05; RS-RES-01 to 04, 06; RS-CHECK-01 to 03; RS-TOOL-01; RS-MORE-01, 03, 04 |
+| 7 the page's choice | `{motion . draw, still}` | RS-MOTION-01, 02, 03 |
+| 7 the visitor's choice | `{point . name, pdf, software, writing, out, stay}` | RS-MOTION-04; RS-PAPER-02, RS-TOOL-02, RS-MORE-01, 02 |
+| 8 in Chromium | `page(…)` on a phone, by keyboard, in light and dark | RS-PAGE-09 to 12; RS-COLOR-01 to 04 |
 | forbidden: an old publication | `page(…)` holds one paper | RS-PAGE-P-02 |
 | forbidden: the abstract, a statement or a number changed for `l` | the same for every `l` | RS-PAPER-P-01, RS-RES-P-01, RS-CHECK-P-01 |
+| forbidden: wall numbers without their rung, or not the data's | `wall(lattices, wall_l)`, `rung_l` | RS-WALL-P-01, P-03 |
+| forbidden: a wall that is not the data | `wall(lattices, …)` | RS-WALL-P-02 |
+| forbidden: a wall hidden in `still` | `still . end` with the wall complete | RS-MOTION-P-01 |
 | forbidden: `head_en` on `l = de` | `ok200(s_l)` | RS-HEAD-P-01 |
 | forbidden: results folded | `statements[…]` shown open | RS-RES-P-02 |
 | forbidden: `pdf` in a new tab, `out` without saying so, a repository | the choice's branches | RS-PAPER-P-02, RS-MORE-P-01, RS-TOOL-P-01 |
@@ -187,18 +248,26 @@ The page is read-only: no repeat, stale-token or race rows.
 ## Slices (proposed)
 
 The route, menu link and sitemap entry exist already, so every slice is reachable on `next` as soon
-as it is pushed. `next` is not merged into `main` until slice 3 is done (D5).
+as it is pushed. `next` is not merged into `main` until slice 4 is done (D5).
 
 1. **Frame + head:** the route becomes `loadChildren` with `research.routes.ts`, providing
    `RESEARCH_CONTENT` and `SHARED_CONTENT`; `research/head` through the content pipeline; `PageHead`;
    the title; the old page's markup, spec and i18n keys go (D7). RS-PAGE-01 to 08, P-01, P-02;
    RS-HEAD-01 to 05, P-01.
-2. **The paper and its results:** `research/paper` and `research/results`; the four statements in
-   `shared/paper` (D3; `SharedSeedIntegrationTest` changes with it); `PaperCard`, `PaperResults`.
-   RS-PAPER-01 to 07, P-01, P-02; RS-RES-01 to 06, P-01, P-02.
-3. **Checks, tool, more, and the browser:** `research/checked`, `research/tool`, `research/more`;
-   `PaperChecks`, the tool row, the closing row; the browser file `research-page.test.mjs`.
-   RS-CHECK-01 to 04, P-01; RS-TOOL-01 to 03, P-01; RS-MORE-01 to 04, P-01; RS-PAGE-09 to 12.
+2. **The wall:** render.py's Research output and its regeneration test (D8); `ResearchWall` beside
+   the head; `research/wall` (label, caption, hint) through the pipeline; the counts test (D9); the
+   draw-in and pointing, with reduced motion and without JavaScript; one browser file for the
+   motion. RS-WALL-01 to 04, 06, P-01 to P-03; RS-MOTION-01 to 04, P-01.
+3. **The paper and its results on the band:** `research/paper`, `research/results`; the four
+   statements in `shared/paper` (D3; `SharedSeedIntegrationTest` changes with it); `PaperCard`,
+   `PaperResults` on the band tokens. RS-PAPER-01 to 07, P-01, P-02; RS-RES-01 to 06, P-01, P-02;
+   RS-COLOR-01.
+4. **Checks, tool, more, and the browser:** `research/checked` with the rung note, `research/tool`,
+   `research/more`; `PaperChecks` (ochre rule on 15), the tool row on the raised glaze, the closing
+   row; the page's browser file `research-page.test.mjs`. RS-CHECK-01 to 04, P-01; RS-WALL-05;
+   RS-TOOL-01 to 03, P-01; RS-SHOT-01; RS-MORE-01 to 04, P-01; RS-COLOR-02 to 04; RS-PAGE-09 to 12.
+
+Not in these slices: RS-SHOT-02 (with the image), What's next (D1), Cite (Q5).
 
 ## Decisions
 
@@ -208,7 +277,13 @@ Answered by the developer on 2026-11-08:
 - **R2: a,** the abstract in English on every page, as a quotation, with "Auf Englisch" / "Em
   inglês" on de and pt (as D10 in `writing.md`).
 - **R3: a,** all four statements, open.
-- **R4: a,** no figure for now.
+- **R4: replaced on 2026-11-09** (it was "a, no figure for now"; the developer found the page "too
+  monotone", "all the same blunt color, no dynamics"): **option A, the wall in the head.** The 74
+  R2′ lattices of the paper's corpus as a tile panel beside the heading, drawing in smallest first,
+  pointing at a tile names its protocol. The section colours (results on the theorem band, the tool
+  on the raised glaze, the ochre rule on "15") and the BICA screenshot's place in "The tool", shared
+  by all options, stay. Options B (two lattices beside the theorem) and C (the corpus as a
+  filterable panel) are not chosen; C's filter is not planned.
 - **R5: a, under R1 b:** the 2007–2010 line leaves the page as a section; one link, "Earlier papers
   (2007–2010)", to the Writing page stays.
 - **R6: a,** "What's next" as a placeholder in the mock-up; built only with text (D1).
@@ -223,28 +298,45 @@ Answered by the developer on 2026-11-09:
 - **Q1: a,** the `<h1>` is "Research" / "Forschung" / "Investigação", as on Software and Writing.
 - **Q2: a,** the profiles stay in the closing row.
 - **Q3:** no ORCID, DBLP or Google Scholar; ResearchGate alone.
-- **Q4:** the drafts (eyebrow, intro, headings, figure labels, the tool link, the closing row) are
-  built as drafted in en, de and pt and listed for the developer's review on the preview.
+- **Q4:** the drafts (eyebrow, intro, headings, figure labels, the wall's label, caption and hint,
+  the rung note, the tool link, the closing row) are built as drafted in en, de and pt and listed
+  for the developer's review on the preview.
 - **Q5: a,** a Cite block only once the EPTCS details exist; nothing now.
 - The design hook's "overused font" warning on Fraunces stays unsilenced: Fraunces is settled.
 
-Proposed by ui-design-peer on 2026-11-09 for the build (the developer may change them):
+Proposed by ui-design-peer on 2026-11-09 for the build (the developer may change them). D1 and D3
+to D7 hold as first proposed; D2 and D5 changed with option A; D8 to D10 are new.
 
 - **D1. "What's next" is left out** while it has no text: no section, no stored row, no key. It comes
   back as its own change, `research/next` `{heading, text}`, between the tool and the closing row.
-- **D2. Where the text lives:** page `research` holds its own sections (`head`, `paper`, `results`,
-  `checked`, `tool`, `more`, shapes in the spec); the paper's title, year, PDF, read label, kind
-  words, evidence and statements come from `shared/paper`, as the bands read them, so they are
-  stored once.
-- **D3. `shared/paper.statements` holds all four** from slice 2 on (it replaces D31 in
-  `software.md`); the band still shows only the theorem (RS-RES-06). The home band later reads the
-  same four.
+- **D2. Where the text lives** (changed: `wall` and `checked.rung` added): page `research` holds its
+  own sections (`head`, `wall`, `paper`, `results`, `checked` with `rung`, `tool`, `more`, shapes in
+  the spec); the paper's title, year, PDF, read label, kind words, evidence and statements come from
+  `shared/paper`, as the bands read them, so they are stored once. The wall's drawing does not come
+  from the API (D8).
+- **D3. `shared/paper.statements` holds all four** from slice 3 on (it replaces D31 in
+  `software.md`); the band still shows only the theorem (RS-RES-06).
 - **D4. The statements are plain text,** as the band shows Theorem 15: no markup in the stored
-  texts, no mono spans for the notation (the mock-up's mono `S` and `ℒ(S)/≡` are not built).
-- **D5. `next` is not merged into `main` mid-way:** the route is already in the menu, so a slice on
-  `main` would show a half-built page.
+  texts, no mono spans for the notation.
+- **D5. `next` is not merged into `main` mid-way** (changed: four slices now, so until slice 4): the
+  route is already in the menu, so a slice on `main` would show a half-built page.
 - **D6. reticulateP's text is copied** into `research/tool` (each page downloads only its own text,
   D20 in `software.md`), and a seed test holds it equal to the Software row's (RS-TOOL-03).
 - **D7. The old page goes in slice 1:** its markup, `research.spec.ts` and the i18n keys
   `research.subtitle`, `profilesHeading`, `publicationsHeading`, `paperLink`. `nav.research` stays;
   `ContentService.publications` stays while the home page's `paper-statements` reads it.
+- **D8. The wall is generated, as the hero's is:** `scripts/lattice-wall/render.py` gets a second
+  output for the Research page (10 tiles wide, no crop, `data-name` per tile, `pathLength="1"` and a
+  `--d` delay on each line and state, the tokens of the spec), written to
+  `pages/research/research-wall/research-wall.html` and checked in; never hand-edited; a script test
+  regenerates it and compares (RS-WALL-03). The hero's `LatticeWall` and its file are not touched.
+  Recommended over a shared component with inputs, because the hero's wall is cropped, decorative and
+  parked with its own flicker, and the two would pull one component two ways.
+- **D9. The wall's counts are stored text, held to the data by a test:** `wall.label`,
+  `wall.caption` and `checked.rung` keep their numbers in the sentence (natural in each language),
+  and a test computes 74, 47, 104 and 50 from `lattices.json` and checks each text in en, de and pt
+  (RS-WALL-06). A regenerated `lattices.json` with other counts stops the build until the texts
+  follow.
+- **D10. The BICA screenshot is built only when the image exists:** until then "The tool" has no
+  frame and no placeholder (RS-SHOT-01). With the image come its alt text and caption in en, de and
+  pt, as their own change (RS-SHOT-02).
