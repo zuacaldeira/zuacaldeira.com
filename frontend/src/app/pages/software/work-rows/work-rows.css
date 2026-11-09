@@ -1,5 +1,5 @@
-/* More work (software-spec.md, `WorkRow`): one column per row on a phone and a tablet; from 900 px
-   three columns, 0.9fr 1.5fr 1fr. Rows separated by a light rule. */
+/* More work (software-spec.md, `WorkRow`): the section and its heading; each row is the shared
+   `WorkRow` (D21 in research.md). */
 .sw-work {
   padding-block: clamp(40px, 6vw, 80px);
 }
@@ -17,67 +17,6 @@
   font-weight: 600;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   color: var(--zc-text-heading);
-}
-
-.sw-work__row {
-  display: grid;
-  gap: var(--zc-space-3);
-  padding-block: var(--zc-space-6);
-  border-top: 1px solid var(--zc-border-light);
-}
-
-.sw-work__kicker {
-  margin: 0 0 var(--zc-space-2);
-  font-family: var(--zc-font-mono);
-  font-size: 0.875rem;
-  color: var(--zc-ochre-text);
-}
-
-.sw-work__title {
-  margin: 0;
-  font-family: var(--zc-font-heading);
-  font-weight: 600;
-  font-size: 1.5rem;
-  color: var(--zc-text-heading);
-}
-
-.sw-work__text {
-  margin: 0;
-  line-height: 1.6;
-  color: var(--zc-text-body);
-}
-
-.sw-work__stack {
-  margin: 0 0 var(--zc-space-2);
-  font-family: var(--zc-font-mono);
-  font-size: 0.875rem;
-  color: var(--zc-text-body);
-}
-
-/* Links in running text are underlined and at least 44 px tall (software-spec.md). */
-.sw-work__links {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 var(--zc-space-4);
-}
-
-.sw-work__links a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  color: var(--zc-azul);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-@media (min-width: 900px) {
-  .sw-work__row {
-    grid-template-columns: 0.9fr 1.5fr 1fr;
-    gap: clamp(24px, 3vw, 48px);
-  }
 }
 
 @media (max-width: 599.98px) {

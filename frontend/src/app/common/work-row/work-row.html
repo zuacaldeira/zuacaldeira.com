@@ -1,0 +1,21 @@
+<article class="work-row">
+  <div class="work-row__name">
+    <p class="work-row__kicker">{{ row().kicker }}</p>
+    <h3 class="work-row__title">{{ row().title }}</h3>
+  </div>
+  <p class="work-row__text">{{ row().text }}</p>
+  <div class="work-row__more">
+    <p class="work-row__stack" translate="no">{{ row().stack }}</p>
+    <ul class="work-row__links">
+      @for (link of row().links; track link.href) {
+        <li>
+          @if (outside(link.href)) {
+            <a [href]="link.href" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+          } @else {
+            <a [href]="link.href">{{ link.label }}</a>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+</article>

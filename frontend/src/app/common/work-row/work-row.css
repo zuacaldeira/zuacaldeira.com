@@ -1,0 +1,66 @@
+/* One piece of work (software-spec.md, `WorkRow`; D21 in research.md): one column on a phone and a
+   tablet; from 900 px three columns, 0.9fr 1.5fr 1fr. Rows separated by a light rule. */
+:host {
+  display: block;
+}
+
+.work-row {
+  display: grid;
+  gap: var(--zc-space-3);
+  padding-block: var(--zc-space-6);
+  border-top: 1px solid var(--zc-border-light);
+}
+
+.work-row__kicker {
+  margin: 0 0 var(--zc-space-2);
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
+  color: var(--zc-ochre-text);
+}
+
+.work-row__title {
+  margin: 0;
+  font-family: var(--zc-font-heading);
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: var(--zc-text-heading);
+}
+
+.work-row__text {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--zc-text-body);
+}
+
+.work-row__stack {
+  margin: 0 0 var(--zc-space-2);
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
+  color: var(--zc-text-body);
+}
+
+/* Links in running text are underlined and at least 44 px tall (software-spec.md). */
+.work-row__links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--zc-space-4);
+}
+
+.work-row__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--zc-azul);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (min-width: 900px) {
+  .work-row {
+    grid-template-columns: 0.9fr 1.5fr 1fr;
+    gap: clamp(24px, 3vw, 48px);
+  }
+}

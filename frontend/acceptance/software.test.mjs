@@ -385,10 +385,10 @@ test('SW-LEAD-06: the lead holds the light and the dark screenshot, with the pag
 const work = (html) => sections(html).find(({ cls }) => cls.split(' ').includes('sw-work'))?.inner ?? '';
 const workRows = (html) =>
   [...work(html).matchAll(/<article\b[^>]*>(.*?)<\/article>/gs)].map(([, row]) => ({
-    kicker: texts(row, 'p', 'sw-work__kicker')[0],
+    kicker: texts(row, 'p', 'work-row__kicker')[0],
     title: texts(row, 'h3')[0],
-    text: texts(row, 'p', 'sw-work__text')[0],
-    stack: texts(row, 'p', 'sw-work__stack')[0],
+    text: texts(row, 'p', 'work-row__text')[0],
+    stack: texts(row, 'p', 'work-row__stack')[0],
   }));
 
 const EN_ROWS = [

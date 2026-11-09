@@ -21,10 +21,10 @@ describe('WorkRows', () => {
     const el = render('de');
     expect(text(el.querySelector('h2'))).toBe('work heading de');
     const rows = [...el.querySelectorAll('article')].map((row) => ({
-      kicker: text(row.querySelector('.sw-work__kicker')),
+      kicker: text(row.querySelector('.work-row__kicker')),
       title: text(row.querySelector('h3')),
-      text: text(row.querySelector('.sw-work__text')),
-      stack: text(row.querySelector('.sw-work__stack')),
+      text: text(row.querySelector('.work-row__text')),
+      stack: text(row.querySelector('.work-row__stack')),
     }));
     expect(rows).toEqual([
       { kicker: 'kicker first de', title: 'First', text: 'text first de', stack: 'Python' },
