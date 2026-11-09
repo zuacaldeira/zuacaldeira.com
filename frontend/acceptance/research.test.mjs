@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { menu } from './menu.mjs';
 
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
 const page = (route) => readFileSync(join(browser, route, 'index.html'), 'utf8');
@@ -98,4 +99,12 @@ test('RS-PAGE-03: the German Research page links to its version in every languag
     'pt https://zuacaldeira.com/pt/research',
     'x-default https://zuacaldeira.com/en/research',
   ]);
+});
+
+test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
+  const links = menu(page('de/research'));
+  assert.deepEqual(
+    links.filter((link) => link.includes('/de/research') || link.endsWith('(current)')),
+    ['Forschung → /de/research (current)'],
+  );
 });
