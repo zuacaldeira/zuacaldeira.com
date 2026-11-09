@@ -570,6 +570,35 @@ test('RS-TOOL-01: the tool behind the paper is named and described, as on the So
   });
 });
 
+// The closing row: its heading and its links, each with what a reader and a screen reader get.
+const RESEARCHGATE = 'https://www.researchgate.net/profile/Alexandre-Caldeira';
+const more = (html) => {
+  const inner = section(html, 'rs-more');
+  return {
+    heading: texts(inner, 'h2'),
+    links: [...inner.matchAll(/<a\b([^>]*)>(.*?)<\/a>/gs)].map(([, attrs, body]) => ({
+      label: text(body.replace(/<span\b[^>]*>.*?<\/span>/gs, '')),
+      href: attr(attrs, 'href'),
+      target: attr(attrs, 'target'),
+    })),
+  };
+};
+
+test('RS-MORE-01: the page ends with earlier papers and the research profile', () => {
+  const html = page('en/research');
+  assert.deepEqual(
+    { last: sections(main(html)).at(-1), ...more(html) },
+    {
+      last: 'rs-more',
+      heading: ['More research'],
+      links: [
+        { label: 'Earlier papers (2007–2010)', href: '/en/writing', target: null },
+        { label: 'ResearchGate', href: RESEARCHGATE, target: '_blank' },
+      ],
+    },
+  );
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
