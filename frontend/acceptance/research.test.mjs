@@ -265,6 +265,28 @@ test('RS-WALL-06 (D9, D16): every number in the wall’s label and caption is th
   );
 });
 
+// The CSS rules in a page's <style> elements that hide the wall's lines or states: a selector on
+// `.draw` with a dash offset of 1 or no opacity.
+const hidingRules = (html) =>
+  [...html.matchAll(/<style\b[^>]*>(.*?)<\/style>/gs)]
+    .flatMap(([, css]) => [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)])
+    .filter(([, selector, body]) => /\.draw\b/.test(selector) && /stroke-dashoffset:1\b|opacity:0\b/.test(body))
+    .map(([, selector]) => selector.trim());
+
+test('RS-MOTION-03, RS-MOTION-P-03: without a script the wall is complete and the hint says nothing', () => {
+  const html = page('en/research');
+  const rules = hidingRules(html);
+  assert.ok(rules.length >= 2, `the rules that hide lines and states are read: ${JSON.stringify(rules)}`);
+  assert.deepEqual(
+    {
+      tiles: tiles(figures(html)[0] ?? '').length,
+      unconditional: rules.flatMap((rule) => rule.split(',')).filter((sel) => !/^\s*html\.motion\b/.test(sel)),
+      hint: wallWords(html).hint,
+    },
+    { tiles: 74, unconditional: [], hint: '' },
+  );
+});
+
 // The classes the head's inline scripts put on <html> before first paint, run as theme.test.mjs runs
 // them, on a device that does or does not ask for reduced motion.
 const htmlClassesAtFirstPaint = (html, { reducedMotion }) => {
