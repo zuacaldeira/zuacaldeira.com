@@ -514,6 +514,35 @@ test('RS-RES-06 (D20): with four statements stored, the Software band still show
   );
 });
 
+// How it was checked: the <dl>'s figures as "value: label", then the paragraphs after it.
+const checks = (html) => {
+  const inner = section(html, 'rs-checks');
+  const dl = inner.match(/<dl\b[^>]*>(.*?)<\/dl>/s)?.[1] ?? '';
+  return {
+    heading: texts(inner, 'h2'),
+    figures: [...dl.matchAll(/<dt\b[^>]*>(.*?)<\/dt>\s*<dd\b[^>]*>(.*?)<\/dd>/gs)].map(
+      ([, value, label]) => `${text(value)}: ${text(label)}`,
+    ),
+    after: texts(inner.split(/<\/dl>/)[1] ?? '', 'p'),
+  };
+};
+
+test('RS-CHECK-01, RS-WALL-05: four figures say how it was checked, then the evidence, then which count is which', () => {
+  assert.deepEqual(checks(page('en/research')), {
+    heading: ['How it was checked'],
+    figures: [
+      '108: benchmark protocols, every one a lattice',
+      '93: distributive',
+      '15: not distributive',
+      'Lean 4: mechanised proof',
+    ],
+    after: [
+      'Checked on 108 benchmark protocols from networking, databases, distributed systems and AI. Mechanised in Lean 4, with two independent tool implementations.',
+      'The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, which keeps the structure of recursive protocols: there 47 of the 74 distinct lattices are not distributive, and 50 of the 104 protocols fall in one of them.',
+    ],
+  });
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
