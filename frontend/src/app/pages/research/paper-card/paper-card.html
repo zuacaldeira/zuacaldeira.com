@@ -16,6 +16,15 @@
           shared.read
         }}</a>
       </div>
+      <div class="rs-paper__side">
+        <h3 class="rs-paper__label">{{ paper.abstractLabel }}</h3>
+        @if (!english) {
+          <p class="rs-paper__lang">{{ paper.inEnglish }}</p>
+        }
+        <blockquote class="rs-paper__abstract" translate="no" [attr.lang]="english ? null : 'en'">
+          <p>{{ paper.abstract }}</p>
+        </blockquote>
+      </div>
     </article>
   </div>
 </section>

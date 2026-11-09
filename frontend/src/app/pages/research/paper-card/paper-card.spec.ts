@@ -46,6 +46,24 @@ describe('PaperCard', () => {
     ]);
   });
 
+  it('RS-PAPER-03, 04: should quote the abstract under its label, in English, and say so on de', () => {
+    const side = (lang: 'en' | 'de') => {
+      const card = show(lang);
+      const quote = card.querySelector('blockquote');
+      return {
+        label: text(card.querySelector('h3')),
+        inEnglish: text(card.querySelector('.rs-paper__lang')) ?? null,
+        abstract: text(quote),
+        lang: quote?.getAttribute('lang') ?? null,
+        translate: quote?.getAttribute('translate'),
+      };
+    };
+    expect({ en: side('en'), de: side('de') }).toEqual({
+      en: { label: 'abstract label en', inEnglish: null, abstract: 'We prove a thing.', lang: null, translate: 'no' },
+      de: { label: 'abstract label de', inEnglish: 'in English de', abstract: 'We prove a thing.', lang: 'en', translate: 'no' },
+    });
+  });
+
   it('RS-PAPER-05: should keep the title, the author and the venue as published, the title marked English on de', () => {
     const marks = (lang: 'en' | 'de') => {
       const card = show(lang);
