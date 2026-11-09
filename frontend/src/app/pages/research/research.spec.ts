@@ -1,11 +1,18 @@
 import { provideTestContent } from '../../content/content.testing';
 import { TestBed } from '@angular/core/testing';
+import { Title } from '@angular/platform-browser';
 import { Research } from './research';
 import { I18nService } from '../../services/i18n.service';
 
 describe('Research', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({ providers: [provideTestContent()] });
+  });
+
+  it('RS-PAGE-02: should title the page with the full name and its heading', () => {
+    TestBed.inject(I18nService).setLanguage('pt');
+    TestBed.createComponent(Research).detectChanges();
+    expect(TestBed.inject(Title).getTitle()).toBe('Alexandre Zua Caldeira — research heading pt');
   });
 
   it('RS-HEAD-02, RS-PAGE-07: should open with the eyebrow, the one <h1> and the intro in the page language, and show nothing else', () => {
