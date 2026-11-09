@@ -351,6 +351,35 @@ test('RS-PAPER-01: after the head comes the paper, with its year, kind, title, a
   );
 });
 
+const attr = (attrs, name) => attrs.match(new RegExp(`\\s${name}="([^"]*)"`))?.[1] ?? null;
+const PDF = '/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf';
+
+test('RS-PAPER-02: one button opens the paper as a PDF from this site, in the same tab, in every language', () => {
+  const READ = { en: 'Read the paper (PDF)', de: 'Paper lesen (PDF)', pt: 'Ler o artigo (PDF)' };
+  const links = Object.fromEntries(
+    LANGS.map((lang) => [
+      lang,
+      [...section(page(`${lang}/research`), 'rs-paper').matchAll(/<a\b([^>]*)>(.*?)<\/a>/gs)].map(([, attrs, inner]) => ({
+        label: text(inner),
+        href: attr(attrs, 'href'),
+        type: attr(attrs, 'type'),
+        hreflang: attr(attrs, 'hreflang'),
+        target: attr(attrs, 'target'),
+      })),
+    ]),
+  );
+  assert.deepEqual(
+    links,
+    Object.fromEntries(
+      LANGS.map((lang) => [
+        lang,
+        [{ label: READ[lang], href: PDF, type: 'application/pdf', hreflang: 'en', target: null }],
+      ]),
+    ),
+  );
+  assert.ok(existsSync(join(browser, PDF)), 'the paper is not in the build');
+});
+
 // The four statements of the paper (the spec's table, D3): label and text, as on the English page.
 const STATEMENTS = [
   ['Theorem 15 · Reticulate Theorem', 'For every well-formed session type S, ℒ(S)/≡ is a bounded lattice.'],
