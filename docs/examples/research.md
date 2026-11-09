@@ -71,15 +71,15 @@ protocol counts, and every place that shows them says so.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-WALL-01 | Beside the heading, the page shows the paper's 74 distinct lattices as one tile panel, the 47 that are not distributive in ochre. | the built `/en/research` | the head is read | after the intro, one `<figure>` whose SVG has `role="img"` and 74 tiles (`g.t`), in render.py's order (states, then edges), 47 of them `g.t.nd` | |
-| RS-WALL-02 | The panel says what it is, and which construction it draws, in the page's language. | the built `/de/research` | the wall's label and caption are read | the SVG's `aria-label` is `wall.label` de and the `<figcaption>` is `wall.caption` de; both name "R2′" and "74", the caption also "104", "108" and "47" | |
-| RS-WALL-03 | The panel is the data, drawn: regenerating it gives the same file. | `lattices.json` and the checked-in wall file | `render.py` is run for the Research wall | its output equals the checked-in file byte for byte (D8) | |
-| RS-WALL-04 | Each tile carries the name of its protocol, as published, in every language. | the built `/en/research` and `/pt/research` | the tiles are read | tile 1 has `data-name="GoF Facade"`, the last `data-name="Raft Leader Election"`; the 74 names are identical on the three pages | |
+| RS-WALL-01 | Beside the heading, the page shows the paper's 74 distinct lattices as one tile panel, the 47 that are not distributive in ochre. | the built `/en/research` | the head is read | after the intro, one `<figure>` whose SVG has `role="img"` and 74 tiles (`g.t`), in render.py's order (states, then edges), 47 of them `g.t.nd` | yes (build and unit, 2026-11-09) |
+| RS-WALL-02 | The panel says what it is, and which construction it draws, in the page's language. | the built `/de/research` | the wall's label and caption are read | the SVG's `aria-label` is `wall.label` de and the `<figcaption>` is `wall.caption` de; both name "R2′" and "74", the caption also "104", "108" and "47" | yes (build, unit and integration, 2026-11-09) |
+| RS-WALL-03 | The panel is the data, drawn: regenerating it gives the same file. | `lattices.json` and the checked-in wall file | `render.py` is run for the Research wall | its output equals the checked-in file byte for byte (D8) | yes (the script test, 2026-11-09; the hero's file held too) |
+| RS-WALL-04 | Each tile carries the name of its protocol, as published, in every language. | the built `/en/research` and `/pt/research` | the tiles are read | tile 1 has `data-name="GoF Facade"`, the last `data-name="Raft Leader Election"`; the 74 names are identical on the three pages | yes (build, 2026-11-09) |
 | RS-WALL-05 | Under the figures, one sentence tells the paper's count from the wall's. | the built `/en/research` | the checks section is read | after the evidence sentence, `checked.rung` en: "The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, …"; de and pt the same in their language | |
-| RS-WALL-06 | Every R2′ number on the page agrees with the data, in every language. | `lattices.json` and the stored `wall` and `checked.rung` in en, de, pt | the numbers are computed from the data and read from the texts | 74 classes, 47 not distributive, 104 protocols (four excluded from 108), 50 in a non-distributive class; each stored text holds exactly these numbers (D9) | |
-| RS-WALL-P-01 | Wall numbers shown without their rung are refused. | the built `/de/research` | "R2′" is taken out of the caption | RS-WALL-02 goes red | |
-| RS-WALL-P-02 | A hand-edited wall is refused. | the checked-in wall file | one tile is removed | RS-WALL-03 and RS-WALL-01 go red | |
-| RS-WALL-P-03 | A wall count that no longer matches the data is refused. | the stored `wall.caption` de | "47" is changed to "15" | RS-WALL-06 goes red | |
+| RS-WALL-06 | Every R2′ number on the page agrees with the data, in every language. | `lattices.json` and the stored `wall` and `checked.rung` in en, de, pt | the numbers are computed from the data and read from the texts | 74 classes, 47 not distributive, 104 protocols (four excluded from 108), 50 in a non-distributive class; each stored text holds exactly these numbers (D9) | label and caption (build and integration, 2026-11-09); the rung note's 50 in slice 4 (D16) |
+| RS-WALL-P-01 | Wall numbers shown without their rung are refused. | the built `/de/research` | "R2′" is taken out of the caption | RS-WALL-02 goes red | yes (break in the build) |
+| RS-WALL-P-02 | A hand-edited wall is refused. | the checked-in wall file | one tile is removed | RS-WALL-03 and RS-WALL-01 go red | yes (break in the checked-in file and in the build) |
+| RS-WALL-P-03 | A wall count that no longer matches the data is refused. | the stored `wall.caption` de | "47" is changed to "15" | RS-WALL-06 goes red | yes (break in the build) |
 
 ## 4. The paper
 
@@ -157,11 +157,13 @@ protocol counts, and every place that shows them says so.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-MOTION-01 | When the page opens, the wall draws itself in, smallest lattice first. | `/en/research` at 1440 in the browser, motion allowed | the page loads and the wall is in view | `<html>` has `motion`, the wall gets `in`; the first tile's lines start before the last tile's (their `--d` rises with the tile's index); after 2 s every line's `stroke-dashoffset` is 0 | |
-| RS-MOTION-02 | With reduced motion, the wall is complete at once and nothing moves. | the same with `prefers-reduced-motion: reduce` | the page loads | `<html>` has no `motion`; at once every line's `stroke-dashoffset` is 0 and no transition runs | |
-| RS-MOTION-03 | Without JavaScript, the wall is complete. | the built `/en/research`, its scripts not run | the prerendered page is read (and shown in Chromium with JavaScript off) | the 74 tiles are in the HTML; no rule hides a line unless `<html>` has `motion`, which only the script sets | |
-| RS-MOTION-04 | Pointing at a tile names its protocol; leaving the wall brings the sentence back. | `/en/research` at 1440 in the browser | the pointer moves over the tile "Two-Phase Commit", then off the wall | the hint reads "Two-Phase Commit" and that tile's lines thicken; then the hint reads `wall.hint` en again; the hint is `aria-hidden` and no tile is focusable | |
-| RS-MOTION-P-01 | A wall hidden until a script runs is refused. | the built page | the hiding rule loses its `html.motion` condition | RS-MOTION-03 goes red | |
+| RS-MOTION-01 | When the page opens, the wall draws itself in, smallest lattice first. | `/en/research` at 1440 in the browser, motion allowed | the page loads and the wall is in view | `<html>` has `motion`, the wall gets `in`; the first tile's lines start before the last tile's (their `--d` rises with the tile's index); after 2 s every line's `stroke-dashoffset` is 0 | yes (browser, build and unit, 2026-11-09) |
+| RS-MOTION-02 | With reduced motion, the wall is complete at once and nothing moves. | the same with `prefers-reduced-motion: reduce` | the page loads | `<html>` has no `motion`; at once every line's `stroke-dashoffset` is 0 and no transition runs | yes (browser and build, 2026-11-09) |
+| RS-MOTION-03 | Without JavaScript, the wall is complete. | the built `/en/research`, its scripts not run | the prerendered page is read (and shown in Chromium with JavaScript off) | the 74 tiles are in the HTML; no rule hides a line unless `<html>` has `motion`, which only the script sets | yes (browser with JavaScript off, and build, 2026-11-09) |
+| RS-MOTION-04 | Pointing at a tile names its protocol; leaving the wall brings the sentence back. | `/en/research` at 1440 in the browser | the pointer moves over the tile "Two-Phase Commit", then off the wall | the hint reads "Two-Phase Commit" and that tile's lines thicken; then the hint reads `wall.hint` en again; the hint is `aria-hidden` and no tile is focusable | yes (browser and unit, 2026-11-09) |
+| RS-MOTION-P-01 | A wall hidden until a script runs is refused. | the built page | the hiding rule loses its `html.motion` condition | RS-MOTION-03 goes red | yes (break in the build, and in the browser) |
+| RS-MOTION-P-02 | A wall that draws itself before it is in view is refused. (Added from slice 2's G, 2026-11-09.) | `ResearchWall` with an observer | the observer reports the wall out of view | the wall gets no `in` until a report says it is in view | yes (unit; a break drawing on any report went red) |
+| RS-MOTION-P-03 | A hint that tells you to point, or names a protocol, before pointing can work is refused. (Added from slice 2's G, 2026-11-09.) | the built page; the page once it runs | the hint is read before a script runs, then after | empty in the prerendered page; `wall.hint` once the page runs, a name only after pointing | yes (build and unit; a prerendered sentence went red) |
 
 ## In the browser (after the build, `npm run acceptance:browser`)
 
@@ -518,6 +520,70 @@ The refactor in U1 (D15), on the Software and Writing pages: `G_pre` is their sl
 `PageHead` drawing eyebrow, `<h1>` and intro; `G_post` is the same with an empty `<ng-content />`
 after the intro. `Visitor ↾` is identical (`Page?page(lang = l, h1, links) . end`), held by their
 specs and acceptance tests, unchanged.
+
+**Done 2026-11-09.** Red first, each for its own reason:
+- A1 on slice 1's build: `one figure after the intro: 0 !== 1`.
+- A2 on slice 1's build: `allowed: []`.
+- S1: no checked-in Research wall, and render.py printing "wrote …" for the hero (no `--print`).
+- S2: "Missing expected rejection".
+- B1: `expected: 200 but was: 404` in en, de and pt.
+- U1: `expected undefined to be 'APP-RESEARCH-WALL'`.
+- U3: the hint `''` at every step.
+- U4: "an observer watches the wall: expected undefined to be defined", and `false` without an
+  observer (its first run had thrown a `TypeError`; the test now asserts it).
+
+Green at first and shown to bite, each break restored from a copy (md5 checked):
+- U2: the component reading the English wall.
+- A3: "R2′" out of the German caption (RS-WALL-P-01).
+- A4: Two-Phase Commit renamed on pt.
+- A5: "47" changed to "15" (RS-WALL-P-03).
+- A6: the hiding rule without `html.motion` (RS-MOTION-P-01), and a prerendered hint (RS-MOTION-P-03).
+- RS-WALL-P-02: one tile cut from the checked-in file (S1 red at line 10) and from the built page
+  (A1 red, 73 tiles).
+- A2: the head script without its motion line.
+- U4's RS-MOTION-P-02: drawing on any report.
+
+The browser file (W1 to W4) failed twice on its first run, both the test's fault. The site's
+reduced-motion rule sets every transition to 0.01 ms, so "no transition" now means none longer than
+1 ms; and a value read at once is the transition's start, so the pointing reads wait two frames.
+Its breaks:
+- The line-hiding rule without `html.motion` turned W2 and W3 red.
+- The `in` rule held at offset 1 turned W1 red, and the `hot` rule at 1.6 px turned W4 red, but only
+  when each was broken in the page's `<style>` and in the Research chunk both. Angular adds the
+  component's styles again from the chunk, so a break in the prerendered page alone can add a rule
+  but not take one away. The first commit of the browser file claimed those two bit when they had
+  not; it was amended before any push.
+
+Results:
+- Unit: 268 passed, 5 skipped (42 files).
+- Scripts: 16/16.
+- `acceptance`: 88/88.
+- `acceptance:nginx`: 13/13.
+- `research-wall.test.mjs` in Chromium: 4/4.
+- Backend `./mvnw verify` once: 48 tests.
+- The build prerenders 26 routes. The Research chunk is 251.76 kB, about 19.4 kB to transfer, as the
+  home chunk with the hero's wall.
+
+One whole-suite run failed under a load average of 9.4 while other projects built, and passed on the
+rerun. Its output was cut off, so which test failed is not known (SHELL-12's timeout is the likely
+one, not confirmed). The other browser files were not run: this slice adds no link or control
+outside the wall.
+
+Leftovers, not built:
+- **For the developer's review on the preview** (Q4): the wall's label, caption and hint in en, de
+  and pt as drafted.
+- **Open: the caption's ochre words** (D16's note). The spec shows "Ochre: not distributive" in
+  `--zc-ochre-text`, but the caption is one plain string; slice 2 shows it plain. Options:
+  (a) a `key` field beside `caption` (`wall: {label, caption, key, hint}`, the key "Ochre: not
+  distributive, 47 of the 74." shown after the caption in ochre), recommended: plain text,
+  translatable, no markup in the store;
+  (b) keep it plain;
+  (c) markup in the stored text: no, the store holds plain text (D4).
+- **The intro's line height at 1440** looked tight in the screenshots (about 1.0; the phone is fine).
+  It is the shared head's style; whether Software and Writing look the same is not checked.
+- **The wall's contrast** (RS-COLOR-04) is slice 4's, measured in the browser with the rest.
+- **The rung note and its 50** (RS-WALL-05, the rest of RS-WALL-06) come with `research/checked` in
+  slice 4.
 
 ## Decisions
 
