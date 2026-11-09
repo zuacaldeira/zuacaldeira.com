@@ -17,18 +17,21 @@ INSERT INTO content_section (page, section, lang, body) VALUES
         'heading', 'Investigação',
         'intro', 'O espaço de estados de todo o tipo de sessão bem formado forma um reticulado. Esta página apresenta o artigo que o prova: o que mostra, como foi verificado e a ferramenta por trás dele.'));
 
--- The wall's words (D2). Its numbers are R2′ counts of lattices.json, written into the sentences,
+-- The wall's words (D2), the ochre key apart from the caption (D17). Its numbers are R2′ counts of lattices.json, written into the sentences,
 -- and a test holds them to the data in every language (D9, RS-WALL-06): change both together.
 INSERT INTO content_section (page, section, lang, body) VALUES
     ('research', 'wall', 'en', JSON_OBJECT(
         'label', 'The 74 distinct lattices of the paper’s benchmark protocols at rung R2′, ordered by size; the 47 that are not distributive in ochre.',
-        'caption', '74 distinct lattices, drawn from 104 of the paper’s 108 protocols at rung R2′, a finer construction than the paper’s own. Ochre: not distributive, 47 of the 74.',
+        'caption', '74 distinct lattices, drawn from 104 of the paper’s 108 protocols at rung R2′, a finer construction than the paper’s own.',
+        'key', 'Ochre: not distributive, 47 of the 74.',
         'hint', 'Point at a tile to name its protocol.')),
     ('research', 'wall', 'de', JSON_OBJECT(
         'label', 'Die 74 verschiedenen Verbände der Benchmark-Protokolle des Papers auf Stufe R2′, nach Größe geordnet; die 47 nicht distributiven in Ocker.',
-        'caption', '74 verschiedene Verbände, gezeichnet aus 104 der 108 Protokolle des Papers auf Stufe R2′, einer feineren Konstruktion als der des Papers. Ocker: nicht distributiv, 47 der 74.',
+        'caption', '74 verschiedene Verbände, gezeichnet aus 104 der 108 Protokolle des Papers auf Stufe R2′, einer feineren Konstruktion als der des Papers.',
+        'key', 'Ocker: nicht distributiv, 47 der 74.',
         'hint', 'Zeigen Sie auf eine Kachel, um ihr Protokoll zu sehen.')),
     ('research', 'wall', 'pt', JSON_OBJECT(
         'label', 'Os 74 reticulados distintos dos protocolos de referência do artigo no nível R2′, por tamanho; os 47 não distributivos a ocre.',
-        'caption', '74 reticulados distintos, desenhados a partir de 104 dos 108 protocolos do artigo no nível R2′, uma construção mais fina do que a do artigo. Ocre: não distributivos, 47 dos 74.',
+        'caption', '74 reticulados distintos, desenhados a partir de 104 dos 108 protocolos do artigo no nível R2′, uma construção mais fina do que a do artigo.',
+        'key', 'Ocre: não distributivos, 47 dos 74.',
         'hint', 'Aponte para um mosaico para ver o seu protocolo.'));
