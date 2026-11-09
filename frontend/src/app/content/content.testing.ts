@@ -145,7 +145,13 @@ const sharedPaperIn = (lang: Language): SharedPaper => ({
   allResearch: `all research ${lang}`,
   more: `more ${lang}`,
   pdfUrl: '/assets/pdfs/paper.pdf',
-  statements: [{ kind: 'theorem', number: 15, name: 'Name', text: 'For every S, a statement.' }],
+  // The paper's four kinds, the theorem first (D3); names and texts the same in every language.
+  statements: [
+    { kind: 'theorem', number: 15, name: 'Name', text: 'For every S, a statement.' },
+    { kind: 'definition', number: 6, name: 'Def', text: 'A definition.' },
+    { kind: 'lemma', number: 8, name: 'Lem', text: 'A lemma.' },
+    { kind: 'proposition', number: 18, name: 'Prop', text: 'A proposition.' },
+  ],
 });
 
 const inEvery = <T>(make: (lang: Language) => T): Record<Language, T> => ({
@@ -173,6 +179,16 @@ export const TEST_CONTENT: ContentSnapshot = {
       key: `wall key ${lang}`,
       hint: `wall hint ${lang}`,
     })),
+    paper: inEvery((lang) => ({
+      kind: `paper kind ${lang}`,
+      note: `paper note ${lang}`,
+      inEnglish: `in English ${lang}`,
+      abstractLabel: `abstract label ${lang}`,
+      author: 'Ann Author',
+      venue: 'W 2026 · A Workshop',
+      abstract: 'We prove a thing.',
+    })),
+    results: inEvery((lang) => ({ heading: `results heading ${lang}` })),
   },
   shared: { paper: inEvery(sharedPaperIn) },
 };

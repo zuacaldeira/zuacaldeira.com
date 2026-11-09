@@ -1,0 +1,18 @@
+<section class="rs-paper">
+  <div class="rs-paper__in">
+    <article class="rs-paper__card">
+      <div class="rs-paper__main">
+        <p class="rs-paper__when">
+          <span class="rs-paper__year">{{ shared.year }}</span> ·
+          <span class="rs-paper__kind">{{ paper.kind }}</span>
+        </p>
+        <h2 class="rs-paper__title" translate="no" [attr.lang]="english ? null : 'en'">
+          {{ shared.paperTitle }}
+        </h2>
+        <p class="rs-paper__author" translate="no"><b>{{ paper.author }}</b></p>
+        <p class="rs-paper__venue" translate="no">{{ paper.venue }}</p>
+        <p class="rs-paper__note">{{ paper.note }}</p>
+      </div>
+    </article>
+  </div>
+</section>

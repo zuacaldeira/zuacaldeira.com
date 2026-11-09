@@ -175,10 +175,28 @@ export interface ResearchWallText {
   readonly hint: string;
 }
 
+/**
+ * One language's paper card, `research/paper` (D2 in research.md): its labels, and the paper's
+ * author, venue and abstract, the same in every language (the abstract in English, R2). Title, year,
+ * PDF and read label are `shared/paper`'s.
+ */
+export interface ResearchPaper {
+  readonly kind: string;
+  readonly note: string;
+  readonly inEnglish: string;
+  readonly abstractLabel: string;
+  readonly author: string;
+  readonly venue: string;
+  readonly abstract: string;
+}
+
 /** The Research page's text, `@page-content/research` (D2 in research.md). */
 export interface ResearchContent {
   readonly head: Readonly<Record<Language, PageHead>>;
   readonly wall: Readonly<Record<Language, ResearchWallText>>;
+  readonly paper: Readonly<Record<Language, ResearchPaper>>;
+  /** What it proves: its heading; the statements are `shared/paper`'s (D3). */
+  readonly results: Readonly<Record<Language, { readonly heading: string }>>;
 }
 
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
