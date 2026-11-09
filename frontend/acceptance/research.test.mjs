@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { holding } from './loaded.mjs';
 import { menu } from './menu.mjs';
 
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
@@ -120,6 +121,21 @@ test('RS-PAGE-03: the German Research page links to its version in every languag
     'pt https://zuacaldeira.com/pt/research',
     'x-default https://zuacaldeira.com/en/research',
   ]);
+});
+
+test('RS-PAGE-06 (D11): the Research page downloads its own text, and no other page’s', () => {
+  // Its own text is there, so the files read are the ones that hold page text (ASCII sentences).
+  const own = 'The state space of every well-formed session type forms a lattice.';
+  assert.notDeepEqual(holding('en/research', own), []);
+  assert.deepEqual(
+    {
+      home: holding('en/research', 'I build software, and prove its protocols hold.'),
+      software: holding('en/research', 'A monitor that holds a coding agent to its TDD protocol'),
+      writing: holding('en/research', 'Papers on session types, and on tools that check code against its specification'),
+      fromHome: holding('en/home', own),
+    },
+    { home: [], software: [], writing: [], fromHome: [] },
+  );
 });
 
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
