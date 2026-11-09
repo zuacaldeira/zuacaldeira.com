@@ -138,6 +138,22 @@ test('RS-PAGE-06 (D11): the Research page downloads its own text, and no other p
   );
 });
 
+// The sections of a page's <main>, by their first class, in page order.
+const sections = (inner) =>
+  [...inner.matchAll(/<section\b[^>]*class="([^"]*)"/g)].map(([, cls]) => cls.split(' ')[0]);
+
+test('RS-PAGE-08 (D1): no "What\'s next" while it has no text; the sections so far are the head alone', () => {
+  const next = ["What's next", 'What’s next', 'Wie es weitergeht', 'O que vem a seguir'];
+  const shown = Object.fromEntries(
+    LANGS.map((lang) => {
+      const html = main(page(`${lang}/research`));
+      return [lang, { sections: sections(html), next: next.filter((words) => text(html).includes(words)) }];
+    }),
+  );
+  // Slices 2 to 4 add the paper, what it proves, how it was checked, the tool and more research.
+  assert.deepEqual(shown, Object.fromEntries(LANGS.map((lang) => [lang, { sections: ['page-head'], next: [] }])));
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
