@@ -38,12 +38,22 @@ class SharedSeedIntegrationTest {
     @LocalServerPort
     int port;
 
-    /** Theorem 15 alone for now (D31); the same in every language: notation is never translated. */
-    private static final List<Map<String, Object>> STATEMENTS = List.of(Map.of(
-            "kind", "theorem",
-            "number", 15,
-            "name", "Reticulate Theorem",
-            "text", "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice."));
+    /**
+     * The paper's four statements, in the research spec's order (D3 in docs/examples/research.md,
+     * which replaces D31 in software.md); the same in every language: notation is never translated.
+     */
+    private static final List<Map<String, Object>> STATEMENTS = List.of(
+            Map.of("kind", "theorem", "number", 15, "name", "Reticulate Theorem",
+                    "text", "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice."),
+            Map.of("kind", "definition", "number", 6, "name", "SCC quotient",
+                    "text", "The SCC quotient ℒ(S)/≡ identifies mutually reachable states, collapsing each recursion"
+                            + " cycle to one class. It is ordered by [s₁] ≤ [s₂] iff s₂ ↠ s₁: a state is smaller when"
+                            + " less of the protocol remains, so execution descends from q⊤ to q⊥."),
+            Map.of("kind", "lemma", "number", 8, "name", "End",
+                    "text", "ℒ(end)/≡ is a bounded lattice."),
+            Map.of("kind", "proposition", "number", 18, "name", "Duality isomorphism",
+                    "text", "For every well-formed session type S, there is a bounded-lattice isomorphism"
+                            + " ℒ(S)/≡ ≅ ℒ(dual(S))/≡."));
 
     /** HOME-PAPER-09's fields in English (home.md: HOME-PAPER-01 to 08). */
     private static final Map<String, Object> EN_PAPER = Map.ofEntries(
@@ -68,7 +78,7 @@ class SharedSeedIntegrationTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("languages")
-    @DisplayName("SW-PROOF-03 the seed answers the paper's shared labels in every language, the statements the same")
+    @DisplayName("SW-PROOF-03, RS-RES-05 the seed answers the paper's shared labels in every language, the four statements the same")
     void answersTheSeededPaper(String lang) throws Exception {
         HttpResponse<String> response = get("/api/content/shared/paper?lang=" + lang);
 
