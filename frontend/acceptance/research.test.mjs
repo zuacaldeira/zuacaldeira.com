@@ -79,3 +79,12 @@ test('RS-HEAD-02: the German Research page opens in German: eyebrow, one <h1>, t
     ],
   });
 });
+
+test('RS-PAGE-02: the browser tab names the Research page in its language', () => {
+  const titles = LANGS.map((lang) => page(`${lang}/research`).match(/<title>(.*?)<\/title>/)?.[1]);
+  assert.deepEqual(titles, [
+    'Alexandre Zua Caldeira — Research',
+    'Alexandre Zua Caldeira — Forschung',
+    'Alexandre Zua Caldeira — Investigação',
+  ]);
+});
