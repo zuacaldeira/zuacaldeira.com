@@ -646,6 +646,16 @@ test('RS-CHECK-02, 03: on de and pt the meanings and the evidence are translated
   );
 });
 
+test('RS-WALL-05: on de and pt the rung note follows the evidence, in the page language', () => {
+  assert.deepEqual(
+    { de: checks(page('de/research')).after[1], pt: checks(page('pt/research')).after[1] },
+    {
+      de: 'Die 93 und 15 sind die eigene Zählung des Papers über seine 108 Protokolle. Die Wand zeichnet denselben Korpus auf Stufe R2′, die die Struktur rekursiver Protokolle erhält: Dort sind 47 der 74 verschiedenen Verbände nicht distributiv, und 50 der 104 Protokolle fallen in einen davon.',
+      pt: 'Os 93 e 15 são a contagem do próprio artigo sobre os seus 108 protocolos. A parede desenha o mesmo corpus no nível R2′, que mantém a estrutura dos protocolos recursivos: aí 47 dos 74 reticulados distintos não são distributivos, e 50 dos 104 protocolos caem num deles.',
+    },
+  );
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
