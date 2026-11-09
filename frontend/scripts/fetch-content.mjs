@@ -16,6 +16,9 @@ const SECTIONS = [
   ['research', 'wall'],
   ['research', 'paper'],
   ['research', 'results'],
+  ['research', 'checked'],
+  ['research', 'tool'],
+  ['research', 'more'],
   // Text several pages read, written as shared.json (D30).
   ['shared', 'paper'],
 ];
