@@ -8,6 +8,7 @@ import {
   SharedPaper,
   SOFTWARE_CONTENT,
   PageHead,
+  RESEARCH_CONTENT,
   SoftwareHow,
   SoftwareLead,
   SoftwareWork,
@@ -35,6 +36,12 @@ const writingHeadIn = (lang: Language): PageHead => ({
   eyebrow: `writing eyebrow ${lang}`,
   heading: `writing heading ${lang}`,
   intro: `writing intro ${lang}`,
+});
+
+const researchHeadIn = (lang: Language): PageHead => ({
+  eyebrow: `research eyebrow ${lang}`,
+  heading: `research heading ${lang}`,
+  intro: `research intro ${lang}`,
 });
 
 // Two texts: a paper on the site with a note, and an article outside it with a co-author first.
@@ -158,6 +165,7 @@ export const TEST_CONTENT: ContentSnapshot = {
     proof: inEvery((lang) => ({ kicker: `proof kicker ${lang}` })),
   },
   writing: { head: inEvery(writingHeadIn), texts: inEvery(writingTextsIn) },
+  research: { head: inEvery(researchHeadIn) },
   shared: { paper: inEvery(sharedPaperIn) },
 };
 
@@ -165,5 +173,6 @@ export const provideTestContent = (): Provider => [
   { provide: HOME_CONTENT, useValue: TEST_CONTENT.home },
   { provide: SOFTWARE_CONTENT, useValue: TEST_CONTENT.software },
   { provide: WRITING_CONTENT, useValue: TEST_CONTENT.writing },
+  { provide: RESEARCH_CONTENT, useValue: TEST_CONTENT.research },
   { provide: SHARED_CONTENT, useValue: TEST_CONTENT.shared },
 ];

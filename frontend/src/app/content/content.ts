@@ -14,7 +14,7 @@ export interface HomeHero {
 
 /**
  * One language's page head, `GET /api/content/<page>/head?lang=xx` (D11 in software.md), for the
- * Software and Writing pages (D13 in writing.md).
+ * Software, Writing and Research pages (D13 in writing.md).
  */
 export interface PageHead {
   readonly eyebrow: string;
@@ -163,11 +163,17 @@ export interface WritingContent {
   readonly texts: Readonly<Record<Language, WritingTexts>>;
 }
 
+/** The Research page's text, `@page-content/research` (D2 in research.md). */
+export interface ResearchContent {
+  readonly head: Readonly<Record<Language, PageHead>>;
+}
+
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
 export interface ContentSnapshot {
   readonly home: HomeContent;
   readonly software: SoftwareContent;
   readonly writing: WritingContent;
+  readonly research: ResearchContent;
   readonly shared: SharedContent;
 }
 
@@ -178,5 +184,6 @@ export interface ContentSnapshot {
 export const HOME_CONTENT = new InjectionToken<HomeContent>('HOME_CONTENT');
 export const SOFTWARE_CONTENT = new InjectionToken<SoftwareContent>('SOFTWARE_CONTENT');
 export const WRITING_CONTENT = new InjectionToken<WritingContent>('WRITING_CONTENT');
+export const RESEARCH_CONTENT = new InjectionToken<ResearchContent>('RESEARCH_CONTENT');
 /** Text several pages read, provided by each route that needs it (D30). */
 export const SHARED_CONTENT = new InjectionToken<SharedContent>('SHARED_CONTENT');

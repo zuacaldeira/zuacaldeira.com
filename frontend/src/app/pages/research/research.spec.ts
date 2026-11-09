@@ -1,28 +1,23 @@
+import { provideTestContent } from '../../content/content.testing';
 import { TestBed } from '@angular/core/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Research } from './research';
+import { I18nService } from '../../services/i18n.service';
 
 describe('Research', () => {
-  let component: Research;
-
   beforeEach(() => {
-    const fixture = TestBed.overrideComponent(Research, {
-      set: { schemas: [NO_ERRORS_SCHEMA] },
-    }).createComponent(Research);
-    component = fixture.componentInstance;
+    TestBed.configureTestingModule({ providers: [provideTestContent()] });
+  });
+
+  it('RS-HEAD-02, RS-PAGE-07: should open with the eyebrow, the one <h1> and the intro in the page language, and show nothing else', () => {
+    TestBed.inject(I18nService).setLanguage('de');
+    const fixture = TestBed.createComponent(Research);
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should expose publications from ContentService', () => {
-    expect(component.publications.length).toBeGreaterThanOrEqual(1);
-    expect(component.publications[0].title).toBeTruthy();
-  });
-
-  it('should have translations signal', () => {
-    expect(component.t().research.title).toBeTruthy();
+    const page: HTMLElement = fixture.nativeElement;
+    const texts = (selector: string) =>
+      [...page.querySelectorAll(selector)].map((el) => el.textContent?.trim());
+    expect(texts('.page-head__eyebrow')).toEqual(['research eyebrow de']);
+    expect(texts('h1')).toEqual(['research heading de']);
+    expect(texts('.page-head__intro')).toEqual(['research intro de']);
+    expect([...page.children].map((el) => el.tagName)).toEqual(['APP-PAGE-HEAD']);
   });
 });
