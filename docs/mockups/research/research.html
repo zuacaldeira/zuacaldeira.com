@@ -679,7 +679,7 @@ function page(){
 
  <section class="sec" aria-labelledby="next-h"><div class="col">
   <h2 class="sec-h" id="next-h">${draft(P.nextH)}</h2>
-  <div class="phblock"><p><span class="ann">${P.phTag}</span> For Zua: what follows from the paper, such as the questions it leaves open, work in progress, or an invitation to collaborate. Built only if you write it (R6).</p></div>
+  <div class="phblock"><p><span class="ann">${P.phTag}</span> For Zua: what follows from the paper, such as the questions it leaves open, work in progress, or an invitation to collaborate. Not built until you write it: the page goes from "The tool" to "More research" (D1 in research.md).</p></div>
  </div></section>
 
  <section class="more" aria-labelledby="more-h"><div class="col"><div style="border-top:1px solid var(--zc-border-light);padding-top:var(--zc-space-6)">
@@ -687,7 +687,6 @@ function page(){
   <ul>
    <li><a class="go" href="/${LG}/writing">${draft(P.earlier)}</a></li>
    <li>${out('https://www.researchgate.net/profile/Alexandre-Caldeira','ResearchGate')}</li>
-   <li>${ph('ORCID')}</li><li>${ph('DBLP')}</li><li>${ph('Google Scholar')}</li>
   </ul>${src('wr')}${src('rg')}
  </div></div></section>`;
 }
