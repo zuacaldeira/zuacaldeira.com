@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -108,6 +110,59 @@ class ResearchSeedIntegrationTest {
                 new TypeReference<Map<String, String>>() {});
         assertThat(wall).isEqualTo(expected);
         assertThat(wall.values()).allSatisfy(text -> assertThat(text).isNotBlank());
+    }
+
+    /** The spec's English card (D2's shape); author, venue and abstract are the same in every language. */
+    private static final Map<String, String> EN_PAPER = Map.of(
+            "kind", "Workshop paper",
+            "note", "Camera-ready · to appear in EPTCS",
+            "inEnglish", "In English (not shown)",
+            "abstractLabel", "Abstract",
+            "author", "Alexandre Zua Caldeira",
+            "venue", "ICE 2026 · International Workshop on Interaction and Concurrency Experience",
+            "abstract", "We prove that the state space of every well-formed session type, quotiented by strongly"
+                    + " connected components, forms a bounded lattice; n-ary parallel composition yields product"
+                    + " lattices. Two consequences follow: duality preserves the lattice up to isomorphism, and"
+                    + " Gay–Hole width subtyping corresponds to lattice embedding for non-recursive types. We"
+                    + " validate this on 108 benchmark protocols across networking, databases, distributed systems,"
+                    + " AI, and fault tolerance: all form lattices, 93 distributive, 15 non-distributive. Mechanised"
+                    + " in Lean 4 with two independently developed tool implementations.");
+
+    @ParameterizedTest(name = "{0}")
+    @ValueSource(strings = {"en", "de", "pt"})
+    @DisplayName("RS-PAPER-07 the seed answers the paper's card in every language, the paper's fields the same in each")
+    void answersTheSeededPaper(String lang) throws Exception {
+        HttpResponse<String> response = get("/api/content/research/paper?lang=" + lang);
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        Map<String, String> paper = JsonMapper.builder().build().readValue(response.body(),
+                new TypeReference<Map<String, String>>() {});
+        if (lang.equals("en")) {
+            assertThat(paper).isEqualTo(EN_PAPER);
+        }
+        assertThat(paper.keySet()).isEqualTo(EN_PAPER.keySet());
+        for (String same : List.of("author", "venue", "abstract")) {
+            assertThat(paper.get(same)).as(same).isEqualTo(EN_PAPER.get(same));
+        }
+        assertThat(paper.values()).allSatisfy(text -> assertThat(text).isNotBlank());
+    }
+
+    static Stream<Arguments> results() {
+        return Stream.of(
+                Arguments.of("en", "What it proves"),
+                Arguments.of("de", "Was es beweist"),
+                Arguments.of("pt", "O que prova"));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("results")
+    @DisplayName("RS-RES-01, 03, 04 the seed answers the results' heading in every language")
+    void answersTheSeededResults(String lang, String heading) throws Exception {
+        HttpResponse<String> response = get("/api/content/research/results?lang=" + lang);
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(JsonMapper.builder().build().readValue(response.body(),
+                new TypeReference<Map<String, String>>() {})).isEqualTo(Map.of("heading", heading));
     }
 
     private HttpResponse<String> get(String path) throws Exception {

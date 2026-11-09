@@ -35,3 +35,36 @@ INSERT INTO content_section (page, section, lang, body) VALUES
         'caption', '74 reticulados distintos, desenhados a partir de 104 dos 108 protocolos do artigo no nível R2′, uma construção mais fina do que a do artigo.',
         'key', 'Ocre: não distributivos, 47 dos 74.',
         'hint', 'Aponte para um mosaico para ver o seu protocolo.'));
+
+-- The paper's card (D2): its labels per language; author, venue and abstract written once, the same
+-- in every language (R2: the abstract in English everywhere). Title, year, PDF and read label are in
+-- shared/paper.
+SET @author = 'Alexandre Zua Caldeira';
+SET @venue = 'ICE 2026 · International Workshop on Interaction and Concurrency Experience';
+SET @abstract = 'We prove that the state space of every well-formed session type, quotiented by strongly connected components, forms a bounded lattice; n-ary parallel composition yields product lattices. Two consequences follow: duality preserves the lattice up to isomorphism, and Gay–Hole width subtyping corresponds to lattice embedding for non-recursive types. We validate this on 108 benchmark protocols across networking, databases, distributed systems, AI, and fault tolerance: all form lattices, 93 distributive, 15 non-distributive. Mechanised in Lean 4 with two independently developed tool implementations.';
+
+INSERT INTO content_section (page, section, lang, body) VALUES
+    ('research', 'paper', 'en', JSON_OBJECT(
+        'kind', 'Workshop paper',
+        'note', 'Camera-ready · to appear in EPTCS',
+        'inEnglish', 'In English (not shown)',
+        'abstractLabel', 'Abstract',
+        'author', @author, 'venue', @venue, 'abstract', @abstract)),
+    ('research', 'paper', 'de', JSON_OBJECT(
+        'kind', 'Workshop-Paper',
+        'note', 'Druckfassung · erscheint in EPTCS',
+        'inEnglish', 'Auf Englisch',
+        'abstractLabel', 'Zusammenfassung',
+        'author', @author, 'venue', @venue, 'abstract', @abstract)),
+    ('research', 'paper', 'pt', JSON_OBJECT(
+        'kind', 'Artigo de workshop',
+        'note', 'Versão final · a publicar na EPTCS',
+        'inEnglish', 'Em inglês',
+        'abstractLabel', 'Resumo',
+        'author', @author, 'venue', @venue, 'abstract', @abstract));
+
+-- What it proves: its heading; the statements are shared/paper's (D3).
+INSERT INTO content_section (page, section, lang, body) VALUES
+    ('research', 'results', 'en', JSON_OBJECT('heading', 'What it proves')),
+    ('research', 'results', 'de', JSON_OBJECT('heading', 'Was es beweist')),
+    ('research', 'results', 'pt', JSON_OBJECT('heading', 'O que prova'));
