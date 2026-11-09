@@ -688,6 +688,23 @@ test('RS-MORE-02: the profile opens in a new tab, and says so in the page langua
   );
 });
 
+test('RS-MORE-03: on de and pt the words around the links are translated, ResearchGate stays', () => {
+  const closing = (heading, earlier, lang) => ({
+    heading: [heading],
+    links: [
+      { label: earlier, href: `/${lang}/writing`, target: null },
+      { label: 'ResearchGate', href: RESEARCHGATE, target: '_blank' },
+    ],
+  });
+  assert.deepEqual(
+    { de: more(page('de/research')), pt: more(page('pt/research')) },
+    {
+      de: closing('Mehr Forschung', 'Frühere Paper (2007–2010)', 'de'),
+      pt: closing('Mais investigação', 'Artigos anteriores (2007–2010)', 'pt'),
+    },
+  );
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
