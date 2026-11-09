@@ -104,6 +104,22 @@ test('RS-PAGE-10: every link and the button on the Research page are at least 44
   }
 });
 
+for (const width of [390, 1280]) {
+  test(`RS-PAGE-11: on /de/research at ${width} px, Tab then Enter moves focus to the main content`, async () => {
+    const { context, page } = await open('/de/research', width);
+    try {
+      await page.keyboard.press('Tab');
+      const first = await page.evaluate(() => document.activeElement?.textContent?.trim());
+      assert.equal(first, 'Zum Hauptinhalt springen');
+      await page.keyboard.press('Enter');
+      await page.waitForFunction(() => document.activeElement?.id === 'main-content', null, { timeout: 5000 });
+      assert.equal(new URL(page.url()).pathname, '/de/research');
+    } finally {
+      await context.close();
+    }
+  });
+}
+
 test('BUG-RS-01 (RS-MORE-02): the new-tab words of the ResearchGate link are for screen readers, not on screen', async () => {
   const { context, page } = await open('/de/research', 1280);
   try {
