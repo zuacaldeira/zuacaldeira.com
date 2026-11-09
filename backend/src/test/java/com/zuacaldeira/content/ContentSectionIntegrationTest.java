@@ -124,6 +124,28 @@ class ContentSectionIntegrationTest {
         assertThat(json(response.body())).isEqualTo(json(DE_RESEARCH_HEAD));
     }
 
+    private static String researchPaper(String kind, String abstractLabel) {
+        return """
+                {"kind": "%s", "note": "Versão final · a publicar na EPTCS", "inEnglish": "Em inglês",
+                 "abstractLabel": "%s", "author": "Alexandre Zua Caldeira",
+                 "venue": "ICE 2026 · International Workshop on Interaction and Concurrency Experience",
+                 "abstract": "We prove that the state space of every well-formed session type … forms a bounded lattice."}\
+                """.formatted(kind, abstractLabel);
+    }
+
+    @Test
+    @DisplayName("RS-PAPER-06 answers the stored Portuguese card of the Research page as it is")
+    void answersTheStoredResearchPaper() throws Exception {
+        String ptPaper = researchPaper("Artigo de workshop", "Resumo");
+        store("research", "paper", "pt", ptPaper);
+        store("research", "paper", "en", researchPaper("Workshop paper", "Abstract"));
+
+        HttpResponse<String> response = get("/api/content/research/paper?lang=pt");
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(json(response.body())).isEqualTo(json(ptPaper));
+    }
+
     /** D11's shape, one text: nested objects, an array, a number and booleans, stored as they are. */
     private static String writingTexts(String read, String kind) {
         return """
