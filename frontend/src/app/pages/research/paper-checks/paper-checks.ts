@@ -10,6 +10,7 @@ import { I18nService } from '../../../services/i18n.service';
 @Component({
   selector: 'app-paper-checks',
   templateUrl: './paper-checks.html',
+  styleUrl: './paper-checks.css',
 })
 export class PaperChecks {
   private readonly lang = inject(I18nService).language();

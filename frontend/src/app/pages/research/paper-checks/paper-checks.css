@@ -1,0 +1,76 @@
+/* How it was checked (research-spec.md, "Components" and "Layout per width"): on the warm ground (no
+   rule: the ground changes from the band's); four figures, 2 × 2 on a phone and a tablet, in a row
+   from 900 px, each under a 3 px cobalt rule, the third (15, not distributive) under the wall's ochre
+   (D23: by its place, which RS-CHECK-01 holds). The meaning is in the words, not the colour. */
+.rs-checks {
+  padding-block: clamp(40px, 6vw, 80px);
+  background: var(--zc-bg-warm);
+}
+
+.rs-checks__in {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.rs-checks__heading {
+  margin: 0 0 var(--zc-space-6);
+  font-family: var(--zc-font-heading);
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  line-height: 1.12;
+  color: var(--zc-text-heading);
+}
+
+.rs-checks__figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--zc-space-6) var(--zc-space-8);
+  margin: 0 0 var(--zc-space-8);
+}
+
+.rs-checks__figure {
+  padding-top: var(--zc-space-3);
+  border-top: 3px solid var(--zc-azul);
+}
+
+.rs-checks__figure:nth-child(3) {
+  border-top-color: var(--zc-ochre);
+}
+
+.rs-checks__value {
+  font-family: var(--zc-font-mono);
+  font-weight: 500;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  color: var(--zc-text-heading);
+}
+
+.rs-checks__label {
+  margin: var(--zc-space-2) 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--zc-text-body);
+}
+
+.rs-checks__evidence,
+.rs-checks__rung {
+  margin: 0 0 var(--zc-space-4);
+  max-width: 65ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--zc-text-body);
+}
+
+@media (min-width: 900px) {
+  .rs-checks__figures {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 599.98px) {
+  .rs-checks__in {
+    padding-inline: 16px;
+  }
+}
