@@ -88,3 +88,14 @@ test('RS-PAGE-02: the browser tab names the Research page in its language', () =
     'Alexandre Zua Caldeira — Investigação',
   ]);
 });
+
+test('RS-PAGE-03: the German Research page links to its version in every language, English as default', () => {
+  const alternates = [...page('de/research').matchAll(/<link rel="alternate" hreflang="([^"]*)" href="([^"]*)">/g)]
+    .map(([, hreflang, href]) => `${hreflang} ${href}`);
+  assert.deepEqual(alternates, [
+    'en https://zuacaldeira.com/en/research',
+    'de https://zuacaldeira.com/de/research',
+    'pt https://zuacaldeira.com/pt/research',
+    'x-default https://zuacaldeira.com/en/research',
+  ]);
+});
