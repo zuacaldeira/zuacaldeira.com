@@ -46,9 +46,9 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-PAGE-03 | Search engines still learn that the three pages are one page in three languages. | the built `/de/research` | it is read | `<link rel="alternate">` for en, de, pt to `https://zuacaldeira.com/{en,de,pt}/research`, and `x-default` to `/en/research` | yes (build, 2026-11-09) |
 | RS-PAGE-04 | The header shows Research as the page you are on. | the built `/de/research` | the main navigation is read | its Forschung link goes to `/de/research` and carries `aria-current="page"`; no other link does | yes (build, 2026-11-09) |
 | RS-PAGE-05 | A missing German text stops the build instead of showing English. | no research content stored for de | the site is built | the build fails, naming page `research`, the section and `de`; nothing is deployed (as WR-PAGE-09) | yes (the snapshot script, 2026-11-09) |
-| RS-PAGE-06 | The page downloads only its own text and the paper's shared text. | the built site | the files `/en/research` loads at once are read | its own text and `shared/paper` are among them; none holds the home hero's sentence, the Software lead's title or the Writing intro (as WR-PAGE-10) | own text only (build and unit, 2026-11-09); `shared/paper` in slice 3 (D11) |
+| RS-PAGE-06 | The page downloads only its own text and the paper's shared text. | the built site | the files `/en/research` loads at once are read | its own text and `shared/paper` are among them; none holds the home hero's sentence, the Software lead's title or the Writing intro (as WR-PAGE-10) | yes (build and unit: own text 2026-11-09 in slice 1, `shared/paper` in slice 3, D18) |
 | RS-PAGE-07 | The old page is gone: no list of publications and no Material buttons. | the built `/en/research` | `<main>` is read | no heading "Publications", no title or abstract of the POPL, FOOL or ConGu papers, no `mat-card`, `mat-button` or `mat-stroked-button` | yes (build and unit, 2026-11-09) |
-| RS-PAGE-08 | "What's next" is not on the page while it has no text. | the built pages | `<main>` is read | no section headed "What's next", "Wie es weitergeht" or "O que vem a seguir", and the sections are, in order: head, paper, what it proves, how it was checked, the tool, more research (D1) | no What's next (build, 2026-11-09); the order grows with slices 2 to 4 |
+| RS-PAGE-08 | "What's next" is not on the page while it has no text. | the built pages | `<main>` is read | no section headed "What's next", "Wie es weitergeht" or "O que vem a seguir", and the sections are, in order: head, paper, what it proves, how it was checked, the tool, more research (D1) | no What's next (build, 2026-11-09); the order head, paper, results (build and unit, slice 3); the rest in slice 4 |
 | RS-PAGE-P-01 | A Research page in only one or two languages is refused. | the build | a language's research page is missing | RS-PAGE-01 goes red, naming the language | yes (break in the build) |
 | RS-PAGE-P-02 | An old publication put back on the page is refused. | the built `/en/research` | the POPL title is put in `<main>` | RS-PAGE-07 goes red | yes (red on the old build, and a break in the new one) |
 
@@ -77,7 +77,7 @@ protocol counts, and every place that shows them says so.
 | RS-WALL-04 | Each tile carries the name of its protocol, as published, in every language. | the built `/en/research` and `/pt/research` | the tiles are read | tile 1 has `data-name="GoF Facade"`, the last `data-name="Raft Leader Election"`; the 74 names are identical on the three pages | yes (build, 2026-11-09) |
 | RS-WALL-05 | Under the figures, one sentence tells the paper's count from the wall's. | the built `/en/research` | the checks section is read | after the evidence sentence, `checked.rung` en: "The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, …"; de and pt the same in their language | |
 | RS-WALL-06 | Every R2′ number on the page agrees with the data, in every language. | `lattices.json` and the stored `wall` and `checked.rung` in en, de, pt | the numbers are computed from the data and read from the texts | 74 classes, 47 not distributive, 104 protocols (four excluded from 108), 50 in a non-distributive class; each stored text holds exactly these numbers (D9) | label and caption (build and integration, 2026-11-09); the rung note's 50 in slice 4 (D16) |
-| RS-WALL-07 | The caption says in words, in ochre, which tiles are not distributive. (Added 2026-11-09, D17.) | the built `/de/research`; `research/wall` in the seed | the caption is read | the `<figcaption>` holds `wall.caption` de, then `wall.key` de "Ocker: nicht distributiv, 47 der 74." in its own `<span class="rs-wall__key">`; the seed has `key` in en, de and pt, none empty, and no caption ends with its key | |
+| RS-WALL-07 | The caption says in words, in ochre, which tiles are not distributive. (Added 2026-11-09, D17.) | the built `/de/research`; `research/wall` in the seed | the caption is read | the `<figcaption>` holds `wall.caption` de, then `wall.key` de "Ocker: nicht distributiv, 47 der 74." in its own `<span class="rs-wall__key">`; the seed has `key` in en, de and pt, none empty, and no caption ends with its key | yes (build, unit and integration, 2026-11-09) |
 | RS-WALL-P-01 | Wall numbers shown without their rung are refused. | the built `/de/research` | "R2′" is taken out of the caption | RS-WALL-02 goes red | yes (break in the build) |
 | RS-WALL-P-02 | A hand-edited wall is refused. | the checked-in wall file | one tile is removed | RS-WALL-03 and RS-WALL-01 go red | yes (break in the checked-in file and in the build) |
 | RS-WALL-P-03 | A wall count that no longer matches the data is refused. | the stored `wall.caption` de | "47" is changed to "15" | RS-WALL-06 goes red | yes (break in the build) |
@@ -86,29 +86,29 @@ protocol counts, and every place that shows them says so.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-PAPER-01 | The paper comes first, with its year, kind, title, author, venue and status. | the built `/en/research` | the section after the head is read | "2026 · Workshop paper", `<h2>` "Session Type State Spaces Form Lattices", "Alexandre Zua Caldeira" in `<b>`, "ICE 2026 · International Workshop on Interaction and Concurrency Experience", "Camera-ready · to appear in EPTCS" | |
-| RS-PAPER-02 | One button opens the paper as a PDF from this site. | any language | the section's links are read | exactly one link, labelled `shared/paper.read` ("Paper lesen (PDF)" on `/de/research`), to `/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf` from the site root, same tab, `hreflang="en"`, `type="application/pdf"`; the file is in the build | |
-| RS-PAPER-03 | The abstract is shown word for word, under its label. | the built `/en/research` | the abstract is read | a label "Abstract", then a `<blockquote>` with the abstract of the spec, word for word | |
-| RS-PAPER-04 | German and Portuguese readers get the abstract in English, and are told so. | `/de/research`, `/pt/research` | the abstract is read | label "Zusammenfassung" / "Resumo", the line "Auf Englisch" / "Em inglês", the abstract identical to `/en/research`'s with `lang="en"` and `translate="no"`; `/en/research` shows no such line (R2) | |
-| RS-PAPER-05 | Title, name and venue stay as published on every page. | `/de/research`, `/pt/research` | the card is read | title, author and venue identical to `/en/research`; each `translate="no"`; the title `lang="en"` | |
-| RS-PAPER-06 | When the site asks for the Portuguese card, it gets its labels and the paper's fields as stored. | `research/paper` stored for pt | `GET /api/content/research/paper?lang=pt` | 200 with the stored JSON as it is (D2's shape) | |
-| RS-PAPER-07 | A fresh database gives the card in every language, the paper's fields the same in each. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/research/paper?lang=en`, `de`, `pt` | 200; author, venue and abstract identical in the three; every label non-empty | |
-| RS-PAPER-P-01 | A translated abstract is refused. | the built `/de/research` | the abstract's first sentence is put in German | RS-PAPER-04 goes red | |
-| RS-PAPER-P-02 | The PDF opening in a new tab is refused. | the built `/de/research` | `target="_blank"` is put on the button | RS-PAPER-02 goes red | |
+| RS-PAPER-01 | The paper comes first, with its year, kind, title, author, venue and status. | the built `/en/research` | the section after the head is read | "2026 · Workshop paper", `<h2>` "Session Type State Spaces Form Lattices", "Alexandre Zua Caldeira" in `<b>`, "ICE 2026 · International Workshop on Interaction and Concurrency Experience", "Camera-ready · to appear in EPTCS" | yes (build and unit, 2026-11-09) |
+| RS-PAPER-02 | One button opens the paper as a PDF from this site. | any language | the section's links are read | exactly one link, labelled `shared/paper.read` ("Paper lesen (PDF)" on `/de/research`), to `/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf` from the site root, same tab, `hreflang="en"`, `type="application/pdf"`; the file is in the build | yes (build and unit, 2026-11-09) |
+| RS-PAPER-03 | The abstract is shown word for word, under its label. | the built `/en/research` | the abstract is read | a label "Abstract", then a `<blockquote>` with the abstract of the spec, word for word | yes (build and unit, 2026-11-09) |
+| RS-PAPER-04 | German and Portuguese readers get the abstract in English, and are told so. | `/de/research`, `/pt/research` | the abstract is read | label "Zusammenfassung" / "Resumo", the line "Auf Englisch" / "Em inglês", the abstract identical to `/en/research`'s with `lang="en"` and `translate="no"`; `/en/research` shows no such line (R2) | yes (build and unit, 2026-11-09) |
+| RS-PAPER-05 | Title, name and venue stay as published on every page. | `/de/research`, `/pt/research` | the card is read | title, author and venue identical to `/en/research`; each `translate="no"`; the title `lang="en"` | yes (build and unit, 2026-11-09) |
+| RS-PAPER-06 | When the site asks for the Portuguese card, it gets its labels and the paper's fields as stored. | `research/paper` stored for pt | `GET /api/content/research/paper?lang=pt` | 200 with the stored JSON as it is (D2's shape) | yes (integration, 2026-11-09) |
+| RS-PAPER-07 | A fresh database gives the card in every language, the paper's fields the same in each. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/research/paper?lang=en`, `de`, `pt` | 200; author, venue and abstract identical in the three; every label non-empty | yes (integration, 2026-11-09) |
+| RS-PAPER-P-01 | A translated abstract is refused. | the built `/de/research` | the abstract's first sentence is put in German | RS-PAPER-04 goes red | yes (break in the build) |
+| RS-PAPER-P-02 | The PDF opening in a new tab is refused. | the built `/de/research` | `target="_blank"` is put on the button | RS-PAPER-02 goes red | yes (break in the build) |
 
 ## 5. What it proves
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-RES-01 | The results open with the theorem, in large type. | the built `/en/research` | the section after the paper is read | `<h2>` "What it proves"; first statement labelled "Theorem 15 · Reticulate Theorem", text "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice." | |
-| RS-RES-02 | The three other results follow, all open, in a fixed order. | the same | the section is read | then "Definition 6 · SCC quotient", "Lemma 8 · End", "Proposition 18 · Duality isomorphism", each with its text from the spec; none inside a `<details>` (R3) | |
-| RS-RES-03 | On the German page, the labels are German and the statements are not translated. | the built `/de/research` | the section is read | `<h2>` "Was es beweist"; "Satz 15", "Definition 6", "Lemma 8", "Proposition 18"; the names and the four texts identical to `/en/research`, each text `translate="no"` and `lang="en"` | |
-| RS-RES-04 | The Portuguese page does the same in Portuguese. | the built `/pt/research` | the section is read | "O que prova"; "Teorema 15", "Definição 6", "Lema 8", "Proposição 18"; the rest as RS-RES-03 | |
-| RS-RES-05 | The stored paper holds all four statements, the same in every language. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/shared/paper?lang=en`, `de`, `pt` | `statements` holds the four of the spec, in its order, identical in the three (HOME-PAPER-09 in full; D3 replaces D31 in `software.md`) | |
-| RS-RES-06 | The Software page's band still shows only the theorem. | the built `/de/software` | the band is read | it shows "Satz 15 · Reticulate Theorem" and its text, and no Definition, Lemma or Proposition (SW-PROOF-01 with four statements stored) | |
-| RS-RES-P-01 | A translated statement is refused. | the built `/de/research` | Lemma 8's text is put in German | RS-RES-03 goes red | |
-| RS-RES-P-03 | A Software band that shows more than the theorem is refused. (Added from slice 3's G, 2026-11-09.) | the built `/de/software`, four statements stored | Definition 6 is put on the band | RS-RES-06 goes red | |
-| RS-RES-P-02 | Results folded away are refused. | the built `/en/research` | the three are put inside a `<details>` | RS-RES-02 goes red | |
+| RS-RES-01 | The results open with the theorem, in large type. | the built `/en/research` | the section after the paper is read | `<h2>` "What it proves"; first statement labelled "Theorem 15 · Reticulate Theorem", text "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice." | yes (build, unit and integration, 2026-11-09) |
+| RS-RES-02 | The three other results follow, all open, in a fixed order. | the same | the section is read | then "Definition 6 · SCC quotient", "Lemma 8 · End", "Proposition 18 · Duality isomorphism", each with its text from the spec; none inside a `<details>` (R3) | yes (build and unit, 2026-11-09) |
+| RS-RES-03 | On the German page, the labels are German and the statements are not translated. | the built `/de/research` | the section is read | `<h2>` "Was es beweist"; "Satz 15", "Definition 6", "Lemma 8", "Proposition 18"; the names and the four texts identical to `/en/research`, each text `translate="no"` and `lang="en"` | yes (build, unit and integration, 2026-11-09) |
+| RS-RES-04 | The Portuguese page does the same in Portuguese. | the built `/pt/research` | the section is read | "O que prova"; "Teorema 15", "Definição 6", "Lema 8", "Proposição 18"; the rest as RS-RES-03 | yes (build and integration, 2026-11-09) |
+| RS-RES-05 | The stored paper holds all four statements, the same in every language. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/shared/paper?lang=en`, `de`, `pt` | `statements` holds the four of the spec, in its order, identical in the three (HOME-PAPER-09 in full; D3 replaces D31 in `software.md`) | yes (integration, 2026-11-09) |
+| RS-RES-06 | The Software page's band still shows only the theorem. | the built `/de/software` | the band is read | it shows "Satz 15 · Reticulate Theorem" and its text, and no Definition, Lemma or Proposition (SW-PROOF-01 with four statements stored) | yes (build, 2026-11-09) |
+| RS-RES-P-01 | A translated statement is refused. | the built `/de/research` | Lemma 8's text is put in German | RS-RES-03 goes red | yes (break in the build) |
+| RS-RES-P-03 | A Software band that shows more than the theorem is refused. (Added from slice 3's G, 2026-11-09.) | the built `/de/software`, four statements stored | Definition 6 is put on the band | RS-RES-06 goes red | yes (break in the build) |
+| RS-RES-P-02 | Results folded away are refused. | the built `/en/research` | the three are put inside a `<details>` | RS-RES-02 goes red | yes (break in the build) |
 
 ## 6. How it was checked
 
@@ -150,10 +150,10 @@ protocol counts, and every place that shows them says so.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-COLOR-01 | "What it proves" stands on the theorem band, as on Home and Software. | `/en/research` in the browser, light and dark | the results section is measured | its background is `--zc-band-bg` (the accent in light, the raised glaze in dark) and its texts `--zc-band-fg` | |
+| RS-COLOR-01 | "What it proves" stands on the theorem band, as on Home and Software. | `/en/research` in the browser, light and dark | the results section is measured | its background is `--zc-band-bg` (the accent in light, the raised glaze in dark) and its texts `--zc-band-fg` | yes (browser, light and dark, 2026-11-09) |
 | RS-COLOR-02 | "The tool" stands on the raised glaze. | the same | the tool section is measured | its background is `--zc-bg-light` | |
 | RS-COLOR-03 | The "not distributive" figure carries the wall's ochre; the others carry cobalt. | the same | the four figures' top rules are measured | 15's is `--zc-ochre`; 108's, 93's and Lean 4's are `--zc-azul` | |
-| RS-COLOR-04 | The lattices and the band's text are easy to see in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the wall's lines and the band's texts are measured | every lattice line at 3:1 or more against its ground (the mock-up's lowest: 3.2 light, 3.38 dark); every band text at 4.5:1 or more | |
+| RS-COLOR-04 | The lattices and the band's text are easy to see in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the wall's lines and the band's texts are measured | every lattice line at 3:1 or more against its ground (the mock-up's lowest: 3.2 light, 3.38 dark); every band text at 4.5:1 or more | the band's texts, `/en/research` light and dark (browser, 2026-11-09, D19); the lattice lines and `/de/research` in slice 4 |
 
 ## 11. Motion
 
@@ -698,6 +698,54 @@ Software ↾ = Build?prerender(band(thm15)) . end
 | forbidden: the Software band with more than `thm15` | `band(thm15)` | RS-RES-P-03 |
 
 The page is read-only: no repeat, stale-token or race rows.
+
+**Done 2026-11-09.** Red first, each for its own reason:
+- K-A on slice 2's build: the key `[]`, still inside the caption.
+- K-B: no `key`, the captions still ending with it, in en, de and pt.
+- K-U: no key span.
+- A1, A2 on slice 2's build: no section after the head.
+- B1: `statements` held Theorem 15 alone.
+- B2: `expected: 200 but was: 404` for the card and the results, in en, de and pt.
+- S1: "Missing expected rejection".
+- U1 to U4: nothing rendered by the empty `PaperCard` and `PaperResults` shells (each an assertion,
+  not a missing class).
+- U5: the page held the head alone, and `/de/research` had no paper title (no shared text on the
+  route).
+
+K-U turned RS-WALL-02's unit expectation red, as it should: the figcaption now reads caption then key.
+Green at first and shown to bite, each break restored from a copy (md5 checked):
+- B3: the service answering the English row.
+- A3 / RS-PAPER-P-02: `target="_blank"` on the German button.
+- A2 / RS-RES-P-02: the three inside a `<details>`.
+- A4 / RS-PAPER-P-01: the abstract's first sentence in German.
+- A5: the venue translated on pt.
+- A6 / RS-RES-P-01: Lemma 8's text in German.
+- A7 / RS-RES-P-03: Definition 6 put on the Software band.
+- A8: the shared sentence changed in its chunk.
+- K-A: the key's span without its class.
+- W1: the results' ground set to `--zc-bg-warm`, broken in the page's `<style>` and the Research
+  chunk both, as slice 2 taught.
+
+Results:
+- Unit: 275 passed, 5 skipped (44 files).
+- Scripts: 17/17.
+- `acceptance`: 96/96.
+- `acceptance:nginx`: 13/13.
+- Browser, one file at a time: `research-band.test.mjs` 2/2, `research-wall.test.mjs` 4/4,
+  `software-band.test.mjs` 2/2.
+- Backend `./mvnw verify` once: 55 tests.
+- The build prerenders 26 routes. The Research chunk is 263 kB (21.7 kB to transfer). The initial
+  bundle grew to 512.57 kB (from 510.68), as `shared.json` now serves two routes; SW-PAGE-14 still
+  holds every page to its own text.
+
+Leftovers, not built:
+- **For the developer's review on the preview** (Q4): the card's labels and the results' heading in
+  de and pt ("Workshop-Paper", "Druckfassung · erscheint in EPTCS", "Zusammenfassung", "Was es
+  beweist"; "Artigo de workshop", "Versão final · a publicar na EPTCS", "Resumo", "O que prova"), and
+  the key's words.
+- **The English `inEnglish`** is stored as the spec has it, "In English (not shown)", and never
+  shown; it could go, but D2's shape keeps every language's card the same.
+- **The intro's line height at 1440** (slice 2's leftover) is unchanged.
 
 ## Decisions
 

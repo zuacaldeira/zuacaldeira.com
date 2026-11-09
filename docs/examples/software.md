@@ -836,7 +836,8 @@ Decided by the developer on 2026-11-08, for slice 6:
   `shared.json`, read by the Software route now and by the home route when the home band is built.
   HOME-PAPER-09's address changed from `home/paper` to `shared/paper` (noted in `home.md`). The
   Software page's own line, "Why the protocols hold", is in `software/proof`.
-- **D31. `statements` holds Theorem 15 alone for now.** The home band adds Definition 6, Lemma 8 and
+- **D31. `statements` holds Theorem 15 alone for now.** (Replaced on 2026-11-09 by D3 and D20 in
+  `research.md`: it holds all four; the band still shows the theorem alone, RS-RES-06.) The home band adds Definition 6, Lemma 8 and
   Proposition 18 from the paper when it is built; their texts are not invented here.
 
 Taken in slice 5's plan on 2026-11-08, following the spec and D5 (the developer may change them):

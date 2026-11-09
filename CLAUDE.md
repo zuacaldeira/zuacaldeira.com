@@ -47,7 +47,8 @@ URL. Specs never read the fetched files: they use `provideTestContent()` from
   (table `content_section`, one JSON object per page, section and language) come from the content
   API through the build's snapshot; the rest still lives in `ContentService` and the i18n files.
   The Research page is being rebuilt in slices (`docs/examples/research.md`): so far its head and
-  the wall. The wall's template is generated from `scripts/lattice-wall/lattices.json` by
+  the wall, the paper card and its four statements on the theorem band (the statements are
+  `shared/paper`'s, which the Research route provides too). The wall's template is generated from `scripts/lattice-wall/lattices.json` by
   `render.py`, beside the hero's (never hand-edit either; `scripts/research-wall.test.mjs` holds
   both). `html.motion` is set by `index.html`'s head script unless reduced motion is asked for
   (D13 there): only under it may a drawing wait hidden
@@ -176,7 +177,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 42 test files, 273 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-09) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 44 test files, 280 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-09) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
