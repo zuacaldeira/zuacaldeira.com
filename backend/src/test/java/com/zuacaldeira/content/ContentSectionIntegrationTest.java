@@ -107,6 +107,23 @@ class ContentSectionIntegrationTest {
         assertMissing(get("/api/content/writing/nope?lang=en"));
     }
 
+    private static final String DE_RESEARCH_HEAD = """
+            {"eyebrow": "Ein Paper · ICE 2026", "heading": "Forschung", "intro": "Der Zustandsraum jedes \
+            wohlgeformten Session-Typs bildet einen Verband. Diese Seite stellt das Paper vor, das es beweist: was \
+            es zeigt, wie es geprüft wurde und das Werkzeug dahinter."}""";
+
+    @Test
+    @DisplayName("RS-HEAD-04 answers the stored German head of the Research page as it is")
+    void answersTheStoredResearchHead() throws Exception {
+        store("research", "head", "de", DE_RESEARCH_HEAD);
+        store("research", "head", "en", DE_WRITING_HEAD);
+
+        HttpResponse<String> response = get("/api/content/research/head?lang=de");
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(json(response.body())).isEqualTo(json(DE_RESEARCH_HEAD));
+    }
+
     /** D11's shape, one text: nested objects, an array, a number and booleans, stored as they are. */
     private static String writingTexts(String read, String kind) {
         return """
