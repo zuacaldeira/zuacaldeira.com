@@ -105,7 +105,12 @@ const everything = () => {
     shared: { paper: all(paperIn) },
     software: { head: all(headIn), lead: all(leadIn), work: all(workIn), how: all(howIn), proof: all(proofIn) },
     writing: { head: all(headIn), texts: all(textsIn) },
-    research: { head: all(headIn), wall: all(wallIn) },
+    research: {
+      head: all(headIn),
+      wall: all(wallIn),
+      paper: all((lang) => ({ kind: `kind ${lang}`, abstract: 'We prove …' })),
+      results: all((lang) => ({ heading: `heading ${lang}` })),
+    },
   };
 };
 
@@ -172,6 +177,17 @@ test('RS-PAGE-05: the Research wall missing in pt stops the build, naming page, 
 
   await assert.rejects(fetchContent(api.url), {
     message: 'No content for page research, section wall, language pt (404)',
+  });
+});
+
+test('RS-PAGE-05: the Research paper card missing in de stops the build, naming page, section and language', async (t) => {
+  const stored = everything();
+  delete stored.research.paper.de;
+  const api = await fakeApi(stored);
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'No content for page research, section paper, language de (404)',
   });
 });
 
