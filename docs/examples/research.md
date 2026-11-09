@@ -2,8 +2,11 @@
 
 Status: **agreed with the developer on 2026-11-09:** the 71 cases, the four slices and D1 to D10
 below, as ui-design-peer proposed them (answers under "Decisions"). R1 to R8 (R4 replaced), Q1 to
-Q5 and the choice of option A are answered. Slices 1 to 3 are done and accepted (2026-11-09); slice
-4, the last, is being built.
+Q5 and the choice of option A are answered. **The page is done (2026-11-09):** slices 1 to 3 are
+accepted, slice 4 is built and waits for the developer's review on the preview. Every case is covered
+but RS-SHOT-02, which waits for the image (D10). Open, as the Writing page was: the route, the menu
+link, the current marker, the sitemap and nginx were there before slice 1 (D25). `next` is not merged
+into `main` until the whole site is built (D5).
 
 The Research page in three languages, at `/en/research`, `/de/research` and `/pt/research`: a landing
 page for the ICE 2026 paper (R1 b). Design: `docs/mockups/research/research-spec.md`, with the
@@ -48,7 +51,7 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-PAGE-05 | A missing German text stops the build instead of showing English. | no research content stored for de | the site is built | the build fails, naming page `research`, the section and `de`; nothing is deployed (as WR-PAGE-09) | yes (the snapshot script, 2026-11-09) |
 | RS-PAGE-06 | The page downloads only its own text and the paper's shared text. | the built site | the files `/en/research` loads at once are read | its own text and `shared/paper` are among them; none holds the home hero's sentence, the Software lead's title or the Writing intro (as WR-PAGE-10) | yes (build and unit: own text 2026-11-09 in slice 1, `shared/paper` in slice 3, D18) |
 | RS-PAGE-07 | The old page is gone: no list of publications and no Material buttons. | the built `/en/research` | `<main>` is read | no heading "Publications", no title or abstract of the POPL, FOOL or ConGu papers, no `mat-card`, `mat-button` or `mat-stroked-button` | yes (build and unit, 2026-11-09) |
-| RS-PAGE-08 | "What's next" is not on the page while it has no text. | the built pages | `<main>` is read | no section headed "What's next", "Wie es weitergeht" or "O que vem a seguir", and the sections are, in order: head, paper, what it proves, how it was checked, the tool, more research (D1) | no What's next (build, 2026-11-09); the order head, paper, results (build and unit, slice 3); the rest in slice 4 |
+| RS-PAGE-08 | "What's next" is not on the page while it has no text. | the built pages | `<main>` is read | no section headed "What's next", "Wie es weitergeht" or "O que vem a seguir", and the sections are, in order: head, paper, what it proves, how it was checked, the tool, more research (D1) | yes (build and unit, 2026-11-09: no What's next, and D1's order in full) |
 | RS-PAGE-P-01 | A Research page in only one or two languages is refused. | the build | a language's research page is missing | RS-PAGE-01 goes red, naming the language | yes (break in the build) |
 | RS-PAGE-P-02 | An old publication put back on the page is refused. | the built `/en/research` | the POPL title is put in `<main>` | RS-PAGE-07 goes red | yes (red on the old build, and a break in the new one) |
 
@@ -75,8 +78,8 @@ protocol counts, and every place that shows them says so.
 | RS-WALL-02 | The panel says what it is, and which construction it draws, in the page's language. | the built `/de/research` | the wall's label and caption are read | the SVG's `aria-label` is `wall.label` de and the `<figcaption>` is `wall.caption` de; both name "R2′" and "74", the caption also "104", "108" and "47" | yes (build, unit and integration, 2026-11-09) |
 | RS-WALL-03 | The panel is the data, drawn: regenerating it gives the same file. | `lattices.json` and the checked-in wall file | `render.py` is run for the Research wall | its output equals the checked-in file byte for byte (D8) | yes (the script test, 2026-11-09; the hero's file held too) |
 | RS-WALL-04 | Each tile carries the name of its protocol, as published, in every language. | the built `/en/research` and `/pt/research` | the tiles are read | tile 1 has `data-name="GoF Facade"`, the last `data-name="Raft Leader Election"`; the 74 names are identical on the three pages | yes (build, 2026-11-09) |
-| RS-WALL-05 | Under the figures, one sentence tells the paper's count from the wall's. | the built `/en/research` | the checks section is read | after the evidence sentence, `checked.rung` en: "The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, …"; de and pt the same in their language | |
-| RS-WALL-06 | Every R2′ number on the page agrees with the data, in every language. | `lattices.json` and the stored `wall` and `checked.rung` in en, de, pt | the numbers are computed from the data and read from the texts | 74 classes, 47 not distributive, 104 protocols (four excluded from 108), 50 in a non-distributive class; each stored text holds exactly these numbers (D9) | label and caption (build and integration, 2026-11-09); the rung note's 50 in slice 4 (D16) |
+| RS-WALL-05 | Under the figures, one sentence tells the paper's count from the wall's. | the built `/en/research` | the checks section is read | after the evidence sentence, `checked.rung` en: "The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, …"; de and pt the same in their language | yes (build, unit and integration, 2026-11-09) |
+| RS-WALL-06 | Every R2′ number on the page agrees with the data, in every language. | `lattices.json` and the stored `wall` and `checked.rung` in en, de, pt | the numbers are computed from the data and read from the texts | 74 classes, 47 not distributive, 104 protocols (four excluded from 108), 50 in a non-distributive class; each stored text holds exactly these numbers (D9) | yes (build and integration: label and caption in slice 2, the rung note with 50 in slice 4, D16) |
 | RS-WALL-07 | The caption says in words, in ochre, which tiles are not distributive. (Added 2026-11-09, D17.) | the built `/de/research`; `research/wall` in the seed | the caption is read | the `<figcaption>` holds `wall.caption` de, then `wall.key` de "Ocker: nicht distributiv, 47 der 74." in its own `<span class="rs-wall__key">`; the seed has `key` in en, de and pt, none empty, and no caption ends with its key | yes (build, unit and integration, 2026-11-09) |
 | RS-WALL-P-01 | Wall numbers shown without their rung are refused. | the built `/de/research` | "R2′" is taken out of the caption | RS-WALL-02 goes red | yes (break in the build) |
 | RS-WALL-P-02 | A hand-edited wall is refused. | the checked-in wall file | one tile is removed | RS-WALL-03 and RS-WALL-01 go red | yes (break in the checked-in file and in the build) |
@@ -114,37 +117,37 @@ protocol counts, and every place that shows them says so.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-CHECK-01 | Four numbers say how the result was checked, each with its meaning in words. | the built `/en/research` | the section after the results is read | `<h2>` "How it was checked"; a `<dl>` of four: `108` "benchmark protocols, every one a lattice", `93` "distributive", `15` "not distributive", `Lean 4` "mechanised proof", in that order | |
-| RS-CHECK-02 | Under them, the sentence the bands use. | any language | the section is read | the paragraph after the `<dl>` is `shared/paper.evidence` in the page's language ("Geprüft an 108 …" on `/de/research`) | |
-| RS-CHECK-03 | On the German and Portuguese pages, the meanings are translated and the numbers are not. | `/de/research`, `/pt/research` | the figures are read | the labels of the spec's copy table in de and pt; the values `108`, `93`, `15`, `Lean 4` identical to `/en/research` | |
-| RS-CHECK-04 | A fresh database gives the figures in every language, the values the same in each. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/research/checked?lang=en`, `de`, `pt` | 200; four figures, values identical in the three, every label non-empty | |
-| RS-CHECK-P-01 | A changed number on one language's page is refused. | the built `/de/research` | `93` is changed to `94` | RS-CHECK-03 goes red | |
+| RS-CHECK-01 | Four numbers say how the result was checked, each with its meaning in words. | the built `/en/research` | the section after the results is read | `<h2>` "How it was checked"; a `<dl>` of four: `108` "benchmark protocols, every one a lattice", `93` "distributive", `15` "not distributive", `Lean 4` "mechanised proof", in that order | yes (build and unit, 2026-11-09) |
+| RS-CHECK-02 | Under them, the sentence the bands use. | any language | the section is read | the paragraph after the `<dl>` is `shared/paper.evidence` in the page's language ("Geprüft an 108 …" on `/de/research`) | yes (build and unit, 2026-11-09) |
+| RS-CHECK-03 | On the German and Portuguese pages, the meanings are translated and the numbers are not. | `/de/research`, `/pt/research` | the figures are read | the labels of the spec's copy table in de and pt; the values `108`, `93`, `15`, `Lean 4` identical to `/en/research` | yes (build and integration, 2026-11-09) |
+| RS-CHECK-04 | A fresh database gives the figures in every language, the values the same in each. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/research/checked?lang=en`, `de`, `pt` | 200; four figures, values identical in the three, every label non-empty | yes (integration, 2026-11-09) |
+| RS-CHECK-P-01 | A changed number on one language's page is refused. | the built `/de/research` | `93` is changed to `94` | RS-CHECK-03 goes red | yes (break in the build) |
 
 ## 7. The tool
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-TOOL-01 | The tool behind the paper is named and described. | the built `/en/research` | the section after the figures is read | `<h2>` "The tool"; kicker "Verification tool"; `<h3>` "reticulateP" (`translate="no"`); the Software page's reticulateP text; stack "Python" | |
-| RS-TOOL-02 | One link leads to the tool on the Software page, in the same language. | the built `/de/research` | the section's links are read | exactly one: "reticulateP auf der Software-Seite" → `/de/software`, same tab; no link to a repository (as SW-WORK-02) | |
-| RS-TOOL-03 | The tool's text says the same as on the Software page. | an empty MySQL with Flyway and the `seed` profile | `research/tool` and `software/work` are read in en, de and pt | `tool.text` equals the reticulateP row's `text` in each language (D6) | |
-| RS-TOOL-P-01 | A link to a private repository is refused. | the built page | a repository link is put on the tool | RS-TOOL-02 goes red | |
+| RS-TOOL-01 | The tool behind the paper is named and described. | the built `/en/research` | the section after the figures is read | `<h2>` "The tool"; kicker "Verification tool"; `<h3>` "reticulateP" (`translate="no"`); the Software page's reticulateP text; stack "Python" | yes (build, unit and integration, 2026-11-09) |
+| RS-TOOL-02 | One link leads to the tool on the Software page, in the same language. | the built `/de/research` | the section's links are read | exactly one: "reticulateP auf der Software-Seite" → `/de/software`, same tab; no link to a repository (as SW-WORK-02) | yes (build, unit and integration, 2026-11-09) |
+| RS-TOOL-03 | The tool's text says the same as on the Software page. | an empty MySQL with Flyway and the `seed` profile | `research/tool` and `software/work` are read in en, de and pt | `tool.text` equals the reticulateP row's `text` in each language (D6) | yes (integration, 2026-11-09; a drifted German word went red) |
+| RS-TOOL-P-01 | A link to a private repository is refused. | the built page | a repository link is put on the tool | RS-TOOL-02 goes red | yes (break in the build) |
 
 ## 8. More research
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-MORE-01 | The page ends with two links: earlier papers, and the research profile. | the built `/en/research` | the last section of `<main>` is read | heading "More research"; a list of two links in order: "Earlier papers (2007–2010)" → `/en/writing`, same tab; "ResearchGate" → `https://www.researchgate.net/profile/Alexandre-Caldeira` | |
-| RS-MORE-02 | The profile opens in a new tab, and says so in the page's language. | the built `/de/research` | the ResearchGate link is read | `target="_blank"`, `rel="noopener noreferrer"`, the `↗` with `aria-hidden="true"`, and a visually hidden " (öffnet in einem neuen Tab)" | |
-| RS-MORE-03 | The German and Portuguese pages translate the words around the links. | `/de/research`, `/pt/research` | the section is read | "Mehr Forschung", "Frühere Paper (2007–2010)" → `/de/writing`; "Mais investigação", "Artigos anteriores (2007–2010)" → `/pt/writing`; "ResearchGate" unchanged | |
-| RS-MORE-04 | No other profile links. | any language | the page is read | no ORCID, DBLP or Google Scholar link or text (Q3) | |
-| RS-MORE-P-02 | A profile link other than ResearchGate is refused. (Added from slice 4's G, 2026-11-09.) | the built `/en/research` | a Google Scholar link is put in the closing row | RS-MORE-04 goes red | |
-| RS-MORE-P-01 | An outside link that does not say it opens a new tab is refused. | the built `/de/research` | the hidden new-tab words are taken out of the ResearchGate link | RS-MORE-02 goes red | |
+| RS-MORE-01 | The page ends with two links: earlier papers, and the research profile. | the built `/en/research` | the last section of `<main>` is read | heading "More research"; a list of two links in order: "Earlier papers (2007–2010)" → `/en/writing`, same tab; "ResearchGate" → `https://www.researchgate.net/profile/Alexandre-Caldeira` | yes (build, unit and integration, 2026-11-09) |
+| RS-MORE-02 | The profile opens in a new tab, and says so in the page's language. | the built `/de/research` | the ResearchGate link is read | `target="_blank"`, `rel="noopener noreferrer"`, the `↗` with `aria-hidden="true"`, and a visually hidden " (öffnet in einem neuen Tab)" | yes (build, unit and browser, 2026-11-09; BUG-RS-01) |
+| RS-MORE-03 | The German and Portuguese pages translate the words around the links. | `/de/research`, `/pt/research` | the section is read | "Mehr Forschung", "Frühere Paper (2007–2010)" → `/de/writing`; "Mais investigação", "Artigos anteriores (2007–2010)" → `/pt/writing`; "ResearchGate" unchanged | yes (build, unit and integration, 2026-11-09) |
+| RS-MORE-04 | No other profile links. | any language | the page is read | no ORCID, DBLP or Google Scholar link or text (Q3) | yes (build, 2026-11-09) |
+| RS-MORE-P-02 | A profile link other than ResearchGate is refused. (Added from slice 4's G, 2026-11-09.) | the built `/en/research` | a Google Scholar link is put in the closing row | RS-MORE-04 goes red | yes (break in the build) |
+| RS-MORE-P-01 | An outside link that does not say it opens a new tab is refused. | the built `/de/research` | the hidden new-tab words are taken out of the ResearchGate link | RS-MORE-02 goes red | yes (break in the build) |
 
 ## 9. The BICA screenshot (later)
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-SHOT-01 | Until the screenshot exists, the tool section shows no empty frame. | the built pages, no BICA image in the repository | "The tool" is read | it holds the reticulateP row only: no frame, no placeholder text, no `<img>` (D10) | |
+| RS-SHOT-01 | Until the screenshot exists, the tool section shows no empty frame. | the built pages, no BICA image in the repository | "The tool" is read | it holds the reticulateP row only: no frame, no placeholder text, no `<img>` (D10) | yes (build and unit, 2026-11-09) |
 | RS-SHOT-02 | Once Zua sends it, the screenshot of the BICA plugin marking an out-of-order call sits beside reticulateP, described in the page's language. | the image and its alt text and caption in en, de, pt | "The tool" is read | a `<figure>` with the `<img>` (its width and height set, `alt` in the page's language) and its `<figcaption>`; waits for the image, built as its own change | waits for the image |
 
 ## 10. Colour
@@ -152,9 +155,9 @@ protocol counts, and every place that shows them says so.
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
 | RS-COLOR-01 | "What it proves" stands on the theorem band, as on Home and Software. | `/en/research` in the browser, light and dark | the results section is measured | its background is `--zc-band-bg` (the accent in light, the raised glaze in dark) and its texts `--zc-band-fg` | yes (browser, light and dark, 2026-11-09) |
-| RS-COLOR-02 | "The tool" stands on the raised glaze. | the same | the tool section is measured | its background is `--zc-bg-light` | |
-| RS-COLOR-03 | The "not distributive" figure carries the wall's ochre; the others carry cobalt. | the same | the four figures' top rules are measured | 15's is `--zc-ochre`; 108's, 93's and Lean 4's are `--zc-azul` | |
-| RS-COLOR-04 | The lattices and the band's text are easy to see in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the wall's lines and the band's texts are measured | every lattice line at 3:1 or more against its ground (the mock-up's lowest: 3.2 light, 3.38 dark); every band text at 4.5:1 or more | the band's texts, `/en/research` light and dark (browser, 2026-11-09, D19); the lattice lines and `/de/research` in slice 4 |
+| RS-COLOR-02 | "The tool" stands on the raised glaze. | the same | the tool section is measured | its background is `--zc-bg-light` | yes (browser, light and dark, 2026-11-09) |
+| RS-COLOR-03 | The "not distributive" figure carries the wall's ochre; the others carry cobalt. | the same | the four figures' top rules are measured | 15's is `--zc-ochre`; 108's, 93's and Lean 4's are `--zc-azul` | yes (browser, light and dark, 2026-11-09, D23) |
+| RS-COLOR-04 | The lattices and the band's text are easy to see in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the wall's lines and the band's texts are measured | every lattice line at 3:1 or more against its ground (the mock-up's lowest: 3.2 light, 3.38 dark); every band text at 4.5:1 or more | yes (browser, light and dark: the band on en in slice 3; the lattice tokens and de's band in slice 4, D24) |
 
 ## 11. Motion
 
@@ -172,10 +175,10 @@ protocol counts, and every place that shows them says so.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-PAGE-09 | The page fits a phone: nothing runs off the side. | a phone at 390 px, `/en/research`, `/de/research`, `/pt/research` | the page is measured | no horizontal scroll; no element in `<main>` ends right of 390 px | |
-| RS-PAGE-10 | Every link and the button are easy to tap. | the same | the links in `<main>` are measured | each is at least 44 px tall | |
-| RS-PAGE-11 | Keyboard users get to the content first. | `/de/research`, 390 and 1280 px | Tab, then Enter | the skip link goes to `<main>` on the same page (SHELL-10 on the new page) | |
-| RS-PAGE-12 | The page's text is easy to read in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the texts in `<main>` are measured | each at 4.5:1 or more against what is behind it (option A's mock-up lowest: 4.59 light, the ochre kicker on the raised glaze; 4.77 dark), with the shared contrast reader | |
+| RS-PAGE-09 | The page fits a phone: nothing runs off the side. | a phone at 390 px, `/en/research`, `/de/research`, `/pt/research` | the page is measured | no horizontal scroll; no element in `<main>` ends right of 390 px | yes (browser, en, de, pt, 2026-11-09) |
+| RS-PAGE-10 | Every link and the button are easy to tap. | the same | the links in `<main>` are measured | each is at least 44 px tall | yes (browser, en, de, pt, 2026-11-09) |
+| RS-PAGE-11 | Keyboard users get to the content first. | `/de/research`, 390 and 1280 px | Tab, then Enter | the skip link goes to `<main>` on the same page (SHELL-10 on the new page) | yes (browser, 390 and 1280, 2026-11-09) |
+| RS-PAGE-12 | The page's text is easy to read in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the texts in `<main>` are measured | each at 4.5:1 or more against what is behind it (option A's mock-up lowest: 4.59 light, the ochre kicker on the raised glaze; 4.77 dark), with the shared contrast reader | yes (browser, en and de, light and dark, 2026-11-09) |
 
 ## Diagram: the build (all slices)
 
@@ -857,6 +860,85 @@ The refactor R (D21), on the Software page: `G_pre` is its slice 2 G with "More 
 row itself; `G_post` draws each with `WorkRow`. `Visitor ↾` is identical (the same rows, texts, links
 and order); the Software specs and acceptance tests hold it, only their class selectors moving.
 
+**BUG-RS-01, found while styling slice 4:** on the closing row, the hidden "(opens in a new tab)"
+words showed on screen. `.visually-hidden` was defined only in the Writing rows' scoped styles, which
+reach nothing outside that component.
+
+```mermaid
+flowchart LR
+    T["research-more.html: span.visually-hidden"] --> S{"which rule applies?"}
+    S -->|"text-rows.css .visually-hidden, scoped to TextRows"| X["no match outside TextRows ✗ (the faulty step)"]
+    X --> V["the words show on screen, 172 × 20 px"]
+    S -.->|"after the fix: styles.css, the site's one rule"| H["hidden, 1 × 1 px, read by screen readers"]
+```
+
+**Done 2026-11-09.** The out-of-memory killer stopped the first attempt at this slice partway through
+(after `a70ff88`). The tree it left was looked at piece by piece:
+- The `WorkRow` extraction was kept as a refactor and shown green before and after: the Software
+  unit specs 17/17, `software.test.mjs` 25/25 on the build, `software-phone.test.mjs` 6/6. Its
+  `translate="no"` on the title came out, to come back test-first with the tool.
+- The checks' seed test, written but never run, was kept and run as C-B, in its turn.
+- A plan to run three seed tests at once was dropped: one red at a time.
+
+Red first, each for its own reason:
+- O1 on slice 3's build: no checks, tool or more sections.
+- S1: "Missing expected rejection".
+- C-A, T-A, M-A on the old build: the sections' fields all `[]`.
+- C-B, T-B, M-B: `expected: 200 but was: 404` in en, de, pt.
+- C-U, T-U, M-U: nothing rendered by the empty shells.
+- The page spec, at each step: one part short.
+- BUG-RS-01: 172 × 20 px.
+
+Green at first and shown to bite, each break restored from a copy (md5 checked):
+- RS-TOOL-03: one German word drifted from the Software row.
+- RS-CHECK-02, 03 / RS-CHECK-P-01: 93 changed to 94 on de.
+- RS-WALL-06's rung / RS-WALL-P-03: 50 changed to 15 on de.
+- RS-WALL-05: the English rung sentence on pt.
+- RS-TOOL-02 / RS-TOOL-P-01: a repository link.
+- RS-SHOT-01: a placeholder frame.
+- RS-MORE-02 / P-01: the hidden words removed.
+- RS-MORE-03: pt's earlier papers to `/en/writing`.
+- RS-MORE-04 / P-02: a Google Scholar link.
+- W1: the figures in four 200 px columns.
+- W2: the closing links' min-height removed.
+- W4: the meanings in `--zc-border-light`.
+- W5: the ochre rule on the second figure.
+- W6: `--zc-edge` paled.
+- W3: `<main>`'s id renamed in the shell's script.
+
+Styles were broken where the browser reads them: the page and the chunk (or the global stylesheet)
+together.
+
+Four breaks first missed their target and changed nothing; each was redone before it counted:
+- BUG-RS-01's revert left the linked global stylesheet in place.
+- RS-CHECK-P-01's matched the wrong attribute order.
+- W3's renamed the prerendered id, which the shell's script sets again.
+- W6's missed the token's space.
+
+Two of them had been committed with a bite claim before the run was read (BUG-RS-01, RS-CHECK-02,
+03), and both commits were amended before any push. From then on, no commit went out before its run
+had been read.
+
+Results, the whole set once:
+- Unit: 279 passed, 5 skipped (47 files).
+- Scripts: 18/18.
+- `acceptance`: 107/107.
+- `acceptance:nginx`: 13/13.
+- Backend `./mvnw verify`: 64 tests.
+- Browser, every file one at a time (`--test-concurrency=1`): 130/130.
+- The build prerenders 26 routes. The Research chunk is 272 kB (23.4 kB to transfer); the initial
+  bundle is unchanged at 512.57 kB.
+
+Twice another project's Maven or e2e run held the machine (the machine guard), and the run waited
+for it.
+
+Leftovers, not built:
+- **For the developer's review on the preview** (Q4): every drafted text of the page in de and pt,
+  and the English drafts (listed in the final message of this slice).
+- **RS-SHOT-02**, the BICA screenshot, waits for the image (D10).
+- **`tools/wait-load.sh`**, named in the developer's brief, is not in the repo; a scratch script did
+  the waiting.
+
 ## Decisions
 
 Answered by the developer on 2026-11-08:
@@ -1009,7 +1091,8 @@ Taken while planning slice 4 (2026-11-09, tdd-peer; the developer may change the
   row's styles or component, do not copy"). Its classes become `work-row__*`; only the Software
   specs' and acceptance tests' selectors move with them (as R in `writing.md`, D13). The row's title
   gets `translate="no"`, which the Software rows' names (never translated, SW-WORK-05) should have
-  had too.
+  had too. (Built apart: the refactor came first without it; the attribute came test-first with the
+  tool, RS-TOOL-01.)
 - **D22. The links keep the spec's shapes:** `tool.link` is `{label, href}` with the href stored per
   language (`/de/software`); "Earlier papers" has no stored href in `more`, so the page makes it with
   `pagePath(lang, 'writing')`. SHELL-04 holds both to the page's language.

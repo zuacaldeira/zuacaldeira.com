@@ -46,12 +46,14 @@ URL. Specs never read the fetched files: they use `provideTestContent()` from
 - **Content:** the home hero (table `home_hero`) and the Software, Writing and Research pages
   (table `content_section`, one JSON object per page, section and language) come from the content
   API through the build's snapshot; the rest still lives in `ContentService` and the i18n files.
-  The Research page is being rebuilt in slices (`docs/examples/research.md`): so far its head and
-  the wall, the paper card and its four statements on the theorem band (the statements are
-  `shared/paper`'s, which the Research route provides too). The wall's template is generated from `scripts/lattice-wall/lattices.json` by
+  The Research page (`docs/examples/research.md`) is done: the head with the wall, the paper card,
+  its four statements on the theorem band (`shared/paper`'s, which the Research route provides too),
+  how it was checked, the tool (the Software page's row, shared as `common/work-row/`), and more
+  research. The wall's template is generated from `scripts/lattice-wall/lattices.json` by
   `render.py`, beside the hero's (never hand-edit either; `scripts/research-wall.test.mjs` holds
   both). `html.motion` is set by `index.html`'s head script unless reduced motion is asked for
-  (D13 there): only under it may a drawing wait hidden
+  (D13 there): only under it may a drawing wait hidden. `.visually-hidden` is the site's one class
+  for screen-reader-only words, in `styles.css`; a component's scoped copy reaches nothing outside it
 
 ### Folder Layout
 
@@ -71,10 +73,10 @@ Routes defined in `src/app/app.routes.ts`. All lazy-loaded:
 - `/en/...`, `/de/...`, `/pt/...`: `home`, `about`, `software`, `research`, `writing`, `running`,
   `contact` under each language prefix. The prefix sets the language, `<html lang>` and the `hreflang`
   alternates. The menu is Software, Research, Writing, About (SHELL-11; `ContentService.navItems`,
-  the phone menu adds Contact): Home and Running are in no menu. `software` and `writing`
-  (`docs/examples/software.md`, `writing.md`) are in the sitemap (21 pages). The menus mark the page
-  you are on with `aria-current="page"` (D34). Both pages' heads are the shared `common/page-head/`
-  (D13 in `writing.md`).
+  the phone menu adds Contact): Home and Running are in no menu. `software`, `research` and `writing`
+  (`docs/examples/software.md`, `research.md`, `writing.md`) are in the sitemap (21 pages). The menus
+  mark the page you are on with `aria-current="page"` (D34). The three pages' heads are the shared
+  `common/page-head/` (D13 in `writing.md`; the Research head projects its wall, D15).
 - `/404` and `**`: the English 404 page; nginx serves its copy `404.html` with status 404
   (HOME-PAGE-06)
 - The old paths (`/home`, `/about`, `/research`, `/running`, `/contact`) answer `301` to their
@@ -177,7 +179,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 44 test files, 280 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-09) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 47 test files, 284 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-09) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
