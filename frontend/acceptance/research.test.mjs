@@ -230,6 +230,41 @@ test('RS-WALL-04: each tile carries its protocol’s name as published, the same
   );
 });
 
+// The wall's counts, computed from the data (D9; scripts/lattice-wall/README.md): classes and
+// protocols, never mixed. 108 is the paper's own corpus, of which the data covers 104.
+const COUNTS = {
+  classes: LATTICES.length,
+  notDistributive: LATTICES.filter((o) => !o.dist).length,
+  protocols: LATTICES.reduce((sum, o) => sum + o.count, 0),
+  protocolsNotDistributive: LATTICES.filter((o) => !o.dist).reduce((sum, o) => sum + o.count, 0),
+};
+const PAPER_PROTOCOLS = 108;
+// The numbers a reader sees in a text, in any order; "R2′" names the rung, it is no count.
+const numbersIn = (words) => (words ?? '').replaceAll('R2′', '').match(/\d+/g)?.map(Number).toSorted((a, b) => a - b) ?? [];
+
+test('RS-WALL-06 (D9, D16): every number in the wall’s label and caption is the data’s, in every language', () => {
+  assert.deepEqual(COUNTS, { classes: 74, notDistributive: 47, protocols: 104, protocolsNotDistributive: 50 });
+  const { classes, notDistributive, protocols } = COUNTS;
+  const sorted = (...numbers) => numbers.toSorted((a, b) => a - b);
+  assert.deepEqual(
+    Object.fromEntries(
+      LANGS.map((lang) => {
+        const { label, caption } = wallWords(page(`${lang}/research`));
+        return [lang, { label: numbersIn(label), caption: numbersIn(caption) }];
+      }),
+    ),
+    Object.fromEntries(
+      LANGS.map((lang) => [
+        lang,
+        {
+          label: sorted(classes, notDistributive),
+          caption: sorted(classes, protocols, PAPER_PROTOCOLS, notDistributive, classes),
+        },
+      ]),
+    ),
+  );
+});
+
 // The classes the head's inline scripts put on <html> before first paint, run as theme.test.mjs runs
 // them, on a device that does or does not ask for reduced motion.
 const htmlClassesAtFirstPaint = (html, { reducedMotion }) => {
