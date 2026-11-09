@@ -128,6 +128,9 @@ test('RS-PAGE-06 (D11): the Research page downloads its own text, and no other p
   // Its own text is there, so the files read are the ones that hold page text (ASCII sentences).
   const own = 'The state space of every well-formed session type forms a lattice.';
   assert.notDeepEqual(holding('en/research', own), []);
+  // D18: and the paper's shared text, which the card and the results read (shared/paper.evidence).
+  const shared = 'Checked on 108 benchmark protocols from networking, databases, distributed systems and AI.';
+  assert.notDeepEqual(holding('en/research', shared), [], 'the shared paper text is not loaded');
   assert.deepEqual(
     {
       home: holding('en/research', 'I build software, and prove its protocols hold.'),
