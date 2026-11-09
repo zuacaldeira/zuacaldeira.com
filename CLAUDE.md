@@ -23,8 +23,9 @@ Build output: `dist/zuacaldeira-com/browser/` (prerendered static HTML).
 **Content snapshot.** `npm run content` (`scripts/fetch-content.mjs`) asks the content API for
 every page, section and language and writes one file per page, `src/app/content/generated/<page>.json`
 (git-ignored). Each page's route file (`pages/home/home.routes.ts`, `pages/software/software.routes.ts`,
-`pages/writing/writing.routes.ts`) imports its own as `@page-content/<page>` and provides it
-(`HOME_CONTENT`, `SOFTWARE_CONTENT`, `WRITING_CONTENT`), so a
+`pages/writing/writing.routes.ts`, `pages/research/research.routes.ts`) imports its own as
+`@page-content/<page>` and provides it (`HOME_CONTENT`, `SOFTWARE_CONTENT`, `WRITING_CONTENT`,
+`RESEARCH_CONTENT`), so a
 page downloads only its own text (D20, D21 in `docs/examples/software.md`). Text several pages read
 is a page of its own, `shared` (`shared.json`, `@page-content/shared`, `SHARED_CONTENT`; today the
 paper's labels at `shared/paper`, read by the shared `common/theorem-band/`, D30), provided by each
@@ -42,9 +43,10 @@ URL. Specs never read the fetched files: they use `provideTestContent()` from
 - **Angular 21** with SSR prerendering (`@angular/ssr`), no runtime server — all routes prerendered to static HTML
 - **Standalone components** throughout (no NgModules)
 - **Lazy-loaded routes** via `loadComponent()` in `app.routes.ts`
-- **Content:** the home hero (table `home_hero`) and the Software page (table `content_section`,
-  one JSON object per page, section and language) come from the content API through the build's
-  snapshot; the rest still lives in `ContentService` and the i18n files
+- **Content:** the home hero (table `home_hero`) and the Software, Writing and Research pages
+  (table `content_section`, one JSON object per page, section and language) come from the content
+  API through the build's snapshot; the rest still lives in `ContentService` and the i18n files.
+  The Research page is being rebuilt in slices (`docs/examples/research.md`): so far its head only
 
 ### Folder Layout
 
@@ -170,7 +172,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 41 test files, 268 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-08) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 41 test files, 268 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-09) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 

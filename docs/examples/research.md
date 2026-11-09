@@ -40,27 +40,27 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-PAGE-01 | The Research page is the new page in all three languages. | the research content in en, de and pt | the site is built | `/en/research/index.html`, `/de/research/index.html`, `/pt/research/index.html` exist with `<html lang>` en, de, pt, and each has the shared page head (`app-page-head`) | |
-| RS-PAGE-02 | The browser tab names the page in its language. | the built pages | they are read | `<title>` is "Alexandre Zua Caldeira — Research", "— Forschung", "— Investigação" | |
-| RS-PAGE-03 | Search engines still learn that the three pages are one page in three languages. | the built `/de/research` | it is read | `<link rel="alternate">` for en, de, pt to `https://zuacaldeira.com/{en,de,pt}/research`, and `x-default` to `/en/research` | |
-| RS-PAGE-04 | The header shows Research as the page you are on. | the built `/de/research` | the main navigation is read | its Forschung link goes to `/de/research` and carries `aria-current="page"`; no other link does | |
-| RS-PAGE-05 | A missing German text stops the build instead of showing English. | no research content stored for de | the site is built | the build fails, naming page `research`, the section and `de`; nothing is deployed (as WR-PAGE-09) | |
-| RS-PAGE-06 | The page downloads only its own text and the paper's shared text. | the built site | the files `/en/research` loads at once are read | its own text and `shared/paper` are among them; none holds the home hero's sentence, the Software lead's title or the Writing intro (as WR-PAGE-10) | |
-| RS-PAGE-07 | The old page is gone: no list of publications and no Material buttons. | the built `/en/research` | `<main>` is read | no heading "Publications", no title or abstract of the POPL, FOOL or ConGu papers, no `mat-card`, `mat-button` or `mat-stroked-button` | |
-| RS-PAGE-08 | "What's next" is not on the page while it has no text. | the built pages | `<main>` is read | no section headed "What's next", "Wie es weitergeht" or "O que vem a seguir", and the sections are, in order: head, paper, what it proves, how it was checked, the tool, more research (D1) | |
-| RS-PAGE-P-01 | A Research page in only one or two languages is refused. | the build | a language's research page is missing | RS-PAGE-01 goes red, naming the language | |
-| RS-PAGE-P-02 | An old publication put back on the page is refused. | the built `/en/research` | the POPL title is put in `<main>` | RS-PAGE-07 goes red | |
+| RS-PAGE-01 | The Research page is the new page in all three languages. | the research content in en, de and pt | the site is built | `/en/research/index.html`, `/de/research/index.html`, `/pt/research/index.html` exist with `<html lang>` en, de, pt, and each has the shared page head (`app-page-head`) | yes (build and unit, 2026-11-09) |
+| RS-PAGE-02 | The browser tab names the page in its language. | the built pages | they are read | `<title>` is "Alexandre Zua Caldeira — Research", "— Forschung", "— Investigação" | yes (build and unit, 2026-11-09) |
+| RS-PAGE-03 | Search engines still learn that the three pages are one page in three languages. | the built `/de/research` | it is read | `<link rel="alternate">` for en, de, pt to `https://zuacaldeira.com/{en,de,pt}/research`, and `x-default` to `/en/research` | yes (build, 2026-11-09) |
+| RS-PAGE-04 | The header shows Research as the page you are on. | the built `/de/research` | the main navigation is read | its Forschung link goes to `/de/research` and carries `aria-current="page"`; no other link does | yes (build, 2026-11-09) |
+| RS-PAGE-05 | A missing German text stops the build instead of showing English. | no research content stored for de | the site is built | the build fails, naming page `research`, the section and `de`; nothing is deployed (as WR-PAGE-09) | yes (the snapshot script, 2026-11-09) |
+| RS-PAGE-06 | The page downloads only its own text and the paper's shared text. | the built site | the files `/en/research` loads at once are read | its own text and `shared/paper` are among them; none holds the home hero's sentence, the Software lead's title or the Writing intro (as WR-PAGE-10) | own text only (build and unit, 2026-11-09); `shared/paper` in slice 3 (D11) |
+| RS-PAGE-07 | The old page is gone: no list of publications and no Material buttons. | the built `/en/research` | `<main>` is read | no heading "Publications", no title or abstract of the POPL, FOOL or ConGu papers, no `mat-card`, `mat-button` or `mat-stroked-button` | yes (build and unit, 2026-11-09) |
+| RS-PAGE-08 | "What's next" is not on the page while it has no text. | the built pages | `<main>` is read | no section headed "What's next", "Wie es weitergeht" or "O que vem a seguir", and the sections are, in order: head, paper, what it proves, how it was checked, the tool, more research (D1) | no What's next (build, 2026-11-09); the order grows with slices 2 to 4 |
+| RS-PAGE-P-01 | A Research page in only one or two languages is refused. | the build | a language's research page is missing | RS-PAGE-01 goes red, naming the language | yes (break in the build) |
+| RS-PAGE-P-02 | An old publication put back on the page is refused. | the built `/en/research` | the POPL title is put in `<main>` | RS-PAGE-07 goes red | yes (red on the old build, and a break in the new one) |
 
 ## 2. Head
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-HEAD-01 | The page opens with its name and one sentence about the paper. | the built `/en/research` | the head is read | eyebrow "One paper · ICE 2026", `<h1>` "Research", `head.intro` en; the page has exactly one `<h1>` | |
-| RS-HEAD-02 | The German page reads in German. | the built `/de/research` | the head is read | "Ein Paper · ICE 2026", "Forschung", `head.intro` de | |
-| RS-HEAD-03 | The Portuguese page reads in Portuguese. | the built `/pt/research` | the head is read | "Um artigo · ICE 2026", "Investigação", `head.intro` pt | |
-| RS-HEAD-04 | When the site asks for the German head, it gets its three texts exactly as stored. | `research/head` stored for de | `GET /api/content/research/head?lang=de` | 200 with `{"eyebrow": "Ein Paper · ICE 2026", "heading": "Forschung", "intro": "Der Zustandsraum …"}` as stored | |
-| RS-HEAD-05 | A fresh database, filled with the starting texts, gives the head in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/research/head?lang=en`, `de`, `pt` | 200 with the spec's copy, each field non-empty | |
-| RS-HEAD-P-01 | English text on the German page's head is refused. | the built `/de/research` | the English intro is put in | RS-HEAD-02 goes red | |
+| RS-HEAD-01 | The page opens with its name and one sentence about the paper. | the built `/en/research` | the head is read | eyebrow "One paper · ICE 2026", `<h1>` "Research", `head.intro` en; the page has exactly one `<h1>` | yes (build, 2026-11-09) |
+| RS-HEAD-02 | The German page reads in German. | the built `/de/research` | the head is read | "Ein Paper · ICE 2026", "Forschung", `head.intro` de | yes (build and unit, 2026-11-09) |
+| RS-HEAD-03 | The Portuguese page reads in Portuguese. | the built `/pt/research` | the head is read | "Um artigo · ICE 2026", "Investigação", `head.intro` pt | yes (build, 2026-11-09) |
+| RS-HEAD-04 | When the site asks for the German head, it gets its three texts exactly as stored. | `research/head` stored for de | `GET /api/content/research/head?lang=de` | 200 with `{"eyebrow": "Ein Paper · ICE 2026", "heading": "Forschung", "intro": "Der Zustandsraum …"}` as stored | yes (integration, 2026-11-09) |
+| RS-HEAD-05 | A fresh database, filled with the starting texts, gives the head in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/research/head?lang=en`, `de`, `pt` | 200 with the spec's copy, each field non-empty | yes (integration, 2026-11-09) |
+| RS-HEAD-P-01 | English text on the German page's head is refused. | the built `/de/research` | the English intro is put in | RS-HEAD-02 goes red | yes (break in the build) |
 
 ## 3. The wall
 
@@ -355,6 +355,35 @@ API ↾     = Build?get . Build!{ ok200 . end , missing404 . end }
 
 The build is read-only: no repeat, stale-token or race rows. The old page is not a refactor: what
 the visitor sees changes, so there is no `G_pre`/`G_post` claim; A2 and RS-PAGE-P-02 hold the change.
+
+**Done 2026-11-09.** Red first, each for its own reason: A1 on the old build, eyebrow and intro `[]`;
+A2 on the old build, the three old headings, the POPL, FOOL and ConGu titles and abstracts and the
+Material tags in en, de and pt; B1 `expected: 200 but was: 404` in en, de, pt; S1 "Missing expected
+rejection"; U1 `expected [] to deeply equal [ 'research eyebrow de' ]`; U2 `expected '' to be
+'Alexandre Zua Caldeira — research heading pt'`; U3 `NullInjectorError`. A9 was red once from a bug
+in the test (it read `<main>` twice), fixed in the test. Green at first and shown to bite, each
+break in the built page restored from a copy (md5 checked): B2 (the service answering the English
+row for every language), A3 (`pt` moved out: RS-PAGE-P-01), A4 (the German title "— Research"), A5
+(the `pt` alternate to `/pt/home`), A6 (Texte marked current too), A7 (a second `<h1>` on en; the
+German first sentence on pt), A8 (the home hero's sentence in the Research chunk), A9 (a "Wie es
+weitergeht" section on de); A1's RS-HEAD-P-01 (the English intro on de) and A2's RS-PAGE-P-02 (the
+POPL title in en's `<main>`) on the new build too. The cleanup (D7, D12) was held by the compiler
+and the suite.
+
+Results: unit 263 passed, 5 skipped (41 files); scripts 13/13; `acceptance` 82/82;
+`acceptance:nginx` 13/13; backend `./mvnw verify` once, 45 tests in 7 classes (`ResearchSeed` 3,
+`ContentSection` 8, and the other seed classes with the new seed file); the build prerenders 26
+routes. Not run: the browser tests (slice 4; this slice adds no link or control).
+
+Leftovers, not built:
+- **For the developer's review on the preview** (Q4): the drafted eyebrow and intro in en, de and pt
+  ("One paper · ICE 2026", "Ein Paper · ICE 2026", "Um artigo · ICE 2026").
+- **The head at 390, 768 and 1280 px,** light and dark: it is the shared `PageHead`, not measured
+  here; the wall beside it comes in slice 2, which may make `PageHead` take projected content (the
+  spec's "Components").
+- **The title line** (`Alexandre Zua Caldeira — ${heading}`) is now in Writing and Research; a third
+  page would make it worth one helper.
+- **The initial bundle** is 510.58 kB against the 500 kB warning budget (511.49 kB before).
 
 ## Decisions
 
