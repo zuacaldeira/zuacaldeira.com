@@ -25,13 +25,14 @@ describe('Research', () => {
     expect(texts('.page-head__eyebrow')).toEqual(['research eyebrow de']);
     expect(texts('h1')).toEqual(['research heading de']);
     expect(texts('.page-head__intro')).toEqual(['research intro de']);
-    // RS-PAGE-08: the head, the paper, what it proves, how it was checked; slice 4 adds the rest.
+    // RS-PAGE-08: the head, the paper, what it proves, how it was checked, the tool, more research.
     expect([...page.children].map((el) => el.tagName)).toEqual([
       'APP-PAGE-HEAD',
       'APP-PAPER-CARD',
       'APP-PAPER-RESULTS',
       'APP-PAPER-CHECKS',
       'APP-RESEARCH-TOOL',
+      'APP-RESEARCH-MORE',
     ]);
   });
 
