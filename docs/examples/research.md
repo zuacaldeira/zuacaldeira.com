@@ -2,8 +2,8 @@
 
 Status: **agreed with the developer on 2026-11-09:** the 71 cases, the four slices and D1 to D10
 below, as ui-design-peer proposed them (answers under "Decisions"). R1 to R8 (R4 replaced), Q1 to
-Q5 and the choice of option A are answered. Slices 1 and 2 are done and accepted (2026-11-09); slice
-3 is being built.
+Q5 and the choice of option A are answered. Slices 1 to 3 are done and accepted (2026-11-09); slice
+4, the last, is being built.
 
 The Research page in three languages, at `/en/research`, `/de/research` and `/pt/research`: a landing
 page for the ICE 2026 paper (R1 b). Design: `docs/mockups/research/research-spec.md`, with the
@@ -137,6 +137,7 @@ protocol counts, and every place that shows them says so.
 | RS-MORE-02 | The profile opens in a new tab, and says so in the page's language. | the built `/de/research` | the ResearchGate link is read | `target="_blank"`, `rel="noopener noreferrer"`, the `↗` with `aria-hidden="true"`, and a visually hidden " (öffnet in einem neuen Tab)" | |
 | RS-MORE-03 | The German and Portuguese pages translate the words around the links. | `/de/research`, `/pt/research` | the section is read | "Mehr Forschung", "Frühere Paper (2007–2010)" → `/de/writing`; "Mais investigação", "Artigos anteriores (2007–2010)" → `/pt/writing`; "ResearchGate" unchanged | |
 | RS-MORE-04 | No other profile links. | any language | the page is read | no ORCID, DBLP or Google Scholar link or text (Q3) | |
+| RS-MORE-P-02 | A profile link other than ResearchGate is refused. (Added from slice 4's G, 2026-11-09.) | the built `/en/research` | a Google Scholar link is put in the closing row | RS-MORE-04 goes red | |
 | RS-MORE-P-01 | An outside link that does not say it opens a new tab is refused. | the built `/de/research` | the hidden new-tab words are taken out of the ResearchGate link | RS-MORE-02 goes red | |
 
 ## 9. The BICA screenshot (later)
@@ -747,6 +748,115 @@ Leftovers, not built:
   shown; it could go, but D2's shape keeps every language's card the same.
 - **The intro's line height at 1440** (slice 2's leftover) is unchanged.
 
+## Slice 4: checks, the tool, more research, and the browser
+
+Test list (crossed off in the "Done" note below as each is committed):
+- **Outer test,** red on slice 3's build: O1 RS-PAGE-08, `<main>`'s sections in D1's order: head,
+  paper, results, checks, tool, more (the order moves here from RS-RES-01, 02's test).
+- **Script:** S1 RS-PAGE-05: the snapshot asks for `research/checked`, `research/tool` and
+  `research/more`; a missing `pt` tool stops it, naming page, section and language.
+- **Refactor first (D21):** R the Software row becomes `common/work-row/`; the Software specs and
+  acceptance tests stay green, their selectors moved to `work-row__*`.
+- **C, how it was checked:**
+  - C-A, outer: RS-CHECK-01 and RS-WALL-05 on `/en/research`: `<h2>` "How it was checked", the four
+    figures as a `<dl>` in order, then the evidence sentence, then the rung note.
+  - C-B: the seed's `research/checked` (RS-CHECK-04: four figures, values identical in en, de, pt,
+    every label non-empty; en the spec's copy; the rung note in each language).
+  - C-U: `PaperChecks` shows the `<h2>`, the `<dl>` (`<dt>` value `translate="no"`, `<dd>` label),
+    `shared/paper.evidence`, then `checked.rung` (RS-CHECK-01, 02, RS-WALL-05).
+  - Then on the build: RS-CHECK-02, 03 (de and pt labels, values as en; the evidence in each
+    language), RS-WALL-05 de and pt, and RS-WALL-06's rung row: the rung note holds exactly the
+    paper's 93, 15, 108 and the data's 47, 74, 50, 104 in every language (D16 completed).
+- **T, the tool:**
+  - T-A, outer: RS-TOOL-01 on `/en/research`: `<h2>` "The tool", kicker "Verification tool", `<h3>`
+    "reticulateP" (`translate="no"`), the Software text, stack "Python".
+  - T-B: the seed's `research/tool` in en, de, pt, and RS-TOOL-03: its `text` equals the reticulateP
+    row's `text` of `software/work` in each language (D6).
+  - T-U: `ResearchTool` shows the shared row with the one link to the stored href, same tab, and no
+    figure, image or placeholder (RS-TOOL-01, 02, RS-SHOT-01).
+  - Then on the build: RS-TOOL-02 (`/de/research`: exactly one link, "reticulateP auf der
+    Software-Seite" → `/de/software`, no repository), RS-SHOT-01.
+- **M, more research:**
+  - M-A, outer: RS-MORE-01 on `/en/research`: the last section, "More research", two links in
+    order: "Earlier papers (2007–2010)" → `/en/writing`, same tab; "ResearchGate" → the profile.
+  - M-B: the seed's `research/more` in en, de, pt.
+  - M-U: `ResearchMore` shows the heading and the two links; ResearchGate with `target="_blank"`,
+    `rel="noopener noreferrer"`, the `↗` hidden, the hidden "(new tab)" words (RS-MORE-01, 02, 03).
+  - Then on the build: RS-MORE-02, 03 (de and pt), RS-MORE-04 (no ORCID, DBLP, Google Scholar).
+- **Styles, reviewed by eye:** the checks on the warm ground with the figures' rules (cobalt, the
+  third ochre, D23), the tool on the raised glaze, the closing row; at 390 and 1440, light and dark.
+- **Browser** (`research-page.test.mjs`, D24): W1 RS-PAGE-09 (390 px, en, de, pt: no sideways
+  scroll), W2 RS-PAGE-10 (every link and the button in `<main>` 44 px or taller), W3 RS-PAGE-11 (the
+  skip link on `/de/research` at 390 and 1280), W4 RS-PAGE-12 (every text in `<main>` at 4.5:1, en
+  and de, light and dark), W5 RS-COLOR-02 (the tool on `--zc-bg-light`) and RS-COLOR-03 (the rules:
+  15 ochre, the others cobalt), W6 RS-COLOR-04's rest (the lattice tokens at 3:1 against the wall's
+  ground; `/de/research`'s band texts).
+- **Protocol rows:** RS-CHECK-P-01 (93 → 94 on de: RS-CHECK-03), RS-TOOL-P-01 (a repository link on
+  the tool: RS-TOOL-02), RS-MORE-P-01 (the hidden new-tab words out of the de ResearchGate link:
+  RS-MORE-02), RS-WALL-P-03 for the rung note ("50" → "15" on de), and from G, RS-MORE-P-02, a
+  profile link that is not ResearchGate (RS-MORE-04). Each row green at first is shown red by its
+  break, styles broken in the page and the chunk both.
+- **At the end (D25):** the page marked done; the whole set run once: unit, scripts, built pages,
+  nginx, backend, and every browser file one at a time.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in C-B, T-B, M-B
+        participant API as Content API (seed R__research.sql, R__software.sql, R__shared.sql)
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/research/index.html
+    participant B as Chromium (W1–W6)
+    T->>API: C-B, T-B, M-B: GET research/{checked,tool,more}; software/work for RS-TOOL-03
+    F->>API: the same for l in en, de, pt
+    API-->>F: 200, or 404 → the build stops (S1)
+    F->>NG: research.json, shared.json
+    NG->>P: PaperChecks (C-U), ResearchTool on WorkRow (R, T-U), ResearchMore (M-U)
+    T->>P: O1, C-A, T-A, M-A and the build rows, P rows
+    B->>P: phone, 44 px, skip link, contrast, grounds and rules, light and dark
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → API : get(research, {checked, tool, more}, l) .
+    API → Build : { ok200(checked_l, tool_l, more_l) .
+                    Build → Page : prerender(l, checks(heading_l, [108, 93, 15, Lean 4], labels_l,
+                                                       evidence_l, rung_l(93, 15, 108, 47, 74, 50, 104)),
+                                             tool(heading_l, kicker_l, reticulateP, text_l = sw_text_l,
+                                                  Python, link_l → /l/software),
+                                             more(heading_l, earlier_l → /l/writing,
+                                                  researchGate → profile, newTab_l)) .
+                    Page → Visitor : page(…) .
+                    Visitor → Page : { software(l) . end , writing(l) . end ,
+                                       out(researchGate, newTab_l) . end , stay . end } ,
+                    missing404 . Build → CI : fail(research, s, l) . end }
+  the figures' values, reticulateP, Python, the ResearchGate target: the same for every l
+
+Visitor ↾ = Page?page(…) . Page!{ software . end , writing . end , out . end , stay . end }
+Page ↾    = (PaperChecks, ResearchTool, ResearchMore, the units under change) Build?prerender .
+            Visitor!page(…) . Visitor?{ software . end , writing . end , out . end , stay . end }
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1–3 T/F → API | `get(…)`, `{ok200, missing404}` | C-B, T-B (RS-TOOL-03), M-B, S1 |
+| 4–5 F → NG → P | `prerender(l, checks(…), tool(…), more(…))` | C-U, T-U, M-U, O1, C-A, T-A, M-A |
+| 6 T → P, the links | the Visitor's `{software, writing, out, stay}` | RS-TOOL-02, RS-MORE-01 to 03 |
+| 7 B → P | `page(…)` on a phone, by keyboard, in light and dark | W1–W6 |
+| forbidden: a figure changed for `l` | values the same for every `l` | RS-CHECK-P-01 |
+| forbidden: rung numbers not the data's | `rung_l(…)` | RS-WALL-P-03 (rung) |
+| forbidden: a repository link on the tool | `software(l)` only | RS-TOOL-P-01 |
+| forbidden: `out` without saying so | `out(researchGate, newTab_l)` | RS-MORE-P-01 |
+| forbidden: another profile | `out(researchGate, …)` the only `out` | RS-MORE-P-02 |
+
+The refactor R (D21), on the Software page: `G_pre` is its slice 2 G with "More work" drawing each
+row itself; `G_post` draws each with `WorkRow`. `Visitor ↾` is identical (the same rows, texts, links
+and order); the Software specs and acceptance tests hold it, only their class selectors moving.
+
 ## Decisions
 
 Answered by the developer on 2026-11-08:
@@ -887,3 +997,28 @@ Taken while planning slice 3 (2026-11-09, tdd-peer; the developer may change the
 - **D20. D31 in `software.md` is replaced by D3:** `shared/paper.statements` holds all four;
   SW-PROOF-03's "Theorem 15 alone" changes with it, and SW-PROOF-01 still holds the band to the
   theorem alone (RS-RES-06).
+
+Answered by the developer on 2026-11-09, after slice 3: **slice 3 is accepted; D17 to D20 stand.**
+`next` is pushed at `cf6630e`. **The intro's line spacing at 1440 stays as it is for now** (slice 2's
+leftover is closed).
+
+Taken while planning slice 4 (2026-11-09, tdd-peer; the developer may change them):
+
+- **D21. The Software page's row becomes a shared component,** `common/work-row/` (`WorkRow`, input
+  `row`), used by "More work" and by the Research page's tool section, as the spec asks ("reuse the
+  row's styles or component, do not copy"). Its classes become `work-row__*`; only the Software
+  specs' and acceptance tests' selectors move with them (as R in `writing.md`, D13). The row's title
+  gets `translate="no"`, which the Software rows' names (never translated, SW-WORK-05) should have
+  had too.
+- **D22. The links keep the spec's shapes:** `tool.link` is `{label, href}` with the href stored per
+  language (`/de/software`); "Earlier papers" has no stored href in `more`, so the page makes it with
+  `pagePath(lang, 'writing')`. SHELL-04 holds both to the page's language.
+- **D23. The ochre rule marks the third figure** (15, not distributive) by its place: RS-CHECK-01
+  holds the order, so the stored figures keep the spec's `{value, label}` and get no flag.
+- **D24. The page's browser checks are one file,** `acceptance/browser/research-page.test.mjs`:
+  RS-PAGE-09 to 12, RS-COLOR-02, 03 and the rest of RS-COLOR-04. The lattices' lines are measured as
+  their tokens (`--zc-edge`, `--zc-ochre`) against the wall's ground (`--zc-bg-warm`), as the
+  stroke itself has no contrast reader.
+- **D25. Opening the page is a status change, not a build step:** the route, menu link, current
+  marker, sitemap entries and nginx exist since before slice 1 (HOME-PAGE-07 to 09, SHELL-11). At the
+  end the file's status says the page is done, and `CLAUDE.md` lists it beside Software and Writing.
