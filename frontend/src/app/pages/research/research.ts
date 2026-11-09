@@ -3,12 +3,15 @@ import { Title } from '@angular/platform-browser';
 import { RESEARCH_CONTENT } from '../../content/content';
 import { I18nService } from '../../services/i18n.service';
 import { PageHead } from '../../common/page-head/page-head';
+import { ResearchWall } from './research-wall/research-wall';
 
 /** The Research page (docs/examples/research.md; build spec docs/mockups/research/research-spec.md). */
 @Component({
   selector: 'app-research',
-  imports: [PageHead],
-  template: '<app-page-head [head]="head" />',
+  imports: [PageHead, ResearchWall],
+  template: `<app-page-head [head]="head" class="page-head--wall">
+    <app-research-wall />
+  </app-page-head>`,
 })
 export class Research {
   private readonly lang = inject(I18nService).language();

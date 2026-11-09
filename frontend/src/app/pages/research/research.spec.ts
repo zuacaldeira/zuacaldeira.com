@@ -27,4 +27,12 @@ describe('Research', () => {
     expect(texts('.page-head__intro')).toEqual(['research intro de']);
     expect([...page.children].map((el) => el.tagName)).toEqual(['APP-PAGE-HEAD']);
   });
+
+  it('RS-WALL-01 (D15): should show the wall in the head, right after the intro', () => {
+    TestBed.inject(I18nService).setLanguage('en');
+    const fixture = TestBed.createComponent(Research);
+    fixture.detectChanges();
+    const intro = (fixture.nativeElement as HTMLElement).querySelector('app-page-head .page-head__intro');
+    expect(intro?.nextElementSibling?.tagName).toBe('APP-RESEARCH-WALL');
+  });
 });

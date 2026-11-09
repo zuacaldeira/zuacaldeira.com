@@ -163,9 +163,20 @@ export interface WritingContent {
   readonly texts: Readonly<Record<Language, WritingTexts>>;
 }
 
+/**
+ * One language's words for the Research wall, `research/wall` (D2 in research.md). The numbers in
+ * them are R2′ counts of lattices.json, held to the data by RS-WALL-06 (D9).
+ */
+export interface ResearchWallText {
+  readonly label: string;
+  readonly caption: string;
+  readonly hint: string;
+}
+
 /** The Research page's text, `@page-content/research` (D2 in research.md). */
 export interface ResearchContent {
   readonly head: Readonly<Record<Language, PageHead>>;
+  readonly wall: Readonly<Record<Language, ResearchWallText>>;
 }
 
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */

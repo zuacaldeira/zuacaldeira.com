@@ -165,7 +165,14 @@ export const TEST_CONTENT: ContentSnapshot = {
     proof: inEvery((lang) => ({ kicker: `proof kicker ${lang}` })),
   },
   writing: { head: inEvery(writingHeadIn), texts: inEvery(writingTextsIn) },
-  research: { head: inEvery(researchHeadIn) },
+  research: {
+    head: inEvery(researchHeadIn),
+    wall: inEvery((lang) => ({
+      label: `wall label ${lang}`,
+      caption: `wall caption ${lang}`,
+      hint: `wall hint ${lang}`,
+    })),
+  },
   shared: { paper: inEvery(sharedPaperIn) },
 };
 
