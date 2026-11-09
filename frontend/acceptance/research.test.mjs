@@ -154,6 +154,41 @@ test('RS-PAGE-08 (D1): no "What\'s next" while it has no text; the sections so f
   assert.deepEqual(shown, Object.fromEntries(LANGS.map((lang) => [lang, { sections: ['page-head'], next: [] }])));
 });
 
+// The wall's data (D8): the distinct lattices at rung R2′, in render.py's order (states, then edges).
+const LATTICES = JSON.parse(
+  readFileSync(join(import.meta.dirname, '../scripts/lattice-wall/lattices.json'), 'utf8'),
+).toSorted((a, b) => a.n - b.n || a.e - b.e);
+
+// The page head's parts after the intro, and the wall's tiles: each `g` with its classes and name.
+const afterIntro = (html) => main(html).split(/<p\b[^>]*class="page-head__intro"[^>]*>.*?<\/p>/s)[1] ?? '';
+const figures = (html) => [...afterIntro(html).matchAll(/<figure\b[^>]*>(.*?)<\/figure>/gs)].map(([, inner]) => inner);
+const tiles = (inner) =>
+  [...inner.matchAll(/<g\b([^>]*)>/g)].map(([, attrs]) => ({
+    cls: attrs.match(/\sclass="([^"]*)"/)?.[1] ?? '',
+    name: attrs.match(/\sdata-name="([^"]*)"/)?.[1] ?? null,
+  }));
+
+test('RS-WALL-01 (D8): after the intro, one figure shows the 74 lattices in order, the 47 not distributive marked', () => {
+  const found = figures(page('en/research'));
+  assert.equal(found.length, 1, 'one figure after the intro');
+  const svg = found[0].match(/<svg\b([^>]*)>/)?.[1] ?? '';
+  const shown = tiles(found[0]);
+  assert.deepEqual(
+    {
+      role: svg.match(/\srole="([^"]*)"/)?.[1],
+      names: shown.map(({ name }) => name),
+      notDistributive: shown.filter(({ cls }) => cls.split(' ').includes('nd')).length,
+      tiles: shown.filter(({ cls }) => cls.split(' ').includes('t')).length,
+    },
+    {
+      role: 'img',
+      names: LATTICES.map(({ name }) => name),
+      notDistributive: 47,
+      tiles: 74,
+    },
+  );
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
