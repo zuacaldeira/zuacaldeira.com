@@ -31,6 +31,7 @@ describe('Research', () => {
       'APP-PAPER-CARD',
       'APP-PAPER-RESULTS',
       'APP-PAPER-CHECKS',
+      'APP-RESEARCH-TOOL',
     ]);
   });
 
