@@ -2,7 +2,7 @@
 // Run `npm run build` first, then `npm run acceptance`. Examples: docs/examples/research.md.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
@@ -54,6 +54,18 @@ test('RS-PAGE-07 (D7): the old page is gone: no list of publications, no Materia
     ].map((found) => `${lang}: ${found}`);
   });
   assert.deepEqual(found, []);
+});
+
+const LANGS = ['en', 'de', 'pt'];
+
+test('RS-PAGE-01: the Research page is built in every language, each with its lang and the shared page head', () => {
+  const missing = LANGS.filter((lang) => !existsSync(join(browser, lang, 'research', 'index.html')));
+  assert.deepEqual(missing, [], 'languages without a built Research page');
+  const built = LANGS.map((lang) => {
+    const html = page(`${lang}/research`);
+    return { lang: html.match(/<html lang="([^"]*)"/)?.[1], head: /<app-page-head\b/.test(main(html)) };
+  });
+  assert.deepEqual(built, LANGS.map((lang) => ({ lang, head: true })));
 });
 
 test('RS-HEAD-02: the German Research page opens in German: eyebrow, one <h1>, the intro', () => {
