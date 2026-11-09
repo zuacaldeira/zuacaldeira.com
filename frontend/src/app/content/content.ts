@@ -199,6 +199,18 @@ export interface ResearchContent {
   readonly results: Readonly<Record<Language, { readonly heading: string }>>;
   readonly checked: Readonly<Record<Language, ResearchChecked>>;
   readonly tool: Readonly<Record<Language, ResearchTool>>;
+  readonly more: Readonly<Record<Language, ResearchMore>>;
+}
+
+/**
+ * One language's closing row, `research/more` (D2): the earlier papers' words (the page makes the
+ * link to the Writing page, D22) and ResearchGate, the one profile (Q3), which opens a new tab.
+ */
+export interface ResearchMore {
+  readonly heading: string;
+  readonly earlier: string;
+  readonly newTab: string;
+  readonly researchGate: WorkLink;
 }
 
 /**

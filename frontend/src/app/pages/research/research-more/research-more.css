@@ -1,0 +1,56 @@
+/* The closing row (research-spec.md, "Components"): on the warm ground (no rule: the ground changes
+   from the tool's), a small mono heading over two links, each 44 px or taller, underlined. */
+.rs-more {
+  padding-block: clamp(32px, 4vw, 56px);
+  background: var(--zc-bg-warm);
+}
+
+.rs-more__in {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+.rs-more__heading {
+  margin: 0 0 var(--zc-space-2);
+  font-family: var(--zc-font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--zc-text-muted);
+}
+
+.rs-more__links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--zc-space-6);
+}
+
+.rs-more__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 500;
+  color: var(--zc-azul);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rs-more__arrow {
+  margin-left: 0.25em;
+  text-decoration: none;
+}
+
+@media (max-width: 599.98px) {
+  .rs-more__in {
+    padding-inline: 16px;
+  }
+
+  .rs-more__links {
+    flex-direction: column;
+  }
+}

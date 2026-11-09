@@ -202,6 +202,12 @@ export const TEST_CONTENT: ContentSnapshot = {
       stack: 'Python',
       link: { label: `tool link ${lang}`, href: `/${lang}/software` },
     })),
+    more: inEvery((lang) => ({
+      heading: `more heading ${lang}`,
+      earlier: `earlier ${lang}`,
+      newTab: `new tab ${lang}`,
+      researchGate: { label: 'Profile', href: 'https://example.org/profile' },
+    })),
   },
   shared: { paper: inEvery(sharedPaperIn) },
 };

@@ -1,0 +1,14 @@
+<section class="rs-more">
+  <div class="rs-more__in">
+    <h2 class="rs-more__heading">{{ more.heading }}</h2>
+    <ul class="rs-more__links">
+      <li><a [href]="writing">{{ more.earlier }}</a></li>
+      <li>
+        <a [href]="more.researchGate.href" target="_blank" rel="noopener noreferrer"
+          >{{ more.researchGate.label }}<span class="rs-more__arrow" aria-hidden="true">↗</span
+          ><span class="visually-hidden"> ({{ more.newTab }})</span></a
+        >
+      </li>
+    </ul>
+  </div>
+</section>
