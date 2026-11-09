@@ -12,6 +12,9 @@
         <p class="rs-paper__author" translate="no"><b>{{ paper.author }}</b></p>
         <p class="rs-paper__venue" translate="no">{{ paper.venue }}</p>
         <p class="rs-paper__note">{{ paper.note }}</p>
+        <a class="rs-paper__pdf" [href]="shared.pdfUrl" type="application/pdf" hreflang="en">{{
+          shared.read
+        }}</a>
       </div>
     </article>
   </div>

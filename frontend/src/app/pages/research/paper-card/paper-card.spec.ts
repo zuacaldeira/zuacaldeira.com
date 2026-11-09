@@ -33,6 +33,19 @@ describe('PaperCard', () => {
     });
   });
 
+  it('RS-PAPER-02: should open the paper as a PDF from this site with one link, in the same tab', () => {
+    const links = [...show('de').querySelectorAll('a')].map((a) => ({
+      label: text(a),
+      href: a.getAttribute('href'),
+      type: a.getAttribute('type'),
+      hreflang: a.getAttribute('hreflang'),
+      target: a.getAttribute('target'),
+    }));
+    expect(links).toEqual([
+      { label: 'read de', href: '/assets/pdfs/paper.pdf', type: 'application/pdf', hreflang: 'en', target: null },
+    ]);
+  });
+
   it('RS-PAPER-05: should keep the title, the author and the venue as published, the title marked English on de', () => {
     const marks = (lang: 'en' | 'de') => {
       const card = show(lang);
