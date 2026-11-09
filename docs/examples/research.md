@@ -2,8 +2,8 @@
 
 Status: **agreed with the developer on 2026-11-09:** the 71 cases, the four slices and D1 to D10
 below, as ui-design-peer proposed them (answers under "Decisions"). R1 to R8 (R4 replaced), Q1 to
-Q5 and the choice of option A are answered. Slice 1 is done and accepted (2026-11-09); slice 2 is
-being built.
+Q5 and the choice of option A are answered. Slices 1 and 2 are done and accepted (2026-11-09); slice
+3 is being built.
 
 The Research page in three languages, at `/en/research`, `/de/research` and `/pt/research`: a landing
 page for the ICE 2026 paper (R1 b). Design: `docs/mockups/research/research-spec.md`, with the
@@ -77,6 +77,7 @@ protocol counts, and every place that shows them says so.
 | RS-WALL-04 | Each tile carries the name of its protocol, as published, in every language. | the built `/en/research` and `/pt/research` | the tiles are read | tile 1 has `data-name="GoF Facade"`, the last `data-name="Raft Leader Election"`; the 74 names are identical on the three pages | yes (build, 2026-11-09) |
 | RS-WALL-05 | Under the figures, one sentence tells the paper's count from the wall's. | the built `/en/research` | the checks section is read | after the evidence sentence, `checked.rung` en: "The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, …"; de and pt the same in their language | |
 | RS-WALL-06 | Every R2′ number on the page agrees with the data, in every language. | `lattices.json` and the stored `wall` and `checked.rung` in en, de, pt | the numbers are computed from the data and read from the texts | 74 classes, 47 not distributive, 104 protocols (four excluded from 108), 50 in a non-distributive class; each stored text holds exactly these numbers (D9) | label and caption (build and integration, 2026-11-09); the rung note's 50 in slice 4 (D16) |
+| RS-WALL-07 | The caption says in words, in ochre, which tiles are not distributive. (Added 2026-11-09, D17.) | the built `/de/research`; `research/wall` in the seed | the caption is read | the `<figcaption>` holds `wall.caption` de, then `wall.key` de "Ocker: nicht distributiv, 47 der 74." in its own `<span class="rs-wall__key">`; the seed has `key` in en, de and pt, none empty, and no caption ends with its key | |
 | RS-WALL-P-01 | Wall numbers shown without their rung are refused. | the built `/de/research` | "R2′" is taken out of the caption | RS-WALL-02 goes red | yes (break in the build) |
 | RS-WALL-P-02 | A hand-edited wall is refused. | the checked-in wall file | one tile is removed | RS-WALL-03 and RS-WALL-01 go red | yes (break in the checked-in file and in the build) |
 | RS-WALL-P-03 | A wall count that no longer matches the data is refused. | the stored `wall.caption` de | "47" is changed to "15" | RS-WALL-06 goes red | yes (break in the build) |
@@ -106,6 +107,7 @@ protocol counts, and every place that shows them says so.
 | RS-RES-05 | The stored paper holds all four statements, the same in every language. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/shared/paper?lang=en`, `de`, `pt` | `statements` holds the four of the spec, in its order, identical in the three (HOME-PAPER-09 in full; D3 replaces D31 in `software.md`) | |
 | RS-RES-06 | The Software page's band still shows only the theorem. | the built `/de/software` | the band is read | it shows "Satz 15 · Reticulate Theorem" and its text, and no Definition, Lemma or Proposition (SW-PROOF-01 with four statements stored) | |
 | RS-RES-P-01 | A translated statement is refused. | the built `/de/research` | Lemma 8's text is put in German | RS-RES-03 goes red | |
+| RS-RES-P-03 | A Software band that shows more than the theorem is refused. (Added from slice 3's G, 2026-11-09.) | the built `/de/software`, four statements stored | Definition 6 is put on the band | RS-RES-06 goes red | |
 | RS-RES-P-02 | Results folded away are refused. | the built `/en/research` | the three are put inside a `<details>` | RS-RES-02 goes red | |
 
 ## 6. How it was checked
@@ -585,6 +587,118 @@ Leftovers, not built:
 - **The rung note and its 50** (RS-WALL-05, the rest of RS-WALL-06) come with `research/checked` in
   slice 4.
 
+## Slice 3: the paper and its results on the band
+
+Test list (crossed off in the "Done" note below as each is committed). Two elements, the key first.
+
+**K, the wall's ochre key (D17, RS-WALL-07):**
+- K-A, outer, red on slice 2's build: on `/de/research` the `<figcaption>`'s key is a
+  `span.rs-wall__key` reading "Ocker: nicht distributiv, 47 der 74.", after the caption.
+- K-B: the seed's `research/wall` has `key` in en, de and pt, and the captions end before it
+  (`ResearchSeedIntegrationTest`).
+- K-U: `ResearchWall` shows `wall.key` in its key span after the caption (render.py's template
+  changes, regenerated; RS-WALL-03 holds it).
+- Then on the build: RS-WALL-02 and RS-WALL-06 stay green, as they read the whole caption.
+
+**P, the paper card and the results:**
+- **Acceptance, the outer tests,** red on today's build:
+  - A1 RS-PAPER-01: on `/en/research` the section after the head is the card: "2026 · Workshop
+    paper", `<h2>` the title, "Alexandre Zua Caldeira" in `<b>`, the venue, the EPTCS note.
+  - A2 RS-RES-01, 02: the next section is "What it proves": Theorem 15 first, then Definition 6,
+    Lemma 8, Proposition 18 with their texts, none in a `<details>`. RS-PAGE-08's order grows to
+    head, paper, results.
+- **Backend** (one class per run):
+  - B1 RS-RES-05: `shared/paper.statements` holds the four in order, the same in every language
+    (`SharedSeedIntegrationTest`; SW-PROOF-03's "Theorem 15 alone" changes with it, D20).
+  - B2 RS-PAPER-07 and `research/results`: the seed's `research/paper` (en the spec's copy; author,
+    venue and abstract identical in the three; every label non-empty) and `research/results`
+    (`ResearchSeedIntegrationTest`).
+  - B3 RS-PAPER-06: the stored Portuguese card as it is (`ContentSectionIntegrationTest`); expected
+    green at once, shown to bite by a break in `ContentService`.
+- **Script:** S1 RS-PAGE-05: the snapshot asks for `research/paper` and `research/results`; a
+  missing `de` card stops it, naming page, section and language.
+- **Unit:**
+  - U1 RS-PAPER-01, 05: `PaperCard` shows year · kind, the `<h2>` title, the author in `<b>`, the
+    venue and the note; title, author and venue `translate="no"`, the title `lang="en"` on de.
+  - U2 RS-PAPER-02: one link, `shared/paper.read`, to `pdfUrl`, `type="application/pdf"`,
+    `hreflang="en"`, no `target`.
+  - U3 RS-PAPER-03, 04: the `<h3>` label, then the abstract in a `<blockquote>`; on de "in English"
+    before it and `lang="en"`, `translate="no"`; on en no such line and no `lang`.
+  - U4 RS-RES-01, 02, 03: `PaperResults` shows the `<h2>` and the four statements in order as
+    `<blockquote>`s, each labelled "kind number · name" with the kind word in the page's language,
+    the text `translate="no"` (and `lang="en"` on de), none in a `<details>`.
+  - U5 RS-PAGE-06, 08 (D18): `/de/research` brings the shared text with its route, and the page
+    reads head, card, results.
+- **Styles, reviewed by eye:** the card (surface, ochre top, two columns from 900 px), the results on
+  the band tokens, the three statements in a row under a rule; the ochre key.
+- **Acceptance, after the build:** A3 RS-PAPER-02 (the one link in every language, the file in the
+  build), A4 RS-PAPER-03, 04 (the abstract word for word; de and pt the same, marked English), A5
+  RS-PAPER-05, A6 RS-RES-03, 04 (de and pt labels; names and texts as en), A7 RS-RES-06 (the German
+  Software band still the theorem alone, with four stored), A8 RS-PAGE-06's shared half.
+- **Browser** (`acceptance/browser/research-band.test.mjs`, D19): W1 RS-COLOR-01 at 1280, light and
+  dark, the results' background is `--zc-band-bg` and its texts `--zc-band-fg`, every text at 4.5:1.
+- **Protocol rows:** RS-PAPER-P-01 (the abstract's first sentence in German on de: A4), RS-PAPER-P-02
+  (`target="_blank"` on the button: A3), RS-RES-P-01 (Lemma 8's text in German on de: A6),
+  RS-RES-P-02 (the three inside a `<details>`: A2), and from G, RS-RES-P-03, the Software band
+  showing more than its theorem (A7). Each row green at first is shown red by its break.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1–B3
+        participant API as Content API (seed R__research.sql, R__shared.sql)
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/research/index.html
+    participant S as dist/…/l/software/index.html
+    participant B as Chromium (W1)
+    T->>API: B1–B3: GET shared/paper, research/{wall,paper,results} ?lang=l
+    F->>API: the same for l in en, de, pt
+    API-->>F: 200, or 404 → the build stops (S1)
+    F->>NG: research.json, shared.json (both on the Research route, D18)
+    NG->>P: head + wall (key, K-U), PaperCard (U1–U3), PaperResults on the band (U4), U5
+    NG->>S: the Software band: Theorem 15 alone of the four (A7)
+    T->>P: K-A, A1–A6, A8, P rows
+    B->>P: the results' colours and contrast, light and dark (W1)
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → API : get(research, {wall, paper, results}, l) . get(shared, paper, l) .
+    API → Build : { ok200(wall_l, paper_l, results_l, shared_l) .
+                    Build → Page : prerender(l, caption_l . key_l,
+                                             card(year, kind_l, title, author, venue, note_l, pdf,
+                                                  abstractLabel_l, [inEnglish_l if l ≠ en], abstract),
+                                             results(heading_l, [thm15, def6, lem8, prop18], kinds_l)) .
+                    Build → Software : prerender(band(thm15)) .
+                    Page → Visitor : page(…) .
+                    Visitor → Page : { pdf(ice2026) . end , stay . end } ,
+                    missing404 . Build → CI : fail(page, section, l) . end }
+  year, title, author, venue, abstract, pdf, the statements' names and texts: the same for every l
+
+Visitor ↾  = Page?page(…) . Page!{ pdf . end , stay . end }
+Page ↾     = (PaperCard, PaperResults, the units under change) Build?prerender .
+             Visitor!page(…) . Visitor?{ pdf . end , stay . end }
+Software ↾ = Build?prerender(band(thm15)) . end
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1–3 T/F → API | `get(…)`, `{ok200, missing404}` | B1, B2, B3, K-B, S1 |
+| 4–5 F → NG → P | `prerender(l, caption_l . key_l, card(…), results(…))` | K-U, U1–U5, K-A, A1–A6, A8 |
+| 6 NG → S | `Build → Software : prerender(band(thm15))` | A7 (RS-RES-06) |
+| 7 T → P, the link | the Visitor's `{pdf, stay}` | U2, A3 |
+| 8 B → P | `page(…)` on the band tokens | W1 |
+| forbidden: the abstract or a statement translated for `l` | the same for every `l` | RS-PAPER-P-01, RS-RES-P-01 |
+| forbidden: `pdf` in a new tab, or a second link | `pdf(ice2026) . end`, one branch | RS-PAPER-P-02, U2 |
+| forbidden: results folded | `[thm15, def6, lem8, prop18]` shown open | RS-RES-P-02 |
+| forbidden: the Software band with more than `thm15` | `band(thm15)` | RS-RES-P-03 |
+
+The page is read-only: no repeat, stale-token or race rows.
+
 ## Decisions
 
 Answered by the developer on 2026-11-08:
@@ -702,3 +816,26 @@ Taken while planning slice 2 (2026-11-09, tdd-peer; the developer may change the
 - **Open, for the developer:** the spec sets "Ochre: not distributive" in the caption in
   `--zc-ochre-text`, but the stored caption is one plain string (`wall: {label, caption, hint}`).
   Slice 2 shows it plain; how to mark it is a content-shape question (see the slice's leftovers).
+  Answered below (D17).
+
+Answered by the developer on 2026-11-09, after slice 2: **slice 2 is accepted; D13 to D16 stand.**
+`next` is pushed at `afab568`. **The caption's ochre words: (a),** "Ochre: not distributive" stored
+as its own short plain text beside the caption and shown in ochre, in en, de and pt.
+
+Taken while planning slice 3 (2026-11-09, tdd-peer; the developer may change them):
+
+- **D17. The key is `wall.key`,** the caption's last sentence as its own field: en "Ochre: not
+  distributive, 47 of the 74.", de "Ocker: nicht distributiv, 47 der 74.", pt "Ocre: não
+  distributivos, 47 dos 74."; `wall.caption` ends before it. The `<figcaption>` shows the caption,
+  then the key in a `<span>` in `--zc-ochre-text` 500, so what a reader sees is the same sentence
+  as before; RS-WALL-06 reads the whole `<figcaption>` and still holds the key's 47 and 74. New case
+  RS-WALL-07. The key goes first in slice 3: it closes slice 2's open question.
+- **D18. The Research route provides `SHARED_CONTENT` from slice 3 on,** as D11 planned: the card
+  and the results read the paper's title, year, PDF, read label, kind words and statements there.
+  RS-PAGE-06's second half is checked then.
+- **D19. The band colours are checked in a browser file of their own,** `research-band.test.mjs`,
+  as the Software band has `software-band.test.mjs`: RS-COLOR-01, and the band's texts at 4.5:1
+  (RS-COLOR-04's band half; its lattice half stays in slice 4).
+- **D20. D31 in `software.md` is replaced by D3:** `shared/paper.statements` holds all four;
+  SW-PROOF-03's "Theorem 15 alone" changes with it, and SW-PROOF-01 still holds the band to the
+  theorem alone (RS-RES-06).
