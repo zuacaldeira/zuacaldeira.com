@@ -245,6 +245,20 @@ main:focus {
 }
 
 /* Utility */
+
+/* Words for screen readers only (a hidden heading, "(opens in a new tab)"). The site's one
+   definition: a component's scoped copy reaches nothing outside it (BUG-RS-01 in research.md). */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
 .hover-lift {
   transition:
     transform var(--zc-transition-base),
