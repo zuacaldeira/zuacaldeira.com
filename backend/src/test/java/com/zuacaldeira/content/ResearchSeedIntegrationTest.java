@@ -165,6 +165,42 @@ class ResearchSeedIntegrationTest {
                 new TypeReference<Map<String, String>>() {})).isEqualTo(Map.of("heading", heading));
     }
 
+    /** The figures' values, the same in every language (RS-CHECK-03): the paper's own count. */
+    private static final List<String> VALUES = List.of("108", "93", "15", "Lean 4");
+
+    /** The spec's English checks: the four figures with their meanings, and the rung note (RS-WALL-05). */
+    private static final Map<String, Object> EN_CHECKED = Map.of(
+            "heading", "How it was checked",
+            "figures", List.of(
+                    Map.of("value", "108", "label", "benchmark protocols, every one a lattice"),
+                    Map.of("value", "93", "label", "distributive"),
+                    Map.of("value", "15", "label", "not distributive"),
+                    Map.of("value", "Lean 4", "label", "mechanised proof")),
+            "rung", "The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same"
+                    + " corpus at rung R2′, which keeps the structure of recursive protocols: there 47 of the 74"
+                    + " distinct lattices are not distributive, and 50 of the 104 protocols fall in one of them.");
+
+    @ParameterizedTest(name = "{0}")
+    @ValueSource(strings = {"en", "de", "pt"})
+    @DisplayName("RS-CHECK-04, RS-WALL-05 the seed answers the checks in every language, the values the same in each")
+    @SuppressWarnings("unchecked")
+    void answersTheSeededChecks(String lang) throws Exception {
+        HttpResponse<String> response = get("/api/content/research/checked?lang=" + lang);
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        Map<String, Object> checked = JsonMapper.builder().build().readValue(response.body(),
+                new TypeReference<Map<String, Object>>() {});
+        if (lang.equals("en")) {
+            assertThat(checked).isEqualTo(EN_CHECKED);
+        }
+        assertThat(checked.keySet()).isEqualTo(EN_CHECKED.keySet());
+        List<Map<String, String>> figures = (List<Map<String, String>>) checked.get("figures");
+        assertThat(figures).extracting(figure -> figure.get("value")).isEqualTo(VALUES);
+        assertThat(figures).allSatisfy(figure -> assertThat(figure.get("label")).isNotBlank());
+        assertThat(List.of(checked.get("heading"), checked.get("rung")))
+                .allSatisfy(text -> assertThat((String) text).isNotBlank());
+    }
+
     private HttpResponse<String> get(String path) throws Exception {
         HttpRequest request = HttpRequest.newBuilder(URI.create("http://localhost:" + port + path)).build();
         try (HttpClient client = HttpClient.newHttpClient()) {

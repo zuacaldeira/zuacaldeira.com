@@ -68,3 +68,32 @@ INSERT INTO content_section (page, section, lang, body) VALUES
     ('research', 'results', 'en', JSON_OBJECT('heading', 'What it proves')),
     ('research', 'results', 'de', JSON_OBJECT('heading', 'Was es beweist')),
     ('research', 'results', 'pt', JSON_OBJECT('heading', 'O que prova'));
+
+-- How it was checked (D2): the paper's own count, its values the same in every language (RS-CHECK-03),
+-- then the rung note, which tells the paper's 93 and 15 from the wall's R2′ numbers; those are held to
+-- lattices.json by RS-WALL-06 (D9, D16): change both together.
+INSERT INTO content_section (page, section, lang, body) VALUES
+    ('research', 'checked', 'en', JSON_OBJECT(
+        'heading', 'How it was checked',
+        'figures', JSON_ARRAY(
+            JSON_OBJECT('value', '108', 'label', 'benchmark protocols, every one a lattice'),
+            JSON_OBJECT('value', '93', 'label', 'distributive'),
+            JSON_OBJECT('value', '15', 'label', 'not distributive'),
+            JSON_OBJECT('value', 'Lean 4', 'label', 'mechanised proof')),
+        'rung', 'The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, which keeps the structure of recursive protocols: there 47 of the 74 distinct lattices are not distributive, and 50 of the 104 protocols fall in one of them.')),
+    ('research', 'checked', 'de', JSON_OBJECT(
+        'heading', 'Wie es geprüft wurde',
+        'figures', JSON_ARRAY(
+            JSON_OBJECT('value', '108', 'label', 'Benchmark-Protokolle, jedes ein Verband'),
+            JSON_OBJECT('value', '93', 'label', 'distributiv'),
+            JSON_OBJECT('value', '15', 'label', 'nicht distributiv'),
+            JSON_OBJECT('value', 'Lean 4', 'label', 'mechanisierter Beweis')),
+        'rung', 'Die 93 und 15 sind die eigene Zählung des Papers über seine 108 Protokolle. Die Wand zeichnet denselben Korpus auf Stufe R2′, die die Struktur rekursiver Protokolle erhält: Dort sind 47 der 74 verschiedenen Verbände nicht distributiv, und 50 der 104 Protokolle fallen in einen davon.')),
+    ('research', 'checked', 'pt', JSON_OBJECT(
+        'heading', 'Como foi verificado',
+        'figures', JSON_ARRAY(
+            JSON_OBJECT('value', '108', 'label', 'protocolos de referência, todos reticulados'),
+            JSON_OBJECT('value', '93', 'label', 'distributivos'),
+            JSON_OBJECT('value', '15', 'label', 'não distributivos'),
+            JSON_OBJECT('value', 'Lean 4', 'label', 'prova mecanizada')),
+        'rung', 'Os 93 e 15 são a contagem do próprio artigo sobre os seus 108 protocolos. A parede desenha o mesmo corpus no nível R2′, que mantém a estrutura dos protocolos recursivos: aí 47 dos 74 reticulados distintos não são distributivos, e 50 dos 104 protocolos caem num deles.'));
