@@ -143,16 +143,13 @@ test('RS-PAGE-06 (D11): the Research page downloads its own text, and no other p
 const sections = (inner) =>
   [...inner.matchAll(/<section\b[^>]*class="([^"]*)"/g)].map(([, cls]) => cls.split(' ')[0]);
 
-test('RS-PAGE-08 (D1): no "What\'s next" while it has no text; the sections so far are the head alone', () => {
+// The sections' order is held by RS-RES-01, 02's test, and grows with slice 4.
+test('RS-PAGE-08 (D1): no "What\'s next" while it has no text, in any language', () => {
   const next = ["What's next", 'What’s next', 'Wie es weitergeht', 'O que vem a seguir'];
   const shown = Object.fromEntries(
-    LANGS.map((lang) => {
-      const html = main(page(`${lang}/research`));
-      return [lang, { sections: sections(html), next: next.filter((words) => text(html).includes(words)) }];
-    }),
+    LANGS.map((lang) => [lang, next.filter((words) => text(main(page(`${lang}/research`))).includes(words))]),
   );
-  // Slices 2 to 4 add the paper, what it proves, how it was checked, the tool and more research.
-  assert.deepEqual(shown, Object.fromEntries(LANGS.map((lang) => [lang, { sections: ['page-head'], next: [] }])));
+  assert.deepEqual(shown, Object.fromEntries(LANGS.map((lang) => [lang, []])));
 });
 
 // The wall's data (D8): the distinct lattices at rung R2′, in render.py's order (states, then edges).
@@ -351,6 +348,39 @@ test('RS-PAPER-01: after the head comes the paper, with its year, kind, title, a
       venue: ['ICE 2026 · International Workshop on Interaction and Concurrency Experience'],
       note: ['Camera-ready · to appear in EPTCS'],
     },
+  );
+});
+
+// The four statements of the paper (the spec's table, D3): label and text, as on the English page.
+const STATEMENTS = [
+  ['Theorem 15 · Reticulate Theorem', 'For every well-formed session type S, ℒ(S)/≡ is a bounded lattice.'],
+  [
+    'Definition 6 · SCC quotient',
+    'The SCC quotient ℒ(S)/≡ identifies mutually reachable states, collapsing each recursion cycle to one class. It is ordered by [s₁] ≤ [s₂] iff s₂ ↠ s₁: a state is smaller when less of the protocol remains, so execution descends from q⊤ to q⊥.',
+  ],
+  ['Lemma 8 · End', 'ℒ(end)/≡ is a bounded lattice.'],
+  [
+    'Proposition 18 · Duality isomorphism',
+    'For every well-formed session type S, there is a bounded-lattice isomorphism ℒ(S)/≡ ≅ ℒ(dual(S))/≡.',
+  ],
+];
+const statements = (results) =>
+  [...results.matchAll(/<blockquote\b[^>]*>(.*?)<\/blockquote>/gs)].map(([, inner]) => [
+    texts(inner, 'p', 'rs-results__label')[0],
+    texts(inner, 'p', 'rs-results__text')[0],
+  ]);
+
+test('RS-RES-01, 02, RS-PAGE-08: after the paper, what it proves: the theorem, then the three, all open', () => {
+  const html = page('en/research');
+  const results = section(html, 'rs-results');
+  assert.deepEqual(
+    {
+      sections: sections(main(html)),
+      heading: texts(results, 'h2'),
+      statements: statements(results),
+      folded: /<details\b/.test(results),
+    },
+    { sections: ['page-head', 'rs-paper', 'rs-results'], heading: ['What it proves'], statements: STATEMENTS, folded: false },
   );
 });
 
