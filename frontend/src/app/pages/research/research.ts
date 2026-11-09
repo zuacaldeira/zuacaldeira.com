@@ -12,6 +12,7 @@ import { ResearchWall } from './research-wall/research-wall';
   template: `<app-page-head [head]="head" class="page-head--wall">
     <app-research-wall />
   </app-page-head>`,
+  styleUrl: './research.css',
 })
 export class Research {
   private readonly lang = inject(I18nService).language();

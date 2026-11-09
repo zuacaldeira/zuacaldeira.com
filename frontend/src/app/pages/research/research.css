@@ -1,0 +1,9 @@
+/* The wall beside the head's text from 900 px, after the intro below it (research-spec.md, "Layout
+   per width"; D15 in research.md). */
+@media (min-width: 900px) {
+  app-research-wall {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    align-self: center;
+  }
+}

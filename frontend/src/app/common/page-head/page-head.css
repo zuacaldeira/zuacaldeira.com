@@ -44,6 +44,30 @@
   color: var(--zc-text-body);
 }
 
+/* With a figure beside the text (the Research wall, D15 in research.md): two columns from 900 px,
+   the text centred against the figure by the empty first and last rows; one column below. The page
+   places its own projected figure in column 2. */
+@media (min-width: 900px) {
+  :host(.page-head--wall) .page-head__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+    grid-template-rows: 1fr auto auto auto 1fr;
+    column-gap: clamp(32px, 5vw, 72px);
+  }
+
+  :host(.page-head--wall) .page-head__eyebrow {
+    grid-area: 2 / 1;
+  }
+
+  :host(.page-head--wall) .page-head__title {
+    grid-area: 3 / 1;
+  }
+
+  :host(.page-head--wall) .page-head__intro {
+    grid-area: 4 / 1;
+  }
+}
+
 @media (max-width: 599.98px) {
   .page-head__in {
     padding-inline: 16px;

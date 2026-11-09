@@ -11,6 +11,7 @@ import { I18nService } from '../../../services/i18n.service';
 @Component({
   selector: 'app-research-wall',
   templateUrl: './research-wall.html',
+  styleUrl: './research-wall.css',
 })
 export class ResearchWall {
   readonly wall = inject(RESEARCH_CONTENT).wall[inject(I18nService).language()];
