@@ -148,7 +148,9 @@ def render_research(lattices):
             out.append("</g>")
     out += [
         "</svg>",
-        '<figcaption class="rs-wall__caption">{{ wall.caption }}</figcaption>',
+        # The key in ochre, after the caption: its own stored text (D17).
+        '<figcaption class="rs-wall__caption">{{ wall.caption }}'
+        ' <span class="rs-wall__key">{{ wall.key }}</span></figcaption>',
         '<p class="rs-wall__hint" aria-hidden="true">{{ hint() }}</p>',
         "</figure>",
     ]

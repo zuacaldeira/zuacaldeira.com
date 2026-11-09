@@ -170,6 +170,7 @@ export const TEST_CONTENT: ContentSnapshot = {
     wall: inEvery((lang) => ({
       label: `wall label ${lang}`,
       caption: `wall caption ${lang}`,
+      key: `wall key ${lang}`,
       hint: `wall hint ${lang}`,
     })),
   },

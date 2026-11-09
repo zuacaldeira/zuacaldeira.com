@@ -170,6 +170,8 @@ export interface WritingContent {
 export interface ResearchWallText {
   readonly label: string;
   readonly caption: string;
+  /** "Ochre: not distributive, …", shown after the caption in ochre (D17). */
+  readonly key: string;
   readonly hint: string;
 }
 

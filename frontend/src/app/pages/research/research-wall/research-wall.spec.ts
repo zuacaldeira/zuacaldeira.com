@@ -22,7 +22,18 @@ describe('ResearchWall', () => {
       role: svg?.getAttribute('role'),
       label: svg?.getAttribute('aria-label'),
       caption: wall.querySelector('figure figcaption')?.textContent?.trim(),
-    }).toEqual({ role: 'img', label: 'wall label de', caption: 'wall caption de' });
+    }).toEqual({ role: 'img', label: 'wall label de', caption: 'wall caption de wall key de' });
+  });
+
+  it('RS-WALL-07 (D17): should end the caption with the key, in a span of its own', () => {
+    const { wall } = show('pt');
+    const caption = wall.querySelector('figure figcaption')!;
+    const key = caption.querySelector('span.rs-wall__key');
+    expect({
+      key: key?.textContent?.trim(),
+      last: caption.lastElementChild === key,
+      before: caption.firstChild?.textContent?.trim(),
+    }).toEqual({ key: 'wall key pt', last: true, before: 'wall caption pt' });
   });
 
   it('RS-MOTION-04, RS-MOTION-P-03: should name the tile pointed at, and bring the hint back on leaving the wall', async () => {
