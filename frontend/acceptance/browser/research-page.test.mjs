@@ -87,6 +87,23 @@ for (const lang of ['en', 'de', 'pt']) {
   });
 }
 
+test('RS-PAGE-10: every link and the button on the Research page are at least 44 px tall at 390 px', async () => {
+  for (const lang of ['en', 'de', 'pt']) {
+    const { context, page } = await open(`/${lang}/research`, 390);
+    try {
+      const links = await page.evaluate(() =>
+        [...document.querySelectorAll('main a')]
+          .filter((el) => el.getClientRects().length > 0)
+          .map((el) => ({ text: el.textContent.trim().slice(0, 30), height: el.getBoundingClientRect().height })),
+      );
+      assert.equal(links.length, 4, `/${lang}/research: the PDF button, the tool's link and the two closing links`);
+      assert.deepEqual(links.filter(({ height }) => height < 44), [], `/${lang}/research`);
+    } finally {
+      await context.close();
+    }
+  }
+});
+
 test('BUG-RS-01 (RS-MORE-02): the new-tab words of the ResearchGate link are for screen readers, not on screen', async () => {
   const { context, page } = await open('/de/research', 1280);
   try {
