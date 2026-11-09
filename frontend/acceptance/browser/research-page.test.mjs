@@ -9,6 +9,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { extname, join, normalize } from 'node:path';
 import { chromium } from 'playwright-core';
+import { contrastsIn } from './contrast.mjs';
 
 const site = join(import.meta.dirname, '../../dist/zuacaldeira-com/browser');
 const TYPES = {
@@ -118,6 +119,21 @@ for (const width of [390, 1280]) {
       await context.close();
     }
   });
+}
+
+for (const lang of ['en', 'de']) {
+  for (const theme of ['light', 'dark']) {
+    test(`RS-PAGE-12: on /${lang}/research (1280, ${theme}), every text in main is at 4.5:1 or more`, async () => {
+      const { context, page } = await open(`/${lang}/research`, 1280, theme);
+      try {
+        const texts = await contrastsIn(page, 'main');
+        assert.ok(texts.length > 30, `the page's texts are read: ${texts.length}`);
+        assert.deepEqual(texts.filter(({ contrast }) => contrast < 4.5), [], JSON.stringify(texts.slice(0, 5)));
+      } finally {
+        await context.close();
+      }
+    });
+  }
 }
 
 test('BUG-RS-01 (RS-MORE-02): the new-tab words of the ResearchGate link are for screen readers, not on screen', async () => {
