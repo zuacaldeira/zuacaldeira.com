@@ -304,6 +304,26 @@ test('RS-MOTION-03, RS-MOTION-P-03: without a script the wall is complete and th
   );
 });
 
+// The paper's own count (its abstract): 93 distributive, 15 not, of 108; the wall's are COUNTS.
+const PAPER = { distributive: 93, notDistributive: 15 };
+
+test('RS-WALL-06 (D16): every number in the rung note is the paper’s or the data’s, 50 included, in every language', () => {
+  const { classes, notDistributive, protocols, protocolsNotDistributive } = COUNTS;
+  const expected = [
+    PAPER.distributive,
+    PAPER.notDistributive,
+    PAPER_PROTOCOLS,
+    notDistributive,
+    classes,
+    protocolsNotDistributive,
+    protocols,
+  ].toSorted((a, b) => a - b);
+  assert.deepEqual(
+    Object.fromEntries(LANGS.map((lang) => [lang, numbersIn(checks(page(`${lang}/research`)).after[1])])),
+    Object.fromEntries(LANGS.map((lang) => [lang, expected])),
+  );
+});
+
 // The classes the head's inline scripts put on <html> before first paint, run as theme.test.mjs runs
 // them, on a device that does or does not ask for reduced motion.
 const htmlClassesAtFirstPaint = (html, { reducedMotion }) => {
