@@ -380,6 +380,34 @@ test('RS-PAPER-02: one button opens the paper as a PDF from this site, in the sa
   assert.ok(existsSync(join(browser, PDF)), 'the paper is not in the build');
 });
 
+const ABSTRACT =
+  'We prove that the state space of every well-formed session type, quotiented by strongly connected components, forms a bounded lattice; n-ary parallel composition yields product lattices. Two consequences follow: duality preserves the lattice up to isomorphism, and Gay–Hole width subtyping corresponds to lattice embedding for non-recursive types. We validate this on 108 benchmark protocols across networking, databases, distributed systems, AI, and fault tolerance: all form lattices, 93 distributive, 15 non-distributive. Mechanised in Lean 4 with two independently developed tool implementations.';
+
+test('RS-PAPER-03, 04 (R2): the abstract word for word under its label, in English on every page, and said so on de and pt', () => {
+  const shown = Object.fromEntries(
+    LANGS.map((lang) => {
+      const card = section(page(`${lang}/research`), 'rs-paper');
+      const quote = card.match(/<blockquote\b([^>]*)>(.*?)<\/blockquote>/s);
+      return [
+        lang,
+        {
+          label: texts(card, 'h3'),
+          inEnglish: texts(card, 'p', 'rs-paper__lang'),
+          abstract: text(quote?.[2] ?? ''),
+          lang: attr(quote?.[1] ?? '', 'lang'),
+          translate: attr(quote?.[1] ?? '', 'translate'),
+        },
+      ];
+    }),
+  );
+  const quoted = (label, inEnglish, lang) => ({ label: [label], inEnglish, abstract: ABSTRACT, lang, translate: 'no' });
+  assert.deepEqual(shown, {
+    en: quoted('Abstract', [], null),
+    de: quoted('Zusammenfassung', ['Auf Englisch'], 'en'),
+    pt: quoted('Resumo', ['Em inglês'], 'en'),
+  });
+});
+
 // The four statements of the paper (the spec's table, D3): label and text, as on the English page.
 const STATEMENTS = [
   ['Theorem 15 · Reticulate Theorem', 'For every well-formed session type S, ℒ(S)/≡ is a bounded lattice.'],
