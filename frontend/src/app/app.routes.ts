@@ -16,7 +16,10 @@ const pages: Routes = [
     path: 'software',
     loadChildren: () => import('./pages/software/software.routes').then((m) => m.SOFTWARE_ROUTES),
   },
-  { path: 'research', loadComponent: () => import('./pages/research/research').then((m) => m.Research) },
+  {
+    path: 'research',
+    loadChildren: () => import('./pages/research/research.routes').then((m) => m.RESEARCH_ROUTES),
+  },
   {
     path: 'writing',
     loadChildren: () => import('./pages/writing/writing.routes').then((m) => m.WRITING_ROUTES),

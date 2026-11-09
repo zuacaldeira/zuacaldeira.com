@@ -131,6 +131,14 @@ describe('App Routes', () => {
       const harness = await RouterTestingHarness.create(url);
       expect(harness.routeNativeElement?.querySelector(selector)?.textContent?.trim()).toBe(text);
     });
+
+    it('RS-PAGE-01, RS-PAGE-06 (D11): should show /de/research as the Research page in German, its text from its route', async () => {
+      TestBed.inject(I18nService).setLanguage('en');
+      const harness = await RouterTestingHarness.create('/de/research');
+      expect(harness.routeNativeElement?.tagName).toBe('APP-RESEARCH');
+      expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe('de');
+      expect(harness.routeNativeElement?.querySelector('h1')?.textContent?.trim()).toBe('research heading de');
+    });
   });
 
   describe('page head', () => {
