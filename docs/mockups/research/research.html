@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Alexandre Zua Caldeira, Research page mock-up</title>
-<!-- Research page mock-up, one option (R1 b: a landing page for the ICE 2026 paper). Head, tokens,
-     shell CSS and the glaze engine are copied unchanged from docs/mockups/writing/writing.html
-     (itself from the Software and home mock-ups). -->
+<!-- Research page mock-up (R1 b: a landing page for the ICE 2026 paper), with three options for
+     its graphics, colour and motion (#opt=a|b|c, 2026-11-09). Head, tokens, shell CSS and the glaze
+     engine are copied unchanged from docs/mockups/writing/writing.html. -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -331,6 +331,88 @@ html.sources .src{display:block}
   .thm .m,.stmts .m{white-space:normal}
 }
 @media (max-width:480px){.lead{padding:var(--zc-space-4)}.lead .btn{width:100%;align-self:stretch}.more ul{flex-direction:column;align-items:flex-start}}
+
+/* ---------- Graphics, colour and motion (2026-11-09: R4 reopened). Tokens only. ---------- */
+/* Colour rhythm, the same in every option: head on the glaze tile, the paper on the surface with its
+   ochre top, the results on the theorem band (as on Home and Software), the tool on the raised glaze. */
+.sec--band{background:var(--band-bg);color:var(--band-fg);border-top:0}
+.sec--band+.sec{border-top:0}
+.sec--band .sec-h,.sec--band .thm p:last-child,.sec--band .stmts p:last-child{color:var(--band-fg)}
+.sec--band .thm-k{color:var(--band-fg);opacity:1}
+.sec--band .stmts{border-top-color:color-mix(in srgb,var(--band-fg) 40%,transparent)}
+.sec--band *:focus-visible{outline-color:var(--band-fg)}
+.sec--raised{background:var(--zc-bg-light)}
+.fig--nd{border-top-color:var(--zc-ochre)}
+
+/* A lattice drawing: edges in --zc-edge (3:1), not distributive in ochre; ⊤ and ⊥ larger. */
+.lat2 line{stroke:var(--zc-edge);stroke-width:1.6;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.lat2 circle{fill:var(--zc-edge)}
+.lat2 .nd line{stroke:var(--zc-ochre)}
+.lat2 .nd circle{fill:var(--zc-ochre)}
+.lat2 rect.cell{fill:transparent;stroke:var(--grout);stroke-width:1;vector-effect:non-scaling-stroke}
+.sec--band .lat2 line{stroke:var(--band-fg)}
+.sec--band .lat2 circle{fill:var(--band-fg)}
+.sec--band .lat2 .nd line{stroke:var(--foot-gold)}
+.sec--band .lat2 .nd circle{fill:var(--foot-gold)}
+.lat2 .end{stroke:var(--zc-bg-warm);stroke-width:1.5}
+.sec--band .lat2 .end{stroke:var(--band-bg)}
+.lat2 text{font-family:var(--zc-font-mono);font-size:13px;fill:currentColor}
+.lat2 g.hot line{stroke-width:2.6}
+
+/* Motion: only with JavaScript and without reduced motion (html.motion is set by the script). */
+html.motion .draw line{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .7s ease var(--d,0s)}
+html.motion .draw circle{opacity:0;transition:opacity .4s ease var(--d,0s)}
+html.motion .draw.in line{stroke-dashoffset:0}
+html.motion .draw.in circle{opacity:1}
+html.motion .tiles .tile{transition:opacity .3s ease}
+@media (prefers-reduced-motion:reduce){html.motion .draw line,html.motion .draw circle{transition:none}}
+
+/* Option A: the wall beside the head. */
+.sw-head--wall .col{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:var(--zc-space-6) clamp(32px,5vw,72px);align-items:center}
+.sw-head--wall .head__text{display:flex;flex-direction:column;gap:var(--zc-space-4);min-width:0}
+.wallfig{margin:0;display:flex;flex-direction:column;gap:var(--zc-space-2);min-width:0}
+.wallfig svg{width:100%;height:auto;display:block;background:color-mix(in srgb,var(--zc-bg-warm) 85%,transparent)}
+.cap{font-family:var(--zc-font-mono);font-size:.75rem;line-height:1.5;color:var(--zc-text-muted);max-width:60ch}
+.cap b{font-weight:500;color:var(--zc-ochre-text)}
+.hint{font-family:var(--zc-font-mono);font-size:.75rem;color:var(--zc-text-body);min-height:1.5em}
+
+/* Option B: two lattices beside the theorem. */
+.thm-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--zc-space-8) clamp(32px,5vw,72px);align-items:center}
+.pair{margin:0;display:flex;flex-direction:column;gap:var(--zc-space-3);min-width:0}
+.pair__row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--zc-space-6)}
+.pair__one{display:flex;flex-direction:column;gap:var(--zc-space-2);align-items:center;min-width:0}
+.pair__one svg{width:100%;max-width:220px;height:auto}
+.pair__name{font-family:var(--zc-font-mono);font-size:.8125rem;text-align:center}
+.pair .cap{color:var(--band-fg)}
+.replay{display:inline-flex;align-items:center;gap:.4rem;min-height:44px;padding:0 16px;border:1px solid var(--band-fg);background:transparent;color:var(--band-fg);font:500 .9375rem var(--zc-font-body);border-radius:2px;cursor:pointer;align-self:flex-start}
+.replay:hover{background:var(--band-fg);color:var(--band-bg)}
+html:not(.motion) .replay{display:none}
+
+/* Option C: the corpus as evidence, every tile a button. */
+.wallsec{margin-top:clamp(40px,5vw,64px);padding-top:var(--zc-space-8);border-top:1px solid var(--zc-border-light)}
+.wallsec h3{font-family:var(--zc-font-heading);font-weight:600;font-size:1.375rem;color:var(--zc-text-heading);margin-bottom:var(--zc-space-3)}
+.filters{display:flex;flex-wrap:wrap;gap:0;margin:var(--zc-space-4) 0}
+.filters button{min-height:44px;padding:0 14px;border:1px solid var(--zc-border-light);margin-inline-start:-1px;background:var(--zc-bg-white);color:var(--zc-text-body);font:500 .875rem var(--zc-font-body);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--zc-azul);border-color:var(--zc-azul);color:var(--zc-on-accent)}
+.filters button:focus-visible{position:relative;z-index:1}
+.tiles{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:4px;list-style:none;margin:0;padding:0}
+.tile{display:block;width:100%;aspect-ratio:1;min-height:44px;padding:0;border:1px solid var(--zc-border-light);background:var(--zc-bg-white);cursor:pointer}
+.tile svg{width:100%;height:100%;display:block}
+.tile:hover,.tile[aria-pressed="true"]{border-color:var(--zc-azul);box-shadow:inset 0 0 0 1px var(--zc-azul)}
+.tile.nd:hover,.tile.nd[aria-pressed="true"]{border-color:var(--zc-ochre-text);box-shadow:inset 0 0 0 1px var(--zc-ochre-text)}
+.tile.dim{opacity:.18}
+.info{font-family:var(--zc-font-mono);font-size:.8125rem;color:var(--zc-text-body);min-height:3em;margin-top:var(--zc-space-3)}
+
+/* The IDE screenshot Zua will supply: a plainly marked empty frame. */
+.shot{margin:0;display:flex;flex-direction:column;gap:var(--zc-space-2);min-width:0}
+.shot__frame{aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;padding:var(--zc-space-6);border:2px dashed #9e2b25;background:var(--zc-bg-white);text-align:center}
+.shot__frame p{font-family:var(--zc-font-mono);font-size:.875rem;color:var(--zc-text-body);max-width:34ch}
+.toolgrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--zc-space-8) clamp(32px,5vw,72px);align-items:start}
+
+@media (max-width:900px){
+  .sw-head--wall .col,.thm-grid,.toolgrid{grid-template-columns:minmax(0,1fr)}
+  .tiles{grid-template-columns:repeat(7,minmax(0,1fr))}
+}
 </style>
 <script>
 /* The glaze engine, copied unchanged from the Living Glaze study. */
@@ -498,6 +580,9 @@ function paint(){
   const dark=th.mode==='dark';
   r.setProperty('--foot-bg',dark?th.hex.raised:th.hex.heading);
   r.setProperty('--foot-fg',dark?th.hex.heading:th.hex.bg);
+  /* The theorem band, as styles.css (D32 in software.md): the accent in light, the raised surface in dark. */
+  r.setProperty('--band-bg',dark?th.hex.raised:th.hex.accent);
+  r.setProperty('--band-fg',dark?th.hex.heading:th.hex.onAccent);
   document.documentElement.style.colorScheme=dark?'dark':'light';
   document.documentElement.dataset.mode=th.mode;
 }
@@ -547,6 +632,8 @@ function paint(){
 const NAMES={en:'English',de:'Deutsch',pt:'Português'};
 const L=['en','de','pt'];
 const ICON={living:'<path d="M12 2 22 12 12 22 2 12zm0 3.4V18.6L18.6 12z"/>',light:'<path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM11 1h2v3h-2zm0 19h2v3h-2zM1 11h3v2H1zm19 0h3v2h-3zM4.2 2.8l2.1 2.1-1.4 1.4-2.1-2.1zm14.9 14.9 2.1 2.1-1.4 1.4-2.1-2.1zM2.8 19.8l2.1-2.1 1.4 1.4-2.1 2.1zM17.7 4.9l2.1-2.1 1.4 1.4-2.1 2.1z"/>',dark:'<path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.4 5.4 0 0 1-9.54-5.4A5.5 5.5 0 0 1 13.36 3.1 9.3 9.3 0 0 0 12 3z"/>'};
+/* frontend/scripts/lattice-wall/lattices.json (R2′), sorted by size as render.py does; nodes are 0..n-1. */
+const LATS=[{"n":2,"cov":[[0,1]],"top":0,"bot":1,"name":"GoF Facade","dist":true,"count":1,"members":["GoF Facade"]},{"n":3,"cov":[[0,1],[1,2]],"top":0,"bot":2,"name":"GoF Visitor","dist":true,"count":5,"members":["GoF Visitor","GoF Decorator","GoF Adapter","GoF Prototype","GoF Singleton"]},{"n":4,"cov":[[0,1],[1,2],[2,3]],"top":0,"bot":3,"name":"GoF Command","dist":true,"count":3,"members":["GoF Command","GoF Builder","GoF Proxy"]},{"n":4,"cov":[[0,1],[0,2],[1,3],[2,3]],"top":0,"bot":3,"name":"QED Vertex","dist":true,"count":6,"members":["QED Vertex","GoF Strategy","GoF Composite","GoF Factory Method","GoF Bridge","GoF Abstract Factory"]},{"n":5,"cov":[[0,1],[1,2],[2,3],[3,4]],"top":0,"bot":4,"name":"Needham-Schroeder","dist":true,"count":6,"members":["Needham-Schroeder","Socratic Questioning","AI Agent Negotiation","GoF Chain of Responsibility","GoF Interpreter","GoF Mediator"]},{"n":5,"cov":[[0,1],[1,2],[1,3],[2,4],[3,4]],"top":0,"bot":4,"name":"Double Slit Observed","dist":true,"count":2,"members":["Double Slit Observed","GoF Flyweight"]},{"n":5,"cov":[[0,1],[0,2],[1,4],[2,3],[3,4]],"top":0,"bot":4,"name":"Nim (3 objects)","dist":false,"count":1,"members":["Nim (3 objects)"]},{"n":5,"cov":[[0,1],[0,2],[1,3],[2,3],[3,4]],"top":0,"bot":4,"name":"Dominion Attack/Moat","dist":true,"count":1,"members":["Dominion Attack/Moat"]},{"n":6,"cov":[[0,1],[1,2],[1,3],[2,4],[3,4],[4,5]],"top":0,"bot":5,"name":"Double Slit Unobserved","dist":true,"count":1,"members":["Double Slit Unobserved"]},{"n":6,"cov":[[0,1],[1,2],[2,3],[2,4],[3,5],[4,5]],"top":0,"bot":5,"name":"GoF Template Method","dist":true,"count":1,"members":["GoF Template Method"]},{"n":6,"cov":[[0,1],[1,2],[1,3],[1,4],[2,5],[3,5],[4,5]],"top":0,"bot":5,"name":"QCD Gluon Exchange","dist":false,"count":1,"members":["QCD Gluon Exchange"]},{"n":6,"cov":[[0,1],[0,2],[0,3],[0,4],[1,5],[2,5],[3,5],[4,5]],"top":0,"bot":5,"name":"Billiard Map","dist":false,"count":1,"members":["Billiard Map"]},{"n":7,"cov":[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6]],"top":0,"bot":6,"name":"Java Iterator","dist":true,"count":7,"members":["Java Iterator","mRNA Lifecycle","Cascade Decay","Mathematical Proof Dialogue","Legal Cross-Examination","GoF State","GoF Memento"]},{"n":7,"cov":[[0,1],[1,2],[1,3],[2,6],[3,4],[4,5],[5,6]],"top":0,"bot":6,"name":"Two-Phase Commit","dist":false,"count":1,"members":["Two-Phase Commit"]},{"n":7,"cov":[[0,1],[0,3],[1,2],[2,6],[3,4],[4,5],[5,6]],"top":0,"bot":6,"name":"Hydrogen Atom","dist":false,"count":2,"members":["Hydrogen Atom","GoF Observer"]},{"n":7,"cov":[[0,1],[1,2],[2,3],[2,4],[3,5],[4,5],[5,6]],"top":0,"bot":6,"name":"T-Cell Activation","dist":true,"count":1,"members":["T-Cell Activation"]},{"n":7,"cov":[[0,1],[1,2],[1,4],[2,3],[3,6],[4,5],[5,6]],"top":0,"bot":6,"name":"Weak Decay (Beta)","dist":false,"count":1,"members":["Weak Decay (Beta)"]},{"n":7,"cov":[[0,1],[1,2],[2,3],[2,4],[2,5],[3,6],[4,6],[5,6]],"top":0,"bot":6,"name":"Alternative Splicing","dist":false,"count":1,"members":["Alternative Splicing"]},{"n":8,"cov":[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]],"top":0,"bot":7,"name":"Diffie-Hellman","dist":true,"count":1,"members":["Diffie-Hellman"]},{"n":8,"cov":[[0,1],[1,2],[2,3],[2,4],[3,7],[4,5],[5,6],[6,7]],"top":0,"bot":7,"name":"File Object","dist":false,"count":1,"members":["File Object"]},{"n":8,"cov":[[0,1],[1,2],[2,3],[3,4],[3,5],[4,7],[5,6],[6,7]],"top":0,"bot":7,"name":"Blockchain Tx","dist":false,"count":1,"members":["Blockchain Tx"]},{"n":8,"cov":[[0,1],[1,2],[2,3],[3,4],[4,5],[4,6],[5,7],[6,7]],"top":0,"bot":7,"name":"Signal Transduction PKA","dist":true,"count":1,"members":["Signal Transduction PKA"]},{"n":8,"cov":[[0,1],[1,2],[1,6],[2,3],[3,4],[3,5],[4,7],[5,7],[6,7]],"top":0,"bot":7,"name":"A2A","dist":false,"count":1,"members":["A2A"]},{"n":9,"cov":[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8]],"top":0,"bot":8,"name":"Carnot Cycle","dist":true,"count":4,"members":["Carnot Cycle","tRNA Charging","SAML SSO","Zero-Knowledge Proof"]},{"n":9,"cov":[[0,1],[1,2],[2,3],[2,5],[3,4],[4,8],[5,6],[6,7],[7,8]],"top":0,"bot":8,"name":"ER-Golgi Secretory","dist":false,"count":1,"members":["ER-Golgi Secretory"]},{"n":9,"cov":[[0,1],[0,2],[1,8],[2,3],[3,4],[4,5],[4,6],[5,8],[6,7],[7,8]],"top":0,"bot":8,"name":"Ribosome Translation","dist":false,"count":1,"members":["Ribosome Translation"]},{"n":9,"cov":[[0,1],[0,6],[1,2],[1,4],[2,3],[3,8],[4,5],[5,8],[6,7],[7,8]],"top":0,"bot":8,"name":"Black Hole Hawking","dist":false,"count":1,"members":["Black Hole Hawking"]},{"n":9,"cov":[[0,1],[1,2],[1,5],[2,3],[2,4],[3,8],[4,8],[5,6],[5,7],[6,8],[7,8]],"top":0,"bot":8,"name":"Quantum Measurement","dist":false,"count":1,"members":["Quantum Measurement"]},{"n":9,"cov":[[0,1],[0,2],[1,3],[1,6],[2,3],[2,4],[3,5],[3,7],[4,5],[5,8],[6,7],[7,8]],"top":0,"bot":8,"name":"Bell Pair","dist":true,"count":1,"members":["Bell Pair"]},{"n":10,"cov":[[0,1],[1,2],[1,6],[2,3],[3,4],[4,5],[5,9],[6,7],[7,8],[8,9]],"top":0,"bot":9,"name":"Rate Limiter","dist":false,"count":3,"members":["Rate Limiter","Enzyme (Michaelis-Menten)","Apoptosis"]},{"n":10,"cov":[[0,1],[1,2],[2,3],[3,4],[3,8],[4,5],[5,6],[6,7],[7,9],[8,9]],"top":0,"bot":9,"name":"DNSSEC","dist":false,"count":1,"members":["DNSSEC"]},{"n":10,"cov":[[0,1],[1,2],[2,3],[2,4],[3,9],[4,5],[5,6],[6,7],[6,8],[7,9],[8,9]],"top":0,"bot":9,"name":"Gravitational Collapse","dist":false,"count":1,"members":["Gravitational Collapse"]},{"n":10,"cov":[[0,1],[1,2],[2,3],[2,6],[3,4],[3,7],[4,5],[4,8],[5,9],[6,7],[7,8],[8,9]],"top":0,"bot":9,"name":"Two-Buyer","dist":true,"count":1,"members":["Two-Buyer"]},{"n":10,"cov":[[0,1],[1,2],[1,4],[2,3],[2,5],[3,6],[4,5],[4,7],[5,6],[5,8],[6,9],[7,8],[8,9]],"top":0,"bot":9,"name":"gRPC BiDi Stream","dist":true,"count":1,"members":["gRPC BiDi Stream"]},{"n":11,"cov":[[0,1],[1,2],[2,3],[3,4],[4,5],[4,7],[5,6],[6,10],[7,8],[8,9],[9,10]],"top":0,"bot":10,"name":"OAuth 2.0","dist":false,"count":1,"members":["OAuth 2.0"]},{"n":11,"cov":[[0,1],[1,2],[2,3],[3,4],[3,5],[4,6],[5,6],[6,7],[7,8],[8,9],[9,10]],"top":0,"bot":10,"name":"GitHub CI Workflow","dist":true,"count":1,"members":["GitHub CI Workflow"]},{"n":11,"cov":[[0,1],[1,2],[1,9],[2,3],[3,4],[4,5],[5,6],[5,7],[6,10],[7,8],[8,10],[9,10]],"top":0,"bot":10,"name":"Protein Folding","dist":false,"count":1,"members":["Protein Folding"]},{"n":12,"cov":[[0,1],[1,2],[1,4],[1,9],[2,3],[3,11],[4,5],[4,7],[5,6],[6,11],[7,8],[8,11],[9,10],[10,11]],"top":0,"bot":11,"name":"Pub/Sub","dist":false,"count":1,"members":["Pub/Sub"]},{"n":12,"cov":[[0,1],[1,2],[2,3],[2,5],[3,4],[3,6],[4,7],[5,6],[5,8],[6,7],[6,9],[7,10],[8,9],[9,10],[10,11]],"top":0,"bot":11,"name":"File Channel","dist":true,"count":2,"members":["File Channel","Big Bang Nucleosynthesis"]},{"n":13,"cov":[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[6,9],[7,8],[8,12],[9,10],[10,11],[11,12]],"top":0,"bot":12,"name":"Kerberos","dist":false,"count":1,"members":["Kerberos"]},{"n":13,"cov":[[0,1],[1,2],[1,6],[2,3],[2,4],[3,12],[4,5],[5,12],[6,7],[7,8],[8,9],[8,11],[9,10],[10,12],[11,12]],"top":0,"bot":12,"name":"TLS Handshake","dist":false,"count":1,"members":["TLS Handshake"]},{"n":13,"cov":[[0,1],[1,2],[2,3],[2,5],[3,4],[3,7],[4,8],[5,6],[5,7],[6,9],[7,8],[7,9],[8,10],[9,10],[10,11],[11,12]],"top":0,"bot":12,"name":"Mutual TLS","dist":true,"count":1,"members":["Mutual TLS"]},{"n":14,"cov":[[0,1],[1,2],[2,3],[2,9],[3,4],[4,5],[5,6],[6,7],[7,8],[8,13],[9,10],[10,11],[11,12],[12,13]],"top":0,"bot":13,"name":"Failover","dist":false,"count":1,"members":["Failover"]},{"n":14,"cov":[[0,1],[1,2],[2,3],[2,6],[2,9],[3,4],[4,5],[5,13],[6,7],[7,8],[8,13],[9,10],[10,11],[11,12],[12,13]],"top":0,"bot":13,"name":"HTTP Connection","dist":false,"count":1,"members":["HTTP Connection"]},{"n":14,"cov":[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[5,9],[6,7],[6,10],[7,8],[7,11],[8,12],[9,10],[10,11],[11,12],[12,13]],"top":0,"bot":13,"name":"Reticulate Pipeline","dist":true,"count":1,"members":["Reticulate Pipeline"]},{"n":14,"cov":[[0,1],[1,2],[1,5],[2,3],[2,6],[3,4],[3,7],[4,8],[5,6],[5,9],[6,7],[6,10],[7,8],[7,11],[8,12],[9,10],[10,11],[11,12],[12,13]],"top":0,"bot":13,"name":"Quantum Teleportation","dist":true,"count":1,"members":["Quantum Teleportation"]},{"n":15,"cov":[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[5,10],[6,7],[7,8],[8,9],[9,14],[10,11],[11,12],[12,13],[13,14]],"top":0,"bot":14,"name":"SMTP","dist":false,"count":1,"members":["SMTP"]},{"n":15,"cov":[[0,1],[1,2],[2,3],[2,4],[3,14],[4,5],[4,10],[4,12],[5,6],[5,8],[6,7],[7,14],[8,9],[9,14],[10,11],[11,14],[12,13],[13,14]],"top":0,"bot":14,"name":"ATM","dist":false,"count":1,"members":["ATM"]},{"n":16,"cov":[[0,1],[1,2],[1,7],[2,3],[3,4],[4,5],[5,6],[6,15],[7,8],[8,9],[9,10],[10,11],[11,12],[12,13],[13,14],[14,15]],"top":0,"bot":15,"name":"Reentrant Lock","dist":false,"count":1,"members":["Reentrant Lock"]},{"n":16,"cov":[[0,1],[1,2],[2,3],[3,4],[4,5],[4,9],[5,6],[6,7],[7,8],[8,15],[9,10],[10,11],[11,12],[12,13],[13,14],[14,15]],"top":0,"bot":15,"name":"Certificate Chain","dist":false,"count":1,"members":["Certificate Chain"]},{"n":16,"cov":[[0,1],[1,2],[1,6],[1,9],[1,12],[2,3],[3,4],[4,5],[5,15],[6,7],[7,8],[8,15],[9,10],[10,11],[11,15],[12,13],[13,14],[14,15]],"top":0,"bot":15,"name":"DNS Resolver","dist":false,"count":1,"members":["DNS Resolver"]},{"n":16,"cov":[[0,1],[1,2],[2,3],[3,4],[3,5],[4,6],[5,6],[6,7],[6,8],[7,9],[8,9],[9,10],[9,11],[10,12],[11,12],[12,13],[13,14],[14,15]],"top":0,"bot":15,"name":"Ki3 Offboarding","dist":true,"count":1,"members":["Ki3 Offboarding"]},{"n":16,"cov":[[0,1],[1,2],[1,9],[2,3],[3,4],[4,5],[5,6],[5,7],[6,15],[7,8],[8,15],[9,10],[10,11],[11,12],[11,13],[12,15],[13,14],[14,15]],"top":0,"bot":15,"name":"Lac Operon","dist":false,"count":1,"members":["Lac Operon"]},{"n":16,"cov":[[0,1],[1,2],[2,3],[3,4],[3,7],[3,11],[4,5],[4,6],[5,15],[6,15],[7,8],[8,9],[8,10],[9,15],[10,15],[11,12],[12,13],[12,14],[13,15],[14,15]],"top":0,"bot":15,"name":"Signal Protocol","dist":false,"count":1,"members":["Signal Protocol"]},{"n":16,"cov":[[0,1],[1,2],[1,5],[2,3],[2,7],[3,4],[3,9],[4,10],[4,13],[5,6],[5,7],[6,8],[7,8],[7,9],[8,11],[9,10],[9,11],[10,12],[10,14],[11,12],[12,15],[13,14],[14,15]],"top":0,"bot":15,"name":"DNA Replication Fork","dist":true,"count":1,"members":["DNA Replication Fork"]},{"n":17,"cov":[[0,1],[0,11],[1,2],[1,7],[2,3],[3,4],[3,5],[4,16],[5,6],[6,16],[7,8],[7,9],[8,16],[9,10],[10,16],[11,12],[12,13],[12,14],[13,16],[14,15],[15,16]],"top":0,"bot":16,"name":"Enzyme (Competitive Inhibition)","dist":false,"count":1,"members":["Enzyme (Competitive Inhibition)"]},{"n":17,"cov":[[0,1],[1,2],[1,7],[1,12],[2,3],[3,4],[4,5],[4,6],[5,16],[6,16],[7,8],[8,9],[9,10],[9,11],[10,16],[11,16],[12,13],[13,14],[13,15],[14,16],[15,16]],"top":0,"bot":16,"name":"Glucose Regulation","dist":false,"count":1,"members":["Glucose Regulation"]},{"n":17,"cov":[[0,1],[1,2],[1,9],[2,3],[2,6],[3,4],[3,5],[4,16],[5,16],[6,7],[6,8],[7,16],[8,16],[9,10],[9,13],[10,11],[10,12],[11,16],[12,16],[13,14],[13,15],[14,16],[15,16]],"top":0,"bot":16,"name":"DB Transaction","dist":false,"count":1,"members":["DB Transaction"]},{"n":17,"cov":[[0,1],[0,2],[1,3],[1,6],[2,3],[2,4],[3,5],[3,7],[4,5],[5,8],[6,7],[7,8],[8,9],[8,10],[9,11],[9,14],[10,11],[10,12],[11,13],[11,15],[12,13],[13,16],[14,15],[15,16]],"top":0,"bot":16,"name":"Photosynthesis-Respiration","dist":true,"count":1,"members":["Photosynthesis-Respiration"]},{"n":18,"cov":[[0,1],[1,2],[2,3],[2,4],[2,6],[2,8],[3,5],[3,7],[3,9],[4,5],[4,10],[4,14],[5,11],[5,16],[6,7],[6,12],[6,14],[7,13],[7,16],[8,9],[8,10],[8,12],[9,11],[9,13],[10,11],[10,15],[11,17],[12,13],[12,15],[13,17],[14,15],[14,16],[15,17],[16,17]],"top":0,"bot":17,"name":"WebSocket","dist":true,"count":1,"members":["WebSocket"]},{"n":20,"cov":[[0,1],[1,2],[1,5],[2,3],[2,6],[3,4],[3,7],[4,8],[5,6],[5,9],[6,7],[6,10],[7,8],[7,11],[8,12],[9,10],[9,13],[10,11],[10,14],[11,12],[11,15],[12,16],[13,14],[14,15],[15,16],[16,17],[16,18],[17,19],[18,19]],"top":0,"bot":19,"name":"Saga Orchestrator","dist":true,"count":1,"members":["Saga Orchestrator"]},{"n":21,"cov":[[0,1],[1,2],[1,15],[2,3],[3,4],[3,9],[4,5],[5,6],[6,7],[7,8],[8,20],[9,10],[10,11],[11,12],[12,13],[13,14],[14,20],[15,16],[16,17],[17,18],[18,19],[19,20]],"top":0,"bot":20,"name":"Ion Channel (Single)","dist":false,"count":1,"members":["Ion Channel (Single)"]},{"n":28,"cov":[[0,1],[1,2],[1,4],[1,10],[2,3],[2,16],[3,9],[3,17],[4,5],[4,7],[4,11],[5,6],[5,12],[6,9],[6,13],[7,8],[7,14],[8,9],[8,15],[9,18],[10,11],[10,16],[10,19],[11,12],[11,14],[11,22],[12,13],[12,23],[13,18],[13,24],[14,15],[14,25],[15,18],[15,26],[16,17],[16,20],[17,18],[17,21],[18,27],[19,20],[19,22],[20,21],[21,27],[22,23],[22,25],[23,24],[24,27],[25,26],[26,27]],"top":0,"bot":27,"name":"MCP","dist":false,"count":1,"members":["MCP"]},{"n":30,"cov":[[0,1],[0,9],[0,15],[0,23],[1,2],[1,4],[1,7],[2,3],[3,29],[4,5],[4,6],[5,29],[6,29],[7,8],[8,29],[9,10],[9,12],[9,13],[10,11],[11,29],[12,29],[13,14],[14,29],[15,16],[15,18],[15,20],[16,17],[17,29],[18,19],[19,29],[20,21],[20,22],[21,29],[22,29],[23,24],[23,26],[23,27],[24,25],[25,29],[26,29],[27,28],[28,29]],"top":0,"bot":29,"name":"Hex (2x2)","dist":false,"count":1,"members":["Hex (2x2)"]},{"n":30,"cov":[[0,1],[1,2],[2,3],[2,4],[2,14],[3,5],[3,15],[4,5],[4,6],[4,10],[4,16],[5,8],[5,11],[5,19],[6,7],[6,8],[6,22],[7,9],[7,24],[7,26],[8,9],[8,23],[9,25],[9,27],[10,11],[10,12],[10,17],[11,13],[11,20],[12,13],[12,18],[12,26],[13,21],[13,27],[14,15],[14,16],[15,19],[16,17],[16,19],[16,22],[17,18],[17,20],[18,21],[18,28],[19,20],[19,23],[20,21],[21,29],[22,23],[22,24],[23,25],[24,25],[24,28],[25,29],[26,27],[26,28],[27,29],[28,29]],"top":0,"bot":29,"name":"MQTT Client","dist":false,"count":1,"members":["MQTT Client"]},{"n":32,"cov":[[0,1],[1,2],[2,3],[2,5],[3,4],[3,6],[4,7],[5,6],[5,8],[6,7],[6,9],[7,10],[8,9],[9,10],[10,11],[11,12],[12,13],[12,15],[13,14],[13,17],[14,18],[15,16],[15,17],[16,19],[17,18],[17,19],[18,20],[19,20],[20,21],[20,23],[21,22],[21,24],[22,25],[23,24],[24,25],[25,26],[26,27],[26,29],[27,28],[28,31],[29,30],[30,31]],"top":0,"bot":31,"name":"Ki3 Onboarding","dist":false,"count":1,"members":["Ki3 Onboarding"]},{"n":33,"cov":[[0,1],[1,2],[1,23],[2,3],[3,4],[4,5],[4,14],[5,6],[6,7],[7,8],[7,9],[8,32],[9,10],[10,11],[11,12],[11,13],[12,32],[13,32],[14,15],[15,16],[16,17],[16,18],[17,32],[18,19],[19,20],[20,21],[20,22],[21,32],[22,32],[23,24],[24,25],[25,26],[25,27],[26,32],[27,28],[28,29],[29,30],[29,31],[30,32],[31,32]],"top":0,"bot":32,"name":"Cell Cycle","dist":false,"count":1,"members":["Cell Cycle"]},{"n":34,"cov":[[0,1],[1,2],[2,3],[3,4],[3,19],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[9,14],[10,11],[11,12],[12,13],[13,33],[14,15],[15,16],[16,17],[17,18],[18,33],[19,20],[20,21],[21,22],[22,23],[23,24],[23,28],[24,25],[25,26],[26,27],[27,33],[28,29],[29,30],[30,31],[31,32],[32,33]],"top":0,"bot":33,"name":"SSH Handshake","dist":false,"count":1,"members":["SSH Handshake"]},{"n":36,"cov":[[0,1],[1,2],[1,9],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8],[8,35],[9,10],[9,17],[10,11],[11,12],[12,13],[13,14],[14,15],[15,16],[16,35],[17,18],[18,19],[18,28],[19,20],[20,21],[21,22],[22,23],[23,24],[24,25],[25,26],[26,27],[27,35],[28,29],[29,30],[30,31],[31,32],[32,33],[33,34],[34,35]],"top":0,"bot":35,"name":"Circuit Breaker","dist":false,"count":1,"members":["Circuit Breaker"]},{"n":40,"cov":[[0,1],[1,2],[1,13],[2,3],[2,7],[2,14],[3,4],[3,15],[4,5],[4,16],[5,6],[5,17],[6,18],[6,37],[7,8],[7,19],[8,9],[8,20],[9,10],[9,21],[10,11],[10,22],[11,12],[11,23],[12,24],[12,37],[13,14],[13,25],[14,15],[14,19],[14,26],[15,16],[15,27],[16,17],[16,28],[17,18],[17,29],[18,30],[18,38],[19,20],[19,31],[20,21],[20,32],[21,22],[21,33],[22,23],[22,34],[23,24],[23,35],[24,36],[24,38],[25,26],[26,27],[26,31],[27,28],[28,29],[29,30],[30,39],[31,32],[32,33],[33,34],[34,35],[35,36],[36,39],[37,38],[38,39]],"top":0,"bot":39,"name":"Kafka Consumer","dist":false,"count":1,"members":["Kafka Consumer"]},{"n":41,"cov":[[0,1],[1,2],[1,14],[1,26],[1,28],[2,3],[3,4],[4,5],[5,6],[5,8],[5,10],[5,12],[6,7],[7,40],[8,9],[9,40],[10,11],[11,40],[12,13],[13,40],[14,15],[15,16],[16,17],[17,18],[17,20],[17,22],[17,24],[18,19],[19,40],[20,21],[21,40],[22,23],[23,40],[24,25],[25,40],[26,27],[27,40],[28,29],[29,30],[30,31],[31,32],[31,34],[31,36],[31,38],[32,33],[33,40],[34,35],[35,40],[36,37],[37,40],[38,39],[39,40]],"top":0,"bot":40,"name":"Stellar Nucleosynthesis","dist":false,"count":1,"members":["Stellar Nucleosynthesis"]},{"n":41,"cov":[[0,1],[0,2],[1,3],[1,6],[2,3],[2,4],[3,5],[3,7],[4,5],[5,8],[6,7],[7,8],[8,9],[9,10],[9,12],[10,11],[10,14],[11,15],[12,13],[12,14],[13,16],[14,15],[14,16],[15,17],[16,17],[17,18],[18,19],[18,21],[19,20],[19,23],[20,25],[21,22],[21,23],[22,24],[23,24],[23,25],[24,26],[25,26],[26,27],[27,28],[28,29],[29,30],[30,31],[30,39],[31,32],[32,33],[32,34],[33,40],[34,35],[35,36],[36,37],[37,38],[38,40],[39,40]],"top":0,"bot":40,"name":"Ki3 CI/CD Pipeline","dist":false,"count":1,"members":["Ki3 CI/CD Pipeline"]},{"n":50,"cov":[[0,1],[1,2],[1,8],[2,3],[2,13],[3,4],[3,14],[4,5],[4,15],[5,6],[5,16],[6,7],[6,17],[7,18],[8,9],[8,11],[8,13],[9,10],[9,19],[10,25],[10,43],[11,12],[11,31],[12,37],[12,43],[13,14],[13,19],[13,31],[14,15],[14,20],[14,32],[15,16],[15,21],[15,33],[16,17],[16,22],[16,34],[17,18],[17,23],[17,35],[18,24],[18,36],[19,20],[19,25],[20,21],[20,26],[21,22],[21,27],[22,23],[22,28],[23,24],[23,29],[24,30],[25,26],[25,44],[26,27],[26,45],[27,28],[27,46],[28,29],[28,47],[29,30],[29,48],[30,49],[31,32],[31,37],[32,33],[32,38],[33,34],[33,39],[34,35],[34,40],[35,36],[35,41],[36,42],[37,38],[37,44],[38,39],[38,45],[39,40],[39,46],[40,41],[40,47],[41,42],[41,48],[42,49],[43,44],[44,45],[45,46],[46,47],[47,48],[48,49]],"top":0,"bot":49,"name":"Connection Pool","dist":false,"count":1,"members":["Connection Pool"]},{"n":78,"cov":[[0,1],[0,66],[1,2],[2,3],[2,14],[3,4],[4,5],[5,6],[6,7],[6,12],[7,8],[7,10],[8,9],[9,77],[10,11],[11,77],[12,13],[13,77],[14,15],[14,42],[14,53],[15,16],[15,29],[16,17],[16,18],[17,77],[18,19],[19,20],[20,21],[21,22],[21,27],[22,23],[22,25],[23,24],[24,77],[25,26],[26,77],[27,28],[28,77],[29,30],[29,41],[30,31],[31,32],[32,33],[33,34],[33,39],[34,35],[34,37],[35,36],[36,77],[37,38],[38,77],[39,40],[40,77],[41,77],[42,43],[43,44],[44,45],[45,46],[45,51],[46,47],[46,49],[47,48],[48,77],[49,50],[50,77],[51,52],[52,77],[53,54],[53,55],[54,77],[55,56],[56,57],[57,58],[58,59],[58,64],[59,60],[59,62],[60,61],[61,77],[62,63],[63,77],[64,65],[65,77],[66,67],[67,68],[68,69],[69,70],[69,75],[70,71],[70,73],[71,72],[72,77],[73,74],[74,77],[75,76],[76,77]],"top":0,"bot":77,"name":"Raft Leader Election","dist":false,"count":1,"members":["Raft Leader Election"]}];
 
 /* Where each piece of content comes from (shown with "Sources"). Lab notes are English only. */
 const SRC={
@@ -559,7 +646,11 @@ const SRC={
  ev:'shared/paper evidence (R__shared.sql lines 13, 25, 37), as the bands show it',
  tool:'backend/…/seed/R__software.sql, the reticulateP row (lines 89–92, 106–109, 123–126); link label is a draft',
  rg:'ResearchGate URL from today\'s page, frontend/src/app/pages/research/research.html line 39 (R7)',
- wr:'the Writing page lists the 2007–2010 papers (R5 under R1 b)'
+ wr:'the Writing page lists the 2007–2010 papers (R5 under R1 b)',
+ wall:'frontend/scripts/lattice-wall/lattices.json (R2′): 74 classes, 47 not distributive, 104 protocols, 50 of them in a non-distributive class (README.md there); drawn with render.py\'s rank layout',
+ pair:'lattices.json (R2′): "Two-Buyer" (10 states, distributive, 1 protocol) and "Two-Phase Commit" (7 states, not distributive, 1 protocol)',
+ rung:'frontend/scripts/lattice-wall/README.md: R2′ is not the paper\'s own construction; the abstract\'s 93 / 15 are the paper\'s count',
+ bica:'placeholder: no IDE screenshot in the repository; Zua supplies it (2026-11-09)'
 };
 
 const SHELL={
@@ -576,7 +667,17 @@ en:{h1:'Research',draftTag:'Draft',phTag:'Placeholder',
  chkH:'How it was checked',f108:'benchmark protocols, every one a lattice',f93:'distributive',f15:'not distributive',fLean:'mechanised proof',
  ev:'Checked on 108 benchmark protocols from networking, databases, distributed systems and AI. Mechanised in Lean 4, with two independent tool implementations.',
  toolH:'The tool',toolK:'Verification tool',toolT:'Builds the state space of a session type and checks that it forms a lattice. It turned the ICE 2026 paper’s 108 benchmark protocols into lattices, is one of the paper’s two independent tool implementations, and checks every session type on this site.',toolGo:'reticulateP on the Software page',
- nextH:'What’s next',moreH:'More research',earlier:'Earlier papers (2007–2010)',newTab:'opens in a new tab'},
+ moreH:'More research',earlier:'Earlier papers (2007–2010)',newTab:'opens in a new tab',
+ wallLabel:'The 74 distinct lattices of the paper’s benchmark protocols at rung R2′, ordered by size; the 47 that are not distributive in ochre.',
+ wallCap:'74 distinct lattices, drawn from 104 of the paper’s 108 protocols at rung R2′, a finer construction than the paper’s own. <b>Ochre: not distributive</b>, 47 of the 74.',
+ hint:'Point at a tile to name its protocol.',
+ rung:'The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, which keeps the structure of recursive protocols: there 47 of the 74 distinct lattices are not distributive, and 50 of the 104 protocols fall in one of them.',
+ pairLabel:'Two lattices: Two-Buyer, distributive, and Two-Phase Commit, not distributive, each from ⊤ at the top to ⊥ at the bottom.',
+ pairCap:'Two protocols of the paper’s corpus, drawn at rung R2′ from the site’s lattice data. Each runs from ⊤, where it starts, down to ⊥, where it ends.',
+ dist:'distributive',nd:'not distributive',replay:'Draw again',
+ wallH:'The corpus, drawn',fAll:'All',fDist:'Distributive',fNd:'Not distributive',
+ info:'Choose a tile to name its protocol.',states:'states',protocols:'protocols',also:'also',
+ bica:'Screenshot from Zua: the BICA plugin marking an out-of-order call',bicaCap:'Caption from Zua.'},
 de:{h1:'Forschung',draftTag:'Entwurf',phTag:'Platzhalter',
  eyebrow:'Ein Paper · ICE 2026',
  intro:'Der Zustandsraum jedes wohlgeformten Session-Typs bildet einen Verband. Diese Seite stellt das Paper vor, das es beweist: was es zeigt, wie es geprüft wurde und das Werkzeug dahinter.',
@@ -585,7 +686,17 @@ de:{h1:'Forschung',draftTag:'Entwurf',phTag:'Platzhalter',
  chkH:'Wie es geprüft wurde',f108:'Benchmark-Protokolle, jedes ein Verband',f93:'distributiv',f15:'nicht distributiv',fLean:'mechanisierter Beweis',
  ev:'Geprüft an 108 Benchmark-Protokollen aus Netzwerken, Datenbanken, verteilten Systemen und KI. In Lean 4 mechanisiert, mit zwei unabhängigen Werkzeug-Implementierungen.',
  toolH:'Das Werkzeug',toolK:'Verifikationswerkzeug',toolT:'Baut den Zustandsraum eines Session-Typs und prüft, ob er einen Verband bildet. Es hat die 108 Benchmark-Protokolle des ICE-2026-Papers in Verbände übersetzt, ist eine der beiden unabhängigen Werkzeug-Implementierungen des Papers und prüft jeden Session-Typ auf dieser Website.',toolGo:'reticulateP auf der Software-Seite',
- nextH:'Wie es weitergeht',moreH:'Mehr Forschung',earlier:'Frühere Paper (2007–2010)',newTab:'öffnet in einem neuen Tab'},
+ moreH:'Mehr Forschung',earlier:'Frühere Paper (2007–2010)',newTab:'öffnet in einem neuen Tab',
+ wallLabel:'Die 74 verschiedenen Verbände der Benchmark-Protokolle des Papers auf Stufe R2′, nach Größe geordnet; die 47 nicht distributiven in Ocker.',
+ wallCap:'74 verschiedene Verbände, gezeichnet aus 104 der 108 Protokolle des Papers auf Stufe R2′, einer feineren Konstruktion als der des Papers. <b>Ocker: nicht distributiv</b>, 47 der 74.',
+ hint:'Zeigen Sie auf eine Kachel, um ihr Protokoll zu sehen.',
+ rung:'Die 93 und 15 sind die eigene Zählung des Papers über seine 108 Protokolle. Die Wand zeichnet denselben Korpus auf Stufe R2′, die die Struktur rekursiver Protokolle erhält: Dort sind 47 der 74 verschiedenen Verbände nicht distributiv, und 50 der 104 Protokolle fallen in einen davon.',
+ pairLabel:'Zwei Verbände: Two-Buyer, distributiv, und Two-Phase Commit, nicht distributiv, jeweils von ⊤ oben bis ⊥ unten.',
+ pairCap:'Zwei Protokolle aus dem Korpus des Papers, gezeichnet auf Stufe R2′ aus den Verbandsdaten der Website. Jedes läuft von ⊤, wo es beginnt, hinab zu ⊥, wo es endet.',
+ dist:'distributiv',nd:'nicht distributiv',replay:'Neu zeichnen',
+ wallH:'Der Korpus, gezeichnet',fAll:'Alle',fDist:'Distributiv',fNd:'Nicht distributiv',
+ info:'Wählen Sie eine Kachel, um ihr Protokoll zu sehen.',states:'Zustände',protocols:'Protokolle',also:'auch',
+ bica:'Screenshot from Zua: the BICA plugin marking an out-of-order call',bicaCap:'Bildunterschrift von Zua.'},
 pt:{h1:'Investigação',draftTag:'Rascunho',phTag:'Marcador',
  eyebrow:'Um artigo · ICE 2026',
  intro:'O espaço de estados de todo o tipo de sessão bem formado forma um reticulado. Esta página apresenta o artigo que o prova: o que mostra, como foi verificado e a ferramenta por trás dele.',
@@ -594,35 +705,77 @@ pt:{h1:'Investigação',draftTag:'Rascunho',phTag:'Marcador',
  chkH:'Como foi verificado',f108:'protocolos de referência, todos reticulados',f93:'distributivos',f15:'não distributivos',fLean:'prova mecanizada',
  ev:'Verificado em 108 protocolos de referência de redes, bases de dados, sistemas distribuídos e IA. Mecanizado em Lean 4, com duas implementações independentes.',
  toolH:'A ferramenta',toolK:'Ferramenta de verificação',toolT:'Constrói o espaço de estados de um tipo de sessão e verifica que forma um reticulado. Transformou em reticulados os 108 protocolos de referência do artigo ICE 2026, é uma das duas implementações independentes do artigo e verifica cada tipo de sessão deste site.',toolGo:'O reticulateP na página de software',
- nextH:'O que vem a seguir',moreH:'Mais investigação',earlier:'Artigos anteriores (2007–2010)',newTab:'abre num novo separador'}};
+ moreH:'Mais investigação',earlier:'Artigos anteriores (2007–2010)',newTab:'abre num novo separador',
+ wallLabel:'Os 74 reticulados distintos dos protocolos de referência do artigo no nível R2′, por tamanho; os 47 não distributivos a ocre.',
+ wallCap:'74 reticulados distintos, desenhados a partir de 104 dos 108 protocolos do artigo no nível R2′, uma construção mais fina do que a do artigo. <b>Ocre: não distributivos</b>, 47 dos 74.',
+ hint:'Aponte para um mosaico para ver o seu protocolo.',
+ rung:'Os 93 e 15 são a contagem do próprio artigo sobre os seus 108 protocolos. A parede desenha o mesmo corpus no nível R2′, que mantém a estrutura dos protocolos recursivos: aí 47 dos 74 reticulados distintos não são distributivos, e 50 dos 104 protocolos caem num deles.',
+ pairLabel:'Dois reticulados: Two-Buyer, distributivo, e Two-Phase Commit, não distributivo, cada um de ⊤ em cima a ⊥ em baixo.',
+ pairCap:'Dois protocolos do corpus do artigo, desenhados no nível R2′ a partir dos dados de reticulados do site. Cada um vai de ⊤, onde começa, até ⊥, onde acaba.',
+ dist:'distributivo',nd:'não distributivo',replay:'Desenhar de novo',
+ wallH:'O corpus, desenhado',fAll:'Todos',fDist:'Distributivos',fNd:'Não distributivos',
+ info:'Escolha um mosaico para ver o seu protocolo.',states:'estados',protocols:'protocolos',also:'também',
+ bica:'Screenshot from Zua: the BICA plugin marking an out-of-order call',bicaCap:'Legenda do Zua.'}};
 
-/* The paper: from ContentService.publications[0]. Title, name, venue and abstract are never translated. */
 const PAPER={year:2026,title:'Session Type State Spaces Form Lattices',author:'Alexandre Zua Caldeira',
  venue:'ICE 2026 · International Workshop on Interaction and Concurrency Experience',
  pdf:'/assets/pdfs/SessionTypeStateSpacesFormLattices-CameraReady.pdf',
  abstract:'We prove that the state space of every well-formed session type, quotiented by strongly connected components, forms a bounded lattice; n-ary parallel composition yields product lattices. Two consequences follow: duality preserves the lattice up to isomorphism, and Gay–Hole width subtyping corresponds to lattice embedding for non-recursive types. We validate this on 108 benchmark protocols across networking, databases, distributed systems, AI, and fault tolerance: all form lattices, 93 distributive, 15 non-distributive. Mechanised in Lean 4 with two independently developed tool implementations.'};
 
-const view={lang:'en',state:'living',minutes:nowMin()};
+const view={lang:'en',state:'living',minutes:nowMin(),opt:'a'};
 const q1=new URLSearchParams(location.hash.slice(1));
-for(const k of['lang','state'])if(q1.get(k))view[k]=q1.get(k);
+for(const k of['lang','state','opt'])if(q1.get(k))view[k]=q1.get(k);
 if(q1.get('t'))view.minutes=+q1.get('t');
 if(q1.get('src')==='1')document.documentElement.classList.add('sources');
+/* Motion only when allowed; without it (or without JavaScript) every drawing is complete. */
+const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches||q1.get('still')==='1';
+if(!REDUCED)document.documentElement.classList.add('motion');
 
 let P,LG;
 const src=k=>`<span class="src">from: ${SRC[k]}</span>`;
 const draft=x=>`<span class="ph"><span class="ann">${P.draftTag}</span>${x}</span>`;
-const ph=x=>`<span class="ph"><span class="ann">${P.phTag}</span>${x}</span>`;
 const en=()=>LG==='en'?'':' lang="en"';
 const langLine=()=>LG==='en'?'':`<p class="lang">${P.inEn}</p>`;
 const out=(href,label)=>`<a class="go" href="${href}" target="_blank" rel="noopener noreferrer">${label}<span class="out" aria-hidden="true">↗</span><span class="vh"> (${P.newTab})</span></a>`;
 
-function page(){
- const p=PAPER;
- return `<section class="sw-head"><div class="col">
-  <p class="eyebrow">${draft(P.eyebrow)}</p><h1>${P.h1}</h1><p class="intro">${draft(P.intro)}</p>${src('intro')}
- </div></section>
+/* render.py's rank layout: y by longest path from ⊤, nodes of a rank spread evenly. */
+function layout(o){
+ const rank=Array(o.n).fill(0);
+ for(let i=0;i<o.n;i++)for(const[a,b]of o.cov)if(rank[b]<rank[a]+1)rank[b]=rank[a]+1;
+ const rows={};for(let n=0;n<o.n;n++)(rows[rank[n]]??=[]).push(n);
+ const maxr=Math.max(...rank)||1;const pos=[];
+ for(const[r,ns]of Object.entries(rows)){ns.sort((x,y)=>x-y);ns.forEach((n,i)=>pos[n]=[(i+1)/(ns.length+1),r/maxr])}
+ return {pos,rank,maxr};
+}
+/* One lattice as SVG content inside a box (x, y, size, pad). `step` staggers the drawing from ⊤ down. */
+function lattice(o,x,y,S,pad,{delay=0,step=0,cell=false,name=false}={}){
+ const {pos,rank}=layout(o);const p=n=>[x+pad+pos[n][0]*(S-2*pad),y+pad+pos[n][1]*(S-2*pad)];
+ let s=`<g class="${o.dist?'t':'t nd'}"${name?` data-name="${o.name}"`:''}>`;
+ if(cell)s+=`<rect class="cell" x="${x+1}" y="${y+1}" width="${S-2}" height="${S-2}"/>`;
+ for(const[a,b]of o.cov){const[x1,y1]=p(a),[x2,y2]=p(b);s+=`<line pathLength="1" style="--d:${(delay+rank[a]*step).toFixed(2)}s" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/>`}
+ for(let n=0;n<o.n;n++){const[cx,cy]=p(n);const end=n===o.top||n===o.bot;const big=S>150;
+  s+=`<circle${end?' class="end"':''} style="--d:${(delay+rank[n]*step).toFixed(2)}s" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${end?(big?6:2.6):(big?3.5:1.6)}"/>`}
+ return s+'</g>';
+}
+/* The wall, as render.py lays it out: rows of `cols`, the last row centred. */
+function wall(cols){
+ const T=100,rows=Math.ceil(LATS.length/cols);let s='';
+ LATS.forEach((o,i)=>{const r=Math.floor(i/cols),c=i%cols;const inRow=Math.min(cols,LATS.length-r*cols);const off=(cols-inRow)*T/2;
+  s+=lattice(o,off+c*T,r*T,T,15,{delay:i*0.012,cell:true,name:true})});
+ return `<svg class="lat2 draw" viewBox="0 0 ${cols*T} ${rows*T}" role="img" aria-label="${P.wallLabel}">${s}</svg>`;
+}
+const byName=nm=>LATS.find(o=>o.name===nm);
 
- <section class="sec" aria-labelledby="paper-t"><div class="col">
+function head(){
+ const text=`<p class="eyebrow">${draft(P.eyebrow)}</p><h1>${P.h1}</h1><p class="intro">${draft(P.intro)}</p>${src('intro')}`;
+ if(view.opt!=='a')return `<section class="sw-head"><div class="col">${text}</div></section>`;
+ return `<section class="sw-head sw-head--wall"><div class="col">
+  <div class="head__text">${text}</div>
+  <figure class="wallfig">${wall(innerWidth<600?10:10)}
+   <figcaption class="cap">${draft(P.wallCap)}</figcaption><p class="hint" id="hint" aria-hidden="true"></p>${src('wall')}</figure>
+ </div></section>`;
+}
+function paper(){const p=PAPER;return `<section class="sec" aria-labelledby="paper-t"><div class="col">
   <article class="lead">
    <div class="lead__main">
     <p class="k"><span class="mono" style="font-weight:500;color:var(--zc-text-heading)">${p.year}</span> · ${P.kind}</p>
@@ -637,12 +790,21 @@ function page(){
     <blockquote style="margin:0" translate="no"${en()}><p class="abstract prose">${p.abstract}</p></blockquote>${src('abs')}
    </div>
   </article>
- </div></section>
-
- <section class="sec" aria-labelledby="res-h"><div class="col">
-  <h2 class="sec-h" id="res-h">${draft(P.resH)}</h2>
-  <blockquote class="thm"><p class="thm-k">${P.theorem} 15 · <span translate="no">Reticulate Theorem</span></p>
-   <p translate="no"${en()}>For every well-formed session type <span class="m">S</span>, <span class="m">ℒ(S)/≡</span> is a bounded lattice.</p></blockquote>${src('thm')}
+ </div></section>`}
+function results(){
+ const thm=`<blockquote class="thm"><p class="thm-k">${P.theorem} 15 · <span translate="no">Reticulate Theorem</span></p>
+   <p translate="no"${en()}>For every well-formed session type <span class="m">S</span>, <span class="m">ℒ(S)/≡</span> is a bounded lattice.</p></blockquote>${src('thm')}`;
+ let top=thm;
+ if(view.opt==='b'){const A=byName('Two-Buyer'),B=byName('Two-Phase Commit');const one=(o,lab)=>`<div class="pair__one">
+   <svg class="lat2 draw" viewBox="0 0 220 260" aria-hidden="true">${lattice(o,0,10,220,26,{step:.28})}
+    <text x="110" y="14" text-anchor="middle">⊤</text><text x="110" y="258" text-anchor="middle">⊥</text></svg>
+   <p class="pair__name"><span translate="no">${o.name}</span> · ${lab}</p></div>`;
+  top=`<div class="thm-grid"><div>${thm}</div>
+   <figure class="pair"><div class="pair__row">${one(A,P.dist)}${one(B,P.nd)}</div>
+    <figcaption class="cap">${draft(P.pairCap)}</figcaption>${src('pair')}
+    <button type="button" class="replay" id="replay">↻ ${P.replay}</button></figure></div>`}
+ return `<section class="sec sec--band" aria-labelledby="res-h"><div class="col">
+  <h2 class="sec-h" id="res-h">${draft(P.resH)}</h2>${top}
   <div class="stmts">
    <blockquote><p class="thm-k">${P.definition} 6 · <span translate="no">SCC quotient</span></p>
     <p translate="no"${en()}>The SCC quotient <span class="m">ℒ(S)/≡</span> identifies mutually reachable states, collapsing each recursion cycle to one class. It is ordered by <span class="m">[s₁] ≤ [s₂]</span> iff <span class="m">s₂ ↠ s₁</span>: a state is smaller when less of the protocol remains, so execution descends from <span class="m">q⊤</span> to <span class="m">q⊥</span>.</p></blockquote>
@@ -651,50 +813,84 @@ function page(){
    <blockquote><p class="thm-k">${P.proposition} 18 · <span translate="no">Duality isomorphism</span></p>
     <p translate="no"${en()}>For every well-formed session type <span class="m">S</span>, there is a bounded-lattice isomorphism <span class="m">ℒ(S)/≡ ≅ ℒ(dual(S))/≡</span>.</p></blockquote>
   </div>${src('stm')}
- </div></section>
-
- <section class="sec" aria-labelledby="chk-h"><div class="col">
+ </div></section>`;
+}
+function checks(){
+ const nd=LATS.filter(o=>!o.dist).length,di=LATS.length-nd;
+ let extra=view.opt==='a'?`<p class="ev prose" style="margin-top:var(--zc-space-4)">${draft(P.rung)}</p>${src('rung')}`:'';
+ if(view.opt==='c'){
+  extra=`<div class="wallsec"><h3>${draft(P.wallH)}</h3>
+   <p class="prose">${draft(P.rung)}</p>${src('rung')}
+   <div class="filters" role="group" aria-label="${P.wallH}">
+    <button type="button" data-f="all" aria-pressed="true">${P.fAll} ${LATS.length}</button><button type="button" data-f="dist" aria-pressed="false">${P.fDist} ${di}</button><button type="button" data-f="nd" aria-pressed="false">${P.fNd} ${nd}</button></div>
+   <ul class="tiles draw" id="tiles">${LATS.map((o,i)=>`<li><button type="button" class="tile${o.dist?'':' nd'}" data-i="${i}" aria-pressed="false" aria-label="${o.name}, ${o.dist?P.dist:P.nd}"><svg class="lat2" viewBox="0 0 100 100" aria-hidden="true">${lattice(o,0,0,100,14,{delay:(i%14)*0.02+Math.floor(i/14)*0.08})}</svg></button></li>`).join('')}</ul>
+   <p class="info" id="info" aria-live="polite">${P.info}</p>
+   <p class="cap">${draft(P.wallCap)}</p>${src('wall')}</div>`}
+ return `<section class="sec" aria-labelledby="chk-h"><div class="col">
   <h2 class="sec-h" id="chk-h">${draft(P.chkH)}</h2>
   <dl class="figs">
    <div class="fig"><dt>108</dt><dd>${draft(P.f108)}</dd></div>
    <div class="fig"><dt>93</dt><dd>${draft(P.f93)}</dd></div>
-   <div class="fig"><dt>15</dt><dd>${draft(P.f15)}</dd></div>
+   <div class="fig fig--nd"><dt>15</dt><dd>${draft(P.f15)}</dd></div>
    <div class="fig"><dt translate="no">Lean 4</dt><dd>${draft(P.fLean)}</dd></div>
   </dl>${src('figs')}
-  <p class="ev prose">${P.ev}</p>${src('ev')}
- </div></section>
-
- <section class="sec" aria-labelledby="tool-h"><div class="col">
+  <p class="ev prose">${P.ev}</p>${src('ev')}${extra}
+ </div></section>`;
+}
+function tool(){return `<section class="sec sec--raised" aria-labelledby="tool-h"><div class="col">
   <h2 class="sec-h" id="tool-h">${draft(P.toolH)}</h2>
-  <div class="row">
-   <p class="k">${P.toolK}</p>
-   <div class="row__body">
+  <div class="toolgrid"><div class="row" style="grid-template-columns:minmax(0,1fr)">
+   <div class="row__body"><p class="k">${P.toolK}</p>
     <h3 class="ptitle" translate="no">reticulateP</h3>
     <p class="prose">${P.toolT}</p>
     <p class="stack" translate="no">Python</p>
     <a class="go" href="/${LG}/software">${draft(P.toolGo)}</a>${src('tool')}
-   </div>
+   </div></div>
+   <figure class="shot"><div class="shot__frame"><p><span class="ann">${P.phTag}</span><br>${P.bica}</p></div>
+    <figcaption class="cap"><span class="ph"><span class="ann">${P.phTag}</span>${P.bicaCap}</span></figcaption>${src('bica')}</figure>
   </div>
- </div></section>
-
- <section class="sec" aria-labelledby="next-h"><div class="col">
-  <h2 class="sec-h" id="next-h">${draft(P.nextH)}</h2>
-  <div class="phblock"><p><span class="ann">${P.phTag}</span> For Zua: what follows from the paper, such as the questions it leaves open, work in progress, or an invitation to collaborate. Not built until you write it: the page goes from "The tool" to "More research" (D1 in research.md).</p></div>
- </div></section>
-
- <section class="more" aria-labelledby="more-h"><div class="col"><div style="border-top:1px solid var(--zc-border-light);padding-top:var(--zc-space-6)">
+ </div></section>`}
+function more(){return `<section class="more" aria-labelledby="more-h"><div class="col"><div style="border-top:1px solid var(--zc-border-light);padding-top:var(--zc-space-6)">
   <h2 id="more-h">${draft(P.moreH)}</h2>
   <ul>
    <li><a class="go" href="/${LG}/writing">${draft(P.earlier)}</a></li>
    <li>${out('https://www.researchgate.net/profile/Alexandre-Caldeira','ResearchGate')}</li>
   </ul>${src('wr')}${src('rg')}
- </div></div></section>`;
+ </div></div></section>`}
+const page=()=>head()+paper()+results()+checks()+tool()+more();
+
+/* Motion and interaction, wired after each render. */
+let io;
+function wire(){
+ io?.disconnect();
+ const draws=document.querySelectorAll('main .draw');
+ if(document.documentElement.classList.contains('motion')&&'IntersectionObserver' in window){
+  io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}},{threshold:.25});
+  draws.forEach(d=>io.observe(d));
+ }else draws.forEach(d=>d.classList.add('in'));
+ /* A: pointing at a tile names its protocol (pointer only: a decoration, not information). */
+ const hint=document.getElementById('hint');
+ if(hint){hint.textContent=P.hint;const svg=document.querySelector('.wallfig svg');
+  svg.addEventListener('pointerover',e=>{const g=e.target.closest('g[data-name]');svg.querySelectorAll('g.hot').forEach(x=>x.classList.remove('hot'));if(g){g.classList.add('hot');hint.textContent=g.dataset.name}});
+  svg.addEventListener('pointerleave',()=>{svg.querySelectorAll('g.hot').forEach(x=>x.classList.remove('hot'));hint.textContent=P.hint})}
+ /* B: draw the pair again. */
+ document.getElementById('replay')?.addEventListener('click',()=>{const d=document.querySelectorAll('.pair .draw');d.forEach(x=>x.classList.remove('in'));requestAnimationFrame(()=>requestAnimationFrame(()=>d.forEach(x=>x.classList.add('in'))))});
+ /* C: filter and name. */
+ const tiles=document.getElementById('tiles');
+ if(tiles){const info=document.getElementById('info');
+  document.querySelectorAll('.filters button').forEach(b=>b.addEventListener('click',()=>{
+   document.querySelectorAll('.filters button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+   const f=b.dataset.f;tiles.querySelectorAll('.tile').forEach(t=>{const o=LATS[t.dataset.i];t.classList.toggle('dim',f==='dist'?!o.dist:f==='nd'?o.dist:false)})}));
+  tiles.addEventListener('click',e=>{const t=e.target.closest('.tile');if(!t)return;const o=LATS[t.dataset.i];
+   tiles.querySelectorAll('.tile').forEach(x=>x.setAttribute('aria-pressed',String(x===t)));
+   const others=o.members.filter(m=>m!==o.name);
+   info.innerHTML=`<span translate="no">${o.name}</span> · ${o.dist?P.dist:P.nd} · ${o.n} ${P.states}`+(others.length?` · ${P.also}: <span translate="no">${others.join(', ')}</span>`:'')})}
 }
 
 function langLink(l,label,shown){const a=document.createElement('a');a.href='/'+l+'/research';a.hreflang=l;a.lang=l;a.textContent=label;if(label.length===2)a.setAttribute('aria-label',NAMES[l]+' ('+l.toUpperCase()+')');if(l===shown)a.setAttribute('aria-current','true');a.addEventListener('click',ev=>{ev.preventDefault();closeDrawer();tell({lang:l})});return a}
 function render(){
  LG=view.lang;P=PAGE[LG];const t=SHELL[LG];
- document.documentElement.lang=LG;
+ document.documentElement.lang=LG;document.documentElement.dataset.opt=view.opt;
  document.title='Alexandre Zua Caldeira — '+P.h1;
  document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t[e.dataset.t]);
  document.querySelectorAll('[data-mainnav]').forEach(n=>{const items=[...t.nav];if(n.dataset.mainnav==='drawer')items.push(['contact',t.contact]);n.setAttribute('aria-label','Main');n.replaceChildren(...items.map(([s,x])=>{const a=document.createElement('a');a.href='/'+LG+'/'+s;a.textContent=x;if(s==='research')a.setAttribute('aria-current','page');return a}))});
@@ -704,7 +900,7 @@ function render(){
  document.getElementById('main').innerHTML=page();
  const th=document.getElementById('theme');th.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+ICON[view.state]+'</svg>';th.setAttribute('aria-label',t.themeL[view.state]);th.title=t.themeL[view.state];
  document.getElementById('open-menu').setAttribute('aria-label',t.open);document.getElementById('close-menu').setAttribute('aria-label',t.close);
- paint();
+ paint();wire();
 }
 function tell(p){Object.assign(view,p);render();if(parent!==window)parent.postMessage({zcResearch:true,...p},'*')}
 const drawer=document.getElementById('drawer'),scrim=document.getElementById('scrim');
@@ -715,7 +911,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
 /* No backend: links that would leave the mock-up do nothing; the skip link works. */
 document.addEventListener('click',e=>{const a=e.target.closest('a');if(!a||a.closest('[data-langnav]'))return;const h=a.getAttribute('href')||'';if(!h.startsWith('#')||h==='#')e.preventDefault()});
 document.getElementById('theme').onclick=()=>{const order=['living','light','dark'];tell({state:order[(order.indexOf(view.state)+1)%3]})};
-window.addEventListener('message',e=>{const m=e.data;if(!m||!m.zcSet)return;for(const k of['lang','state','minutes'])if(k in m)view[k]=m[k];document.documentElement.classList.toggle('sources',!!m.src);render()});
+window.addEventListener('message',e=>{const m=e.data;if(!m||!m.zcSet)return;for(const k of['lang','state','minutes','opt'])if(k in m)view[k]=m[k];document.documentElement.classList.toggle('sources',!!m.src);render()});
 render();
 </script>
 </body>

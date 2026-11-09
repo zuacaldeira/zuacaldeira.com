@@ -42,6 +42,9 @@ code{font-family:var(--mono);font-size:.9em}
   </header>
 
   <form class="controls" id="controls" aria-label="What to show">
+    <fieldset><legend>Graphics (2026-11-09)</legend><div class="seg">
+      <label><input type="radio" name="opt" value="a" checked>A Wall in the head</label><label><input type="radio" name="opt" value="b">B Two beside the theorem</label><label><input type="radio" name="opt" value="c">C The corpus as evidence</label>
+    </div></fieldset>
     <fieldset><legend>Language</legend><div class="seg">
       <label><input type="radio" name="lang" value="en" checked>EN</label><label><input type="radio" name="lang" value="de">DE</label><label><input type="radio" name="lang" value="pt">PT</label>
     </div></fieldset>
@@ -57,6 +60,17 @@ code{font-family:var(--mono);font-size:.9em}
     <div><p class="cap">1440 px, scaled to fit</p><div class="view" id="v-wide"><iframe id="f-wide" title="The page at 1440 px" width="1440" height="900"></iframe></div></div>
     <div><p class="cap">390 px</p><div class="view"><iframe id="f-phone" title="The page at 390 px" width="390" height="844"></iframe></div></div>
   </div>
+
+  <section>
+    <h2>Three options for graphics, colour and motion (R4 reopened, 2026-11-09)</h2>
+    <p class="lede"><b>Shared by all three:</b> sections get their own ground from the settled tokens: the head on the glaze tile, the paper on the surface with its ochre top, "What it proves" on the theorem band (cobalt in light, the raised glaze in dark, as on Home and Software), "The tool" on the raised glaze; the "15 not distributive" figure carries an ochre rule like the ochre lattices. "The tool" holds a plainly marked empty frame for the screenshot Zua supplies of the BICA plugin marking an out-of-order call. Lattices come only from <code>frontend/scripts/lattice-wall/lattices.json</code> (rung R2′), drawn with <code>render.py</code>'s layout; every R2′ count is labelled R2′ and kept apart from the abstract's 93 / 15. Motion runs only with JavaScript and without <code>prefers-reduced-motion</code>; without either, every drawing is complete.</p>
+    <ul>
+      <li><b>A · Wall in the head.</b> All 74 lattices as a tile panel beside the heading (under it on a phone), ochre where not distributive, with its R2′ caption; a line under the figures says how 74 / 47 differ from 93 / 15. Motion: the tiles draw in, smallest first, when the page opens; pointing at a tile thickens it and names its protocol (a pointer extra; the wall is one image to screen readers).</li>
+      <li><b>B · Two beside the theorem.</b> Theorem 15 on the band, beside two protocols drawn large: Two-Buyer (distributive) and Two-Phase Commit (not distributive, in gold on the band), ⊤ above, ⊥ below. Motion: each draws from ⊤ down to ⊥, rank by rank, as Definition 6 says execution descends; "Draw again" replays it (hidden without motion).</li>
+      <li><b>C · The corpus as evidence.</b> Under the figures, "The corpus, drawn": all 74 tiles as buttons (44 px or more), a filter All 74 / Distributive 27 / Not distributive 47, and a tile names its protocol, its kind, its states and the other protocols in its class. Motion: tiles draw in row by row on scroll; the filter fades the others.</li>
+    </ul>
+    <p class="lede"><b>Recommended: A,</b> with C's filter as a later addition if wanted. A puts the site's own drawing, the tile panel that is the Hasse diagrams, on the first screen of every width, which is where the page felt flat; B's two lattices only appear on the second screen, and C's wall sits a long scroll down.</p>
+  </section>
 
   <section>
     <h2>The page, top to bottom</h2>
@@ -80,9 +94,9 @@ code{font-family:var(--mono);font-size:.9em}
 const f={wide:document.getElementById('f-wide'),phone:document.getElementById('f-phone')};
 const base='research.html';
 function state(){const d=new FormData(document.getElementById('controls'));return Object.fromEntries(d.entries())}
-function load(){const s=state();const h=`#lang=${s.lang}&state=${s.state}&src=${s.src}`;f.wide.src=base+h;f.phone.src=base+h}
+function load(){const s=state();const h=`#opt=${s.opt}&lang=${s.lang}&state=${s.state}&src=${s.src}`;f.wide.src=base+h;f.phone.src=base+h}
 function scale(){const box=document.getElementById('v-wide');const k=Math.min(1,box.clientWidth/1440);f.wide.style.transform=`scale(${k})`;box.style.height=(900*k)+'px'}
-document.getElementById('controls').addEventListener('change',()=>{const s=state();for(const x of Object.values(f))x.contentWindow?.postMessage({zcSet:true,lang:s.lang,state:s.state,src:s.src==='1'},'*')});
+document.getElementById('controls').addEventListener('change',()=>{const s=state();for(const x of Object.values(f))x.contentWindow?.postMessage({zcSet:true,opt:s.opt,lang:s.lang,state:s.state,src:s.src==='1'},'*')});
 window.addEventListener('resize',scale);
 load();scale();
 </script>

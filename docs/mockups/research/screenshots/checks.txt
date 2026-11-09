@@ -1,12 +1,30 @@
-research-en-390-light.png: height 4042; overflow none; under 44px: none; lowest contrast 4.91 ("Verification tool", .k)
-research-en-1440-light.png: height 3325; overflow none; under 44px: none; lowest contrast 4.91 ("Verification tool", .k)
-research-de-390-light.png: height 4184; overflow none; under 44px: none; lowest contrast 4.91 ("Verifikationswerkzeug", .k)
-research-de-1440-light.png: height 3379; overflow none; under 44px: none; lowest contrast 4.91 ("Verifikationswerkzeug", .k)
-research-pt-390-light.png: height 4102; overflow none; under 44px: none; lowest contrast 4.91 ("Ferramenta de verificação", .k)
-research-pt-1440-light.png: height 3352; overflow none; under 44px: none; lowest contrast 4.91 ("Ferramenta de verificação", .k)
-research-en-390-dark.png: height 4042; overflow none; under 44px: none; lowest contrast 5.36 ("ICE 2026 · International Workshop on Int", .venue)
-research-en-1440-dark.png: height 3325; overflow none; under 44px: none; lowest contrast 5.36 ("ICE 2026 · International Workshop on Int", .venue)
-research-de-390-dark.png: height 4184; overflow none; under 44px: none; lowest contrast 5.36 ("Auf Englisch", .lang)
-research-de-1440-dark.png: height 3379; overflow none; under 44px: none; lowest contrast 5.36 ("Auf Englisch", .lang)
-research-pt-390-dark.png: height 4102; overflow none; under 44px: none; lowest contrast 5.36 ("Em inglês", .lang)
-research-pt-1440-dark.png: height 3352; overflow none; under 44px: none; lowest contrast 5.36 ("Em inglês", .lang)
+opt-a-en-390-light.png: height 4546; overflow none; under 44px: none; lowest text 4.59 ("Verification tool", .k); lowest lattice stroke 3.2
+opt-a-en-1440-light.png: height 3532; overflow none; under 44px: none; lowest text 4.59 ("Verification tool", .k); lowest lattice stroke 3.2
+opt-a-de-390-light.png: height 4734; overflow none; under 44px: none; lowest text 4.59 ("Verifikationswerkzeug", .k); lowest lattice stroke 3.2
+opt-a-de-1440-light.png: height 3577; overflow none; under 44px: none; lowest text 4.59 ("Verifikationswerkzeug", .k); lowest lattice stroke 3.2
+opt-a-pt-390-light.png: height 4660; overflow none; under 44px: none; lowest text 4.59 ("Ferramenta de verificação", .k); lowest lattice stroke 3.2
+opt-a-pt-1440-light.png: height 3550; overflow none; under 44px: none; lowest text 4.59 ("Ferramenta de verificação", .k); lowest lattice stroke 3.2
+opt-a-en-390-dark.png: height 4546; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 3.38
+opt-a-en-1440-dark.png: height 3532; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 3.38
+opt-a-de-390-dark.png: height 4734; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 3.38
+opt-a-de-1440-dark.png: height 3577; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 3.38
+opt-b-en-390-light.png: height 4294; overflow none; under 44px: none; lowest text 4.59 ("Verification tool", .k); lowest lattice stroke 4.7 (ochre)
+opt-b-en-1440-light.png: height 3364; overflow none; under 44px: none; lowest text 4.59 ("Verification tool", .k); lowest lattice stroke 4.7 (ochre)
+opt-b-de-390-light.png: height 4454; overflow none; under 44px: none; lowest text 4.59 ("Verifikationswerkzeug", .k); lowest lattice stroke 4.7 (ochre)
+opt-b-de-1440-light.png: height 3391; overflow none; under 44px: none; lowest text 4.59 ("Verifikationswerkzeug", .k); lowest lattice stroke 4.7 (ochre)
+opt-b-pt-390-light.png: height 4399; overflow none; under 44px: none; lowest text 4.59 ("Ferramenta de verificação", .k); lowest lattice stroke 4.7 (ochre)
+opt-b-pt-1440-light.png: height 3364; overflow none; under 44px: none; lowest text 4.59 ("Ferramenta de verificação", .k); lowest lattice stroke 4.7 (ochre)
+opt-b-en-390-dark.png: height 4294; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 6.69 (ochre)
+opt-b-en-1440-dark.png: height 3364; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 6.69 (ochre)
+opt-b-de-390-dark.png: height 4454; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 6.69 (ochre)
+opt-b-de-1440-dark.png: height 3391; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 6.69 (ochre)
+opt-c-en-390-light.png: height 4996; overflow none; under 44px: none; lowest text 4.59 ("Verification tool", .k); lowest lattice stroke 3.54
+opt-c-en-1440-light.png: height 4044; overflow none; under 44px: none; lowest text 4.59 ("Verification tool", .k); lowest lattice stroke 3.54
+opt-c-de-390-light.png: height 5168; overflow none; under 44px: none; lowest text 4.59 ("Verifikationswerkzeug", .k); lowest lattice stroke 3.54
+opt-c-de-1440-light.png: height 4089; overflow none; under 44px: none; lowest text 4.59 ("Verifikationswerkzeug", .k); lowest lattice stroke 3.54
+opt-c-pt-390-light.png: height 5155; overflow none; under 44px: none; lowest text 4.59 ("Ferramenta de verificação", .k); lowest lattice stroke 3.54
+opt-c-pt-1440-light.png: height 4062; overflow none; under 44px: none; lowest text 4.59 ("Ferramenta de verificação", .k); lowest lattice stroke 3.54
+opt-c-en-390-dark.png: height 4996; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 3
+opt-c-en-1440-dark.png: height 4044; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 3
+opt-c-de-390-dark.png: height 5168; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 3
+opt-c-de-1440-dark.png: height 4089; overflow none; under 44px: none; lowest text 4.77 ("Python", .stack); lowest lattice stroke 3

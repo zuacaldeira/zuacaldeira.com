@@ -1,7 +1,11 @@
 # Examples: Research page
 
-Status: **proposed by ui-design-peer on 2026-11-09, for the developer's agreement:** the cases, the
-slices and D1 to D7 below. R1 to R8 (2026-11-08) and Q1 to Q5 (2026-11-09) are answered.
+Status: **on hold (2026-11-09): R4 is reopened.** The developer found the mock-up "too monotone",
+"all the same blunt color, no dynamics", and asked for graphics (lattices from the wall or the
+paper, or a screenshot of the BICA plugin marking an out-of-order call in an IDE). The mock-up now
+offers options A, B and C for graphics, colour and motion (`docs/mockups/research/index.html`). The
+cases, the slices and D1 to D7 below wait for that choice and are not agreed. R1 to R8 (2026-11-08)
+and Q1 to Q5 (2026-11-09) are answered; R4 a ("no figure") no longer holds.
 
 The Research page in three languages, at `/en/research`, `/de/research` and `/pt/research`: a landing
 page for the ICE 2026 paper (R1 b). Design: `docs/mockups/research/research-spec.md`, with the

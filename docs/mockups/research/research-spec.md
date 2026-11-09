@@ -1,5 +1,8 @@
 # Build spec: Research page
 
+**On hold (2026-11-09):** R4 is reopened (graphics, colour, motion); options A, B and C are in the
+mock-up. This spec describes the page without graphics and is revised once an option is chosen.
+
 Chosen on 2026-11-08 and 2026-11-09: **one option, a landing page for the ICE 2026 paper** (R1 b,
 and R2 to R8, Q1 to Q5 in `docs/examples/research.md`). Visual reference: `research.html` beside
 this file, or `index.html` to switch language and theme; screenshots in `screenshots/`. Mock-ups are
