@@ -123,3 +123,24 @@ INSERT INTO content_section (page, section, lang, body) VALUES
         'text', 'Constrói o espaço de estados de um tipo de sessão e verifica que forma um reticulado. Transformou em reticulados os 108 protocolos de referência do artigo ICE 2026, é uma das duas implementações independentes do artigo e verifica cada tipo de sessão deste site.',
         'stack', 'Python',
         'link', JSON_OBJECT('label', 'O reticulateP na página de software', 'href', '/pt/software')));
+
+-- More research (D2): the closing row, Earlier papers to the Writing page (the page makes its link,
+-- D22) and ResearchGate alone (Q3), the same in every language; it opens in a new tab and says so.
+SET @researchGate = JSON_OBJECT('label', 'ResearchGate', 'href', 'https://www.researchgate.net/profile/Alexandre-Caldeira');
+
+INSERT INTO content_section (page, section, lang, body) VALUES
+    ('research', 'more', 'en', JSON_OBJECT(
+        'heading', 'More research',
+        'earlier', 'Earlier papers (2007–2010)',
+        'newTab', 'opens in a new tab',
+        'researchGate', CAST(@researchGate AS JSON))),
+    ('research', 'more', 'de', JSON_OBJECT(
+        'heading', 'Mehr Forschung',
+        'earlier', 'Frühere Paper (2007–2010)',
+        'newTab', 'öffnet in einem neuen Tab',
+        'researchGate', CAST(@researchGate AS JSON))),
+    ('research', 'more', 'pt', JSON_OBJECT(
+        'heading', 'Mais investigação',
+        'earlier', 'Artigos anteriores (2007–2010)',
+        'newTab', 'abre num novo separador',
+        'researchGate', CAST(@researchGate AS JSON)));

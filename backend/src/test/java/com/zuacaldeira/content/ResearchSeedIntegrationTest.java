@@ -231,6 +231,29 @@ class ResearchSeedIntegrationTest {
                 "link", Map.of("label", linkLabel, "href", "/" + lang + "/software")));
     }
 
+    static Stream<Arguments> mores() {
+        return Stream.of(
+                Arguments.of("en", "More research", "Earlier papers (2007–2010)", "opens in a new tab"),
+                Arguments.of("de", "Mehr Forschung", "Frühere Paper (2007–2010)", "öffnet in einem neuen Tab"),
+                Arguments.of("pt", "Mais investigação", "Artigos anteriores (2007–2010)", "abre num novo separador"));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mores")
+    @DisplayName("RS-MORE-01, 03 the seed answers the closing row in every language, ResearchGate the same in each")
+    void answersTheSeededMore(String lang, String heading, String earlier, String newTab) throws Exception {
+        HttpResponse<String> response = get("/api/content/research/more?lang=" + lang);
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(JsonMapper.builder().build().readValue(response.body(),
+                new TypeReference<Map<String, Object>>() {})).isEqualTo(Map.of(
+                        "heading", heading,
+                        "earlier", earlier,
+                        "newTab", newTab,
+                        "researchGate", Map.of("label", "ResearchGate",
+                                "href", "https://www.researchgate.net/profile/Alexandre-Caldeira")));
+    }
+
     private HttpResponse<String> get(String path) throws Exception {
         HttpRequest request = HttpRequest.newBuilder(URI.create("http://localhost:" + port + path)).build();
         try (HttpClient client = HttpClient.newHttpClient()) {
