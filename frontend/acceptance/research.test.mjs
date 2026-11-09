@@ -543,6 +543,33 @@ test('RS-CHECK-01, RS-WALL-05: four figures say how it was checked, then the evi
   });
 });
 
+// The tool (D21): its heading, then the shared row's parts.
+const tool = (html) => {
+  const inner = section(html, 'rs-tool');
+  return {
+    heading: texts(inner, 'h2'),
+    kicker: texts(inner, 'p', 'work-row__kicker'),
+    title: [...inner.matchAll(/<h3\b([^>]*)>(.*?)<\/h3>/gs)].map(([, attrs, body]) => ({
+      text: text(body),
+      translate: attr(attrs, 'translate'),
+    })),
+    text: texts(inner, 'p', 'work-row__text'),
+    stack: texts(inner, 'p', 'work-row__stack'),
+  };
+};
+
+test('RS-TOOL-01: the tool behind the paper is named and described, as on the Software page', () => {
+  assert.deepEqual(tool(page('en/research')), {
+    heading: ['The tool'],
+    kicker: ['Verification tool'],
+    title: [{ text: 'reticulateP', translate: 'no' }],
+    text: [
+      'Builds the state space of a session type and checks that it forms a lattice. It turned the ICE 2026 paper’s 108 benchmark protocols into lattices, is one of the paper’s two independent tool implementations, and checks every session type on this site.',
+    ],
+    stack: ['Python'],
+  });
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
