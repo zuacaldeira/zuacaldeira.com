@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { runInNewContext } from 'node:vm';
 import { holding } from './loaded.mjs';
 import { menu } from './menu.mjs';
 
@@ -186,6 +187,30 @@ test('RS-WALL-01 (D8): after the intro, one figure shows the 74 lattices in orde
       notDistributive: 47,
       tiles: 74,
     },
+  );
+});
+
+// The classes the head's inline scripts put on <html> before first paint, run as theme.test.mjs runs
+// them, on a device that does or does not ask for reduced motion.
+const htmlClassesAtFirstPaint = (html, { reducedMotion }) => {
+  const classes = new Set();
+  const scripts = [...(html.match(/<head>(.*?)<\/head>/s)?.[1] ?? '').matchAll(/<script>(.*?)<\/script>/gs)];
+  runInNewContext(scripts.map(([, code]) => code).join(';\n'), {
+    localStorage: { getItem: () => 'light' },
+    matchMedia: (query) => ({ matches: query === '(prefers-reduced-motion: reduce)' && reducedMotion }),
+    document: { documentElement: { classList: { add: (c) => classes.add(c) } } },
+  });
+  return [...classes];
+};
+
+test('RS-MOTION-01, 02 (D13): before first paint, <html> gets motion unless the device asks for reduced motion', () => {
+  const html = page('en/research');
+  assert.deepEqual(
+    {
+      allowed: htmlClassesAtFirstPaint(html, { reducedMotion: false }),
+      reduced: htmlClassesAtFirstPaint(html, { reducedMotion: true }),
+    },
+    { allowed: ['motion'], reduced: [] },
   );
 });
 
