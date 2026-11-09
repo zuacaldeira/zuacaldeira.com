@@ -325,6 +325,35 @@ test('RS-MOTION-01, 02 (D13): before first paint, <html> gets motion unless the 
   );
 });
 
+// A section of <main> by its first class, with what it holds.
+const section = (html, cls) =>
+  [...main(html).matchAll(/<section\b[^>]*class="([^"]*)"[^>]*>(.*?)<\/section>/gs)].find(
+    ([, classes]) => classes.split(' ')[0] === cls,
+  )?.[2] ?? '';
+
+test('RS-PAPER-01: after the head comes the paper, with its year, kind, title, author, venue and status', () => {
+  const html = page('en/research');
+  const card = section(html, 'rs-paper');
+  assert.deepEqual(
+    {
+      after: sections(main(html))[1],
+      when: texts(card, 'p', 'rs-paper__when'),
+      title: texts(card, 'h2'),
+      author: texts(card, 'b'),
+      venue: texts(card, 'p', 'rs-paper__venue'),
+      note: texts(card, 'p', 'rs-paper__note'),
+    },
+    {
+      after: 'rs-paper',
+      when: ['2026 · Workshop paper'],
+      title: ['Session Type State Spaces Form Lattices'],
+      author: ['Alexandre Zua Caldeira'],
+      venue: ['ICE 2026 · International Workshop on Interaction and Concurrency Experience'],
+      note: ['Camera-ready · to appear in EPTCS'],
+    },
+  );
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
