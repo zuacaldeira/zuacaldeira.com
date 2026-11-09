@@ -599,6 +599,33 @@ test('RS-MORE-01: the page ends with earlier papers and the research profile', (
   );
 });
 
+test('RS-CHECK-02, 03: on de and pt the meanings and the evidence are translated, the numbers are not', () => {
+  const read = (lang) => {
+    const { heading, figures, after } = checks(page(`${lang}/research`));
+    return { heading, values: figures.map((f) => f.split(': ')[0]), labels: figures.map((f) => f.split(': ')[1]), evidence: after[0] };
+  };
+  const VALUES = ['108', '93', '15', 'Lean 4'];
+  assert.deepEqual(
+    { de: read('de'), pt: read('pt') },
+    {
+      de: {
+        heading: ['Wie es geprüft wurde'],
+        values: VALUES,
+        labels: ['Benchmark-Protokolle, jedes ein Verband', 'distributiv', 'nicht distributiv', 'mechanisierter Beweis'],
+        evidence:
+          'Geprüft an 108 Benchmark-Protokollen aus Netzwerken, Datenbanken, verteilten Systemen und KI. In Lean 4 mechanisiert, mit zwei unabhängigen Werkzeug-Implementierungen.',
+      },
+      pt: {
+        heading: ['Como foi verificado'],
+        values: VALUES,
+        labels: ['protocolos de referência, todos reticulados', 'distributivos', 'não distributivos', 'prova mecanizada'],
+        evidence:
+          'Verificado em 108 protocolos de referência de redes, bases de dados, sistemas distribuídos e IA. Mecanizado em Lean 4, com duas implementações independentes.',
+      },
+    },
+  );
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
