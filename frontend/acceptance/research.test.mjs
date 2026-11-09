@@ -220,6 +220,16 @@ test('RS-WALL-02: the German wall says what it is and which construction it draw
   );
 });
 
+test('RS-WALL-04: each tile carries its protocol’s name as published, the same in every language', () => {
+  const names = Object.fromEntries(
+    LANGS.map((lang) => [lang, tiles(figures(page(`${lang}/research`))[0] ?? '').map(({ name }) => name)]),
+  );
+  assert.deepEqual(
+    { first: names.en[0], last: names.en.at(-1), count: names.en.length, de: names.de, pt: names.pt },
+    { first: 'GoF Facade', last: 'Raft Leader Election', count: 74, de: names.en, pt: names.en },
+  );
+});
+
 // The classes the head's inline scripts put on <html> before first paint, run as theme.test.mjs runs
 // them, on a device that does or does not ask for reduced motion.
 const htmlClassesAtFirstPaint = (html, { reducedMotion }) => {
