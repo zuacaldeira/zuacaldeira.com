@@ -656,6 +656,13 @@ test('RS-WALL-05: on de and pt the rung note follows the evidence, in the page l
   );
 });
 
+test('RS-TOOL-02: the tool has one link, to the Software page in the same language and tab, no repository', () => {
+  const links = [...section(page('de/research'), 'rs-tool').matchAll(/<a\b([^>]*)>(.*?)<\/a>/gs)].map(
+    ([, attrs, body]) => ({ label: text(body), href: attr(attrs, 'href'), target: attr(attrs, 'target') }),
+  );
+  assert.deepEqual(links, [{ label: 'reticulateP auf der Software-Seite', href: '/de/software', target: null }]);
+});
+
 test('RS-PAGE-04 (D34 in software.md): the menu shows Forschung as the page you are on, and only it', () => {
   const links = menu(page('de/research'));
   assert.deepEqual(
