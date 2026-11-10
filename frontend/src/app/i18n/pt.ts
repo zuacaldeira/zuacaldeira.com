@@ -63,7 +63,7 @@ export const pt: Translations = {
   },
   footer: {
     end: 'todo o protocolo acaba aqui',
-    heading: 'Vamos falar do seu sistema.',
+    heading: 'Vamos falar do teu sistema.',
     availability:
       'Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.',
     cv: 'CV (PDF)',

@@ -197,7 +197,7 @@ const FOOTER = {
   ],
   pt: [
     'p: ⊥ end · todo o protocolo acaba aqui',
-    'h2: Vamos falar do seu sistema.',
+    'h2: Vamos falar do teu sistema.',
     'p: Aberto a funções em engenharia de software e investigação, e a colaborações em protocolos, verificação e sistemas de agentes.',
   ],
 };
