@@ -24,7 +24,7 @@ export const de: Translations = {
     subtitle: 'Von Lissabon nach Berlin — eine Reise durch Forschung, Code, Bildung und Laufen.',
     journeyHeading: 'Der Weg',
     journeyP1:
-      'Ich bin in Lissabon, Portugal, aufgewachsen, wo ich Informatik an der Universität Lissabon studiert habe. Unter der Betreuung von <strong>Vasco T. Vasconcelos</strong> erforschte ich die Welt der <strong>Session Types</strong> — eine Typdisziplin für nebenläufige und verteilte Systeme, die Kommunikationssicherheit durch Konstruktion garantiert.',
+      'Ich bin in Lissabon, Portugal, aufgewachsen, wo ich Informatik an der Universität Lissabon studiert habe. Unter der Betreuung von <strong>Vasco T. Vasconcelos</strong> erforschte ich die Welt der <strong>Session-Typen</strong> — eine Typdisziplin für nebenläufige und verteilte Systeme, die Kommunikationssicherheit durch Konstruktion garantiert.',
     journeyP2:
       'Meine Forschung wurde auf der <strong>POPL</strong> präsentiert, einer der führenden Konferenzen in der Programmiersprachentheorie. Diese Erfahrung hat mein Denken über Software geprägt: Typen als Spezifikationen, Programme als Beweise, Korrektheit durch Design.',
     berlinHeading: 'Berliner Kapitel',
