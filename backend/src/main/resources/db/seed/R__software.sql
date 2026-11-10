@@ -158,5 +158,5 @@ INSERT INTO content_section (page, section, lang, body) VALUES
         'caption', 'Deste site, como tipo global verificado: a página dá ao visitante as suas ligações, o visitante pede ao nginx, e o nginx responde 200. Não há ramo de redirecionamento (SHELL-04).')),
     -- The proof band's own line (D30); the paper's labels are shared (R__shared.sql).
     ('software', 'proof', 'en', JSON_OBJECT('kicker', 'Why the protocols hold')),
-    ('software', 'proof', 'de', JSON_OBJECT('kicker', 'Warum die Protokolle halten')),
+    ('software', 'proof', 'de', JSON_OBJECT('kicker', 'Warum die Protokolle eingehalten werden')),
     ('software', 'proof', 'pt', JSON_OBJECT('kicker', 'Porque é que os protocolos se cumprem'));

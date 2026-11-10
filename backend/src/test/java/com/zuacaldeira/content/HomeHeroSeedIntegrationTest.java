@@ -51,7 +51,7 @@ class HomeHeroSeedIntegrationTest {
                         "latticeLabel", "The lattice 2 to the third: software, research and running in parallel.",
                         "latticeCaption", "2³ · three threads in parallel · the atoms are links"),
                 "de", Map.of(
-                        "headline", "Ich baue Software und beweise, dass ihre Protokolle halten.",
+                        "headline", "Ich baue Software und beweise, dass ihre Protokolle eingehalten werden.",
                         "lede", "Alexandre Zua Caldeira. Softwareentwickler in Berlin seit 2011 und Forscher"
                                 + " im Bereich Programmiersprachen (POPL 2010, ICE 2026). Java-Backends,"
                                 + " Verifikationswerkzeuge und KI-Agenten, die an ein geprüftes Protokoll"

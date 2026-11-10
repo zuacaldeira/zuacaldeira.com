@@ -587,7 +587,7 @@ test('SW-PROOF-01: the German page ends on the theorem that makes the protocols 
   assert.equal(sections(html).at(-1)?.cls, 'band', 'the band is not the last section');
   assert.deepEqual(bandOf(html), {
     paper: ['Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026'],
-    kicker: ['Warum die Protokolle halten'],
+    kicker: ['Warum die Protokolle eingehalten werden'],
     label: ['Satz 15 · Reticulate Theorem'],
     statement: ['For every well-formed session type S, ℒ(S)/≡ is a bounded lattice.'],
     evidence: [

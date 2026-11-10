@@ -14,7 +14,7 @@ VALUES
      'The lattice 2 to the third: software, research and running in parallel.',
      '2³ · three threads in parallel · the atoms are links'),
     ('de',
-     'Ich baue Software und beweise, dass ihre Protokolle halten.',
+     'Ich baue Software und beweise, dass ihre Protokolle eingehalten werden.',
      'Alexandre Zua Caldeira. Softwareentwickler in Berlin seit 2011 und Forscher im Bereich Programmiersprachen (POPL 2010, ICE 2026). Java-Backends, Verifikationswerkzeuge und KI-Agenten, die an ein geprüftes Protokoll gebunden sind.',
      'Ausgewählte Arbeiten',
      'Lebenslauf herunterladen',

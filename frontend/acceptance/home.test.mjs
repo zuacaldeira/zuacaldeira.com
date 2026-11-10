@@ -106,7 +106,7 @@ test('HOME-PAGE-08: every URL in the sitemap is a page of the build', () => {
 // The build's own backend seeded these (compose.build.yml, db/seed); the page got them from the
 // API through the snapshot (D25). The rest of HOME-HERO-01 to 03 comes with the v2 hero (D27).
 const SEEDED_SENTENCES = [
-  ['de', 'HOME-HERO-01', 'Ich baue Software und beweise, dass ihre Protokolle halten.'],
+  ['de', 'HOME-HERO-01', 'Ich baue Software und beweise, dass ihre Protokolle eingehalten werden.'],
   ['pt', 'HOME-HERO-02', 'Construo software e provo que os seus protocolos se cumprem.'],
   ['en', 'HOME-HERO-03', 'I build software, and prove its protocols hold.'],
 ];

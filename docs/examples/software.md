@@ -103,13 +103,13 @@ language as its example.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| SW-PROOF-01 | The page ends on the theorem that makes the protocols hold. | the built `/de/software` | the band is read | "Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026", "Warum die Protokolle halten", the statement "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice." (untranslated), the home band's German evidence line | yes (build and unit, 2026-11-08; the label "Satz 15 · Reticulate Theorem" too) |
+| SW-PROOF-01 | The page ends on the theorem that makes the protocols hold. | the built `/de/software` | the band is read | "Aus dem Paper — Session Type State Spaces Form Lattices · ICE 2026", "Warum die Protokolle eingehalten werden", the statement "For every well-formed session type S, ℒ(S)/≡ is a bounded lattice." (untranslated), the home band's German evidence line | yes (build and unit, 2026-11-08; the label "Satz 15 · Reticulate Theorem" too) |
 | SW-PROOF-02 | Two buttons lead on: the paper, and the research page in the same language. | any language | its buttons are read | "Read the paper (PDF)" / "Paper lesen (PDF)" / "Ler o artigo (PDF)" → the paper's PDF; "All research" / "Zur Forschung" / "Toda a investigação" → `/xx/research` | yes (build and unit, 2026-11-08) |
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
 | SW-PROOF-03 | A fresh database, filled with the starting texts, gives the paper's shared labels in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/shared/paper?lang=en`, `de`, `pt` | 200 with HOME-PAPER-09's fields (D30), each label non-empty; `paperTitle`, `year`, `pdfUrl` and `statements` (Theorem 15 alone, D31) the same in every language | yes (integration, 2026-11-08) |
-| SW-PROOF-04 | The band's own line comes from the Software page's content in every language. | the same | `GET /api/content/software/proof?lang=en`, `de`, `pt` | 200 with `kicker`: "Why the protocols hold", "Warum die Protokolle halten", "Porque é que os protocolos se cumprem" | yes (integration, 2026-11-08) |
+| SW-PROOF-04 | The band's own line comes from the Software page's content in every language. | the same | `GET /api/content/software/proof?lang=en`, `de`, `pt` | 200 with `kicker`: "Why the protocols hold", "Warum die Protokolle eingehalten werden", "Porque é que os protocolos se cumprem" | yes (integration, 2026-11-08) |
 | SW-PROOF-05 | The band's text is easy to read in light and dark. | `/en/software` in the browser, light and dark | the band's texts are measured | each is at 4.5:1 or more against what is behind it | yes (browser, 1280, light and dark, 2026-11-08) |
 | SW-PROOF-P-01 | A translated theorem is refused. | the built `/de/software` | the statement reads "Für jeden wohlgeformten Session-Typ S …" | SW-PROOF-01 goes red | yes (break in the build) |
 
@@ -811,6 +811,10 @@ Leftovers:
 - **The Portuguese copy** of the whole page is still a draft nobody has read (D16).
 
 ## Decisions
+
+- **D36. The German proof line** (2026-11-10, LA-08 in `docs/language.md`): "Warum die Protokolle
+  eingehalten werden", as the home hero's sentence (D49 in `home.md`). SW-PROOF-01, SW-PROOF-04 and
+  their tests change with it.
 
 Taken in slice 7's plan on 2026-11-08 (the developer may change them):
 

@@ -244,7 +244,7 @@ class SoftwareSeedIntegrationTest {
     static Stream<Arguments> proofs() {
         return Stream.of(
                 Arguments.of("en", "Why the protocols hold"),
-                Arguments.of("de", "Warum die Protokolle halten"),
+                Arguments.of("de", "Warum die Protokolle eingehalten werden"),
                 Arguments.of("pt", "Porque é que os protocolos se cumprem"));
     }
 
