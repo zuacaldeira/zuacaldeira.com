@@ -161,6 +161,9 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
   translation with its own URL prefix; there is no fallback to English. French is not supported.
   `Language` and `LANGUAGES` (`models/i18n.ts`) are the one list, used by the routes and the
   content snapshot too (I18N-02 in `docs/examples/i18n.md`)
+- **Language rules and glossary:** `docs/language.md` (pt-PT, "du" and "tu" to the reader, the
+  agreed terms). Read it before writing de or pt copy. `acceptance/language.test.mjs` reads every
+  built de and pt page for the forms it forbids, from the JSON block in that file (LANG-01 to 05)
 - Translation files live in `src/app/i18n/` — one file per language exporting a `Translations` object
 - Covers all sections: nav, hero, about, research, work, paedagogik, running, contact, footer, common labels
 - Content arrays (`projects`, `facharbeiten`) are also translated

@@ -24,8 +24,8 @@ flowchart LR
 
 | ID | Example | Given | When | Then | Covered |
 |---|---|---|---|---|---|
-| LANG-01 | Every German and Portuguese page is read. | the built site | the test collects pages by `<html lang>` | at least `home`, `about`, `contact`, `research`, `running`, `software`, `writing` in each of de and pt; `/de/index.html` (English) is not among them | |
-| LANG-02 | A forbidden form on a page in its language is refused, by name. | `/de/contact` reads "Lassen Sie uns vernetzen …" | the entry `de-sie` is checked | red: `de/contact: Sie` (LA-02) | |
-| LANG-03 | Text marked English is not read. | `/de/writing` lists "Modular Session Types for Distributed Object-Oriented Programming" with `lang="en"` | the entry `session-types` is checked | the title is not a finding; only own-language text is | |
-| LANG-04 | Portuguese headings are in sentence case. | `/pt/about` has the heading "Para Além do Trabalho" | the sentence-case check runs | red: `pt/about: Para Além do Trabalho` (LA-16); "Capítulo Berlim" passes (a name) | |
-| LANG-05 | The list comes from `docs/language.md`. | the JSON block | the test starts | it parses the block; no block or an empty list is a failure, not a pass | |
+| LANG-01 | Every German and Portuguese page is read. | the built site | the test collects pages by `<html lang>` | at least `home`, `about`, `contact`, `research`, `running`, `software`, `writing` in each of de and pt; `/de/index.html` (English) is not among them | yes (build, 2026-11-10) |
+| LANG-02 | A forbidden form on a page in its language is refused, by name. | `/de/contact` reads "Lassen Sie uns vernetzen …" | the entry `de-sie` is checked | red: `de/contact: Sie` (LA-02) | yes (build, 2026-11-10; 11 entries: 10 red on the old copy and green after their fixes, pt-voce a guard, green from the start) |
+| LANG-03 | Text marked English is not read. | `/de/writing` lists "Modular Session Types for Distributed Object-Oriented Programming" with `lang="en"` | the entry `session-types` is checked | the title is not a finding; only own-language text is | yes (build, 2026-11-10; bites: without the exclusion, session-types went red on de/writing, pt/writing) |
+| LANG-04 | Portuguese headings are in sentence case. | `/pt/about` has the heading "Para Além do Trabalho" | the sentence-case check runs | red: `pt/about: Para Além do Trabalho` (LA-16); "Capítulo Berlim" passes (a name) | yes (build, 2026-11-10) |
+| LANG-05 | The list comes from `docs/language.md`. | the JSON block | the test starts | it parses the block; no block or an empty list is a failure, not a pass | yes (build, 2026-11-10) |

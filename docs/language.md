@@ -153,6 +153,10 @@ Priority: **high** = shown on every page or breaks an agreed rule; **medium** = 
 medium 7, low 13. All five high ones are live: the footer on every page, the Contact page, About.
 LA-24 and LA-25 were added after L13 was decided.
 
+**Fixed (2026-11-10), each turning its part of `language.test.mjs` green:** LA-01, 02, 10, 11, 12
+(high), LA-04, 05, 13, 14, 15, 16 (medium), LA-08 (the headline). **Open:** the low ones, LA-03,
+06, 07, 09, 17 to 25.
+
 **Markup, not copy (found by the build test, 2026-11-10):** on `/de/home` and `/pt/home` the paper
 band's title "Session Type State Spaces Form Lattices" is not marked `lang="en"`/`translate="no"`,
 as it is on the Software, Research and Writing pages, so a screen reader reads it with German or
@@ -193,6 +197,8 @@ test, so each fix turns its own part green.
 ```
 
 ## Next steps
-1. A build test that reads every built `/de/...` and `/pt/...` page for the forbidden forms above.
-2. Fix the high findings, then the medium ones, then LA-08, test-first (agreed 2026-11-10).
-3. The low findings later, each adding its form to the list below when it is fixed.
+1. ~~A build test that reads every built `/de/...` and `/pt/...` page for the forbidden forms above.~~ Done 2026-11-10.
+2. ~~Fix the high findings, then the medium ones, then LA-08, test-first.~~ Done 2026-11-10.
+3. The low findings later, each adding its form to the list above when it is fixed. Most are on the
+   hidden Work and Pädagogik pages, which the test cannot read until they are built again.
+4. Mark the home band's paper title `lang="en"`, then add "Session Type" (singular) to the list.
