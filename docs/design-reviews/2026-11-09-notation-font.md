@@ -1,5 +1,7 @@
 # Notation fonts beside Fraunces, Archivo and Plex Mono (2026-11-09)
 
+**Approved by Zua on 2026-11-10 as it is**, the subscripts, `↠` and `→` included.
+
 Review mode, before the build. The decision is "Notation fonts" in `docs/design.md`.
 The screenshots are in `2026-11-09-notation-font/`, named `<where>-<light|dark>-<before|after>.png`.
 They were taken in Chromium at 1280 px, 2× scale, on the build of `43376ca`. "After" injects the

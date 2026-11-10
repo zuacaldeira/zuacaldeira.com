@@ -55,6 +55,12 @@ the home hero, because the hero's page needs them.
 | SHELL-07b-P-02 | any built page | the bottom row is read | a shown line other than short(checked) is refused: ASCII `\|\|`, a fourth thread, or a checked file changed while the page is not | yes (break in the build, both; break in `zua.st`) |
 | SHELL-07b-P-03 | any built page | the bottom row is read | a © line other than the page language's is refused: "Alexandre Caldeira" (red before), no year, "Berlim" on a German page | yes (build: red before; break in the build, both) |
 | SHELL-07b-P-04 | any built page | its footer is read | a second bottom row, a second © line, or none, is refused | yes (break in the build, all three) |
+| SHELL-13 | every built page (the 21, `/` and `/404`), in Chromium at 1280 px, light, its fonts loaded | Chromium is asked which fonts drew each text in the header, `<main>` and the footer | only the site's families: Fraunces, Archivo, IBM Plex Mono, Material Icons (the icons), and the notation fonts Noto Sans Math and STIX Two Text; no system font (D38, D40) | no |
+| SHELL-13b | every built page | its head and the text of its body are read | the head loads one notation stylesheet, Noto Sans Math and STIX Two Text with `&text=` and `display=swap`; every character of the text is one the three families hold (D39) or one of that `&text=`, and the `&text=` holds no symbol that no page shows; today `₁ ₂ ℒ → ↗ ↠ ∥ ≅ ≡ ≤ ⊤ ⊥` (D41) | no |
+| SHELL-13-P-01 | the same as SHELL-13 | the fonts are read | a text with no notation symbol in it drawn partly by a notation font (letters leaving Fraunces, Archivo or Plex Mono) is refused | no |
+| SHELL-13-P-02 | the same, STIX Two Text left out of a token | the fonts are read | `₁ ₂` drawn by a system font are refused | no |
+| SHELL-13b-P-01 | a built page with a symbol outside the subset (`⊗`) | it is read | refused, naming the symbol and the page | no |
+| SHELL-13b-P-02 | a built page | its head is read | no notation stylesheet, or two, is refused; so is a symbol in the `&text=` that no page shows (weight) | no |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -871,6 +877,78 @@ Leftovers, not built:
 **Reviewed 2026-11-08.** After `3e6a33f` was pushed and deployed, the developer reviewed the footer's
 bottom row (SHELL-07b) on next.zuacaldeira.com: "Great!". No change asked for.
 
+## Diagram: SHELL-13 and SHELL-13b (the notation fonts, at build time and in the browser)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor A as Acceptance test 13b (shell.test.mjs)
+    actor B as Browser test 13 (notation-fonts.test.mjs)
+    participant Page as dist/…/index.html (head, body text)
+    participant CSS as built styles (--zc-font-* tokens)
+    participant G as Google Fonts (real, outside the boundary)
+    participant Chr as Chromium (draws each glyph)
+    A->>Page: read head: the one notation stylesheet, its &text= N (P-02)
+    A->>Page: read body text T (no scripts, no attributes)
+    Note over A,Page: T ⊆ Main ∪ N (P-01), N ⊆ symbols of all pages (P-02, weight)
+    B->>Page: open over a local server, 1280 px, light
+    Page->>G: css(Fraunces, Archivo, Plex Mono), css(Noto Sans Math, STIX Two Text; text = N)
+    G-->>Chr: faces, notation faces with N only
+    Chr->>CSS: token = main family → Noto Sans Math → STIX Two Text → system
+    Chr-->>B: per text node: the fonts that drew it (CSS.getPlatformFontsForNode)
+    Note over B,Chr: only site families (13, P-02); no notation font on a text without symbols (P-01)
+```
+
+Session type. Convention: a role that a branch never calls just ends there. `Main` is D39's set, `N`
+the `&text=`, `c` each character of a text.
+
+```
+G = Visitor → Site   : get(page) .
+    Site    → Visitor : html(head = [main fonts, notation(N)], text T) .
+    Visitor → Fonts   : css(main), css(notation, N) .
+    Fonts   → Visitor : faces(main), faces(NotoSansMath ∩ N, STIXTwoText ∩ N) .
+    Visitor → Visitor : draw(c) for each c in T,
+              { main(c) . end                       if c ∈ Main ,
+                notoSansMath(c) . end               if c ∉ Main, c ∈ N, c ∈ NotoSansMath ,
+                stixTwoText(c) . end                if c ∉ Main, c ∈ N, c ∉ NotoSansMath   (₁ ₂) ,
+                refused(system font) }              otherwise
+
+Visitor ↾ = Site ! get . Site ? html . Fonts ! css . Fonts ? faces . ⊕{ main , notoSansMath , stixTwoText }
+Site ↾    = Visitor ? get . Visitor ! html(head, T) . end
+```
+
+Forbidden by G: a `c ∉ Main ∪ N` on a page (13b-P-01, it could only reach a system font); a head without
+`notation(N)` or with it twice (13b-P-02); a `c ∈ N` no page shows (13b-P-02, bytes for nothing); a
+letter `c ∈ Main` drawn by a notation font (13-P-01, the token order); a symbol whose chosen branch
+fails and lands on a system font (13-P-02). No state, token or race: no repeat or stale rows.
+
+| Diagram arrow | Step in G | Rows |
+|---|---|---|
+| 1 one notation stylesheet, N | `head = [main fonts, notation(N)]` | 13b, 13b-P-02 |
+| 2, Note T ⊆ Main ∪ N | `html(…, text T)`, the `otherwise` branch unreachable | 13b, 13b-P-01 |
+| Note N ⊆ shown symbols | `faces(… ∩ N)`: nothing loaded for nothing | 13b-P-02 |
+| 4–6 css and faces | `css(…)`, `faces(…)` | 13 (the faces load, or 13 goes red) |
+| 7 the token order | the branch choice `main → notoSansMath → stixTwoText` | 13, 13-P-01, 13-P-02 |
+| 8 fonts per node | `draw(c)`, never `refused(system font)` | 13, 13-P-02 |
+
+Test list.
+- **13b, acceptance** (`frontend/acceptance/shell.test.mjs`, `PAGES`, the 23): the head of each page has
+  exactly one `fonts.googleapis.com` stylesheet with `Noto+Sans+Math` and `STIX+Two+Text`, `&text=` N
+  and `display=swap`, the same N on every page; the body's text (scripts, styles and tags removed,
+  entities decoded) has no character outside Main ∪ N, listed as "page: char"; N has no character
+  outside the union of the pages' symbols. Red today: the 12 symbols on their pages, no N.
+- **13, browser** (new `frontend/acceptance/browser/notation-fonts.test.mjs`, D40): each of the 23
+  pages over a local server, fonts ready, every element in `header`, `main`, `footer` asked through CDP
+  which fonts drew its text; a non-site font is listed as "page: family: text". Red today: Tinos,
+  DejaVu Sans Mono and the system Noto Sans Math on the symbols. P-01 in the same run: an element whose
+  own text has no symbol of N lists no notation font.
+- **Breaks, declared and restored** (md5 checked), in the built files, as before: 13-P-02 STIX Two Text
+  out of the built tokens; 13-P-01 STIX Two Text before Fraunces in the heading token; 13b-P-01 a `⊗` in
+  `de/research`; 13b-P-02 no notation link, two, and an `⊗` added to N.
+- **No unit test:** no Angular code changes, only `index.html` and `styles.css`.
+- **Weight and first paint,** measured, not tested: the initial bundle (fonts are not in it), the
+  notation fonts' bytes per page, and the stylesheet's place in the head (D42).
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
@@ -937,8 +1015,35 @@ rule; the site's own texts stay in en, de and pt).
 | SHELL-07b-P-02 | The session type in the footer is always the short form of the one that was checked. |
 | SHELL-07b-P-03 | The copyright line names Alexandre Zua Caldeira, the year and the city, in the page's language. |
 | SHELL-07b-P-04 | The footer has exactly one bottom row with one copyright line. |
+| SHELL-13 | Every letter and every math symbol on the site is drawn by the site's own fonts, the same on every device; nothing falls back to whatever the device has. |
+| SHELL-13b | The site loads its two math fonts only for the symbols its pages show, and a page cannot show a symbol those fonts were not loaded for. |
+| SHELL-13-P-01 | Letters stay in Fraunces, Archivo and Plex Mono; the math fonts draw only symbols. |
+| SHELL-13-P-02 | If a math font is missing from the type settings, the test notices the symbols falling back. |
+| SHELL-13b-P-01 | A new symbol in the text, outside the loaded set, stops the build's checks. |
+| SHELL-13b-P-02 | Every page loads the math fonts exactly once, and only for symbols some page shows. |
 
 ## Decisions
+
+Agreed with the developer on 2026-11-09 and 2026-11-10, for SHELL-13 and SHELL-13b (the notation fonts;
+"Notation fonts" in `docs/design.md`, the comparison in `docs/design-reviews/2026-11-09-notation-font.md`):
+
+- **D38, the site's families:** Fraunces, Archivo and IBM Plex Mono for letters, Material Icons for
+  the icons, Noto Sans Math and then STIX Two Text for the symbols the three lack. Each `--zc-font-*`
+  token is its main family, `'Noto Sans Math'`, `'STIX Two Text'`, then today's system fallbacks.
+  Option 1 of three (2026-11-09): Noto Sans Math lacks `₁ ₂`, which STIX Two Text draws as a serif
+  beside Fraunces. The comparison was approved on 2026-11-10 as it is.
+- **D39, Main,** the characters the three families hold, checked against every file Google Fonts
+  serves at weight 400 (2026-11-10): printable ASCII, U+00A0–00FF, U+0100–017F without `ŉ ſ`
+  (Fraunces lacks them), and `– — ‘ ’ ‚ “ ” „ † • … ′ ″ ‹ › € ™`. The hyphen U+2010 is held by none.
+- **D40, the browser test** reads `header`, `main` and the footer (the brief named the first two; the
+  footer's `∥` needs it too), at 1280 px in light only: the fonts do not change with width or theme.
+  The phone bar is a leftover.
+- **D41, the subset is the site's own:** the test takes N from the built head and compares it with
+  the pages' symbols both ways, so the 12 are not written into the test. A new symbol needs its
+  `&text=` in `index.html` and a font that holds it (SHELL-13 says which).
+- **D42, weight and first paint:** one more stylesheet in the head, after the main one, both from
+  `fonts.googleapis.com`, fetched in parallel; the fonts are fetched only when a page shows one of the
+  symbols, and are not part of the JS bundle.
 
 Agreed with the developer on 2026-11-08, for SHELL-07b (D27's bottom row):
 
