@@ -96,7 +96,9 @@ for (const lang of ['en', 'de', 'pt']) {
       const actual = {
         menu: await familiesOf(cdp, root.nodeId, '.desktop-menu-items a'),
         mark: await familiesOf(cdp, root.nodeId, '.logo-text'),
-        markWeight: await page.locator('.logo-text').evaluate((n) => getComputedStyle(n).fontWeight),
+        markWeight: await page
+          .locator('.logo-text')
+          .evaluate((n) => getComputedStyle(n).fontWeight),
       };
       await cdp.detach();
       assert.deepEqual(actual, { menu: ['IBM Plex Mono'], mark: ['Fraunces'], markWeight: '600' });
