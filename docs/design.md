@@ -63,6 +63,11 @@ Open, for the developer:
   which STIX Two Text draws (a serif, beside the Fraunces statements). Letters stay in Fraunces,
   Archivo and Plex Mono. Rejected: Noto Sans for the subscripts (sans beside Fraunces), and
   writing `s1`, `s2` with lowered digits (the text would no longer match the paper).
+- **Material's type follows the site** (agreed 2026-11-10): `material-theme.scss` set Inter for
+  every Material component, so the desktop menu, the "zc" mark, Material buttons (the band's PDF
+  button) and the Running page's cards were drawn by Inter where a device had it, by its default
+  sans elsewhere. Material's type settings now point at the site's families: Archivo for plain
+  text, Fraunces for display. Found by SHELL-13's browser test (`docs/examples/shell.md`).
 - **Hero:** the Website v2 hero: the sentence "I build software, and prove its protocols
   hold." with the 2³ lattice of `Zua = software ∥ research ∥ running`. It replaces the
   photographic hero, follows the glaze, and has no fixed colours. It sits on the study's

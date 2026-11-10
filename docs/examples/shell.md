@@ -1046,6 +1046,13 @@ Agreed with the developer on 2026-11-09 and 2026-11-10, for SHELL-13 and SHELL-1
   request before first paint, only two small font files, fetched when a page shows one of the
   symbols; they are not part of the JS bundle. Found on 2026-11-10 while writing 13b, which therefore
   reads N from `src/index.html`, not from the built head.
+- **D43, Inter goes, in this element** (2026-11-10, option 1 of three). SHELL-13's first red showed
+  letters drawn by Inter as well as the symbols: the desktop menu links, the "zc" mark, the band's
+  "Read the paper (PDF)" button and the Running page's race cards, all Material components that
+  `material-theme.scss` set in Inter. Material's type settings point at the site's families instead,
+  Archivo for plain text and Fraunces for display, after a before/after comparison for the developer.
+  Rejected: allowing Inter in the test for now (the guard would not hold), loading Inter (the look
+  `docs/design.md` rejects).
 
 Agreed with the developer on 2026-11-08, for SHELL-07b (D27's bottom row):
 
