@@ -15,7 +15,10 @@ import { ContentService } from '../../../services/content.service';
   styleUrl: './paper-statements.css',
 })
 export class PaperStatements {
-  readonly t = inject(I18nService).translations;
+  private readonly i18n = inject(I18nService);
+  readonly t = this.i18n.translations;
+  /** The page's language: the paper's title is marked English where the page is not (HOME-PAPER-10). */
+  readonly language = this.i18n.language;
 
   readonly pub = inject(ContentService).publications.find((p) =>
     p.title.includes('Form Lattices'),

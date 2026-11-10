@@ -1,6 +1,8 @@
 <section class="paper" aria-labelledby="paper-eyebrow">
   <p class="paper__eyebrow" id="paper-eyebrow">
-    {{ t().paper.eyebrow }} — {{ pub.title }} · ICE {{ pub.year }}
+    {{ t().paper.eyebrow }} —
+    <span translate="no" [attr.lang]="language() === 'en' ? null : 'en'">{{ pub.title }}</span>
+    · ICE {{ pub.year }}
   </p>
 
   <blockquote class="paper__theorem">
