@@ -8,6 +8,12 @@ but RS-SHOT-02, which waits for the image (D10). Open, as the Writing page was: 
 link, the current marker, the sitemap and nginx were there before slice 1 (D25). `next` is not merged
 into `main` until the whole site is built (D5).
 
+**Changed on 2026-11-10 (D26):** the wall is gone. The Research head is the plain shared head that
+the Software and Writing pages have, and "How it was checked" ends with the evidence sentence: the rung
+note went with the wall. The wall's cases (RS-WALL-nn, RS-MOTION-nn and the wall's half of
+RS-COLOR-04) are marked retired, not deleted. The new cases are RS-HEAD-06, 07, RS-CHECK-05 and
+RS-PAGE-13; the plan is under "Change: the simple head".
+
 The Research page in three languages, at `/en/research`, `/de/research` and `/pt/research`: a landing
 page for the ICE 2026 paper (R1 b). Design: `docs/mockups/research/research-spec.md`, with the
 mock-up and screenshots beside it. The route, the sitemap entries, nginx, the menu link and its
@@ -19,13 +25,15 @@ Sections, in build order:
    page gone.
 2. **Head** (`RS-HEAD-nn`): eyebrow, `<h1>`, intro.
 3. **The wall** (`RS-WALL-nn`): the 74 R2′ lattices beside the head, its label, caption and rung note.
+   *Retired on 2026-11-10 (D26).*
 4. **The paper** (`RS-PAPER-nn`): the card with the abstract and the PDF.
 5. **What it proves** (`RS-RES-nn`): the four statements.
 6. **How it was checked** (`RS-CHECK-nn`): four figures and the evidence.
 7. **The tool** (`RS-TOOL-nn`): reticulateP; the BICA screenshot later (`RS-SHOT-nn`).
 8. **More research** (`RS-MORE-nn`): the Writing link and ResearchGate.
 9. **Colour and motion** (`RS-COLOR-nn`, `RS-MOTION-nn`): the sections' grounds, the wall drawing
-   in, pointing, reduced motion and no JavaScript.
+   in, pointing, reduced motion and no JavaScript. *Motion retired on 2026-11-10 (D26): nothing on
+   the page moves.*
 
 Not in this file: the header, language links and footer (`shell.md`), the colours (`theme.md`).
 All wording is in the spec's copy table, en, de and pt; a case names a key and gives a language as
@@ -54,6 +62,8 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-PAGE-08 | "What's next" is not on the page while it has no text. | the built pages | `<main>` is read | no section headed "What's next", "Wie es weitergeht" or "O que vem a seguir", and the sections are, in order: head, paper, what it proves, how it was checked, the tool, more research (D1) | yes (build and unit, 2026-11-09: no What's next, and D1's order in full) |
 | RS-PAGE-P-01 | A Research page in only one or two languages is refused. | the build | a language's research page is missing | RS-PAGE-01 goes red, naming the language | yes (break in the build) |
 | RS-PAGE-P-02 | An old publication put back on the page is refused. | the built `/en/research` | the POPL title is put in `<main>` | RS-PAGE-07 goes red | yes (red on the old build, and a break in the new one) |
+| RS-PAGE-13 | Nothing on the page, or in what it downloads, speaks of the wall. (Added 2026-11-10, D26.) | the built pages in en, de, pt | `<main>` and the files `/l/research` loads at once are read | no "R2′" and no `rs-wall` in `<main>`; none of the files holds the wall's hint ("Point at a tile to name its protocol.", "Zeigen Sie auf eine Kachel", "Aponte para um mosaico") or the rung note's first words ("The 93 and 15 are the paper’s own count", "Die 93 und 15 sind", "Os 93 e 15 são") | |
+| RS-PAGE-P-03 | The wall's words left in the page's text are refused. (Added 2026-11-10, D26.) | the built Research chunk | the English hint is put back in it | RS-PAGE-13 goes red | |
 
 ## 2. Head
 
@@ -65,6 +75,9 @@ The Writing page lists every text; this page is about the ICE 2026 paper alone a
 | RS-HEAD-04 | When the site asks for the German head, it gets its three texts exactly as stored. | `research/head` stored for de | `GET /api/content/research/head?lang=de` | 200 with `{"eyebrow": "Ein Paper · ICE 2026", "heading": "Forschung", "intro": "Der Zustandsraum …"}` as stored | yes (integration, 2026-11-09) |
 | RS-HEAD-05 | A fresh database, filled with the starting texts, gives the head in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/research/head?lang=en`, `de`, `pt` | 200 with the spec's copy, each field non-empty | yes (integration, 2026-11-09) |
 | RS-HEAD-P-01 | English text on the German page's head is refused. | the built `/de/research` | the English intro is put in | RS-HEAD-02 goes red | yes (break in the build) |
+| RS-HEAD-06 | The Research page opens with the same simple head as Software and Writing, nothing beside it. (Added 2026-11-10, D26.) | the built `/en/research`, `/de/research`, `/pt/research`; the page in the unit test | the head is read | `app-page-head` without the class `page-head--wall`; inside it the eyebrow, the `<h1>` and the intro, and nothing after the intro: no `<figure>`, `<svg>` or `app-research-wall` | |
+| RS-HEAD-07 | The store no longer holds the wall's words, and the build no longer asks for them. (Added 2026-11-10, D26.) | an empty MySQL with Flyway and the `seed` profile; the snapshot script | `GET /api/content/research/wall?lang=en`, `de`, `pt`; the snapshot taken from an API without `research/wall` | 404 in each language; the snapshot succeeds and `research.json` has no `wall` | |
+| RS-HEAD-P-02 | A figure put back beside the head is refused. (Added 2026-11-10, D26.) | the built `/de/research` | a `<figure>` is put after the intro | RS-HEAD-06 goes red | |
 
 ## 3. The wall
 
@@ -74,16 +87,16 @@ protocol counts, and every place that shows them says so.
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-WALL-01 | Beside the heading, the page shows the paper's 74 distinct lattices as one tile panel, the 47 that are not distributive in ochre. | the built `/en/research` | the head is read | after the intro, one `<figure>` whose SVG has `role="img"` and 74 tiles (`g.t`), in render.py's order (states, then edges), 47 of them `g.t.nd` | yes (build and unit, 2026-11-09) |
-| RS-WALL-02 | The panel says what it is, and which construction it draws, in the page's language. | the built `/de/research` | the wall's label and caption are read | the SVG's `aria-label` is `wall.label` de and the `<figcaption>` is `wall.caption` de; both name "R2′" and "74", the caption also "104", "108" and "47" | yes (build, unit and integration, 2026-11-09) |
-| RS-WALL-03 | The panel is the data, drawn: regenerating it gives the same file. | `lattices.json` and the checked-in wall file | `render.py` is run for the Research wall | its output equals the checked-in file byte for byte (D8) | yes (the script test, 2026-11-09; the hero's file held too) |
-| RS-WALL-04 | Each tile carries the name of its protocol, as published, in every language. | the built `/en/research` and `/pt/research` | the tiles are read | tile 1 has `data-name="GoF Facade"`, the last `data-name="Raft Leader Election"`; the 74 names are identical on the three pages | yes (build, 2026-11-09) |
-| RS-WALL-05 | Under the figures, one sentence tells the paper's count from the wall's. | the built `/en/research` | the checks section is read | after the evidence sentence, `checked.rung` en: "The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, …"; de and pt the same in their language | yes (build, unit and integration, 2026-11-09) |
-| RS-WALL-06 | Every R2′ number on the page agrees with the data, in every language. | `lattices.json` and the stored `wall` and `checked.rung` in en, de, pt | the numbers are computed from the data and read from the texts | 74 classes, 47 not distributive, 104 protocols (four excluded from 108), 50 in a non-distributive class; each stored text holds exactly these numbers (D9) | yes (build and integration: label and caption in slice 2, the rung note with 50 in slice 4, D16) |
-| RS-WALL-07 | The caption says in words, in ochre, which tiles are not distributive. (Added 2026-11-09, D17.) | the built `/de/research`; `research/wall` in the seed | the caption is read | the `<figcaption>` holds `wall.caption` de, then `wall.key` de "Ocker: nicht distributiv, 47 der 74." in its own `<span class="rs-wall__key">`; the seed has `key` in en, de and pt, none empty, and no caption ends with its key | yes (build, unit and integration, 2026-11-09) |
-| RS-WALL-P-01 | Wall numbers shown without their rung are refused. | the built `/de/research` | "R2′" is taken out of the caption | RS-WALL-02 goes red | yes (break in the build) |
-| RS-WALL-P-02 | A hand-edited wall is refused. | the checked-in wall file | one tile is removed | RS-WALL-03 and RS-WALL-01 go red | yes (break in the checked-in file and in the build) |
-| RS-WALL-P-03 | A wall count that no longer matches the data is refused. | the stored `wall.caption` de | "47" is changed to "15" | RS-WALL-06 goes red | yes (break in the build) |
+| RS-WALL-01 | Beside the heading, the page shows the paper's 74 distinct lattices as one tile panel, the 47 that are not distributive in ochre. | the built `/en/research` | the head is read | after the intro, one `<figure>` whose SVG has `role="img"` and 74 tiles (`g.t`), in render.py's order (states, then edges), 47 of them `g.t.nd` | retired 2026-11-10 (D26; was yes (build and unit, 2026-11-09)) |
+| RS-WALL-02 | The panel says what it is, and which construction it draws, in the page's language. | the built `/de/research` | the wall's label and caption are read | the SVG's `aria-label` is `wall.label` de and the `<figcaption>` is `wall.caption` de; both name "R2′" and "74", the caption also "104", "108" and "47" | retired 2026-11-10 (D26; was yes (build, unit and integration, 2026-11-09)) |
+| RS-WALL-03 | The panel is the data, drawn: regenerating it gives the same file. | `lattices.json` and the checked-in wall file | `render.py` is run for the Research wall | its output equals the checked-in file byte for byte (D8) | retired 2026-11-10 (D26; was yes (the script test, 2026-11-09; the hero's file held too)) |
+| RS-WALL-04 | Each tile carries the name of its protocol, as published, in every language. | the built `/en/research` and `/pt/research` | the tiles are read | tile 1 has `data-name="GoF Facade"`, the last `data-name="Raft Leader Election"`; the 74 names are identical on the three pages | retired 2026-11-10 (D26; was yes (build, 2026-11-09)) |
+| RS-WALL-05 | Under the figures, one sentence tells the paper's count from the wall's. | the built `/en/research` | the checks section is read | after the evidence sentence, `checked.rung` en: "The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, …"; de and pt the same in their language | retired 2026-11-10 (D26; was yes (build, unit and integration, 2026-11-09)) |
+| RS-WALL-06 | Every R2′ number on the page agrees with the data, in every language. | `lattices.json` and the stored `wall` and `checked.rung` in en, de, pt | the numbers are computed from the data and read from the texts | 74 classes, 47 not distributive, 104 protocols (four excluded from 108), 50 in a non-distributive class; each stored text holds exactly these numbers (D9) | retired 2026-11-10 (D26; was yes (build and integration: label and caption in slice 2, the rung note with 50 in slice 4, D16)) |
+| RS-WALL-07 | The caption says in words, in ochre, which tiles are not distributive. (Added 2026-11-09, D17.) | the built `/de/research`; `research/wall` in the seed | the caption is read | the `<figcaption>` holds `wall.caption` de, then `wall.key` de "Ocker: nicht distributiv, 47 der 74." in its own `<span class="rs-wall__key">`; the seed has `key` in en, de and pt, none empty, and no caption ends with its key | retired 2026-11-10 (D26; was yes (build, unit and integration, 2026-11-09)) |
+| RS-WALL-P-01 | Wall numbers shown without their rung are refused. | the built `/de/research` | "R2′" is taken out of the caption | RS-WALL-02 goes red | retired 2026-11-10 (D26; was yes (break in the build)) |
+| RS-WALL-P-02 | A hand-edited wall is refused. | the checked-in wall file | one tile is removed | RS-WALL-03 and RS-WALL-01 go red | retired 2026-11-10 (D26; was yes (break in the checked-in file and in the build)) |
+| RS-WALL-P-03 | A wall count that no longer matches the data is refused. | the stored `wall.caption` de | "47" is changed to "15" | RS-WALL-06 goes red | retired 2026-11-10 (D26; was yes (break in the build)) |
 
 ## 4. The paper
 
@@ -122,6 +135,8 @@ protocol counts, and every place that shows them says so.
 | RS-CHECK-03 | On the German and Portuguese pages, the meanings are translated and the numbers are not. | `/de/research`, `/pt/research` | the figures are read | the labels of the spec's copy table in de and pt; the values `108`, `93`, `15`, `Lean 4` identical to `/en/research` | yes (build and integration, 2026-11-09) |
 | RS-CHECK-04 | A fresh database gives the figures in every language, the values the same in each. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/research/checked?lang=en`, `de`, `pt` | 200; four figures, values identical in the three, every label non-empty | yes (integration, 2026-11-09) |
 | RS-CHECK-P-01 | A changed number on one language's page is refused. | the built `/de/research` | `93` is changed to `94` | RS-CHECK-03 goes red | yes (break in the build) |
+| RS-CHECK-05 | The section ends with the evidence sentence; the note about the wall's numbers is gone. (Added 2026-11-10, D26.) | the built pages in en, de, pt; `PaperChecks` in the unit test; the seed | the section after the `<dl>` is read; `research/checked` is read | one paragraph after the `<dl>`, the evidence; no "R2′" in the section; the stored `checked` holds `heading` and `figures` only, in every language | |
+| RS-CHECK-P-02 | The rung note put back is refused. (Added 2026-11-10, D26.) | the built `/pt/research` | a second paragraph is put after the evidence | RS-CHECK-05 goes red | |
 
 ## 7. The tool
 
@@ -156,20 +171,20 @@ protocol counts, and every place that shows them says so.
 |----|----------------|-------|------|------|---------|
 | RS-COLOR-01 | "What it proves" stands on the theorem band, as on Home and Software. | `/en/research` in the browser, light and dark | the results section is measured | its background is `--zc-band-bg` (the accent in light, the raised glaze in dark) and its texts `--zc-band-fg` | yes (browser, light and dark, 2026-11-09) |
 | RS-COLOR-02 | "The tool" stands on the raised glaze. | the same | the tool section is measured | its background is `--zc-bg-light` | yes (browser, light and dark, 2026-11-09) |
-| RS-COLOR-03 | The "not distributive" figure carries the wall's ochre; the others carry cobalt. | the same | the four figures' top rules are measured | 15's is `--zc-ochre`; 108's, 93's and Lean 4's are `--zc-azul` | yes (browser, light and dark, 2026-11-09, D23) |
-| RS-COLOR-04 | The lattices and the band's text are easy to see in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the wall's lines and the band's texts are measured | every lattice line at 3:1 or more against its ground (the mock-up's lowest: 3.2 light, 3.38 dark); every band text at 4.5:1 or more | yes (browser, light and dark: the band on en in slice 3; the lattice tokens and de's band in slice 4, D24) |
+| RS-COLOR-03 | The "not distributive" figure carries the wall's ochre; the others carry cobalt. (Without the wall since D26; whether the ochre stays is open, see D26.) | the same | the four figures' top rules are measured | 15's is `--zc-ochre`; 108's, 93's and Lean 4's are `--zc-azul` | yes (browser, light and dark, 2026-11-09, D23) |
+| RS-COLOR-04 | The lattices and the band's text are easy to see in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the wall's lines and the band's texts are measured | every band text at 4.5:1 or more; (retired 2026-11-10 with the wall, D26: every lattice line at 3:1 or more against its ground) | yes for the band (browser, light and dark: en in slice 3, de in slice 4, D24); the lattice half retired (D26) |
 
 ## 11. Motion
 
 | ID | In plain words | Given | When | Then | Covered |
 |----|----------------|-------|------|------|---------|
-| RS-MOTION-01 | When the page opens, the wall draws itself in, smallest lattice first. | `/en/research` at 1440 in the browser, motion allowed | the page loads and the wall is in view | `<html>` has `motion`, the wall gets `in`; the first tile's lines start before the last tile's (their `--d` rises with the tile's index); after 2 s every line's `stroke-dashoffset` is 0 | yes (browser, build and unit, 2026-11-09) |
-| RS-MOTION-02 | With reduced motion, the wall is complete at once and nothing moves. | the same with `prefers-reduced-motion: reduce` | the page loads | `<html>` has no `motion`; at once every line's `stroke-dashoffset` is 0 and no transition runs | yes (browser and build, 2026-11-09) |
-| RS-MOTION-03 | Without JavaScript, the wall is complete. | the built `/en/research`, its scripts not run | the prerendered page is read (and shown in Chromium with JavaScript off) | the 74 tiles are in the HTML; no rule hides a line unless `<html>` has `motion`, which only the script sets | yes (browser with JavaScript off, and build, 2026-11-09) |
-| RS-MOTION-04 | Pointing at a tile names its protocol; leaving the wall brings the sentence back. | `/en/research` at 1440 in the browser | the pointer moves over the tile "Two-Phase Commit", then off the wall | the hint reads "Two-Phase Commit" and that tile's lines thicken; then the hint reads `wall.hint` en again; the hint is `aria-hidden` and no tile is focusable | yes (browser and unit, 2026-11-09) |
-| RS-MOTION-P-01 | A wall hidden until a script runs is refused. | the built page | the hiding rule loses its `html.motion` condition | RS-MOTION-03 goes red | yes (break in the build, and in the browser) |
-| RS-MOTION-P-02 | A wall that draws itself before it is in view is refused. (Added from slice 2's G, 2026-11-09.) | `ResearchWall` with an observer | the observer reports the wall out of view | the wall gets no `in` until a report says it is in view | yes (unit; a break drawing on any report went red) |
-| RS-MOTION-P-03 | A hint that tells you to point, or names a protocol, before pointing can work is refused. (Added from slice 2's G, 2026-11-09.) | the built page; the page once it runs | the hint is read before a script runs, then after | empty in the prerendered page; `wall.hint` once the page runs, a name only after pointing | yes (build and unit; a prerendered sentence went red) |
+| RS-MOTION-01 | When the page opens, the wall draws itself in, smallest lattice first. | `/en/research` at 1440 in the browser, motion allowed | the page loads and the wall is in view | `<html>` has `motion`, the wall gets `in`; the first tile's lines start before the last tile's (their `--d` rises with the tile's index); after 2 s every line's `stroke-dashoffset` is 0 | retired 2026-11-10 (D26; was yes (browser, build and unit, 2026-11-09)) |
+| RS-MOTION-02 | With reduced motion, the wall is complete at once and nothing moves. | the same with `prefers-reduced-motion: reduce` | the page loads | `<html>` has no `motion`; at once every line's `stroke-dashoffset` is 0 and no transition runs | retired 2026-11-10 (D26; was yes (browser and build, 2026-11-09)) |
+| RS-MOTION-03 | Without JavaScript, the wall is complete. | the built `/en/research`, its scripts not run | the prerendered page is read (and shown in Chromium with JavaScript off) | the 74 tiles are in the HTML; no rule hides a line unless `<html>` has `motion`, which only the script sets | retired 2026-11-10 (D26; was yes (browser with JavaScript off, and build, 2026-11-09)) |
+| RS-MOTION-04 | Pointing at a tile names its protocol; leaving the wall brings the sentence back. | `/en/research` at 1440 in the browser | the pointer moves over the tile "Two-Phase Commit", then off the wall | the hint reads "Two-Phase Commit" and that tile's lines thicken; then the hint reads `wall.hint` en again; the hint is `aria-hidden` and no tile is focusable | retired 2026-11-10 (D26; was yes (browser and unit, 2026-11-09)) |
+| RS-MOTION-P-01 | A wall hidden until a script runs is refused. | the built page | the hiding rule loses its `html.motion` condition | RS-MOTION-03 goes red | retired 2026-11-10 (D26; was yes (break in the build, and in the browser)) |
+| RS-MOTION-P-02 | A wall that draws itself before it is in view is refused. (Added from slice 2's G, 2026-11-09.) | `ResearchWall` with an observer | the observer reports the wall out of view | the wall gets no `in` until a report says it is in view | retired 2026-11-10 (D26; was yes (unit; a break drawing on any report went red)) |
+| RS-MOTION-P-03 | A hint that tells you to point, or names a protocol, before pointing can work is refused. (Added from slice 2's G, 2026-11-09.) | the built page; the page once it runs | the hint is read before a script runs, then after | empty in the prerendered page; `wall.hint` once the page runs, a name only after pointing | retired 2026-11-10 (D26; was yes (build and unit; a prerendered sentence went red)) |
 
 ## In the browser (after the build, `npm run acceptance:browser`)
 
@@ -939,6 +954,110 @@ Leftovers, not built:
 - **`tools/wait-load.sh`**, named in the developer's brief, is not in the repo; a scratch script did
   the waiting.
 
+## Change: the simple head (2026-11-10, D26)
+
+The wall leaves the page. The head becomes the plain shared head, and the rung note leaves "How it
+was checked". This is not a refactor: visitors see the change. So there is a new `G`, not a
+`G_pre`/`G_post` pair, except for `PageHead` on the Software and Writing pages (see below).
+
+Test list. The red tests come first in one commit; the changes follow, each in its own commit, in
+an order that keeps every commit buildable.
+- **Red, first** (on the 2026-11-10 build of `be653ca`, and on today's code):
+  - A1 RS-HEAD-06 (`acceptance/research.test.mjs`): in en, de and pt, `app-page-head` has no
+    `page-head--wall`, and nothing follows the intro.
+  - A2 RS-CHECK-05: in en, de and pt, one paragraph after the `<dl>` (the evidence), and no "R2′"
+    in the section.
+  - A3 RS-PAGE-13: no "R2′" or `rs-wall` in `<main>`; the page's files hold neither the hint nor
+    the rung note's first words, in any language.
+  - U1 RS-HEAD-06 (`research.spec.ts`): the page's head has no class `page-head--wall`, and nothing
+    follows the intro.
+  - U2 RS-CHECK-05 (`paper-checks.spec.ts`): after the `<dl>`, only the evidence.
+  - S1 RS-HEAD-07 (`fetch-content.test.mjs`): the snapshot from an API that holds every section
+    but `research/wall` succeeds.
+  - B1 RS-HEAD-07 (`ResearchSeedIntegrationTest`): `research/wall` answers 404 in en, de, pt.
+  - B2 RS-CHECK-05: the stored `checked` holds `heading` and `figures` only (RS-CHECK-04's English
+    example loses its `rung`).
+- **Green, in order:**
+  1. The page (U1, U2): `Research` without `ResearchWall` and its host class, `PaperChecks` without
+     the rung note, the types without `wall` and `rung`, the test content without them. Then the
+     wall's component, its browser file `research-wall.test.mjs`, and the retired acceptance tests
+     are removed (RS-WALL-01, 02, 04, 06, 07; RS-MOTION-01 to 03; RS-WALL-05), along with the
+     lattice half of RS-COLOR-04 in `research-page.test.mjs`.
+  2. The snapshot (S1): `fetch-content.mjs` stops asking for `research/wall`. The test for a
+     missing wall goes.
+  3. The seed (B1, B2): the `wall` rows and every `rung` go from `R__research.sql`.
+  4. render.py's Research output goes (D8: the hero's output stays byte for byte). Its
+     regeneration test keeps the hero alone and is renamed `scripts/lattice-wall.test.mjs`.
+  5. The `motion` line in `index.html`'s head script goes (D13 retired: only the wall read it).
+  6. Refactor: `PageHead` loses its `<ng-content />` and the `page-head--wall` columns (D15
+     retired: nothing projects any more).
+  7. The docs: `CLAUDE.md`, the wall's README, this file's diagram and `G`, the spec's note.
+- **Then on the build:** A1 to A3 are green. The protocol rows are shown red by their breaks:
+  RS-HEAD-P-02 (a `<figure>` after the de intro: A1), RS-CHECK-P-02 (a second paragraph after the pt
+  evidence: A2), RS-PAGE-P-03 (the English hint put back in the Research chunk: A3). RS-PAGE-08 (D1's
+  section order), RS-COLOR-02, 03 and the band half of RS-COLOR-04 stay green.
+- **Notation fonts (SHELL-13b):** "R2′" leaves the page. If a symbol of the subset is shown nowhere
+  else, the build test says so, and the subset follows.
+- **At the end:** the whole set once: unit, scripts, build, `acceptance`, `acceptance:nginx`,
+  backend `./mvnw verify` (the seed changes), and every browser file one at a time.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1, B2
+        participant API as Content API (seed R__research.sql, no wall, no rung)
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/research/index.html
+    T->>API: B1: GET research/wall?lang=l → 404; B2: GET research/checked → {heading, figures}
+    F->>API: GET research/{head,paper,results,checked,tool,more}, shared/paper ?lang=l (S1: no wall)
+    API-->>F: 200
+    F->>NG: research.json (no wall, no rung), shared.json
+    NG->>P: PageHead alone (U1), PaperCard, PaperResults, PaperChecks without the note (U2), tool, more
+    T->>P: A1 RS-HEAD-06, A2 RS-CHECK-05, A3 RS-PAGE-13, and the P rows
+```
+
+Session type. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → API : get(research, {head, paper, results, checked, tool, more}, l) . get(shared, paper, l) .
+    API → Build : { ok200(head_l, paper_l, results_l, checked_l, tool_l, more_l, shared_l) .
+                    Build → Page : prerender(l, head(eyebrow_l, h1_l, intro_l),
+                                             card(…), results(…),
+                                             checks(heading_l, [108, 93, 15, Lean 4], labels_l, evidence_l),
+                                             tool(…), more(…)) .
+                    Page → Visitor : page(head, paper, statements, figures, evidence, tool, more) .
+                    Visitor → Page : { pdf(ice2026) . end , software(l) . end , writing(l) . end ,
+                                       out(researchGate, newTab_l) . end , stay . end } ,
+                    missing404 . Build → CI : fail(research, s, l) . end }
+
+Visitor ↾ = Page?page(…) . Page!{ pdf . end , software . end , writing . end , out . end , stay . end }
+Page ↾    = (Research, PaperChecks, the units under change) Build?prerender . Visitor!page(…) .
+            Visitor?{ pdf . end , software . end , writing . end , out . end , stay . end }
+Build ↾   = API!get … . API?{ ok200 . Page!prerender . end , missing404 . CI!fail . end }
+```
+
+What left the old `G`: `wall(lattices, wall_l)` and `rung_l` in `prerender`; the page's choice
+`{motion . draw, still}`; the visitor's `point(tile) . name(tile)`; `get(research, wall, l)`.
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1 T → API | no `get(research, wall, l)`: the store answers 404; `checked_l` without `rung` | B1, B2 (RS-HEAD-07, RS-CHECK-05) |
+| 2–4 F → API → NG | `get(research, {…}, l)` without `wall` | S1 (RS-HEAD-07) |
+| 5 NG → P | `prerender(l, head(…), …, checks(…, evidence_l), …)` | U1, U2 |
+| 6 T → P | `page(head, …, figures, evidence, …)` | A1, A2, A3; RS-PAGE-08 still |
+| forbidden: anything after the intro in `head(…)` | `head(eyebrow_l, h1_l, intro_l)` | RS-HEAD-P-02 |
+| forbidden: a note after `evidence_l` | `checks(…, evidence_l)` ends there | RS-CHECK-P-02 |
+| forbidden: the wall's words in what the page downloads | `ok200(…)` holds no `wall` | RS-PAGE-P-03 |
+
+The page is read-only: no repeat, stale-token or race rows.
+
+The refactor in step 6, on the Software and Writing pages: `G_pre` is D15's `PageHead` with an empty
+`<ng-content />` after the intro; `G_post` is the same without it. `Visitor ↾` is identical
+(`Page?page(lang = l, h1, links) . end`): their specs and acceptance tests stay unchanged.
+
 ## Decisions
 
 Answered by the developer on 2026-11-08:
@@ -1105,3 +1224,29 @@ Taken while planning slice 4 (2026-11-09, tdd-peer; the developer may change the
 - **D25. Opening the page is a status change, not a build step:** the route, menu link, current
   marker, sitemap entries and nginx exist since before slice 1 (HOME-PAGE-07 to 09, SHELL-11). At the
   end the file's status says the page is done, and `CLAUDE.md` lists it beside Software and Writing.
+
+Decided by the developer on 2026-11-10:
+
+- **D26. The wall leaves the Research page.** The head becomes the same simple head as on the
+  Software and Writing pages: eyebrow, `<h1>` and intro, with nothing beside them. The eyebrow and
+  the intro stay as they are, since neither mentions the wall. The rung note in "How it was checked"
+  goes too, because it only explained the wall's numbers. The figures 108, 93, 15 and Lean 4 stay.
+  This replaces R4's option A. It retires D8 for the Research output (the hero's wall is untouched),
+  D9, D13 to D17, D24's lattice half, and the cases RS-WALL-01 to 07, P-01 to P-03 and RS-MOTION-01
+  to 04, P-01 to P-03. Those cases are marked retired in their tables, not deleted (as D20 did for
+  D31).
+
+  Taken with it (tdd-peer; the developer may change them):
+  - **The wall's words leave the store** (`research/wall`) and the snapshot. The content API answers
+    404 for that section (RS-HEAD-07).
+  - **`html.motion` goes** from the head script. Only the wall read it (D13). A future drawing that
+    moves brings it back, with its own test.
+  - **`PageHead` loses its projection** (D15) and its two-column style for the wall. Nothing
+    projects into it any more.
+- **Open, for the developer: 15's ochre rule (D23).** It was "the wall's ochre": the wall's key
+  said ochre means not distributive. Without the wall, nothing on the page says so any more. Across
+  the site ochre is the general accent (eyebrows, the paper card's top edge, the current page's
+  underline), and the home lattice, 2³, is distributive. So the rule now reads as "this figure
+  stands out", not as "not distributive". The words under it still carry the meaning. It is left
+  unchanged until the developer chooses (options in the final message of this change). RS-COLOR-03
+  measures it as before.
