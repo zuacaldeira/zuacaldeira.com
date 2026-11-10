@@ -153,7 +153,46 @@ Priority: **high** = shown on every page or breaks an agreed rule; **medium** = 
 medium 7, low 13. All five high ones are live: the footer on every page, the Contact page, About.
 LA-24 and LA-25 were added after L13 was decided.
 
+**Markup, not copy (found by the build test, 2026-11-10):** on `/de/home` and `/pt/home` the paper
+band's title "Session Type State Spaces Form Lattices" is not marked `lang="en"`/`translate="no"`,
+as it is on the Software, Research and Writing pages, so a screen reader reads it with German or
+Portuguese sounds. The test leaves "Session Type" (singular) off its list until it is marked.
+
+## Forbidden forms (read by the build test)
+
+`frontend/acceptance/language.test.mjs` reads the JSON block below and every built page whose
+`<html lang>` is `de` or `pt` (LANG-01 to 05 in `docs/examples/language.md`). It reads the page's
+own-language text: the body's text, `<title>`, `alt` and `aria-label`, but not what is marked
+`lang="en"` or `translate="no"` (titles, the abstract, notation, names; L5). Each entry is one
+test, so each fix turns its own part green.
+
+- `words`: whole words (no letter right before or after). `pattern`: a regular expression for the
+  same, used where a list of words would not do. `ignoreCase` as said. `allow`: words the pattern
+  would catch that are right.
+- `sentenceCase`: in these languages, no word of a heading after its first starts with a capital,
+  except the names in `names` and words with a digit or no lower-case letter (ICE, `2³`).
+- To add a rule: add an entry here, see the test go red on the copy that breaks it, fix the copy.
+
+```json
+{
+  "forbidden": [
+    { "id": "de-sie", "lang": ["de"], "words": ["Sie"], "why": "L2: the reader is 'du'", "findings": ["LA-02", "LA-03"] },
+    { "id": "de-ihr", "lang": ["de"], "words": ["Ihr", "Ihre", "Ihren", "Ihrem", "Ihrer", "Ihres", "Ihnen"], "why": "L2: 'dein', 'dir', not 'Ihr', 'Ihnen'", "findings": ["LA-01"] },
+    { "id": "session-types", "lang": ["de", "pt"], "words": ["Session Types"], "why": "glossary: 'Session-Typen', 'tipos de sessão' (L4); paper titles are marked English and not read", "findings": ["LA-04", "LA-12"] },
+    { "id": "de-kindergarten", "lang": ["de"], "words": ["Kindergarten", "Kindergartens"], "why": "glossary: 'Kita'", "findings": ["LA-05"] },
+    { "id": "de-protokolle-halten", "lang": ["de"], "words": ["Protokolle halten"], "why": "glossary: protocols are 'eingehalten'", "findings": ["LA-08"] },
+    { "id": "pt-voce", "lang": ["pt"], "words": ["você", "vocês"], "ignoreCase": true, "why": "L6: the reader is 'tu'", "findings": [] },
+    { "id": "pt-seu-sistema", "lang": ["pt"], "words": ["seu sistema"], "ignoreCase": true, "why": "L6: the reader's system is 'o teu sistema' ('seu' alone is allowed: it also means 'its')", "findings": ["LA-10"] },
+    { "id": "pt-voce-imperative", "lang": ["pt"], "words": ["entre em contacto", "conectar"], "ignoreCase": true, "why": "L6, L12: 'fala comigo', not the 'você' imperative or 'conectar'", "findings": ["LA-11"] },
+    { "id": "pt-brazilian-words", "lang": ["pt"], "words": ["tela", "arquivo", "registro", "contato", "equipe", "baixar", "pesquisador", "desenvolvedor", "jornada"], "ignoreCase": true, "why": "L1, L7, glossary: 'ecrã', 'ficheiro', 'registo', 'contacto', 'equipa', 'descarregar', 'investigador', 'programador', 'percurso'", "findings": ["LA-13"] },
+    { "id": "pt-gerund", "lang": ["pt"], "pattern": "\\p{L}+(?:ando|endo|indo)", "ignoreCase": true, "allow": ["quando", "mundo", "fundo", "segundo", "prendo", "incluindo"], "why": "L8: 'e treino', 'a fazer', not the gerund", "findings": ["LA-14", "LA-15"] },
+    { "id": "pt-website", "lang": ["pt"], "words": ["website"], "ignoreCase": true, "why": "glossary: 'site'", "findings": ["LA-15"] }
+  ],
+  "sentenceCase": { "lang": ["pt"], "names": ["Berlim", "Lisboa", "Casa", "Azul", "Kita", "Dienstplan", "Strava", "Lean", "Erzieher", "Facharbeiten"], "findings": ["LA-16"] }
+}
+```
+
 ## Next steps
-1. A build test that reads every built `/de/...` and `/pt/...` page for the forbidden forms below.
+1. A build test that reads every built `/de/...` and `/pt/...` page for the forbidden forms above.
 2. Fix the high findings, then the medium ones, then LA-08, test-first (agreed 2026-11-10).
 3. The low findings later, each adding its form to the list below when it is fixed.
