@@ -36,11 +36,14 @@ describe('Research', () => {
     ]);
   });
 
-  it('RS-WALL-01 (D15): should show the wall in the head, right after the intro', () => {
+  it('RS-HEAD-06 (D26): should open with the simple head, as Software and Writing do: nothing after the intro', () => {
     TestBed.inject(I18nService).setLanguage('en');
     const fixture = TestBed.createComponent(Research);
     fixture.detectChanges();
-    const intro = (fixture.nativeElement as HTMLElement).querySelector('app-page-head .page-head__intro');
-    expect(intro?.nextElementSibling?.tagName).toBe('APP-RESEARCH-WALL');
+    const head = (fixture.nativeElement as HTMLElement).querySelector('app-page-head');
+    expect({
+      classes: [...(head?.classList ?? [])],
+      afterIntro: head?.querySelector('.page-head__intro')?.nextElementSibling?.tagName ?? null,
+    }).toEqual({ classes: [], afterIntro: null });
   });
 });

@@ -15,7 +15,6 @@ const workIn = (lang) => ({ heading: `heading ${lang}`, rows: [{ id: 'reticulate
 const howIn = (lang) => ({ heading: `heading ${lang}`, steps: [{ title: `title ${lang}` }] });
 const paperIn = (lang) => ({ eyebrow: `eyebrow ${lang}`, year: 2026 });
 const proofIn = (lang) => ({ kicker: `kicker ${lang}` });
-const wallIn = (lang) => ({ label: `label ${lang}`, caption: `caption ${lang}`, hint: `hint ${lang}` });
 const textsIn = (lang) =>({ read: `read ${lang}`, items: [{ id: 'ice2026', year: 2026 }] });
 
 // Answers GET /api/content/{page}/{section}?lang=xx from `stored`; anything else is 404.
@@ -31,7 +30,8 @@ async function fakeApi(stored) {
   return { url: `http://127.0.0.1:${server.address().port}`, close: () => server.close() };
 }
 
-test('the snapshot holds every section of every language as the API answers it', async (t) => {
+// RS-HEAD-07 (D26): the API holds no `research/wall`, and the snapshot does not ask for it.
+test('RS-HEAD-07: the snapshot holds every section of every language as the API answers it, the wall none of them', async (t) => {
   const stored = everything();
   const api = await fakeApi(stored);
   t.after(api.close);
@@ -107,7 +107,6 @@ const everything = () => {
     writing: { head: all(headIn), texts: all(textsIn) },
     research: {
       head: all(headIn),
-      wall: all(wallIn),
       paper: all((lang) => ({ kind: `kind ${lang}`, abstract: 'We prove …' })),
       results: all((lang) => ({ heading: `heading ${lang}` })),
       checked: all((lang) => ({ heading: `heading ${lang}`, figures: [{ value: '108' }] })),
@@ -169,17 +168,6 @@ test('RS-PAGE-05: a Research head missing in de stops the build, naming page, se
 
   await assert.rejects(fetchContent(api.url), {
     message: 'No content for page research, section head, language de (404)',
-  });
-});
-
-test('RS-PAGE-05: the Research wall missing in pt stops the build, naming page, section and language', async (t) => {
-  const stored = everything();
-  delete stored.research.wall.pt;
-  const api = await fakeApi(stored);
-  t.after(api.close);
-
-  await assert.rejects(fetchContent(api.url), {
-    message: 'No content for page research, section wall, language pt (404)',
   });
 });
 

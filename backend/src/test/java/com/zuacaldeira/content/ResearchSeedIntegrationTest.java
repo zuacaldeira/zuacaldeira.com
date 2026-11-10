@@ -74,42 +74,11 @@ class ResearchSeedIntegrationTest {
         assertThat(head.values()).allSatisfy(text -> assertThat(text).isNotBlank());
     }
 
-    static Stream<Arguments> walls() {
-        return Stream.of(
-                Arguments.of("en", Map.of(
-                        "label", "The 74 distinct lattices of the paper’s benchmark protocols at rung R2′, ordered by"
-                                + " size; the 47 that are not distributive in ochre.",
-                        "caption", "74 distinct lattices, drawn from 104 of the paper’s 108 protocols at rung R2′, a"
-                                + " finer construction than the paper’s own.",
-                        "key", "Ochre: not distributive, 47 of the 74.",
-                        "hint", "Point at a tile to name its protocol.")),
-                Arguments.of("de", Map.of(
-                        "label", "Die 74 verschiedenen Verbände der Benchmark-Protokolle des Papers auf Stufe R2′,"
-                                + " nach Größe geordnet; die 47 nicht distributiven in Ocker.",
-                        "caption", "74 verschiedene Verbände, gezeichnet aus 104 der 108 Protokolle des Papers auf"
-                                + " Stufe R2′, einer feineren Konstruktion als der des Papers.",
-                        "key", "Ocker: nicht distributiv, 47 der 74.",
-                        "hint", "Zeigen Sie auf eine Kachel, um ihr Protokoll zu sehen.")),
-                Arguments.of("pt", Map.of(
-                        "label", "Os 74 reticulados distintos dos protocolos de referência do artigo no nível R2′, por"
-                                + " tamanho; os 47 não distributivos a ocre.",
-                        "caption", "74 reticulados distintos, desenhados a partir de 104 dos 108 protocolos do artigo"
-                                + " no nível R2′, uma construção mais fina do que a do artigo.",
-                        "key", "Ocre: não distributivos, 47 dos 74.",
-                        "hint", "Aponte para um mosaico para ver o seu protocolo.")));
-    }
-
     @ParameterizedTest(name = "{0}")
-    @MethodSource("walls")
-    @DisplayName("RS-WALL-02, 06, 07 the seed answers the wall's label, caption, key and hint in every language")
-    void answersTheSeededWall(String lang, Map<String, String> expected) throws Exception {
-        HttpResponse<String> response = get("/api/content/research/wall?lang=" + lang);
-
-        assertThat(response.statusCode()).isEqualTo(200);
-        Map<String, String> wall = JsonMapper.builder().build().readValue(response.body(),
-                new TypeReference<Map<String, String>>() {});
-        assertThat(wall).isEqualTo(expected);
-        assertThat(wall.values()).allSatisfy(text -> assertThat(text).isNotBlank());
+    @ValueSource(strings = {"en", "de", "pt"})
+    @DisplayName("RS-HEAD-07 the seed holds no words for the wall, which left the page (D26)")
+    void holdsNoWall(String lang) throws Exception {
+        assertThat(get("/api/content/research/wall?lang=" + lang).statusCode()).isEqualTo(404);
     }
 
     /** The spec's English card (D2's shape); author, venue and abstract are the same in every language. */
@@ -168,21 +137,18 @@ class ResearchSeedIntegrationTest {
     /** The figures' values, the same in every language (RS-CHECK-03): the paper's own count. */
     private static final List<String> VALUES = List.of("108", "93", "15", "Lean 4");
 
-    /** The spec's English checks: the four figures with their meanings, and the rung note (RS-WALL-05). */
+    /** The spec's English checks: the four figures with their meanings; no rung note since D26 (RS-CHECK-05). */
     private static final Map<String, Object> EN_CHECKED = Map.of(
             "heading", "How it was checked",
             "figures", List.of(
                     Map.of("value", "108", "label", "benchmark protocols, every one a lattice"),
                     Map.of("value", "93", "label", "distributive"),
                     Map.of("value", "15", "label", "not distributive"),
-                    Map.of("value", "Lean 4", "label", "mechanised proof")),
-            "rung", "The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same"
-                    + " corpus at rung R2′, which keeps the structure of recursive protocols: there 47 of the 74"
-                    + " distinct lattices are not distributive, and 50 of the 104 protocols fall in one of them.");
+                    Map.of("value", "Lean 4", "label", "mechanised proof")));
 
     @ParameterizedTest(name = "{0}")
     @ValueSource(strings = {"en", "de", "pt"})
-    @DisplayName("RS-CHECK-04, RS-WALL-05 the seed answers the checks in every language, the values the same in each")
+    @DisplayName("RS-CHECK-04, 05 the seed answers the checks in every language, the values the same in each, no rung note")
     @SuppressWarnings("unchecked")
     void answersTheSeededChecks(String lang) throws Exception {
         HttpResponse<String> response = get("/api/content/research/checked?lang=" + lang);
@@ -197,8 +163,7 @@ class ResearchSeedIntegrationTest {
         List<Map<String, String>> figures = (List<Map<String, String>>) checked.get("figures");
         assertThat(figures).extracting(figure -> figure.get("value")).isEqualTo(VALUES);
         assertThat(figures).allSatisfy(figure -> assertThat(figure.get("label")).isNotBlank());
-        assertThat(List.of(checked.get("heading"), checked.get("rung")))
-                .allSatisfy(text -> assertThat((String) text).isNotBlank());
+        assertThat((String) checked.get("heading")).isNotBlank();
     }
 
     static Stream<Arguments> tools() {

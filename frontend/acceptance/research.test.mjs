@@ -104,6 +104,46 @@ for (const [id, lang, eyebrow, h1, intro] of [
   });
 }
 
+// The shared head's host element as built: whether it has the wall's class, and the tags of the
+// elements after the intro inside it (the first three kinds, so a failure reads in one line).
+const builtHead = (html) => {
+  const [, attrs = '', inner = ''] = main(html).match(/<app-page-head\b([^>]*)>(.*?)<\/app-page-head>/s) ?? [];
+  const rest = inner.split(/<p\b[^>]*class="page-head__intro"[^>]*>.*?<\/p>/s)[1] ?? '';
+  return {
+    wallClass: /class="[^"]*\bpage-head--wall\b/.test(attrs),
+    afterIntro: [...new Set([...rest.matchAll(/<([a-z][\w-]*)\b/g)].map(([, tag]) => tag))].slice(0, 3),
+  };
+};
+
+test('RS-HEAD-06 (D26): the Research head is the simple head, as on Software and Writing: nothing after the intro', () => {
+  assert.deepEqual(
+    Object.fromEntries(LANGS.map((lang) => [lang, builtHead(page(`${lang}/research`))])),
+    Object.fromEntries(LANGS.map((lang) => [lang, { wallClass: false, afterIntro: [] }])),
+  );
+});
+
+// The wall's words, in each language: the hint, and the rung note's sentence about the wall (ASCII,
+// as `holding` asks).
+const WALL_WORDS = [
+  'Point at a tile to name its protocol.',
+  'Zeigen Sie auf eine Kachel',
+  'Aponte para um mosaico',
+  'The wall draws the same corpus',
+  'Die Wand zeichnet denselben Korpus',
+  'A parede desenha o mesmo corpus',
+];
+
+test('RS-PAGE-13 (D26): nothing on the page, or in what it downloads, speaks of the wall', () => {
+  const found = LANGS.flatMap((lang) => {
+    const html = main(page(`${lang}/research`));
+    return [
+      ...['R2′', 'rs-wall'].filter((words) => html.includes(words)),
+      ...WALL_WORDS.flatMap((words) => holding(`${lang}/research`, words).map((file) => `${words} in ${file}`)),
+    ].map((what) => `${lang}: ${what}`);
+  });
+  assert.deepEqual(found, []);
+});
+
 test('RS-PAGE-02: the browser tab names the Research page in its language', () => {
   const titles = LANGS.map((lang) => page(`${lang}/research`).match(/<title>(.*?)<\/title>/)?.[1]);
   assert.deepEqual(titles, [
@@ -653,6 +693,23 @@ test('RS-WALL-05: on de and pt the rung note follows the evidence, in the page l
       de: 'Die 93 und 15 sind die eigene Zählung des Papers über seine 108 Protokolle. Die Wand zeichnet denselben Korpus auf Stufe R2′, die die Struktur rekursiver Protokolle erhält: Dort sind 47 der 74 verschiedenen Verbände nicht distributiv, und 50 der 104 Protokolle fallen in einen davon.',
       pt: 'Os 93 e 15 são a contagem do próprio artigo sobre os seus 108 protocolos. A parede desenha o mesmo corpus no nível R2′, que mantém a estrutura dos protocolos recursivos: aí 47 dos 74 reticulados distintos não são distributivos, e 50 dos 104 protocolos caem num deles.',
     },
+  );
+});
+
+test('RS-CHECK-05 (D26): how it was checked ends with the evidence, in every language, and names no rung', () => {
+  const EVIDENCE = {
+    en: 'Checked on 108 benchmark protocols from networking, databases, distributed systems and AI. Mechanised in Lean 4, with two independent tool implementations.',
+    de: 'Geprüft an 108 Benchmark-Protokollen aus Netzwerken, Datenbanken, verteilten Systemen und KI. In Lean 4 mechanisiert, mit zwei unabhängigen Werkzeug-Implementierungen.',
+    pt: 'Verificado em 108 protocolos de referência de redes, bases de dados, sistemas distribuídos e IA. Mecanizado em Lean 4, com duas implementações independentes.',
+  };
+  assert.deepEqual(
+    Object.fromEntries(
+      LANGS.map((lang) => {
+        const html = page(`${lang}/research`);
+        return [lang, { after: checks(html).after, rung: text(section(html, 'rs-checks')).includes('R2′') }];
+      }),
+    ),
+    Object.fromEntries(LANGS.map((lang) => [lang, { after: [EVIDENCE[lang]], rung: false }])),
   );
 });
 
