@@ -21,7 +21,7 @@ export const pt: Translations = {
   },
   about: {
     title: 'Sobre',
-    subtitle: 'De Lisboa a Berlim — uma jornada entre investigação, código, educação e corrida.',
+    subtitle: 'De Lisboa a Berlim — um percurso entre investigação, código, educação e corrida.',
     journeyHeading: 'O Percurso',
     journeyP1:
       'Cresci em Lisboa, Portugal, onde estudei Engenharia Informática na Universidade de Lisboa. Sob a orientação de <strong>Vasco T. Vasconcelos</strong>, explorei o mundo dos <strong>tipos de sessão</strong> — uma disciplina de tipos para sistemas concorrentes e distribuídos que garante segurança na comunicação por construção.',
