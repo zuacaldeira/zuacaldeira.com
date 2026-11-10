@@ -13,7 +13,6 @@ const SECTIONS = [
   ['writing', 'head'],
   ['writing', 'texts'],
   ['research', 'head'],
-  ['research', 'wall'],
   ['research', 'paper'],
   ['research', 'results'],
   ['research', 'checked'],
