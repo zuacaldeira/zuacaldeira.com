@@ -118,6 +118,30 @@ for (const [lang, id, sentence] of SEEDED_SENTENCES) {
   });
 }
 
+// The band's paper title in its own element, marked English as the Research page's paper card
+// has it: lang only where the page is not English, translate="no" everywhere (HOME-PAPER-10).
+const PAPER_TITLE = 'Session Type State Spaces Form Lattices';
+const bandTitleMarks = (route) => {
+  const eyebrow = page(route).match(/<p\b[^>]*\bclass="paper__eyebrow"[^>]*>([\s\S]*?)<\/p>/)?.[1];
+  assert.ok(eyebrow?.includes(PAPER_TITLE), `${route}: no band line with the paper title`);
+  const attrs = eyebrow.match(new RegExp(`<(\\w+)([^>]*)>\\s*${PAPER_TITLE}\\s*</\\1>`))?.[2];
+  if (attrs === undefined) return 'the title is not in an element of its own';
+  return {
+    lang: attrs.match(/\slang="([^"]*)"/)?.[1] ?? null,
+    translate: attrs.match(/\stranslate="([^"]*)"/)?.[1] ?? null,
+  };
+};
+
+for (const [lang, marks] of [
+  ['de', { lang: 'en', translate: 'no' }],
+  ['pt', { lang: 'en', translate: 'no' }],
+  ['en', { lang: null, translate: 'no' }],
+]) {
+  test(`HOME-PAPER-10: on /${lang}/home the band's paper title is marked English`, () => {
+    assert.deepEqual(bandTitleMarks(`${lang}/home`), marks);
+  });
+}
+
 // Both deploys take the site from build-site.yml (D26). Each cp line there must have a source
 // the build made. A cp line ending in `|| true` does not match the pattern and is not checked,
 // so write none; HOME-PAGE-06's copy must be there, as a plain line.
