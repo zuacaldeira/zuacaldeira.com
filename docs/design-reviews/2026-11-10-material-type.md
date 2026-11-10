@@ -1,7 +1,9 @@
 # Material's type in the site's families instead of Inter (2026-11-10)
 
 Review mode, before the build; D43 in `docs/examples/shell.md`, "Material's type follows the site"
-in `docs/design.md`. **Waiting for Zua's judgement.**
+in `docs/design.md`. **Approved by Zua on 2026-11-10:** `after-mockup` for the header (the menu in
+IBM Plex Mono, the "zc" mark in Fraunces written as weight 600), the rest as `after` (the PDF button
+and the race card's date and chips in Archivo, the card's title in Fraunces). D44 in `shell.md`.
 
 Screenshots in `2026-11-10-material-type/`, named `<where>-<light|dark>-<variant>.png`, Chromium at
 1280 px, 2× scale.

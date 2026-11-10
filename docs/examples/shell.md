@@ -57,6 +57,7 @@ the home hero, because the hero's page needs them.
 | SHELL-07b-P-04 | any built page | its footer is read | a second bottom row, a second © line, or none, is refused | yes (break in the build, all three) |
 | SHELL-13 | every built page (the 21, `/` and `/404`), in Chromium at 1280 px, light, its fonts loaded | Chromium is asked which fonts drew each text in the header, `<main>` and the footer | only the site's families: Fraunces, Archivo, IBM Plex Mono, Material Icons (the icons), and the notation fonts Noto Sans Math and STIX Two Text; no system font (D38, D40) | no |
 | SHELL-13b | every built page, and `src/index.html` | the heads and the text of each body are read | `index.html` asks Google Fonts once for Noto Sans Math and STIX Two Text with `&text=` and `display=swap`, and every built head carries one face of each (the build inlines them, D42); every character of the text is one the three families hold (D39) or one of that `&text=`, and the `&text=` holds no symbol that no page shows; today `₁ ₂ ℒ → ↗ ↠ ∥ ≅ ≡ ≤ ⊤ ⊥` (D41) | no |
+| SHELL-13c | `/en/home`, `/de/home` and `/pt/home` in Chromium at 1280 px, light | the header's fonts are read | each menu link is drawn by IBM Plex Mono alone; the "zc" mark by Fraunces alone, at weight 600 (D44) | no |
 | SHELL-13-P-01 | the same as SHELL-13 | the fonts are read | a text with no notation symbol in it drawn partly by a notation font (letters leaving Fraunces, Archivo or Plex Mono) is refused | no |
 | SHELL-13-P-02 | the same, STIX Two Text left out of a token | the fonts are read | `₁ ₂` drawn by a system font are refused | no |
 | SHELL-13b-P-01 | a built page with a symbol outside the subset (`⊗`) | it is read | refused, naming the symbol and the page | no |
@@ -942,6 +943,10 @@ Test list.
   which fonts drew its text; a non-site font is listed as "page: family: text". Red today: Tinos,
   DejaVu Sans Mono and the system Noto Sans Math on the symbols. P-01 in the same run: an element whose
   own text has no symbol of N lists no notation font.
+- **13c, browser** (new `frontend/acceptance/browser/header-type.test.mjs`, D44): on the three home
+  pages, CDP's faces for each desktop menu link and for `.logo-text`, and the mark's computed weight.
+  Red today: Inter on both, weight 700. Green: the theme on the tokens, the menu and the mark in their
+  own CSS. After it, SHELL-13 is red on the symbols alone; the font tokens make it green.
 - **Breaks, declared and restored** (md5 checked), in the built files, as before: 13-P-02 STIX Two Text
   out of the built tokens; 13-P-01 STIX Two Text before Fraunces in the heading token; 13b-P-01 a `⊗` in
   `de/research`; 13b-P-02 no notation link, two, and an `⊗` added to N.
@@ -1017,6 +1022,7 @@ rule; the site's own texts stay in en, de and pt).
 | SHELL-07b-P-04 | The footer has exactly one bottom row with one copyright line. |
 | SHELL-13 | Every letter and every math symbol on the site is drawn by the site's own fonts, the same on every device; nothing falls back to whatever the device has. |
 | SHELL-13b | The site loads its two math fonts only for the symbols its pages show, and a page cannot show a symbol those fonts were not loaded for. |
+| SHELL-13c | The top menu is set in the site's monospace and the "zc" mark in its serif, as in the agreed design. |
 | SHELL-13-P-01 | Letters stay in Fraunces, Archivo and Plex Mono; the math fonts draw only symbols. |
 | SHELL-13-P-02 | If a math font is missing from the type settings, the test notices the symbols falling back. |
 | SHELL-13b-P-01 | A new symbol in the text, outside the loaded set, stops the build's checks. |
@@ -1053,6 +1059,14 @@ Agreed with the developer on 2026-11-09 and 2026-11-10, for SHELL-13 and SHELL-1
   Archivo for plain text and Fraunces for display, after a before/after comparison for the developer.
   Rejected: allowing Inter in the test for now (the guard would not hold), loading Inter (the look
   `docs/design.md` rejects).
+- **D44, what the header and Material's components show** (2026-11-10, after the comparison in
+  `docs/design-reviews/2026-11-10-material-type.md`): Material's typography is the site's tokens,
+  `plain-family: var(--zc-font-body)`, `brand-family: var(--zc-font-heading)`, so Material text gets
+  the notation fallbacks too. Material sets its toolbar and card titles in the brand family, so: the
+  desktop menu is set in `--zc-font-mono` in its own CSS (the home mock-up's `.menu`), the "zc" mark in
+  `--zc-font-heading` at weight 600 (the mock-up's `.brand span`; 700 drew the 600 face anyway, and
+  Fraunces 700 is not loaded), the race card's title stays Fraunces, its date and chips and Material
+  buttons are Archivo. SHELL-13c tests the header's two in the browser.
 
 Agreed with the developer on 2026-11-08, for SHELL-07b (D27's bottom row):
 
