@@ -27,7 +27,7 @@ Status of a rule or a term:
 | L10 | Headings and labels in German and Portuguese are in sentence case: `Para além do trabalho`, not `Para Além do Trabalho`. German nouns keep their capital, of course. | agreed (Zua, 2026-11-10) |
 | L11 | Quotation marks: German „…“, Portuguese «…». (The copy already does so.) | agreed (Zua, 2026-11-10) |
 | L12 | Established English terms of the field stay where German or Portuguese speakers use them too (`Paper`, `Commit`, `Hook`, `Frontend`, `Backend`, `Stack`); everyday English (`connect`, `website` in pt, `pair`, `batch` as bare words) is translated. | agreed (Zua, 2026-11-10) |
-| L13 | German role nouns are neutral where that reads naturally, by rephrasing (`wer entwickelt`, `Entwicklungsteam`, `wer die Seite besucht`); no gender star, colon or slash. Where no natural rephrasing exists, the noun stays as it is. | agreed (Zua, 2026-11-10) |
+| L13 | German role nouns are neutral where that reads naturally, by rephrasing (`wer entwickelt`, `Entwicklungsteam`, `wer die Seite besucht`); no gender star, colon or slash. Where no natural rephrasing exists, the noun stays as it is. **Exceptions:** a noun that names a role stays as the role's name: "mit dem Entwickler" (the developer role in the experiment, Software lead, LA-24) and "dem Besucher" (the visitor role of the global type, Software caption, LA-25). | agreed (Zua, 2026-11-10) |
 
 ### What stays English in every language
 - **Names:** Alexandre Zua Caldeira, Kita Casa Azul, Kita Dienstplan, Casa Azul, the co-authors,
@@ -127,8 +127,8 @@ Priority: **high** = shown on every page or breaks an agreed rule; **medium** = 
 | LA-07 | Work (hidden) | `de.ts` `projects[1].description` | Dienstplan-Anwendung für das Team des Kindergartens Casa Azul. … | Dienstplan-Anwendung für das Team der Kita Casa Azul. … | glossary | low |
 | LA-08 | Home, Software | `R__home_hero.sql` de `headline`; `R__software.sql` de `proof.kicker` | Ich baue Software und beweise, dass ihre Protokolle halten. / Warum die Protokolle halten | Ich baue Software und beweise, dass ihre Protokolle eingehalten werden. / Warum die Protokolle eingehalten werden | "halten" for "hold" is a calque. Agreed (Zua, 2026-11-10), with HOME-HERO and SW-PROOF-01 and their tests | medium |
 | LA-09 | Software | `R__software.sql` de `lead.question`, `lead.result` | … im Pair mit dem Entwickler oder im Batch auf einer vereinbarten Testliste? / … im Pair mit mir. | … im Pair-Modus mit dem Entwickler oder im Batch-Modus über eine vereinbarte Testliste? / … im Pair-Modus mit mir. | L12: bare "im Pair", "im Batch" are not German | low |
-| LA-24 | Software | `R__software.sql` de `lead.question` | … im Pair mit dem Entwickler … | to decide with LA-09: e.g. "… im Pair-Modus, gemeinsam mit einem Menschen, oder im Batch-Modus …" | L13 (added 2026-11-10); no rephrasing is obviously natural yet | low |
-| LA-25 | Software | `R__software.sql` de `how.caption` | Die Seite gibt dem Besucher ihre Links, der Besucher fragt nginx … | probably stays: "Besucher" names a role of the global type, like `Visitor` in its notation | L13 (added 2026-11-10) | low |
+| LA-24 | Software | `R__software.sql` de `lead.question` | … im Pair mit dem Entwickler … | stays (Zua, 2026-11-10): it names the developer role in the experiment; an exception to L13 | L13 (added 2026-11-10) | closed |
+| LA-25 | Software | `R__software.sql` de `how.caption` | Die Seite gibt dem Besucher ihre Links, der Besucher fragt nginx … | stays (Zua, 2026-11-10): "Besucher" names a role of the global type; an exception to L13 | L13 (added 2026-11-10) | closed |
 
 ### Portuguese
 
@@ -155,7 +155,7 @@ LA-24 and LA-25 were added after L13 was decided.
 
 **Fixed (2026-11-10), each turning its part of `language.test.mjs` green:** LA-01, 02, 10, 11, 12
 (high), LA-04, 05, 13, 14, 15, 16 (medium), LA-08 (the headline). **Open:** the low ones, LA-03,
-06, 07, 09, 17 to 25.
+06, 07, 09, 17 to 23. **Closed without a change:** LA-24, 25 (role names, exceptions to L13).
 
 **Markup, not copy (found by the build test, 2026-11-10):** on `/de/home` and `/pt/home` the paper
 band's title "Session Type State Spaces Form Lattices" is not marked `lang="en"`/`translate="no"`,
