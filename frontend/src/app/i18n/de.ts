@@ -29,7 +29,7 @@ export const de: Translations = {
       'Meine Forschung wurde auf der <strong>POPL</strong> präsentiert, einer der führenden Konferenzen in der Programmiersprachentheorie. Diese Erfahrung hat mein Denken über Software geprägt: Typen als Spezifikationen, Programme als Beweise, Korrektheit durch Design.',
     berlinHeading: 'Berliner Kapitel',
     berlinP1:
-      'In Berlin habe ich meinen Software-Engineering-Hintergrund mit einer neuen Berufung verbunden: <strong>frühkindliche Bildung</strong>. Ich absolviere derzeit die Ausbildung zum staatlich anerkannten <em>Erzieher</em> an der <strong>Freien Fachschule Berlin</strong> und entwickle gleichzeitig Software für den zweisprachigen portugiesisch-deutschen Kindergarten <strong>Kita Casa Azul</strong>.',
+      'In Berlin habe ich meinen Software-Engineering-Hintergrund mit einer neuen Berufung verbunden: <strong>frühkindliche Bildung</strong>. Ich absolviere derzeit die Ausbildung zum staatlich anerkannten <em>Erzieher</em> an der <strong>Freien Fachschule Berlin</strong> und entwickle gleichzeitig Software für die zweisprachige portugiesisch-deutsche <strong>Kita Casa Azul</strong>.',
     berlinP2:
       'Auf der technischen Seite arbeite ich mit <strong>Angular</strong> und <strong>Spring Boot</strong> und entwickle alles von der <strong>Casa Azul Website</strong> bis zur internen <strong>Dienstplan</strong>-Anwendung (Schichtplanung). Außerdem habe ich die Webpräsenz der <strong>Botschaft von Angola in Berlin</strong> entwickelt.',
     beyondHeading: 'Neben der Arbeit',
