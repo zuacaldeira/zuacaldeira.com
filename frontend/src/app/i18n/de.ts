@@ -59,7 +59,7 @@ export const de: Translations = {
   },
   contact: {
     title: 'Kontakt',
-    subtitle: 'Lassen Sie uns vernetzen — kontaktieren Sie mich über einen dieser Kanäle.',
+    subtitle: 'Schreib mir über einen dieser Kanäle.',
   },
   footer: {
     end: 'hier endet jedes Protokoll',
