@@ -44,9 +44,11 @@ mat-toolbar {
   text-decoration: none;
 }
 
+/* The mark as the home mock-up's brand (D44 in shell.md): Fraunces at 600, the heaviest loaded. */
 .logo-text {
+  font-family: var(--zc-font-heading);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--nav-fg);
   letter-spacing: -0.02em;
   transition: color var(--zc-transition-base);

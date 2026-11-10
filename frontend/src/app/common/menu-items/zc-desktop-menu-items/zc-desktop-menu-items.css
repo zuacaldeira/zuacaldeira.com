@@ -9,6 +9,8 @@
 a {
   text-decoration: none;
   color: var(--nav-fg-muted, var(--zc-text-muted));
+  /* The home mock-up's menu (D44 in shell.md): Plex Mono, not Material's toolbar font. */
+  font-family: var(--zc-font-mono);
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.02em;
