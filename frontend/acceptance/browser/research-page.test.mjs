@@ -170,29 +170,11 @@ for (const theme of ['light', 'dark']) {
   });
 }
 
-// WCAG's contrast ratio of two computed rgb() colours.
-const ratio = (a, b) => {
-  const luminance = (rgb) => {
-    const [r, g, b] = rgb.match(/[\d.]+/g).slice(0, 3).map((v) => {
-      const c = Number(v) / 255;
-      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-    });
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  };
-  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
-  return (hi + 0.05) / (lo + 0.05);
-};
-
 for (const theme of ['light', 'dark']) {
-  test(`RS-COLOR-04 (D24): on /de/research (1280, ${theme}), the lattices at 3:1, the band's texts at 4.5:1`, async () => {
+  // The lattice half left with the wall (D26).
+  test(`RS-COLOR-04 (D24): on /de/research (1280, ${theme}), the band's texts at 4.5:1`, async () => {
     const { context, page } = await open('/de/research', 1280, theme);
     try {
-      const t = await tokens(page, ['--zc-edge', '--zc-ochre', '--zc-bg-warm']);
-      const lines = {
-        edge: Number(ratio(t['--zc-edge'], t['--zc-bg-warm']).toFixed(2)),
-        ochre: Number(ratio(t['--zc-ochre'], t['--zc-bg-warm']).toFixed(2)),
-      };
-      assert.ok(lines.edge >= 3 && lines.ochre >= 3, `the lattice lines against the wall's ground: ${JSON.stringify(lines)}`);
       const band = await contrastsIn(page, 'section.rs-results');
       assert.ok(band.some(({ text }) => text.startsWith('For every well-formed')), 'the band is read');
       assert.deepEqual(band.filter(({ contrast }) => contrast < 4.5), [], JSON.stringify(band));

@@ -4,8 +4,8 @@ import { I18nService } from '../../../services/i18n.service';
 
 /**
  * How the paper was checked (research-spec.md, "Components"; RS-CHECK-nn): the paper's four figures
- * from `research/checked`, the evidence sentence the bands use (`shared/paper`), then the rung note
- * that tells the paper's count from the wall's (RS-WALL-05).
+ * from `research/checked`, then the evidence sentence the bands use (`shared/paper`), and nothing
+ * after it (RS-CHECK-05: the rung note left with the wall, D26).
  */
 @Component({
   selector: 'app-paper-checks',

@@ -54,9 +54,8 @@
   color: var(--zc-text-body);
 }
 
-.rs-checks__evidence,
-.rs-checks__rung {
-  margin: 0 0 var(--zc-space-4);
+.rs-checks__evidence {
+  margin: 0;
   max-width: 65ch;
   font-size: 1.0625rem;
   line-height: 1.6;

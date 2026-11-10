@@ -4,7 +4,6 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { runInNewContext } from 'node:vm';
 import { holding } from './loaded.mjs';
 import { menu } from './menu.mjs';
 
@@ -196,196 +195,6 @@ test('RS-PAGE-08 (D1): no "What\'s next"; the sections are head, paper, results,
   );
   const ORDER = ['page-head', 'rs-paper', 'rs-results', 'rs-checks', 'rs-tool', 'rs-more'];
   assert.deepEqual(shown, Object.fromEntries(LANGS.map((lang) => [lang, { sections: ORDER, next: [] }])));
-});
-
-// The wall's data (D8): the distinct lattices at rung R2′, in render.py's order (states, then edges).
-const LATTICES = JSON.parse(
-  readFileSync(join(import.meta.dirname, '../scripts/lattice-wall/lattices.json'), 'utf8'),
-).toSorted((a, b) => a.n - b.n || a.e - b.e);
-
-// The page head's parts after the intro, and the wall's tiles: each `g` with its classes and name.
-const afterIntro = (html) => main(html).split(/<p\b[^>]*class="page-head__intro"[^>]*>.*?<\/p>/s)[1] ?? '';
-const figures = (html) => [...afterIntro(html).matchAll(/<figure\b[^>]*>(.*?)<\/figure>/gs)].map(([, inner]) => inner);
-const tiles = (inner) =>
-  [...inner.matchAll(/<g\b([^>]*)>/g)].map(([, attrs]) => ({
-    cls: attrs.match(/\sclass="([^"]*)"/)?.[1] ?? '',
-    name: attrs.match(/\sdata-name="([^"]*)"/)?.[1] ?? null,
-  }));
-
-test('RS-WALL-01 (D8): after the intro, one figure shows the 74 lattices in order, the 47 not distributive marked', () => {
-  const found = figures(page('en/research'));
-  assert.equal(found.length, 1, 'one figure after the intro');
-  const svg = found[0].match(/<svg\b([^>]*)>/)?.[1] ?? '';
-  const shown = tiles(found[0]);
-  assert.deepEqual(
-    {
-      role: svg.match(/\srole="([^"]*)"/)?.[1],
-      names: shown.map(({ name }) => name),
-      notDistributive: shown.filter(({ cls }) => cls.split(' ').includes('nd')).length,
-      tiles: shown.filter(({ cls }) => cls.split(' ').includes('t')).length,
-    },
-    {
-      role: 'img',
-      names: LATTICES.map(({ name }) => name),
-      notDistributive: 47,
-      tiles: 74,
-    },
-  );
-});
-
-// The wall's words on a built page: the SVG's label, the caption, and the hint as prerendered.
-const wallWords = (html) => {
-  const figure = figures(html)[0] ?? '';
-  return {
-    label: figure.match(/<svg\b[^>]*\saria-label="([^"]*)"/)?.[1] ?? null,
-    caption: texts(figure, 'figcaption')[0] ?? null,
-    hint: texts(figure, 'p')[0] ?? null,
-  };
-};
-
-test('RS-WALL-02: the German wall says what it is and which construction it draws', () => {
-  const { label, caption } = wallWords(page('de/research'));
-  assert.deepEqual(
-    {
-      label,
-      caption,
-      labelNames: ['R2′', '74'].filter((words) => label?.includes(words)),
-      captionNames: ['R2′', '74', '104', '108', '47'].filter((words) => caption?.includes(words)),
-    },
-    {
-      label:
-        'Die 74 verschiedenen Verbände der Benchmark-Protokolle des Papers auf Stufe R2′, nach Größe geordnet; die 47 nicht distributiven in Ocker.',
-      caption:
-        '74 verschiedene Verbände, gezeichnet aus 104 der 108 Protokolle des Papers auf Stufe R2′, einer feineren Konstruktion als der des Papers. Ocker: nicht distributiv, 47 der 74.',
-      labelNames: ['R2′', '74'],
-      captionNames: ['R2′', '74', '104', '108', '47'],
-    },
-  );
-});
-
-test('RS-WALL-07 (D17): the German caption ends with its key, in a span of its own', () => {
-  const figcaption = (figures(page('de/research'))[0] ?? '').match(/<figcaption\b[^>]*>(.*?)<\/figcaption>/s)?.[1] ?? '';
-  const parts = figcaption.split(/(<span\b[^>]*class="rs-wall__key"[^>]*>.*?<\/span>)/s);
-  assert.deepEqual(
-    { caption: text(parts[0] ?? ''), key: texts(figcaption, 'span', 'rs-wall__key'), after: text(parts[2] ?? '') },
-    {
-      caption:
-        '74 verschiedene Verbände, gezeichnet aus 104 der 108 Protokolle des Papers auf Stufe R2′, einer feineren Konstruktion als der des Papers.',
-      key: ['Ocker: nicht distributiv, 47 der 74.'],
-      after: '',
-    },
-  );
-});
-
-test('RS-WALL-04: each tile carries its protocol’s name as published, the same in every language', () => {
-  const names = Object.fromEntries(
-    LANGS.map((lang) => [lang, tiles(figures(page(`${lang}/research`))[0] ?? '').map(({ name }) => name)]),
-  );
-  assert.deepEqual(
-    { first: names.en[0], last: names.en.at(-1), count: names.en.length, de: names.de, pt: names.pt },
-    { first: 'GoF Facade', last: 'Raft Leader Election', count: 74, de: names.en, pt: names.en },
-  );
-});
-
-// The wall's counts, computed from the data (D9; scripts/lattice-wall/README.md): classes and
-// protocols, never mixed. 108 is the paper's own corpus, of which the data covers 104.
-const COUNTS = {
-  classes: LATTICES.length,
-  notDistributive: LATTICES.filter((o) => !o.dist).length,
-  protocols: LATTICES.reduce((sum, o) => sum + o.count, 0),
-  protocolsNotDistributive: LATTICES.filter((o) => !o.dist).reduce((sum, o) => sum + o.count, 0),
-};
-const PAPER_PROTOCOLS = 108;
-// The numbers a reader sees in a text, in any order; "R2′" names the rung, it is no count.
-const numbersIn = (words) => (words ?? '').replaceAll('R2′', '').match(/\d+/g)?.map(Number).toSorted((a, b) => a - b) ?? [];
-
-test('RS-WALL-06 (D9, D16): every number in the wall’s label and caption is the data’s, in every language', () => {
-  assert.deepEqual(COUNTS, { classes: 74, notDistributive: 47, protocols: 104, protocolsNotDistributive: 50 });
-  const { classes, notDistributive, protocols } = COUNTS;
-  const sorted = (...numbers) => numbers.toSorted((a, b) => a - b);
-  assert.deepEqual(
-    Object.fromEntries(
-      LANGS.map((lang) => {
-        const { label, caption } = wallWords(page(`${lang}/research`));
-        return [lang, { label: numbersIn(label), caption: numbersIn(caption) }];
-      }),
-    ),
-    Object.fromEntries(
-      LANGS.map((lang) => [
-        lang,
-        {
-          label: sorted(classes, notDistributive),
-          caption: sorted(classes, protocols, PAPER_PROTOCOLS, notDistributive, classes),
-        },
-      ]),
-    ),
-  );
-});
-
-// The CSS rules in a page's <style> elements that hide the wall's lines or states: a selector on
-// `.draw` with a dash offset of 1 or no opacity.
-const hidingRules = (html) =>
-  [...html.matchAll(/<style\b[^>]*>(.*?)<\/style>/gs)]
-    .flatMap(([, css]) => [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)])
-    .filter(([, selector, body]) => /\.draw\b/.test(selector) && /stroke-dashoffset:1\b|opacity:0\b/.test(body))
-    .map(([, selector]) => selector.trim());
-
-test('RS-MOTION-03, RS-MOTION-P-03: without a script the wall is complete and the hint says nothing', () => {
-  const html = page('en/research');
-  const rules = hidingRules(html);
-  assert.ok(rules.length >= 2, `the rules that hide lines and states are read: ${JSON.stringify(rules)}`);
-  assert.deepEqual(
-    {
-      tiles: tiles(figures(html)[0] ?? '').length,
-      unconditional: rules.flatMap((rule) => rule.split(',')).filter((sel) => !/^\s*html\.motion\b/.test(sel)),
-      hint: wallWords(html).hint,
-    },
-    { tiles: 74, unconditional: [], hint: '' },
-  );
-});
-
-// The paper's own count (its abstract): 93 distributive, 15 not, of 108; the wall's are COUNTS.
-const PAPER = { distributive: 93, notDistributive: 15 };
-
-test('RS-WALL-06 (D16): every number in the rung note is the paper’s or the data’s, 50 included, in every language', () => {
-  const { classes, notDistributive, protocols, protocolsNotDistributive } = COUNTS;
-  const expected = [
-    PAPER.distributive,
-    PAPER.notDistributive,
-    PAPER_PROTOCOLS,
-    notDistributive,
-    classes,
-    protocolsNotDistributive,
-    protocols,
-  ].toSorted((a, b) => a - b);
-  assert.deepEqual(
-    Object.fromEntries(LANGS.map((lang) => [lang, numbersIn(checks(page(`${lang}/research`)).after[1])])),
-    Object.fromEntries(LANGS.map((lang) => [lang, expected])),
-  );
-});
-
-// The classes the head's inline scripts put on <html> before first paint, run as theme.test.mjs runs
-// them, on a device that does or does not ask for reduced motion.
-const htmlClassesAtFirstPaint = (html, { reducedMotion }) => {
-  const classes = new Set();
-  const scripts = [...(html.match(/<head>(.*?)<\/head>/s)?.[1] ?? '').matchAll(/<script>(.*?)<\/script>/gs)];
-  runInNewContext(scripts.map(([, code]) => code).join(';\n'), {
-    localStorage: { getItem: () => 'light' },
-    matchMedia: (query) => ({ matches: query === '(prefers-reduced-motion: reduce)' && reducedMotion }),
-    document: { documentElement: { classList: { add: (c) => classes.add(c) } } },
-  });
-  return [...classes];
-};
-
-test('RS-MOTION-01, 02 (D13): before first paint, <html> gets motion unless the device asks for reduced motion', () => {
-  const html = page('en/research');
-  assert.deepEqual(
-    {
-      allowed: htmlClassesAtFirstPaint(html, { reducedMotion: false }),
-      reduced: htmlClassesAtFirstPaint(html, { reducedMotion: true }),
-    },
-    { allowed: ['motion'], reduced: [] },
-  );
 });
 
 // A section of <main> by its first class, with what it holds.
@@ -587,7 +396,7 @@ const checks = (html) => {
   };
 };
 
-test('RS-CHECK-01, RS-WALL-05: four figures say how it was checked, then the evidence, then which count is which', () => {
+test('RS-CHECK-01: four figures say how it was checked, then the evidence', () => {
   assert.deepEqual(checks(page('en/research')), {
     heading: ['How it was checked'],
     figures: [
@@ -598,7 +407,6 @@ test('RS-CHECK-01, RS-WALL-05: four figures say how it was checked, then the evi
     ],
     after: [
       'Checked on 108 benchmark protocols from networking, databases, distributed systems and AI. Mechanised in Lean 4, with two independent tool implementations.',
-      'The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, which keeps the structure of recursive protocols: there 47 of the 74 distinct lattices are not distributive, and 50 of the 104 protocols fall in one of them.',
     ],
   });
 });
@@ -682,16 +490,6 @@ test('RS-CHECK-02, 03: on de and pt the meanings and the evidence are translated
         evidence:
           'Verificado em 108 protocolos de referência de redes, bases de dados, sistemas distribuídos e IA. Mecanizado em Lean 4, com duas implementações independentes.',
       },
-    },
-  );
-});
-
-test('RS-WALL-05: on de and pt the rung note follows the evidence, in the page language', () => {
-  assert.deepEqual(
-    { de: checks(page('de/research')).after[1], pt: checks(page('pt/research')).after[1] },
-    {
-      de: 'Die 93 und 15 sind die eigene Zählung des Papers über seine 108 Protokolle. Die Wand zeichnet denselben Korpus auf Stufe R2′, die die Struktur rekursiver Protokolle erhält: Dort sind 47 der 74 verschiedenen Verbände nicht distributiv, und 50 der 104 Protokolle fallen in einen davon.',
-      pt: 'Os 93 e 15 são a contagem do próprio artigo sobre os seus 108 protocolos. A parede desenha o mesmo corpus no nível R2′, que mantém a estrutura dos protocolos recursivos: aí 47 dos 74 reticulados distintos não são distributivos, e 50 dos 104 protocolos caem num deles.',
     },
   );
 });

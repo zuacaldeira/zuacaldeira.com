@@ -173,12 +173,6 @@ export const TEST_CONTENT: ContentSnapshot = {
   writing: { head: inEvery(writingHeadIn), texts: inEvery(writingTextsIn) },
   research: {
     head: inEvery(researchHeadIn),
-    wall: inEvery((lang) => ({
-      label: `wall label ${lang}`,
-      caption: `wall caption ${lang}`,
-      key: `wall key ${lang}`,
-      hint: `wall hint ${lang}`,
-    })),
     paper: inEvery((lang) => ({
       kind: `paper kind ${lang}`,
       note: `paper note ${lang}`,
@@ -192,7 +186,6 @@ export const TEST_CONTENT: ContentSnapshot = {
     checked: inEvery((lang) => ({
       heading: `checked heading ${lang}`,
       figures: ['108', '93', '15', 'Lean 4'].map((value) => ({ value, label: `label ${value} ${lang}` })),
-      rung: `rung ${lang}`,
     })),
     tool: inEvery((lang) => ({
       heading: `tool heading ${lang}`,

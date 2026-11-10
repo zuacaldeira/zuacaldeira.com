@@ -164,18 +164,6 @@ export interface WritingContent {
 }
 
 /**
- * One language's words for the Research wall, `research/wall` (D2 in research.md). The numbers in
- * them are R2′ counts of lattices.json, held to the data by RS-WALL-06 (D9).
- */
-export interface ResearchWallText {
-  readonly label: string;
-  readonly caption: string;
-  /** "Ochre: not distributive, …", shown after the caption in ochre (D17). */
-  readonly key: string;
-  readonly hint: string;
-}
-
-/**
  * One language's paper card, `research/paper` (D2 in research.md): its labels, and the paper's
  * author, venue and abstract, the same in every language (the abstract in English, R2). Title, year,
  * PDF and read label are `shared/paper`'s.
@@ -193,7 +181,6 @@ export interface ResearchPaper {
 /** The Research page's text, `@page-content/research` (D2 in research.md). */
 export interface ResearchContent {
   readonly head: Readonly<Record<Language, PageHead>>;
-  readonly wall: Readonly<Record<Language, ResearchWallText>>;
   readonly paper: Readonly<Record<Language, ResearchPaper>>;
   /** What it proves: its heading; the statements are `shared/paper`'s (D3). */
   readonly results: Readonly<Record<Language, { readonly heading: string }>>;
@@ -227,13 +214,12 @@ export interface ResearchTool {
 }
 
 /**
- * One language's "How it was checked", `research/checked` (D2): the paper's four figures (their
- * values the same in every language) and the rung note, whose R2′ numbers RS-WALL-06 holds to the data.
+ * One language's "How it was checked", `research/checked` (D2): the paper's four figures, their
+ * values the same in every language (no rung note since D26).
  */
 export interface ResearchChecked {
   readonly heading: string;
   readonly figures: readonly { readonly value: string; readonly label: string }[];
-  readonly rung: string;
 }
 
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
