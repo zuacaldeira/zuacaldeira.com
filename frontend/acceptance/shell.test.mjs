@@ -246,6 +246,74 @@ test("SHELL-07b: on every built page the footer's bottom row reads the checked Z
   assert.deepEqual(actual, expected);
 });
 
+// The notation fonts (D38 to D42). Main: what Fraunces, Archivo and IBM Plex Mono all hold (D39).
+// N: the symbols `src/index.html` asks Google Fonts for (D41); the build inlines their faces (D42).
+const MAIN_MARKS = new Set('–—‘’‚“”„†•…′″‹›€™');
+const inMain = (c) => {
+  const cp = c.codePointAt(0);
+  return (
+    c === '\t' ||
+    c === '\n' ||
+    c === '\r' ||
+    (cp >= 0x20 && cp < 0x7f) ||
+    (cp >= 0xa0 && cp <= 0x17f && c !== 'ŉ' && c !== 'ſ') ||
+    MAIN_MARKS.has(c)
+  );
+};
+const INDEX_HTML = readFileSync(join(import.meta.dirname, '../src/index.html'), 'utf8');
+const notationLinks = (html) =>
+  [...html.matchAll(/<link\b[^>]*\bhref="(https:\/\/fonts\.googleapis\.com\/css2\?[^"]*)"/g)]
+    .map(([, href]) => new URL(href.replaceAll('&amp;', '&')))
+    .filter((url) => url.searchParams.getAll('family').includes('Noto Sans Math'));
+const faces = (html, family) =>
+  [...html.matchAll(/@font-face\{[^}]*\}/g)].filter(([face]) =>
+    face.includes(`font-family:'${family}'`),
+  ).length;
+// The text a page shows: its body without scripts, styles, comments, tags and attributes.
+const bodyText = (html) =>
+  (html.match(/<body\b[^>]*>([\s\S]*)<\/body>/)?.[1] ?? '')
+    .replace(/<script\b[\s\S]*?<\/script>/g, '')
+    .replace(/<style\b[\s\S]*?<\/style>/g, '')
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&nbsp;/g, ' ')
+    .replace(
+      /&(amp|lt|gt|quot|apos);/g,
+      (_, e) => ({ amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" })[e],
+    );
+
+test('SHELL-13b: every symbol a built page shows is one its fonts hold, and the notation fonts load only those', () => {
+  const links = notationLinks(INDEX_HTML);
+  const n = new Set(links[0]?.searchParams.get('text') ?? '');
+  const shown = Object.fromEntries(
+    PAGES.map(([route]) => [route, [...new Set(bodyText(page(route)))].filter((c) => !inMain(c))]),
+  );
+  assert.deepEqual(
+    {
+      links: links.map((url) => [
+        url.searchParams.getAll('family'),
+        url.searchParams.get('display'),
+      ]),
+      unloaded: Object.entries(shown).flatMap(([route, cs]) =>
+        cs.filter((c) => !n.has(c)).map((c) => `${route}: ${c}`),
+      ),
+      neverShown: [...n].filter((c) => !Object.values(shown).some((cs) => cs.includes(c))),
+      withoutFaces: PAGES.map(([route]) => route).filter(
+        (route) =>
+          faces(page(route), 'Noto Sans Math') !== 1 || faces(page(route), 'STIX Two Text') !== 1,
+      ),
+    },
+    {
+      links: [[['Noto Sans Math', 'STIX Two Text'], 'swap']],
+      unloaded: [],
+      neverShown: [],
+      withoutFaces: [],
+    },
+  );
+});
+
 test("SHELL-07: on every built page the footer invites a talk, in the page's language, with mail, profiles and CV", () => {
   const actual = Object.fromEntries(PAGES.map(([route]) => [route, footers(page(route))]));
   const expected = Object.fromEntries(
