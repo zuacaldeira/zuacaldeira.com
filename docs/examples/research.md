@@ -171,7 +171,7 @@ protocol counts, and every place that shows them says so.
 |----|----------------|-------|------|------|---------|
 | RS-COLOR-01 | "What it proves" stands on the theorem band, as on Home and Software. | `/en/research` in the browser, light and dark | the results section is measured | its background is `--zc-band-bg` (the accent in light, the raised glaze in dark) and its texts `--zc-band-fg` | yes (browser, light and dark, 2026-11-09) |
 | RS-COLOR-02 | "The tool" stands on the raised glaze. | the same | the tool section is measured | its background is `--zc-bg-light` | yes (browser, light and dark, 2026-11-09) |
-| RS-COLOR-03 | The "not distributive" figure carries the wall's ochre; the others carry cobalt. (Without the wall since D26; whether the ochre stays is open, see D26.) | the same | the four figures' top rules are measured | 15's is `--zc-ochre`; 108's, 93's and Lean 4's are `--zc-azul` | yes (browser, light and dark, 2026-11-09, D23) |
+| RS-COLOR-03 | The "not distributive" figure carries the wall's ochre; the others carry cobalt. (Without the wall since D26; the ochre stays, D27.) | the same | the four figures' top rules are measured | 15's is `--zc-ochre`; 108's, 93's and Lean 4's are `--zc-azul` | yes (browser, light and dark, 2026-11-09, D23) |
 | RS-COLOR-04 | The lattices and the band's text are easy to see in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the wall's lines and the band's texts are measured | every band text at 4.5:1 or more; (retired 2026-11-10 with the wall, D26: every lattice line at 3:1 or more against its ground) | yes for the band (browser, light and dark: en in slice 3, de in slice 4, D24); the lattice half retired (D26) |
 
 ## 11. Motion
@@ -1082,7 +1082,7 @@ Results, the whole set once:
   272 kB. The initial bundle is 513.70 kB against the 500 kB warning budget.
 
 Leftovers, not built:
-- **Open, for the developer: 15's ochre rule** (D26).
+- **15's ochre rule** (D26): answered, it stays (D27).
 - **The mock-up and spec** (`docs/mockups/research/`) still show the wall. They are kept as the
   record of option A, with a note at the top of the spec.
 - **The hero's wall** (`LatticeWall`, D8) is untouched, as asked. Home's D11 parks it; whether it
@@ -1279,4 +1279,11 @@ Decided by the developer on 2026-11-10:
   underline), and the home lattice, 2³, is distributive. So the rule now reads as "this figure
   stands out", not as "not distributive". The words under it still carry the meaning. It is left
   unchanged until the developer chooses (options in the final message of this change). RS-COLOR-03
-  measures it as before.
+  measures it as before. Answered below (D27).
+
+Answered by the developer on 2026-11-10, after D26: **D26 is accepted.** `next` is pushed at
+`57839be`.
+
+- **D27. The ochre line above 15 stays** (option 1 of D26's open question). It still draws the eye
+  to the one surprising figure; the words under it carry the meaning. D23 and RS-COLOR-03 hold as
+  they are.
