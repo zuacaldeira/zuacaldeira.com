@@ -34,7 +34,7 @@ export const pt: Translations = {
       'No lado técnico, trabalho com <strong>Angular</strong> e <strong>Spring Boot</strong>, construindo desde o <strong>Website Casa Azul</strong> até à aplicação interna de <strong>Dienstplan</strong> (planeamento de turnos). Também desenvolvi a presença web da <strong>Embaixada de Angola em Berlim</strong>.',
     beyondHeading: 'Para Além do Trabalho',
     beyondP1:
-      'Sou corredor amador, treinando ao longo das estações de Berlim. Do Silvesterlauf à Maratona de Berlim, a corrida mantém-me equilibrado e dá estrutura a tudo o resto.',
+      'Sou corredor amador e treino ao longo das estações de Berlim. Do Silvesterlauf à Maratona de Berlim, a corrida mantém-me equilibrado e dá estrutura a tudo o resto.',
   },
   work: {
     title: 'Trabalho',
