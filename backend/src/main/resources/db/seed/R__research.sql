@@ -17,25 +17,6 @@ INSERT INTO content_section (page, section, lang, body) VALUES
         'heading', 'Investigação',
         'intro', 'O espaço de estados de todo o tipo de sessão bem formado forma um reticulado. Esta página apresenta o artigo que o prova: o que mostra, como foi verificado e a ferramenta por trás dele.'));
 
--- The wall's words (D2), the ochre key apart from the caption (D17). Its numbers are R2′ counts of lattices.json, written into the sentences,
--- and a test holds them to the data in every language (D9, RS-WALL-06): change both together.
-INSERT INTO content_section (page, section, lang, body) VALUES
-    ('research', 'wall', 'en', JSON_OBJECT(
-        'label', 'The 74 distinct lattices of the paper’s benchmark protocols at rung R2′, ordered by size; the 47 that are not distributive in ochre.',
-        'caption', '74 distinct lattices, drawn from 104 of the paper’s 108 protocols at rung R2′, a finer construction than the paper’s own.',
-        'key', 'Ochre: not distributive, 47 of the 74.',
-        'hint', 'Point at a tile to name its protocol.')),
-    ('research', 'wall', 'de', JSON_OBJECT(
-        'label', 'Die 74 verschiedenen Verbände der Benchmark-Protokolle des Papers auf Stufe R2′, nach Größe geordnet; die 47 nicht distributiven in Ocker.',
-        'caption', '74 verschiedene Verbände, gezeichnet aus 104 der 108 Protokolle des Papers auf Stufe R2′, einer feineren Konstruktion als der des Papers.',
-        'key', 'Ocker: nicht distributiv, 47 der 74.',
-        'hint', 'Zeigen Sie auf eine Kachel, um ihr Protokoll zu sehen.')),
-    ('research', 'wall', 'pt', JSON_OBJECT(
-        'label', 'Os 74 reticulados distintos dos protocolos de referência do artigo no nível R2′, por tamanho; os 47 não distributivos a ocre.',
-        'caption', '74 reticulados distintos, desenhados a partir de 104 dos 108 protocolos do artigo no nível R2′, uma construção mais fina do que a do artigo.',
-        'key', 'Ocre: não distributivos, 47 dos 74.',
-        'hint', 'Aponte para um mosaico para ver o seu protocolo.'));
-
 -- The paper's card (D2): its labels per language; author, venue and abstract written once, the same
 -- in every language (R2: the abstract in English everywhere). Title, year, PDF and read label are in
 -- shared/paper.
@@ -69,9 +50,8 @@ INSERT INTO content_section (page, section, lang, body) VALUES
     ('research', 'results', 'de', JSON_OBJECT('heading', 'Was es beweist')),
     ('research', 'results', 'pt', JSON_OBJECT('heading', 'O que prova'));
 
--- How it was checked (D2): the paper's own count, its values the same in every language (RS-CHECK-03),
--- then the rung note, which tells the paper's 93 and 15 from the wall's R2′ numbers; those are held to
--- lattices.json by RS-WALL-06 (D9, D16): change both together.
+-- How it was checked (D2): the paper's own count, its values the same in every language (RS-CHECK-03).
+-- No rung note since the wall left the page (D26, RS-CHECK-05).
 INSERT INTO content_section (page, section, lang, body) VALUES
     ('research', 'checked', 'en', JSON_OBJECT(
         'heading', 'How it was checked',
@@ -79,24 +59,21 @@ INSERT INTO content_section (page, section, lang, body) VALUES
             JSON_OBJECT('value', '108', 'label', 'benchmark protocols, every one a lattice'),
             JSON_OBJECT('value', '93', 'label', 'distributive'),
             JSON_OBJECT('value', '15', 'label', 'not distributive'),
-            JSON_OBJECT('value', 'Lean 4', 'label', 'mechanised proof')),
-        'rung', 'The 93 and 15 are the paper’s own count over its 108 protocols. The wall draws the same corpus at rung R2′, which keeps the structure of recursive protocols: there 47 of the 74 distinct lattices are not distributive, and 50 of the 104 protocols fall in one of them.')),
+            JSON_OBJECT('value', 'Lean 4', 'label', 'mechanised proof')))),
     ('research', 'checked', 'de', JSON_OBJECT(
         'heading', 'Wie es geprüft wurde',
         'figures', JSON_ARRAY(
             JSON_OBJECT('value', '108', 'label', 'Benchmark-Protokolle, jedes ein Verband'),
             JSON_OBJECT('value', '93', 'label', 'distributiv'),
             JSON_OBJECT('value', '15', 'label', 'nicht distributiv'),
-            JSON_OBJECT('value', 'Lean 4', 'label', 'mechanisierter Beweis')),
-        'rung', 'Die 93 und 15 sind die eigene Zählung des Papers über seine 108 Protokolle. Die Wand zeichnet denselben Korpus auf Stufe R2′, die die Struktur rekursiver Protokolle erhält: Dort sind 47 der 74 verschiedenen Verbände nicht distributiv, und 50 der 104 Protokolle fallen in einen davon.')),
+            JSON_OBJECT('value', 'Lean 4', 'label', 'mechanisierter Beweis')))),
     ('research', 'checked', 'pt', JSON_OBJECT(
         'heading', 'Como foi verificado',
         'figures', JSON_ARRAY(
             JSON_OBJECT('value', '108', 'label', 'protocolos de referência, todos reticulados'),
             JSON_OBJECT('value', '93', 'label', 'distributivos'),
             JSON_OBJECT('value', '15', 'label', 'não distributivos'),
-            JSON_OBJECT('value', 'Lean 4', 'label', 'prova mecanizada')),
-        'rung', 'Os 93 e 15 são a contagem do próprio artigo sobre os seus 108 protocolos. A parede desenha o mesmo corpus no nível R2′, que mantém a estrutura dos protocolos recursivos: aí 47 dos 74 reticulados distintos não são distributivos, e 50 dos 104 protocolos caem num deles.'));
+            JSON_OBJECT('value', 'Lean 4', 'label', 'prova mecanizada'))));
 
 -- The tool (D2): reticulateP in the Software row's shape. Its text is the Software page's
 -- reticulateP row's, copied word for word (D6, each page downloads only its own text); RS-TOOL-03
