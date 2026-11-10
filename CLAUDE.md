@@ -134,12 +134,16 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 **Design tokens** — CSS custom properties prefixed `--zc-*` defined in `src/styles.css`:
 - Colors: `--zc-text-heading`, `--zc-bg-warm`, `--zc-accent`, etc.
 - Spacing: `--zc-space-2` through `--zc-space-24`
-- Typography: Inter font family (`--zc-font-heading`, `--zc-font-body`)
+- Typography: Fraunces (`--zc-font-heading`), Archivo (`--zc-font-body`), IBM Plex Mono
+  (`--zc-font-mono`), each followed by the notation fonts Noto Sans Math and STIX Two Text, which
+  `index.html` loads only for the symbols the pages show (SHELL-13, 13b in `docs/examples/shell.md`:
+  a new symbol goes into that link's `text=`)
 
 **Material 3 theme** — `src/material-theme.scss`:
 - Primary: `mat.$cyan-palette`
 - Tertiary: `mat.$violet-palette`
-- Typography: Inter
+- Typography: the site's tokens, `--zc-font-body` for plain text, `--zc-font-heading` for display
+  (toolbar, card titles), never Inter (D43, D44 in `docs/examples/shell.md`)
 - Dark theme via `.dark-theme` class on `<html>`
 
 ## Internationalization (i18n)

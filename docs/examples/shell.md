@@ -55,13 +55,13 @@ the home hero, because the hero's page needs them.
 | SHELL-07b-P-02 | any built page | the bottom row is read | a shown line other than short(checked) is refused: ASCII `\|\|`, a fourth thread, or a checked file changed while the page is not | yes (break in the build, both; break in `zua.st`) |
 | SHELL-07b-P-03 | any built page | the bottom row is read | a © line other than the page language's is refused: "Alexandre Caldeira" (red before), no year, "Berlim" on a German page | yes (build: red before; break in the build, both) |
 | SHELL-07b-P-04 | any built page | its footer is read | a second bottom row, a second © line, or none, is refused | yes (break in the build, all three) |
-| SHELL-13 | every built page (the 21, `/` and `/404`), in Chromium at 1280 px, light, its fonts loaded | Chromium is asked which fonts drew each text in the header, `<main>` and the footer | only the site's families: Fraunces, Archivo, IBM Plex Mono, Material Icons (the icons), and the notation fonts Noto Sans Math and STIX Two Text; no system font (D38, D40) | no |
-| SHELL-13b | every built page, and `src/index.html` | the heads and the text of each body are read | `index.html` asks Google Fonts once for Noto Sans Math and STIX Two Text with `&text=` and `display=swap`, and every built head carries one face of each (the build inlines them, D42); every character of the text is one the three families hold (D39) or one of that `&text=`, and the `&text=` holds no symbol that no page shows; today `₁ ₂ ℒ → ↗ ↠ ∥ ≅ ≡ ≤ ⊤ ⊥` (D41) | no |
-| SHELL-13c | `/en/home`, `/de/home` and `/pt/home` in Chromium at 1280 px, light | the header's fonts are read | each menu link is drawn by IBM Plex Mono alone; the "zc" mark by Fraunces alone, at weight 600 (D44) | no |
-| SHELL-13-P-01 | the same as SHELL-13 | the fonts are read | a text with no notation symbol in it drawn partly by a notation font (letters leaving Fraunces, Archivo or Plex Mono) is refused | no |
-| SHELL-13-P-02 | the same, STIX Two Text left out of a token | the fonts are read | `₁ ₂` drawn by a system font are refused | no |
-| SHELL-13b-P-01 | a built page with a symbol outside the subset (`⊗`) | it is read | refused, naming the symbol and the page | no |
-| SHELL-13b-P-02 | `src/index.html` and a built page | the heads are read | no notation stylesheet in `index.html`, or two, or a built head without both faces, is refused; so is a symbol in the `&text=` that no page shows (weight) | no |
+| SHELL-13 | every built page (the 21, `/` and `/404`), in Chromium at 1280 px, light, its fonts loaded | Chromium is asked which fonts drew each text in the header, `<main>` and the footer | only the site's families: Fraunces, Archivo, IBM Plex Mono, Material Icons (the icons), and the notation fonts Noto Sans Math and STIX Two Text; no system font (D38, D40) | yes (browser, 23 pages, 2026-11-10: red before, Inter and system fonts) |
+| SHELL-13b | every built page, and `src/index.html` | the heads and the text of each body are read | `index.html` asks Google Fonts once for Noto Sans Math and STIX Two Text with `&text=` and `display=swap`, and every built head carries one face of each (the build inlines them, D42); every character of the text is one the three families hold (D39) or one of that `&text=`, and the `&text=` holds no symbol that no page shows; today `₁ ₂ ℒ → ↗ ↠ ∥ ≅ ≡ ≤ ⊤ ⊥` (D41) | yes (build, 23 pages, 2026-11-10: red before) |
+| SHELL-13c | `/en/home`, `/de/home` and `/pt/home` in Chromium at 1280 px, light | the header's fonts are read | each menu link is drawn by IBM Plex Mono alone; the "zc" mark by Fraunces alone, at weight 600 (D44) | yes (browser, 2026-11-10: red before, Inter at 700) |
+| SHELL-13-P-01 | the same as SHELL-13 | the fonts are read | a text with no notation symbol in it drawn partly by a notation font (letters leaving Fraunces, Archivo or Plex Mono) is refused | yes (break in the build: the full STIX file, no range, first in the token) |
+| SHELL-13-P-02 | the same, STIX Two Text left out of a token | the fonts are read | `₁ ₂` drawn by a system font are refused | yes (break in the built tokens) |
+| SHELL-13b-P-01 | a built page with a symbol outside the subset (`⊗`) | it is read | refused, naming the symbol and the page | yes (break in the build) |
+| SHELL-13b-P-02 | `src/index.html` and a built page | the heads are read | no notation stylesheet in `index.html`, or two, or a built head without both faces, is refused; so is a symbol in the `&text=` that no page shows (weight) | yes (break in `index.html`, three ways, and in the build) |
 
 ## Diagram: SHELL-02 (acceptance, at build time)
 
@@ -953,6 +953,38 @@ Test list.
 - **No unit test:** no Angular code changes, only `index.html` and `styles.css`.
 - **Weight and first paint,** measured, not tested: the initial bundle (fonts are not in it), the
   notation fonts' bytes per page, and the stylesheet's place in the head (D42).
+
+**Done 2026-11-10.** 13b went red on the 12 symbols of their pages with no stylesheet and no faces,
+green with the stylesheet in `index.html` (`508fdc5`). SHELL-13's first red named Inter as well as
+the symbols (D43, D44): 13c went red with the menu and the mark in Inter at 700, green with the
+header's own CSS (`3570b08`); the theme on the tokens took Inter's last 52 findings (`4fbba10`); the
+tokens took the symbols (`342338f`). The first green run of SHELL-13 lost four pages back to back with
+every letter in system fonts (the web fonts had not loaded); the rerun was green, and the test now
+names faces that failed to load first.
+
+Breaks, each restored, md5 checked: 13b-P-01 `⊗` on `de/research`; 13b-P-02 no Noto Sans Math, two
+stylesheets, `⊗` in `&text=`, the STIX face gone from `de/home`; 13-P-02 STIX out of the heading token
+(red on the three Research pages, `₁ ₂` in Tinos; the home pages' subscripts are in Plex Mono, whose
+token kept it). 13-P-01 first stayed green with STIX first in the heading token: the inlined faces
+hold only the 12 symbols and carry their `unicode-range`, so they cannot draw letters. It went red on
+`/de/research` once the full STIX file, without the range, stood first (`STIX Two Text: Forschung`).
+
+Measured (D42): the initial bundle 513.81 kB (512.71 before; styles 20.22 kB raw, Material's
+typography now names the tokens); fonts per page, `/en/about` 4.4 kB of notation (Noto Sans Math) in
+265 kB of fonts, `/en/research` 5.5 kB (with STIX); no request before first paint.
+
+Checks: unit 279 passed, 5 skipped; `acceptance` 108/108; `test:scripts` 18/18; browser 157/157 (13
+files with the new two); the build prerenders 26 routes.
+
+Leftovers, not built:
+- **The phone bar and phone menu** are not read by SHELL-13 (1280 only, D40); the phone menu's links
+  are Material list items, now in Archivo.
+- **The bar at 768 px** with the menu in Plex Mono, for the developer on the preview (D24 holds).
+- **SHELL-12's unit spec** (`zc-nav-mobile.spec.ts`, "after a link in the open menu, focus is on the
+  new page's main") lost twice under load (5.4 s, `expected <mat-sidenav> to be <main>`), green on
+  each rerun: timing-sensitive, unrelated to fonts.
+- **Material Icons** is 128 kB of every page's 265 kB of fonts, for a few icons.
+- **The browser tests need Google Fonts:** a failed font load fails SHELL-13 and SHELL-13c, by design.
 
 ## Width of the header
 
