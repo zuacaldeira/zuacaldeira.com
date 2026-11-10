@@ -1,5 +1,7 @@
 /* The paper card (research-spec.md, "Components" and "Layout per width"): on the warm ground, parted
-   from the head by a rule; the card on the surface with its ochre top; two columns from 900 px. */
+   from the head by a rule; the card on the surface with a plain 1 px border, like the site's other
+   cards (D28: no ochre top; the ochre stays in the kind label and the note's lozenge); two columns
+   from 900 px. */
 .rs-paper {
   padding-block: clamp(40px, 6vw, 80px);
   background: var(--zc-bg-warm);
@@ -19,7 +21,6 @@
   padding: clamp(24px, 3vw, 40px);
   background: var(--zc-bg-white);
   border: 1px solid var(--zc-border-light);
-  border-top: 3px solid var(--zc-ochre);
 }
 
 .rs-paper__main {
