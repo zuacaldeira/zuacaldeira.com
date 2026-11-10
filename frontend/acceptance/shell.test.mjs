@@ -192,7 +192,7 @@ const FOOTER = {
   ],
   de: [
     'p: ⊥ end · hier endet jedes Protokoll',
-    'h2: Sprechen wir über Ihr System.',
+    'h2: Sprechen wir über dein System.',
     'p: Offen für Stellen in Softwareentwicklung und Forschung und für Zusammenarbeit zu Protokollen, Verifikation und Agentensystemen.',
   ],
   pt: [
