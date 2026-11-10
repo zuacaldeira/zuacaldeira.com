@@ -31,7 +31,7 @@ export const pt: Translations = {
     berlinP1:
       'Em Berlim, combinei a minha formação em engenharia de software com uma nova vocação: <strong>educação infantil</strong>. Estou atualmente em formação como <em>Erzieher</em> (educador reconhecido pelo estado) na <strong>Freie Fachschule Berlin</strong>, enquanto desenvolvo software para o jardim de infância bilingue português-alemão <strong>Kita Casa Azul</strong>.',
     berlinP2:
-      'No lado técnico, trabalho com <strong>Angular</strong> e <strong>Spring Boot</strong>, construindo desde o <strong>Website Casa Azul</strong> até à aplicação interna de <strong>Dienstplan</strong> (planeamento de turnos). Também desenvolvi a presença web da <strong>Embaixada de Angola em Berlim</strong>.',
+      'Do lado técnico, trabalho com <strong>Angular</strong> e <strong>Spring Boot</strong> e construí tudo, desde o <strong>site da Casa Azul</strong> até à aplicação interna de <strong>Dienstplan</strong> (planeamento de turnos). Também desenvolvi a presença web da <strong>Embaixada de Angola em Berlim</strong>.',
     beyondHeading: 'Para Além do Trabalho',
     beyondP1:
       'Sou corredor amador e treino ao longo das estações de Berlim. Do Silvesterlauf à Maratona de Berlim, a corrida mantém-me equilibrado e dá estrutura a tudo o resto.',
