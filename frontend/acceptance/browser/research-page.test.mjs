@@ -171,6 +171,32 @@ for (const theme of ['light', 'dark']) {
 }
 
 for (const theme of ['light', 'dark']) {
+  test(`RS-COLOR-05 (D28): on /en/research (1280, ${theme}), the paper card has a plain thin border, ochre only in its small touches`, async () => {
+    const { context, page } = await open('/en/research', 1280, theme);
+    try {
+      const t = await tokens(page, ['--zc-border-light', '--zc-ochre-text', '--zc-ochre']);
+      const shown = await page.evaluate(() => {
+        const card = getComputedStyle(document.querySelector('.rs-paper__card'));
+        return {
+          borders: ['Top', 'Right', 'Bottom', 'Left'].map(
+            (side) => `${card[`border${side}Width`]} ${card[`border${side}Color`]}`,
+          ),
+          kind: getComputedStyle(document.querySelector('.rs-paper__kind')).color,
+          lozenge: getComputedStyle(document.querySelector('.rs-paper__note'), '::before').backgroundColor,
+        };
+      });
+      assert.deepEqual(shown, {
+        borders: Array(4).fill(`1px ${t['--zc-border-light']}`),
+        kind: t['--zc-ochre-text'],
+        lozenge: t['--zc-ochre'],
+      });
+    } finally {
+      await context.close();
+    }
+  });
+}
+
+for (const theme of ['light', 'dark']) {
   // The lattice half left with the wall (D26).
   test(`RS-COLOR-04 (D24): on /de/research (1280, ${theme}), the band's texts at 4.5:1`, async () => {
     const { context, page } = await open('/de/research', 1280, theme);

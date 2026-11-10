@@ -171,6 +171,7 @@ protocol counts, and every place that shows them says so.
 |----|----------------|-------|------|------|---------|
 | RS-COLOR-01 | "What it proves" stands on the theorem band, as on Home and Software. | `/en/research` in the browser, light and dark | the results section is measured | its background is `--zc-band-bg` (the accent in light, the raised glaze in dark) and its texts `--zc-band-fg` | yes (browser, light and dark, 2026-11-09) |
 | RS-COLOR-02 | "The tool" stands on the raised glaze. | the same | the tool section is measured | its background is `--zc-bg-light` | yes (browser, light and dark, 2026-11-09) |
+| RS-COLOR-05 | The paper card has a plain thin border, like the site's other cards; the ochre stays in its small touches. (Added 2026-11-10, D28.) | `/en/research` at 1280 in the browser, light and dark | the card's borders, the kind label and the note's lozenge are measured | all four card borders 1 px in `--zc-border-light` (no 3 px ochre top); the kind label in `--zc-ochre-text`; the lozenge before the EPTCS note in `--zc-ochre` | |
 | RS-COLOR-03 | The "not distributive" figure carries the wall's ochre; the others carry cobalt. (Without the wall since D26; the ochre stays, D27.) | the same | the four figures' top rules are measured | 15's is `--zc-ochre`; 108's, 93's and Lean 4's are `--zc-azul` | yes (browser, light and dark, 2026-11-09, D23) |
 | RS-COLOR-04 | The lattices and the band's text are easy to see in light and dark. | `/en/research` and `/de/research` at 1280, light and dark | the wall's lines and the band's texts are measured | every band text at 4.5:1 or more; (retired 2026-11-10 with the wall, D26: every lattice line at 3:1 or more against its ground) | yes for the band (browser, light and dark: en in slice 3, de in slice 4, D24); the lattice half retired (D26) |
 
@@ -1287,3 +1288,9 @@ Answered by the developer on 2026-11-10, after D26: **D26 is accepted.** `next` 
 - **D27. The ochre line above 15 stays** (option 1 of D26's open question). It still draws the eye
   to the one surprising figure; the words under it carry the meaning. D23 and RS-COLOR-03 hold as
   they are.
+- **D28. The paper card loses its ochre top** (2026-11-10, "I don't like that ochre line on top of
+  the card"). It keeps only its 1 px `--zc-border-light` border on all sides, like the site's other
+  cards. The ochre stays in the card's small touches: the kind label (`--zc-ochre-text`) and the
+  lozenge before the EPTCS note (`--zc-ochre`). This replaces the spec's "ochre top" (slice 3).
+  New case RS-COLOR-05, in `research-page.test.mjs`: red on today's build first, then the change in
+  `paper-card.css`. No protocol row beyond its own red: the old ochre top is the break it refuses.
