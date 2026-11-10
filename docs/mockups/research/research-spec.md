@@ -1,5 +1,10 @@
 # Build spec: Research page
 
+> **Changed on 2026-11-10 (D26 in `docs/examples/research.md`):** the wall and its rung note have
+> left the page. The head is the plain shared head of Software and Writing, and nothing on the page
+> moves. What this spec says about the wall, its motion and its texts is kept as the record of
+> option A only.
+
 Chosen on 2026-11-08 and 2026-11-09: **a landing page for the ICE 2026 paper** (R1 b) **with
 option A, the wall in the head** (R4 replaced, 2026-11-09), and the section colours and motion
 shared by the options. Answers R1 to R8 and Q1 to Q5 in `docs/examples/research.md`. Visual

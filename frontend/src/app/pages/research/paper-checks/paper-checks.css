@@ -1,7 +1,8 @@
 /* How it was checked (research-spec.md, "Components" and "Layout per width"): on the warm ground (no
    rule: the ground changes from the band's); four figures, 2 × 2 on a phone and a tablet, in a row
-   from 900 px, each under a 3 px cobalt rule, the third (15, not distributive) under the wall's ochre
-   (D23: by its place, which RS-CHECK-01 holds). The meaning is in the words, not the colour. */
+   from 900 px, each under a 3 px cobalt rule, the third (15, not distributive) under ochre (D23: by
+   its place, which RS-CHECK-01 holds; it was the wall's ochre, and whether it stays without the wall
+   is open, D26). The meaning is in the words, not the colour. */
 .rs-checks {
   padding-block: clamp(40px, 6vw, 80px);
   background: var(--zc-bg-warm);
