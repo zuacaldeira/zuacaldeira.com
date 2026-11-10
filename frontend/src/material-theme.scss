@@ -1,5 +1,8 @@
 @use '@angular/material' as mat;
 
+// Material's type is the site's font tokens, not Inter (D43, D44 in docs/examples/shell.md): plain
+// text in Archivo, display (toolbar, card titles) in Fraunces, each with the notation fallbacks.
+
 html {
   height: 100%;
   @include mat.theme((
@@ -7,7 +10,7 @@ html {
       primary: mat.$cyan-palette,
       tertiary: mat.$violet-palette,
     ),
-    typography: Inter,
+    typography: (plain-family: var(--zc-font-body), brand-family: var(--zc-font-heading)),
     density: 0,
   ));
 }
@@ -19,7 +22,7 @@ html.dark-theme {
       primary: mat.$cyan-palette,
       tertiary: mat.$violet-palette,
     ),
-    typography: Inter,
+    typography: (plain-family: var(--zc-font-body), brand-family: var(--zc-font-heading)),
     density: 0,
   ));
 }
