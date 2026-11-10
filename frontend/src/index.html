@@ -5,8 +5,7 @@
     <title>Alexandre Caldeira — Researcher. Developer. Educator. Runner.</title>
     <base href="/" />
     <!-- The theme before first paint (THEME-10, D25): the saved choice, else the device's setting,
-         the rule ThemeService applies once Angular runs (both read theme-rule.cases.json in tests).
-         Then `motion`, unless reduced motion is asked for (RS-MOTION-01, 02; D13 in research.md). -->
+         the rule ThemeService applies once Angular runs (both read theme-rule.cases.json in tests). -->
     <script>
       try {
         var zcTheme = localStorage.getItem('zc-theme');
@@ -14,10 +13,6 @@
           document.documentElement.classList.add('dark-theme');
         }
       } catch (e) {}
-      // Drawings may move only with a script and without reduced motion (D13 in research.md).
-      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('motion');
-      }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
