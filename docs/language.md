@@ -20,14 +20,14 @@ Status of a rule or a term:
 | L3 | Informal and friendly when the copy speaks to the reader (calls to action, the footer, the contact page, the 404 page). Formal for concepts, theory and science: no address at all, plain statements, the field's own terms. | agreed (Zua, 2026-11-10) |
 | L4 | "Session types" in Portuguese is "tipos de sessão". | agreed (Zua, 2026-11-10) |
 | L5 | Notation is never translated: session types, `⊤`, `⊥`, `‖`, `ℒ(S)/≡`, `&{…}`, `+{…}`, atom labels. Neither are paper titles, venue names, the paper's abstract and its four statements. | agreed (`docs/tdd.md`; WR-LIST-07, SW-PROOF-01, HOME-PAPER-04) |
-| L6 | Portuguese addresses the reader with "tu" (`fala comigo`, `o teu sistema`), the informal form of pt-PT; where a sentence reads as well without address, leave the address out. Never "você", never the "você" imperative (`entre`, `veja`). | proposed |
-| L7 | Portuguese follows the 1990 spelling agreement, as pt-PT does officially and the copy already does: `ação`, `atualmente`, `deteta`, `selecionados`, `refatorar`; but pt-PT forms where the two norms still differ: `contacto`, `facto`, `receção`, `registo`, `equipa`, `ecrã`, `ficheiro`. | proposed |
-| L8 | Portuguese avoids the Brazilian gerund for an ongoing or accompanying action: `estou a fazer`, `e treino`, not `estou fazendo`, `treinando`. | proposed |
-| L9 | German writes "du", "dein", "dir" in lower case (Duden's recommendation for web copy). | proposed |
-| L10 | Headings and labels in German and Portuguese are in sentence case: `Para além do trabalho`, not `Para Além do Trabalho`. German nouns keep their capital, of course. | proposed |
-| L11 | Quotation marks: German „…“, Portuguese «…». (The copy already does so.) | proposed |
-| L12 | Established English terms of the field stay where German or Portuguese speakers use them too (`Paper`, `Commit`, `Hook`, `Frontend`, `Backend`, `Stack`); everyday English (`connect`, `website` in pt, `pair`, `batch` as bare words) is translated. | proposed |
-| L13 | Open question: German job and role nouns (`Entwickler`, `Besucher`, `Leser`) in the generic masculine, as today, or in a neutral form where one exists (`Entwicklerin oder Entwickler`, `Lesende`)? The copy uses the masculine; nothing changes until Zua decides. | open |
+| L6 | Portuguese addresses the reader with "tu" (`fala comigo`, `o teu sistema`), the informal form of pt-PT; where a sentence reads as well without address, leave the address out. Never "você", never the "você" imperative (`entre`, `veja`). | agreed (Zua, 2026-11-10) |
+| L7 | Portuguese follows the 1990 spelling agreement, as pt-PT does officially and the copy already does: `ação`, `atualmente`, `deteta`, `selecionados`, `refatorar`; but pt-PT forms where the two norms still differ: `contacto`, `facto`, `receção`, `registo`, `equipa`, `ecrã`, `ficheiro`. | agreed (Zua, 2026-11-10) |
+| L8 | Portuguese avoids the Brazilian gerund for an ongoing or accompanying action: `estou a fazer`, `e treino`, not `estou fazendo`, `treinando`. | agreed (Zua, 2026-11-10) |
+| L9 | German writes "du", "dein", "dir" in lower case (Duden's recommendation for web copy). | agreed (Zua, 2026-11-10) |
+| L10 | Headings and labels in German and Portuguese are in sentence case: `Para além do trabalho`, not `Para Além do Trabalho`. German nouns keep their capital, of course. | agreed (Zua, 2026-11-10) |
+| L11 | Quotation marks: German „…“, Portuguese «…». (The copy already does so.) | agreed (Zua, 2026-11-10) |
+| L12 | Established English terms of the field stay where German or Portuguese speakers use them too (`Paper`, `Commit`, `Hook`, `Frontend`, `Backend`, `Stack`); everyday English (`connect`, `website` in pt, `pair`, `batch` as bare words) is translated. | agreed (Zua, 2026-11-10) |
+| L13 | German role nouns are neutral where that reads naturally, by rephrasing (`wer entwickelt`, `Entwicklungsteam`, `wer die Seite besucht`); no gender star, colon or slash. Where no natural rephrasing exists, the noun stays as it is. | agreed (Zua, 2026-11-10) |
 
 ### What stays English in every language
 - **Names:** Alexandre Zua Caldeira, Kita Casa Azul, Kita Dienstplan, Casa Azul, the co-authors,
@@ -47,57 +47,57 @@ Status of a rule or a term:
 
 | English | Deutsch | Português | Status | Note |
 |---|---|---|---|---|
-| session type | Session-Typ (pl. Session-Typen) | tipo de sessão | pt: agreed (Zua, 2026-11-10); de: proposed | Hyphenated in German, as all the copy has it. Never "Session Types" inside a German or Portuguese sentence. |
-| global type | globaler Typ | tipo global | proposed | |
-| subtype | Subtyp | subtipo | proposed | |
-| session (an agent's working session) | Sitzung | sessão | proposed | Not the "session" of "session type". |
+| session type | Session-Typ (pl. Session-Typen) | tipo de sessão | agreed (Zua, 2026-11-10) | Hyphenated in German, as all the copy has it. Never "Session Types" inside a German or Portuguese sentence. |
+| global type | globaler Typ | tipo global | agreed (Zua, 2026-11-10) | |
+| subtype | Subtyp | subtipo | agreed (Zua, 2026-11-10) | |
+| session (an agent's working session) | Sitzung | sessão | agreed (Zua, 2026-11-10) | Not the "session" of "session type". |
 | lattice | Verband | reticulado | agreed (HOME-HERO-08) | |
-| bounded lattice | beschränkter Verband | reticulado limitado | proposed | Only inside the statements today, which stay English (L5). |
-| distributive / not distributive | distributiv / nicht distributiv | distributivo / não distributivo | proposed | |
-| state space | Zustandsraum | espaço de estados | proposed | |
-| state, transition | Zustand, Übergang | estado, transição | proposed | |
-| well-formed | wohlgeformt | bem formado | proposed | |
-| protocol | Protokoll | protocolo | proposed | |
-| (a protocol) holds | halten / eingehalten werden (see LA-08) | cumprir-se | proposed | The hero's headline and the Software page's proof line. |
-| hold (an agent) to a protocol | an ein Protokoll binden | sujeitar a um protocolo (see LA-21) | proposed | |
-| duality | Dualität | dualidade | proposed | |
-| benchmark protocols | Benchmark-Protokolle | protocolos de referência | proposed | |
-| mechanised proof; mechanised in Lean 4 | mechanisierter Beweis; in Lean 4 mechanisiert | prova mecanizada; mecanizado em Lean 4 | proposed | German alternative "maschinell geprüfter Beweis" reads more plainly; "mechanisiert" is the field's word. |
+| bounded lattice | beschränkter Verband | reticulado limitado | agreed (Zua, 2026-11-10) | Only inside the statements today, which stay English (L5). |
+| distributive / not distributive | distributiv / nicht distributiv | distributivo / não distributivo | agreed (Zua, 2026-11-10) | |
+| state space | Zustandsraum | espaço de estados | agreed (Zua, 2026-11-10) | |
+| state, transition | Zustand, Übergang | estado, transição | agreed (Zua, 2026-11-10) | |
+| well-formed | wohlgeformt | bem formado | agreed (Zua, 2026-11-10) | |
+| protocol | Protokoll | protocolo | agreed (Zua, 2026-11-10) | |
+| (a protocol) holds | eingehalten werden (LA-08) | cumprir-se | agreed (Zua, 2026-11-10) | The hero's headline and the Software page's proof line. |
+| hold (an agent) to a protocol | an ein Protokoll binden | sujeitar a um protocolo (see LA-21) | agreed (Zua, 2026-11-10) | |
+| duality | Dualität | dualidade | agreed (Zua, 2026-11-10) | |
+| benchmark protocols | Benchmark-Protokolle | protocolos de referência | agreed (Zua, 2026-11-10) | |
+| mechanised proof; mechanised in Lean 4 | mechanisierter Beweis; in Lean 4 mechanisiert | prova mecanizada; mecanizado em Lean 4 | agreed (Zua, 2026-11-10) | German alternative "maschinell geprüfter Beweis" reads more plainly; "mechanisiert" is the field's word. |
 | Theorem, Definition, Lemma, Proposition | Satz, Definition, Lemma, Proposition | Teorema, Definição, Lema, Proposição | agreed (HOME-PAPER-02, 03) | |
 | paper | Paper (das; pl. Paper) | artigo | agreed (HOME-PAPER-01, WR-LIST-07) | Not "Artikel" in German, not "paper" in Portuguese. |
 | workshop paper, conference paper, technical report | Workshop-Paper, Konferenz-Paper, Technischer Bericht | artigo de workshop, artigo de conferência, relatório técnico | agreed (WR-LIST-07) | |
-| abstract | Zusammenfassung | resumo | proposed | |
-| camera-ready | Druckfassung | versão final | proposed | |
-| research | Forschung | investigação | proposed | Never "pesquisa". |
-| researcher | Forscher | investigador | proposed | Never "pesquisador". |
-| test-first | testgetrieben | com os testes primeiro | proposed | |
-| test-driven (TDD) | testgetrieben (TDD) | guiado por testes (TDD) | proposed | |
-| test list | Testliste | lista de testes | proposed | |
-| coverage | Abdeckung | cobertura | proposed | |
-| refactor | refaktorisieren | refatorar | proposed | |
-| commit (verb) | committen | fazer commit | proposed | |
-| a test bites | ein Test greift | um teste deteta a falha | proposed | |
-| sabotage, triangulation | Sabotage, Triangulation | sabotagem, triangulação | proposed | |
-| monitor | Monitor | monitor | proposed | |
-| agent; AI agent; coding agent | Agent; KI-Agent; Coding-Agent | agente; agente de IA; agente de programação | proposed | |
-| pair mode, batch mode | Pair-Modus, Batch-Modus | em par, em lote | proposed | See LA-09. |
-| live view | Live-Ansicht | vista ao vivo | proposed | |
-| verification tool; tool implementation | Verifikationswerkzeug; Werkzeug-Implementierung | ferramenta de verificação; implementação | proposed | |
-| software engineer | Softwareentwickler | engenheiro de software | proposed | |
-| developer | Entwickler | programador | proposed | Never "desenvolvedor". See L13. |
-| website | Website | site | proposed | Never "website" in Portuguese copy (LA-15, LA-17, LA-18). |
-| web application | Webanwendung | aplicação web | proposed | Not "aplicativo". |
-| link | Link | ligação | proposed | |
-| download | herunterladen | descarregar | proposed | Never "baixar". |
-| repository | Repository | repositório | proposed | |
-| front end, back end | Frontend, Backend | frontend, backend | proposed | |
-| prerendered | vorgerendert | pré-renderizado | proposed | |
-| role-based access | rollenbasierter Zugriff | acesso por perfis | proposed | Two forms in pt today (LA-19). |
-| team | Team | equipa | proposed | Never "time", "equipe". |
-| kindergarten (Casa Azul) | Kita | jardim de infância | proposed | Not "Kindergarten" in German (LA-05 to 07). |
-| contact | Kontakt | contacto | proposed | Never "contato". |
-| new tab | neuer Tab | novo separador | proposed | Never "aba". |
-| screen; file; record | Bildschirm; Datei; Eintrag | ecrã; ficheiro; registo | proposed | Never "tela", "arquivo", "registro". |
+| abstract | Zusammenfassung | resumo | agreed (Zua, 2026-11-10) | |
+| camera-ready | Druckfassung | versão final | agreed (Zua, 2026-11-10) | |
+| research | Forschung | investigação | agreed (Zua, 2026-11-10) | Never "pesquisa". |
+| researcher | Forscher | investigador | agreed (Zua, 2026-11-10) | Never "pesquisador". |
+| test-first | testgetrieben | com os testes primeiro | agreed (Zua, 2026-11-10) | |
+| test-driven (TDD) | testgetrieben (TDD) | guiado por testes (TDD) | agreed (Zua, 2026-11-10) | |
+| test list | Testliste | lista de testes | agreed (Zua, 2026-11-10) | |
+| coverage | Abdeckung | cobertura | agreed (Zua, 2026-11-10) | |
+| refactor | refaktorisieren | refatorar | agreed (Zua, 2026-11-10) | |
+| commit (verb) | committen | fazer commit | agreed (Zua, 2026-11-10) | |
+| a test bites | ein Test greift | um teste deteta a falha | agreed (Zua, 2026-11-10) | |
+| sabotage, triangulation | Sabotage, Triangulation | sabotagem, triangulação | agreed (Zua, 2026-11-10) | |
+| monitor | Monitor | monitor | agreed (Zua, 2026-11-10) | |
+| agent; AI agent; coding agent | Agent; KI-Agent; Coding-Agent | agente; agente de IA; agente de programação | agreed (Zua, 2026-11-10) | |
+| pair mode, batch mode | Pair-Modus, Batch-Modus | em par, em lote | agreed (Zua, 2026-11-10) | See LA-09. |
+| live view | Live-Ansicht | vista ao vivo | agreed (Zua, 2026-11-10) | |
+| verification tool; tool implementation | Verifikationswerkzeug; Werkzeug-Implementierung | ferramenta de verificação; implementação | agreed (Zua, 2026-11-10) | |
+| software engineer | Softwareentwickler | engenheiro de software | agreed (Zua, 2026-11-10) | |
+| developer | Entwickler | programador | agreed (Zua, 2026-11-10) | Never "desenvolvedor". In German, rephrase neutrally where natural (L13). |
+| website | Website | site | agreed (Zua, 2026-11-10) | Never "website" in Portuguese copy (LA-15, LA-17, LA-18). |
+| web application | Webanwendung | aplicação web | agreed (Zua, 2026-11-10) | Not "aplicativo". |
+| link | Link | ligação | agreed (Zua, 2026-11-10) | |
+| download | herunterladen | descarregar | agreed (Zua, 2026-11-10) | Never "baixar". |
+| repository | Repository | repositório | agreed (Zua, 2026-11-10) | |
+| front end, back end | Frontend, Backend | frontend, backend | agreed (Zua, 2026-11-10) | |
+| prerendered | vorgerendert | pré-renderizado | agreed (Zua, 2026-11-10) | |
+| role-based access | rollenbasierter Zugriff | acesso por perfis | agreed (Zua, 2026-11-10) | Two forms in pt today (LA-19). |
+| team | Team | equipa | agreed (Zua, 2026-11-10) | Never "time", "equipe". |
+| kindergarten (Casa Azul) | Kita | jardim de infância | agreed (Zua, 2026-11-10) | Not "Kindergarten" in German (LA-05 to 07). |
+| contact | Kontakt | contacto | agreed (Zua, 2026-11-10) | Never "contato". |
+| new tab | neuer Tab | novo separador | agreed (Zua, 2026-11-10) | Never "aba". |
+| screen; file; record | Bildschirm; Datei; Eintrag | ecrã; ficheiro; registo | agreed (Zua, 2026-11-10) | Never "tela", "arquivo", "registro". |
 
 ## Audit of the stored de and pt copy (2026-11-10)
 
@@ -125,8 +125,10 @@ Priority: **high** = shown on every page or breaks an agreed rule; **medium** = 
 | LA-05 | About | `de.ts` `about.berlinP1` | … Software für den zweisprachigen portugiesisch-deutschen Kindergarten <strong>Kita Casa Azul</strong>. | … Software für die zweisprachige portugiesisch-deutsche <strong>Kita Casa Azul</strong>. | glossary ("Kindergarten Kita" says it twice) | medium |
 | LA-06 | Work (hidden) | `de.ts` `projects[0].description` | Offizielle Website der Kita Casa Azul, ein zweisprachiger portugiesisch-deutscher Kindergarten in Berlin. Entwickelt mit Angular 21, Angular Material und SSR-Prerendering. | Offizielle Website der Kita Casa Azul, einer zweisprachigen portugiesisch-deutschen Kita in Berlin. Entwickelt mit Angular 21 und Angular Material, mit SSR vorgerendert. | grammar (the apposition must be genitive), glossary | low |
 | LA-07 | Work (hidden) | `de.ts` `projects[1].description` | Dienstplan-Anwendung für das Team des Kindergartens Casa Azul. … | Dienstplan-Anwendung für das Team der Kita Casa Azul. … | glossary | low |
-| LA-08 | Home, Software | `R__home_hero.sql` de `headline`; `R__software.sql` de `proof.kicker` | Ich baue Software und beweise, dass ihre Protokolle halten. / Warum die Protokolle halten | Ich baue Software und beweise, dass ihre Protokolle eingehalten werden. / Warum die Protokolle eingehalten werden | "halten" for "hold" is a calque; Zua's call, since HOME-HERO and SW-PROOF-01 pin the current words | medium |
+| LA-08 | Home, Software | `R__home_hero.sql` de `headline`; `R__software.sql` de `proof.kicker` | Ich baue Software und beweise, dass ihre Protokolle halten. / Warum die Protokolle halten | Ich baue Software und beweise, dass ihre Protokolle eingehalten werden. / Warum die Protokolle eingehalten werden | "halten" for "hold" is a calque. Agreed (Zua, 2026-11-10), with HOME-HERO and SW-PROOF-01 and their tests | medium |
 | LA-09 | Software | `R__software.sql` de `lead.question`, `lead.result` | … im Pair mit dem Entwickler oder im Batch auf einer vereinbarten Testliste? / … im Pair mit mir. | … im Pair-Modus mit dem Entwickler oder im Batch-Modus über eine vereinbarte Testliste? / … im Pair-Modus mit mir. | L12: bare "im Pair", "im Batch" are not German | low |
+| LA-24 | Software | `R__software.sql` de `lead.question` | … im Pair mit dem Entwickler … | to decide with LA-09: e.g. "… im Pair-Modus, gemeinsam mit einem Menschen, oder im Batch-Modus …" | L13 (added 2026-11-10); no rephrasing is obviously natural yet | low |
+| LA-25 | Software | `R__software.sql` de `how.caption` | Die Seite gibt dem Besucher ihre Links, der Besucher fragt nginx … | probably stays: "Besucher" names a role of the global type, like `Visitor` in its notation | L13 (added 2026-11-10) | low |
 
 ### Portuguese
 
@@ -140,21 +142,18 @@ Priority: **high** = shown on every page or breaks an agreed rule; **medium** = 
 | LA-15 | About | `pt.ts` `about.berlinP2` | No lado técnico, trabalho com … construindo desde o <strong>Website Casa Azul</strong> até à aplicação interna de … | Do lado técnico, trabalho com … e construí tudo, desde o <strong>site da Casa Azul</strong> até à aplicação interna de … | L8, glossary ("site"), pt-PT "do lado" | medium |
 | LA-16 | About, Running | `pt.ts` `about.journeyHeading`, `about.beyondHeading`, `running.upcomingHeading` | O Percurso / Para Além do Trabalho / Próximas Corridas | O percurso / Para além do trabalho / Próximas corridas | L10 | medium |
 | LA-17 | Work (hidden) | `pt.ts` `projects[0].description` | Website oficial da Kita Casa Azul, … Construído com Angular 21, Angular Material e SSR prerendering. | Site oficial da Kita Casa Azul, … Construído com Angular 21 e Angular Material, pré-renderizado com SSR. | glossary | low |
-| LA-18 | Work (hidden) | `pt.ts` `projects[3].description` | Este website pessoal — construído com Angular 21, Material 3, SSR prerendering e implementado no GitHub Pages. | Este site pessoal — construído com Angular 21, Material 3 e pré-renderização SSR, e publicado no GitHub Pages. | glossary; "implementado" for "deployed" is Brazilian. (GitHub Pages is out of date in all three languages: content, Zua's call.) | low |
+| LA-18 | Work (hidden) | `pt.ts` `projects[3].description` | Este website pessoal — construído com Angular 21, Material 3, SSR prerendering e implementado no GitHub Pages. | Este site pessoal — construído com Angular 21, Material 3 e pré-renderização SSR, e publicado no GitHub Pages. | glossary; "implementado" for "deployed" is Brazilian. (GitHub Pages is out of date in all three languages; Zua, 2026-11-10: leave it until the Work page comes back, then fix it in en, de and pt.) | low |
 | LA-19 | Software; Work (hidden) | `R__software.sql` pt `work.rows[1].text`; `pt.ts` `projects[1].description` | … com acesso por funções. / … acesso baseado em funções. | … com acesso por perfis. / … acesso por perfis. | one term (glossary) | low |
 | LA-20 | Pädagogik (hidden) | `pt.ts` `facharbeiten[3].description` | Reflexão e resumo de filme revisado sobre antroposofia … | Versão revista da reflexão e do resumo de filme sobre antroposofia … | "revisado" is Brazilian; pt-PT "revisto" | low |
 | LA-21 | Software | `R__software.sql` pt `head.intro`, `lead.title` | … como o prendo ao seu protocolo … / Um monitor que prende um agente de programação ao seu protocolo de TDD | … como o sujeito ao seu protocolo … / Um monitor que sujeita um agente de programação ao seu protocolo de TDD | one term with the hero's "sujeitos a um protocolo verificado"; "prender" reads as "to lock up". SW-HEAD/SW-LEAD examples may pin the words | low |
 | LA-22 | About; Pädagogik (hidden) | `pt.ts` `about.berlinP1`, `paedagogik.intro` | … reconhecido pelo estado … | … reconhecido pelo Estado … | the State is capitalised in pt-PT | low |
 | LA-23 | Pädagogik (hidden) | `pt.ts` `paedagogik.tabPraesentationen` | Präsentationen | Apresentações | a German word with a plain Portuguese equivalent ("Facharbeiten" names a German school form and can stay) | low |
 
-**Count:** 23 findings: German 9, Portuguese 14. High 5 (LA-01, 02, 10, 11, 12),
-medium 7, low 11. All five high ones are live: the footer on every page, the Contact page, About.
+**Count:** 25 findings: German 11, Portuguese 14. High 5 (LA-01, 02, 10, 11, 12),
+medium 7, low 13. All five high ones are live: the footer on every page, the Contact page, About.
+LA-24 and LA-25 were added after L13 was decided.
 
-## Next steps (proposed)
-1. Zua decides the proposed rules (L6 to L13) and terms, and LA-08 and LA-21, which change pinned copy.
-2. Fix the findings test-first, high ones first, in `de.ts`, `pt.ts` and the seeds.
-3. A build test that guards this file: every built `/de/...` and `/pt/...` page is read for the
-   forbidden forms (`Sie`, `Ihr`, `Ihnen`, `Ihre` as address; `você`, `tela`, `arquivo`, `registro`,
-   `contato`, `equipe`, `baixar`, `pesquisa`, `Session Types` inside a sentence), with an allow-list
-   for names and notation. The forbidden list lives here in a machine-readable block, so the
-   test and the glossary cannot drift.
+## Next steps
+1. A build test that reads every built `/de/...` and `/pt/...` page for the forbidden forms below.
+2. Fix the high findings, then the medium ones, then LA-08, test-first (agreed 2026-11-10).
+3. The low findings later, each adding its form to the list below when it is fixed.
