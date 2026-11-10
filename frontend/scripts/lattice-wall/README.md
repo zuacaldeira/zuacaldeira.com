@@ -4,13 +4,12 @@ The hero's wall is one tile per distinct lattice realised by the benchmark corpu
 **Session Type State Spaces Form Lattices** (ICE 2026, Urbino), at rung **R2′**.
 
 ```bash
-python3 scripts/lattice-wall/render.py            # lattices.json -> both components
+python3 scripts/lattice-wall/render.py            # lattices.json -> the hero's component
 ```
 
-The same script writes the Research page's wall too (D8, D14 in `docs/examples/research.md`):
-`pages/research/research-wall/research-wall.html`, ten tiles a row, uncropped, each tile named by
-its protocol and timed to draw in smallest first. Both files are generated: never edit them.
-`scripts/research-wall.test.mjs` (`npm run test:scripts`) regenerates both and compares.
+The file is generated: never edit it. `scripts/lattice-wall.test.mjs` (`npm run test:scripts`)
+regenerates it and compares. The script also wrote a Research page wall from 2026-11-09 to
+2026-11-10; it left with that page's head (D26 in `docs/examples/research.md`).
 
 ## What the tiles mean
 
