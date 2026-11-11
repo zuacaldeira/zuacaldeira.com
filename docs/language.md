@@ -160,7 +160,9 @@ LA-24 and LA-25 were added after L13 was decided.
 **Markup, not copy (found by the build test, 2026-11-10):** on `/de/home` and `/pt/home` the paper
 band's title "Session Type State Spaces Form Lattices" is not marked `lang="en"`/`translate="no"`,
 as it is on the Software, Research and Writing pages, so a screen reader reads it with German or
-Portuguese sounds. The test leaves "Session Type" (singular) off its list until it is marked.
+Portuguese sounds. The hero's lattice wall description, which names the paper, was the same.
+Both are marked now (HOME-PAPER-10, HOME-HERO-18 in `home.md`; 2026-11-10 and 11), and the list
+has "Session Type" (singular) too.
 
 ## Forbidden forms (read by the build test)
 
@@ -182,7 +184,7 @@ test, so each fix turns its own part green.
   "forbidden": [
     { "id": "de-sie", "lang": ["de"], "words": ["Sie"], "why": "L2: the reader is 'du'", "findings": ["LA-02", "LA-03"] },
     { "id": "de-ihr", "lang": ["de"], "words": ["Ihr", "Ihre", "Ihren", "Ihrem", "Ihrer", "Ihres", "Ihnen"], "why": "L2: 'dein', 'dir', not 'Ihr', 'Ihnen'", "findings": ["LA-01"] },
-    { "id": "session-types", "lang": ["de", "pt"], "words": ["Session Types"], "why": "glossary: 'Session-Typen', 'tipos de sessão' (L4); paper titles are marked English and not read", "findings": ["LA-04", "LA-12"] },
+    { "id": "session-types", "lang": ["de", "pt"], "words": ["Session Types", "Session Type"], "why": "glossary: 'Session-Typen', 'tipos de sessão' (L4); paper titles are marked English and not read", "findings": ["LA-04", "LA-12"] },
     { "id": "de-kindergarten", "lang": ["de"], "words": ["Kindergarten", "Kindergartens"], "why": "glossary: 'Kita'", "findings": ["LA-05"] },
     { "id": "de-protokolle-halten", "lang": ["de"], "words": ["Protokolle halten"], "why": "glossary: protocols are 'eingehalten'", "findings": ["LA-08"] },
     { "id": "pt-voce", "lang": ["pt"], "words": ["você", "vocês"], "ignoreCase": true, "why": "L6: the reader is 'tu'", "findings": [] },
@@ -201,4 +203,5 @@ test, so each fix turns its own part green.
 2. ~~Fix the high findings, then the medium ones, then LA-08, test-first.~~ Done 2026-11-10.
 3. The low findings later, each adding its form to the list above when it is fixed. Most are on the
    hidden Work and Pädagogik pages, which the test cannot read until they are built again.
-4. Mark the home band's paper title `lang="en"`, then add "Session Type" (singular) to the list.
+4. ~~Mark the home band's paper title `lang="en"`, then add "Session Type" (singular) to the list.~~
+   Done 2026-11-11, with the hero wall's description (HOME-HERO-18).
