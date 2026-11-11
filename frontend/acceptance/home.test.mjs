@@ -142,6 +142,27 @@ for (const [lang, marks] of [
   });
 }
 
+// The wall's description names the paper and is English throughout, so the whole <title> is
+// marked, as the band's title (HOME-HERO-18). render.py writes it.
+const wallTitleMarks = (route) => {
+  const attrs = page(route).match(/<title\b([^>]*\bid="wall-title"[^>]*)>/)?.[1];
+  assert.ok(attrs !== undefined, `${route}: no wall description`);
+  return {
+    lang: attrs.match(/\slang="([^"]*)"/)?.[1] ?? null,
+    translate: attrs.match(/\stranslate="([^"]*)"/)?.[1] ?? null,
+  };
+};
+
+for (const [lang, marks] of [
+  ['de', { lang: 'en', translate: 'no' }],
+  ['pt', { lang: 'en', translate: 'no' }],
+  ['en', { lang: null, translate: 'no' }],
+]) {
+  test(`HOME-HERO-18: on /${lang}/home the lattice wall's description is marked English`, () => {
+    assert.deepEqual(wallTitleMarks(`${lang}/home`), marks);
+  });
+}
+
 // Both deploys take the site from build-site.yml (D26). Each cp line there must have a source
 // the build made. A cp line ending in `|| true` does not match the pattern and is not checked,
 // so write none; HOME-PAGE-06's copy must be there, as a plain line.
