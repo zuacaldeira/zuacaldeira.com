@@ -61,7 +61,10 @@ def render(lattices):
         # Name the rung: R2′ is not the paper's own construction, and its census
         # (74/47) differs from the paper's R1 census (41/15). Attributing these
         # counts to the paper without the qualifier misreads them as its results.
-        f'<title id="wall-title">The {len(lattices)} distinct lattices realised at rung '
+        # English throughout and names the paper: marked English as a whole, on the German and
+        # Portuguese pages too (HOME-HERO-18); a lang on part of an SVG <title> is not honoured.
+        "<title id=\"wall-title\" translate=\"no\" [attr.lang]=\"language() === 'en' ? null : 'en'\">"
+        f"The {len(lattices)} distinct lattices realised at rung "
         f"R2′ by {total} benchmark protocols of Session Type State Spaces Form "
         f"Lattices (ICE 2026), ordered by size. "
         f"The {nd} non-distributive ones are marked in a different colour.</title>",

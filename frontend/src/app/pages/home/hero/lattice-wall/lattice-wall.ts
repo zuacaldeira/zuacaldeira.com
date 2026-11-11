@@ -1,4 +1,5 @@
 import { Component, DestroyRef, ElementRef, afterNextRender, inject } from '@angular/core';
+import { I18nService } from '../../../../services/i18n.service';
 
 /**
  * The 74 distinct lattices realised at rung R2′ by 104 of the ICE 2026 paper's 108
@@ -15,6 +16,8 @@ import { Component, DestroyRef, ElementRef, afterNextRender, inject } from '@ang
   styleUrl: './lattice-wall.css',
 })
 export class LatticeWall {
+  /** The page's language: the wall's English description is marked where the page is not (HOME-HERO-18). */
+  readonly language = inject(I18nService).language;
   private readonly host = inject(ElementRef);
   private tile?: SVGGElement;
   private timer?: ReturnType<typeof setTimeout>;
