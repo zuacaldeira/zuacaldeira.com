@@ -62,7 +62,7 @@ button.tog:focus-visible,a:focus-visible{outline:3px solid var(--zc-ochre);outli
 /* options */
 section.opt{padding:var(--zc-space-16) 0;border-top:1px solid var(--zc-border-light)}
 .opt-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--zc-space-8);align-items:end;margin-bottom:var(--zc-space-8)}
-.tag{display:inline-block;font:500 .8rem var(--zc-font-mono);color:var(--zc-on-accent);background:var(--zc-azul);border-radius:var(--zc-radius-sm);padding:2px 8px;margin-bottom:var(--zc-space-3)}
+.tag{display:inline-block;font:500 .8rem var(--zc-font-mono);color:var(--zc-on-accent);background:var(--zc-azul);border-radius:var(--zc-radius-sm);padding:4px 10px;margin-bottom:var(--zc-space-3)}
 .tag.rec{background:var(--zc-ochre);color:var(--zc-foot-on-gold)}
 .pros{font-size:.95rem}
 .pros b{color:var(--zc-text-heading)}
@@ -134,12 +134,12 @@ html.dark-theme .card{background-color:#0a2a55}
 .card .u{font:400 .8rem var(--zc-font-mono);margin-top:14px;color:#d9a94a}
 
 /* option C: the name as a Lisbon street-name tile */
-.placa{display:inline-flex;align-items:center;gap:.45em;padding:.42em .75em;background:var(--zc-tile);color:var(--zc-azul);
+.placa{display:inline-flex;align-items:center;gap:.45em;padding:.6em .95em;background:var(--zc-tile);color:var(--zc-azul);
   border:2px solid var(--zc-azul);outline:1px solid var(--zc-azul);outline-offset:-6px;border-radius:3px;
   font:600 1.25rem/1 var(--zc-font-heading);white-space:nowrap;text-decoration:none}
 .placa svg{width:.62em;height:.62em;flex:none}
 .placa.big{font-size:clamp(1.8rem,4.6vw,3rem);padding:.5em .9em;border-width:4px;outline-width:2px;outline-offset:-11px}
-.bar .placa{font-size:1.1rem;padding:.38em .6em;min-height:44px}
+.bar .placa{font-size:1rem;padding:.55em .85em;outline-offset:-5px;min-height:44px}
 @media (prefers-reduced-motion:no-preference){
   html.js .optC:not(.in) .placa.big{transform:rotateX(70deg);opacity:0}
   .placa.big{transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .4s ease;transform-origin:50% 0}
