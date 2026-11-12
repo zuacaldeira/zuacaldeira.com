@@ -146,8 +146,8 @@ html.dark-theme .card{background-color:#0a2a55}
 }
 
 /* Signature marks (D–F): day and night side by side, whatever the page toggle says. */
-.day{--zc-text-heading:#0b1526;--zc-text-muted:#556476;--zc-bg-white:#f7fafc;--zc-bg-warm:#e9eff4;--zc-azul:#14417a;--zc-ochre:#b07a22;--zc-border-light:#c9d8e6;--zc-tile:#f7fafc;--zc-foot-on-gold:#1a1205}
-.night{--zc-text-heading:#e9eff4;--zc-text-muted:#8496ab;--zc-bg-white:#12203a;--zc-bg-warm:#0b1526;--zc-azul:#7fa5ce;--zc-ochre:#d9a94a;--zc-border-light:#2a3f63;--zc-tile:#12203a;--zc-foot-on-gold:#1a1205}
+.day{--zc-text-heading:#0b1526;--zc-text-muted:#556476;--zc-bg-white:#f7fafc;--zc-bg-warm:#e9eff4;--zc-azul:#14417a;--zc-ochre:#b07a22;--zc-ochre-text:#8a5e15;--zc-border-light:#c9d8e6;--zc-tile:#f7fafc;--zc-foot-on-gold:#1a1205}
+.night{--zc-text-heading:#e9eff4;--zc-text-muted:#8496ab;--zc-bg-white:#12203a;--zc-bg-warm:#0b1526;--zc-azul:#7fa5ce;--zc-ochre:#d9a94a;--zc-ochre-text:#d9a94a;--zc-border-light:#2a3f63;--zc-tile:#12203a;--zc-foot-on-gold:#1a1205}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--zc-space-3)}
 .stack{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--zc-space-3)}
 .scroller .bar.phone,.scroller .today{max-width:none}
@@ -175,11 +175,11 @@ html.dark-theme .card{background-color:#0a2a55}
 .card2.night{background:#0a2a55;--zc-bg-warm:#0a2a55}
 .card2 svg{height:46%;width:auto;max-width:90%}
 .card2 .s{font:400 clamp(.7rem,1.5vw,.95rem)/1.4 var(--zc-font-body);margin-top:6px}
-.card2 .u{font:400 clamp(.6rem,1.2vw,.78rem) var(--zc-font-mono);color:var(--zc-ochre);margin-top:4px}
+.card2 .u{font:400 clamp(.6rem,1.2vw,.78rem) var(--zc-font-mono);color:var(--zc-ochre-text);margin-top:4px}
 .card2 .t{font:600 clamp(1rem,2.6vw,1.6rem)/1.1 var(--zc-font-heading)}
 .card2 .row{display:flex;align-items:center;gap:14px;justify-content:center}
 .card2 .row svg{height:auto;width:28%}
-.note{background:var(--zc-ochre-wash);border-left:3px solid var(--zc-ochre);padding:var(--zc-space-3) var(--zc-space-4);border-radius:var(--zc-radius-sm);font-size:.95rem;max-width:none}
+.note{background:var(--zc-ochre-wash);border:1px solid var(--zc-border-light);padding:var(--zc-space-3) var(--zc-space-4);border-radius:var(--zc-radius-sm);font-size:.95rem;max-width:none}
 h2.part{margin-top:var(--zc-space-16);font-size:clamp(1.8rem,4vw,2.75rem)}
 
 /* comparison */
