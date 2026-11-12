@@ -145,6 +145,43 @@ html.dark-theme .card{background-color:#0a2a55}
   .placa.big{transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .4s ease;transform-origin:50% 0}
 }
 
+/* Signature marks (D–F): day and night side by side, whatever the page toggle says. */
+.day{--zc-text-heading:#0b1526;--zc-text-muted:#556476;--zc-bg-white:#f7fafc;--zc-bg-warm:#e9eff4;--zc-azul:#14417a;--zc-ochre:#b07a22;--zc-border-light:#c9d8e6;--zc-tile:#f7fafc;--zc-foot-on-gold:#1a1205}
+.night{--zc-text-heading:#e9eff4;--zc-text-muted:#8496ab;--zc-bg-white:#12203a;--zc-bg-warm:#0b1526;--zc-azul:#7fa5ce;--zc-ochre:#d9a94a;--zc-border-light:#2a3f63;--zc-tile:#12203a;--zc-foot-on-gold:#1a1205}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:var(--zc-space-3)}
+.stack{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--zc-space-3)}
+.scroller .bar.phone,.scroller .today{max-width:none}
+.today{display:block;max-width:100%;height:auto;border:1px dashed var(--zc-border-light);border-radius:var(--zc-radius-md);opacity:.9}
+.lbl{font:400 .75rem var(--zc-font-mono);color:var(--zc-text-muted);margin:0}
+.brand .sig{height:36px;width:50px}
+.brand .sigsq{width:34px;height:34px}
+.brand .loop{height:52px;width:177px;color:var(--zc-text-heading)}
+.bar.phone .loop{height:46px;width:156px}
+.bar.day,.bar.night{background:color-mix(in srgb,var(--zc-bg-warm) 94%,var(--zc-azul) 6%)}
+.sigpanel .bigsig{width:min(520px,80%);height:auto}
+.sigpanel .bigsig.loopbig{width:min(640px,90%);color:var(--zc-text-heading)}
+.sigpanel .mono-big{width:min(220px,40%);height:auto}
+.sigpanel{gap:var(--zc-space-4)}
+.sigpanel .cap{font:600 clamp(1.6rem,3.6vw,2.4rem)/1 var(--zc-font-heading);color:var(--zc-text-heading)}
+.bigsig .w{stroke-dasharray:1;stroke-dashoffset:0}
+@media (prefers-reduced-motion:no-preference){
+  html.js .opt:not(.in) .bigsig .w{stroke-dashoffset:1}
+  html.js .opt:not(.in) .bigsig text{opacity:0}
+  .bigsig .w{transition:stroke-dashoffset var(--t,1.4s) cubic-bezier(.45,.05,.4,1) var(--d,0s)}
+  .bigsig text{transition:opacity .6s ease .9s}
+}
+.card2{aspect-ratio:1200/630;width:100%;border-radius:var(--zc-radius-md);overflow:hidden;display:grid;place-items:center;text-align:center;
+  background:var(--zc-bg-warm);border:1px solid var(--zc-border-light);color:var(--zc-text-heading);padding:16px}
+.card2.night{background:#0a2a55;--zc-bg-warm:#0a2a55}
+.card2 svg{height:46%;width:auto;max-width:90%}
+.card2 .s{font:400 clamp(.7rem,1.5vw,.95rem)/1.4 var(--zc-font-body);margin-top:6px}
+.card2 .u{font:400 clamp(.6rem,1.2vw,.78rem) var(--zc-font-mono);color:var(--zc-ochre);margin-top:4px}
+.card2 .t{font:600 clamp(1rem,2.6vw,1.6rem)/1.1 var(--zc-font-heading)}
+.card2 .row{display:flex;align-items:center;gap:14px;justify-content:center}
+.card2 .row svg{height:auto;width:28%}
+.note{background:var(--zc-ochre-wash);border-left:3px solid var(--zc-ochre);padding:var(--zc-space-3) var(--zc-space-4);border-radius:var(--zc-radius-sm);font-size:.95rem;max-width:none}
+h2.part{margin-top:var(--zc-space-16);font-size:clamp(1.8rem,4vw,2.75rem)}
+
 /* comparison */
 .cmp{width:100%;border-collapse:collapse;font-size:.95rem}
 .cmp th,.cmp td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--zc-border-light);vertical-align:top}
@@ -156,6 +193,7 @@ footer{padding:var(--zc-space-12) 0;color:var(--zc-text-muted);font-size:.9rem}
   .opt-head,.evidence{grid-template-columns:1fr}
   .span7,.span5,.span6,.span4,.span8{grid-column:span 12}
   .lockup{flex-direction:column;text-align:center;gap:12px}
+  .pair{grid-template-columns:1fr}
   .card{padding:0 20px;gap:16px}.card svg{width:72px;height:72px}.card .t{font-size:1.4rem}.card .s{font-size:.85rem}
   .card .placa{font-size:1.3rem!important}
 }
@@ -220,25 +258,55 @@ footer{padding:var(--zc-space-12) 0;color:var(--zc-text-muted);font-size:.9rem}
     <g fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3.5 14A10.5 10.5 0 0 0 14 3.5"/><path d="M34 3.5A10.5 10.5 0 0 0 44.5 14"/><path d="M3.5 34A10.5 10.5 0 0 1 14 44.5"/><path d="M34 44.5A10.5 10.5 0 0 1 44.5 34"/></g>
     <text x="24" y="33.5" text-anchor="middle" style="font:600 27px var(--zc-font-heading)" fill="currentColor">Z</text>
   </symbol>
+  <!-- D–F: redrawn from the signature's gesture (outer loop, C a, rising tail). Not a trace. -->
+  <symbol id="d-wide" viewBox="-4 -4 208 149"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="5">
+    <path stroke="var(--zc-azul)" d="M40 110 C62 108 74 104 84 98 C104 88 120 72 125 50 C129 30 120 14 102 7 C88 1 72 1 60 4 C38 10 16 26 7 52 C0 74 2 100 12 118 C22 134 42 141 62 140 C96 138 130 125 158 104 C176 91 190 74 198 59"/>
+    <path stroke="var(--zc-ochre)" d="M64 52 C62 46 57 44 52 46 C45 49 43 60 43 71 C43 83 47 89 53 89 C59 89 63 83 66 76 M81 63 C79 58 74 57 70 61 C66 66 66 76 69 79 C72 82 77 78 80 70 M81 59 L81.5 79 C82 85 86 85 90 80"/>
+  </g></symbol>
+  <symbol id="d-head" viewBox="-5 -5 210 151"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="9">
+    <path stroke="var(--zc-azul)" d="M40 110 C62 108 74 104 84 98 C104 88 120 72 125 50 C129 30 120 14 102 7 C88 1 72 1 60 4 C38 10 16 26 7 52 C0 74 2 100 12 118 C22 134 42 141 62 140 C96 138 130 125 158 104 C176 91 190 74 198 59"/>
+    <path stroke="var(--zc-ochre)" d="M64 52 C62 46 57 44 52 46 C45 49 43 60 43 71 C43 83 47 89 53 89 C59 89 63 83 66 76 M82 62 C80 57 74 57 70 61 C66 66 66 76 69 79 C72 82 77 78 81 70 M82 59 L82.5 79"/>
+  </g></symbol>
+  <symbol id="d-sq" viewBox="-6 -6 152 152"><g fill="none" stroke-linecap="round" stroke-width="12">
+    <path stroke="var(--zc-azul)" d="M44 108 C70 106 104 92 118 70 C130 48 124 20 102 9 C84 0 62 1 44 8 C20 18 4 42 4 70 C4 104 26 132 62 134 C92 136 120 124 140 100"/>
+    <path stroke="var(--zc-ochre)" d="M78 50 C74 42 64 40 57 45 C49 51 47 64 49 74 C51 84 58 88 66 84"/>
+  </g></symbol>
+  <symbol id="e-mono" viewBox="0 0 48 48"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.4">
+    <path stroke="var(--zc-azul)" d="M25 12 C23 7.5 18 6.5 14.5 9 C9.5 12.5 8 21 8.5 29 C9 37 12.5 41.5 17 41.5 C21.5 41.5 25 37 27.5 31"/>
+    <path stroke="var(--zc-azul)" d="M37 26 C35.5 22 31 21.5 28.5 24.5 C25.5 28 25.5 36 28 38.5 C30.5 41 34.5 38 37 32 M37.2 23 L37.6 38"/>
+    <path stroke="var(--zc-ochre)" d="M37.6 38 C38.5 42 42 41.5 46 35"/>
+  </g></symbol>
+  <symbol id="e-small" viewBox="0 0 48 48"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="5.5">
+    <path stroke="var(--zc-azul)" d="M24 11 C22 6 16 5 12.5 8.5 C8 13 7 21 7.5 28.5 C8 37 11.5 42 17 42 C21.5 42 24.5 38 26.5 33"/>
+    <path stroke="var(--zc-ochre)" d="M39.5 26 C38 21.5 32.5 21 30 24.5 C27 28.5 27 37 30 39.5 C33 42 37.5 38 39.5 32 M40 22 L40.5 42"/>
+  </g></symbol>
+  <symbol id="f-loop" viewBox="0 0 340 100">
+    <path fill="none" stroke="var(--zc-azul)" stroke-width="3.2" stroke-linecap="round" d="M56 74 C130 74 250 72 296 56 C326 44 324 18 292 10 C244 0 124 1 72 7 C30 12 7 30 7 51 C7 76 36 93 84 94 C170 99 284 94 336 58"/>
+    <text x="168" y="55" text-anchor="middle" style="font:600 31px var(--zc-font-heading)" fill="currentColor">Zua Caldeira</text>
+  </symbol>
+  <symbol id="f-loop-h" viewBox="0 0 340 100">
+    <path fill="none" stroke="var(--zc-azul)" stroke-width="4.4" stroke-linecap="round" d="M56 74 C130 74 250 72 296 56 C326 44 324 18 292 10 C244 0 124 1 72 7 C30 12 7 30 7 51 C7 76 36 93 84 94 C170 99 284 94 336 58"/>
+    <text x="168" y="56" text-anchor="middle" style="font:600 32px var(--zc-font-heading)" fill="currentColor">Zua Caldeira</text>
+  </symbol>
   <symbol id="loz" viewBox="0 0 10 10"><path d="M5 0 10 5 5 10 0 5Z" fill="var(--zc-ochre)"/></symbol>
 </svg>
 
 <div class="controls">
   <div class="col">
     <strong class="mono" style="color:var(--zc-text-heading)">Logo ideas</strong>
-    <a href="#a">A Losango</a><a href="#b">B Cubo</a><a href="#c">C Placa</a><a href="#cmp">Compare</a>
+    <a href="#d">D Gesto</a><a href="#e">E C a</a><a href="#f">F Laço</a><a href="#cmp">Compare</a><a href="#earlier">A–C</a>
     <span class="sp"></span>
     <button type="button" class="tog" id="theme" aria-pressed="false">Night glaze</button>
   </div>
 </div>
 
 <main class="col">
-  <p class="eyebrow" style="margin-top:var(--zc-space-12)">Mock-up · 2026-11-12 · pair mode, step 1</p>
+  <p class="eyebrow" style="margin-top:var(--zc-space-12)">Mock-up · 2026-11-12 · round 2 · pair mode, step 1</p>
   <h1>Zua Caldeira: a logo</h1>
-  <p>Three marks for the name, each drawn from the settled direction (the Hasse diagram and the azulejo
-  are the same drawing), in the site's own tokens and type. Each is shown where it has to work: the
-  header at 1280 and 390&nbsp;px, the browser tab at 16 and 32&nbsp;px, the phone's home screen, in one
-  colour, and on the card a CV link shows when shared. Switch to the night glaze at the top.</p>
+  <p>Round 2 draws the logo from Zua's own signature: three marks (D, E, F), each shown where it has to
+  work, beside today's header: the header at 1280 and 390&nbsp;px in the light and the night glaze, the
+  browser tab at 16 and 32&nbsp;px, and the card a shared link shows. Round 1's lattice marks (A, B, C)
+  follow below for comparison.</p>
 
   <h2 style="margin-top:var(--zc-space-12)">Today</h2>
   <div class="evidence">
@@ -252,11 +320,194 @@ footer{padding:var(--zc-space-12) 0;color:var(--zc-text-muted);font-size:.9rem}
     </figure>
   </div>
 
+  <h2 class="part" id="signature">From the signature</h2>
+  <p>Three marks redrawn from the signature's characteristic strokes: the outer loop, the <em>C a</em> at its centre and the rising tail. They are new drawings in the site's cobalt and ochre, not traces: the signature itself is not in this page or this repository.</p>
+
+  <section class="opt" id="d" aria-labelledby="d-h">
+    <div class="opt-head">
+      <div>
+        <span class="tag rec">Option D · recommended</span>
+        <h2 id="d-h">Gesto: the whole gesture</h2>
+        <p>The signature reduced to its three moves: the stroke that starts inside, the big loop round it, the tail that rises out to the right. Inside, a clean <em>C a</em> in ochre. For small sizes a second drawing keeps only the loop, curled like an <em>@</em>, with the <em>C</em>.</p>
+      </div>
+      <p class="pros"><b>Optimises for</b> being recognisably his hand at every size: the curl reads at 16&nbsp;px, the wide form carries the tail on the card. Motion is natural: it writes itself.<br><b>Gives up</b> some privacy: of the three it keeps most of the signature's outline (but not its inner strokes, its weight or its rhythm), and it needs two drawings (wide and square).</p>
+    </div>
+    <div class="grid">
+      <div class="panel span12 sigpanel">
+        <a class="lockup" href="#d" aria-label="Alexandre Zua Caldeira" style="flex-direction:column"><svg class="bigsig" viewBox="-4 -4 208 149" aria-hidden="true"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.2">
+      <path class="w" pathLength="1" style="--t:1.8s" stroke="var(--zc-azul)" d="M40 110 C62 108 74 104 84 98 C104 88 120 72 125 50 C129 30 120 14 102 7 C88 1 72 1 60 4 C38 10 16 26 7 52 C0 74 2 100 12 118 C22 134 42 141 62 140 C96 138 130 125 158 104 C176 91 190 74 198 59"/>
+      <path class="w" pathLength="1" style="--t:.6s;--d:1.7s" stroke="var(--zc-ochre)" d="M64 52 C62 46 57 44 52 46 C45 49 43 60 43 71 C43 83 47 89 53 89 C59 89 63 83 66 76"/>
+      <path class="w" pathLength="1" style="--t:.6s;--d:2.2s" stroke="var(--zc-ochre)" d="M81 63 C79 58 74 57 70 61 C66 66 66 76 69 79 C72 82 77 78 80 70 M81 59 L81.5 79 C82 85 86 85 90 80"/></g></svg>
+      <span class="cap">Zua Caldeira</span></a>
+        <button type="button" class="tog replay" data-replay>Write again</button>
+      </div>
+      <div class="cell span12">
+        <h3>Header · 1280 px: today, light, night</h3>
+        <div class="stack scroller">
+          <img class="today" src="evidence/today-1280.png" width="1280" height="120" alt="Today's header: the letters zc." style="width:980px;max-width:none">
+          <div class="bar wide day"><a class="brand" href="#d" aria-label="Alexandre Zua Caldeira"><svg class="sig" aria-hidden="true"><use href="#d-head"/></svg><span>Zua Caldeira</span></a><span class="menu"><span>Software</span><span>Research</span><span>Writing</span><span>About</span></span><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><span class="cta">⊥ write to me</span></div>
+          <div class="bar wide night"><a class="brand" href="#d" aria-label="Alexandre Zua Caldeira"><svg class="sig" aria-hidden="true"><use href="#d-head"/></svg><span>Zua Caldeira</span></a><span class="menu"><span>Software</span><span>Research</span><span>Writing</span><span>About</span></span><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><span class="cta">⊥ write to me</span></div>
+        </div>
+      </div>
+      <div class="cell span6">
+        <h3>Header · 390 px: today, light, night</h3>
+        <div class="stack scroller">
+          <img class="today" src="evidence/today-390.png" width="390" height="120" alt="Today's phone header: the letters zc.">
+          <div class="bar phone day"><a class="brand" href="#d" aria-label="Alexandre Zua Caldeira"><svg class="sigsq" aria-hidden="true"><use href="#d-sq"/></svg></a><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><svg class="burger" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></div>
+          <div class="bar phone night"><a class="brand" href="#d" aria-label="Alexandre Zua Caldeira"><svg class="sigsq" aria-hidden="true"><use href="#d-sq"/></svg></a><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><svg class="burger" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></div>
+        </div>
+      </div>
+      <div class="cell span6 fixed-light">
+        <h3>Browser tab · 16 and 32 px, light and dark</h3>
+        <div class="tabs">
+          <div class="tab l"><span><svg class="fav16"><use href="#d-sq"/></svg>Zua Caldeira</span><svg class="fav32"><use href="#d-sq"/></svg><svg class="fav64"><use href="#d-sq"/></svg></div>
+          <div class="tab d"><span><svg class="fav16" viewBox="0 0 16 16"><rect width="16" height="16" rx="3" fill="var(--zc-bg-warm)"/><svg x="1" y="1" width="14" height="14"><use href="#d-sq"/></svg></svg>Zua Caldeira</span><svg class="fav32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="var(--zc-bg-warm)"/><svg x="3" y="3" width="26" height="26"><use href="#d-sq"/></svg></svg>
+            <span style="font-size:.75rem;opacity:.8">on a dark tab: on its glaze tile</span></div>
+        </div>
+      </div>
+      <div class="cell span12">
+        <h3>Shared link card · 1200 × 630: light, night</h3>
+        <div class="pair">
+          <div class="card2 day"><div><div class="row"><svg class="" aria-hidden="true"><use href="#d-wide"/></svg><div class="t">Zua Caldeira</div></div><div class="s">I build software, and prove its protocols hold.</div><div class="u">zuacaldeira.com</div></div></div>
+          <div class="card2 night"><div><div class="row"><svg class="" aria-hidden="true"><use href="#d-wide"/></svg><div class="t">Zua Caldeira</div></div><div class="s">I build software, and prove its protocols hold.</div><div class="u">zuacaldeira.com</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="opt" id="e" aria-labelledby="e-h">
+    <div class="opt-head">
+      <div>
+        <span class="tag">Option E</span>
+        <h2 id="e-h">C a: the inner monogram</h2>
+        <p>Only the letters at the signature's centre, <em>C</em> and <em>a</em>, redrawn as one cobalt line. The <em>a</em> leaves on a short ochre rise, the tail of the signature in miniature.</p>
+      </div>
+      <p class="pros"><b>Optimises for</b> privacy and calm: it shows none of the signature's outline, and sits beside the Fraunces name like a monogram.<br><b>Gives up</b> the gesture that makes the signature his; <em>Ca</em> also reads as "Caldeira" alone, without Zua, and at 16&nbsp;px it is two small letters.</p>
+    </div>
+    <div class="grid">
+      <div class="panel span12 sigpanel">
+        <a class="lockup" href="#e" aria-label="Alexandre Zua Caldeira" style="flex-direction:column"><svg class="mono-big bigsig" viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.6">
+      <path class="w" pathLength="1" style="--t:.9s" stroke="var(--zc-azul)" d="M25 12 C23 7.5 18 6.5 14.5 9 C9.5 12.5 8 21 8.5 29 C9 37 12.5 41.5 17 41.5 C21.5 41.5 25 37 27.5 31"/>
+      <path class="w" pathLength="1" style="--t:.7s;--d:.85s" stroke="var(--zc-azul)" d="M37 26 C35.5 22 31 21.5 28.5 24.5 C25.5 28 25.5 36 28 38.5 C30.5 41 34.5 38 37 32 M37.2 23 L37.6 38"/>
+      <path class="w" pathLength="1" style="--t:.4s;--d:1.5s" stroke="var(--zc-ochre)" d="M37.6 38 C38.5 42 42 41.5 46 35"/></g></svg>
+      <span class="cap">Zua Caldeira</span></a>
+        <button type="button" class="tog replay" data-replay>Write again</button>
+      </div>
+      <div class="cell span12">
+        <h3>Header · 1280 px: today, light, night</h3>
+        <div class="stack scroller">
+          <img class="today" src="evidence/today-1280.png" width="1280" height="120" alt="Today's header: the letters zc." style="width:980px;max-width:none">
+          <div class="bar wide day"><a class="brand" href="#e" aria-label="Alexandre Zua Caldeira"><svg class="" aria-hidden="true" style="width:36px;height:36px"><use href="#e-mono"/></svg><span>Zua Caldeira</span></a><span class="menu"><span>Software</span><span>Research</span><span>Writing</span><span>About</span></span><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><span class="cta">⊥ write to me</span></div>
+          <div class="bar wide night"><a class="brand" href="#e" aria-label="Alexandre Zua Caldeira"><svg class="" aria-hidden="true" style="width:36px;height:36px"><use href="#e-mono"/></svg><span>Zua Caldeira</span></a><span class="menu"><span>Software</span><span>Research</span><span>Writing</span><span>About</span></span><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><span class="cta">⊥ write to me</span></div>
+        </div>
+      </div>
+      <div class="cell span6">
+        <h3>Header · 390 px: today, light, night</h3>
+        <div class="stack scroller">
+          <img class="today" src="evidence/today-390.png" width="390" height="120" alt="Today's phone header: the letters zc.">
+          <div class="bar phone day"><a class="brand" href="#e" aria-label="Alexandre Zua Caldeira"><svg class="" aria-hidden="true" style="width:38px;height:38px"><use href="#e-mono"/></svg></a><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><svg class="burger" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></div>
+          <div class="bar phone night"><a class="brand" href="#e" aria-label="Alexandre Zua Caldeira"><svg class="" aria-hidden="true" style="width:38px;height:38px"><use href="#e-mono"/></svg></a><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><svg class="burger" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></div>
+        </div>
+      </div>
+      <div class="cell span6 fixed-light">
+        <h3>Browser tab · 16 and 32 px, light and dark</h3>
+        <div class="tabs">
+          <div class="tab l"><span><svg class="fav16"><use href="#e-small"/></svg>Zua Caldeira</span><svg class="fav32"><use href="#e-small"/></svg><svg class="fav64"><use href="#e-mono"/></svg></div>
+          <div class="tab d"><span><svg class="fav16" viewBox="0 0 16 16"><rect width="16" height="16" rx="3" fill="var(--zc-bg-warm)"/><svg x="1" y="1" width="14" height="14"><use href="#e-small"/></svg></svg>Zua Caldeira</span><svg class="fav32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="var(--zc-bg-warm)"/><svg x="3" y="3" width="26" height="26"><use href="#e-small"/></svg></svg>
+            <span style="font-size:.75rem;opacity:.8">on a dark tab: on its glaze tile</span></div>
+        </div>
+      </div>
+      <div class="cell span12">
+        <h3>Shared link card · 1200 × 630: light, night</h3>
+        <div class="pair">
+          <div class="card2 day"><div><div class="row"><svg class="" aria-hidden="true" style="width:22%"><use href="#e-mono"/></svg><div class="t">Zua Caldeira</div></div><div class="s">I build software, and prove its protocols hold.</div><div class="u">zuacaldeira.com</div></div></div>
+          <div class="card2 night"><div><div class="row"><svg class="" aria-hidden="true" style="width:22%"><use href="#e-mono"/></svg><div class="t">Zua Caldeira</div></div><div class="s">I build software, and prove its protocols hold.</div><div class="u">zuacaldeira.com</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="opt" id="f" aria-labelledby="f-h">
+    <div class="opt-head">
+      <div>
+        <span class="tag">Option F</span>
+        <h2 id="f-h">Laço: the loop round the name</h2>
+        <p>The signature's loop, stretched to hold the name. The opening stroke runs under <em>Zua Caldeira</em> like an underline, the loop goes round it, and the tail leaves rising to the right. The tab icon borrows D's curl.</p>
+      </div>
+      <p class="pros"><b>Optimises for</b> the header and the card: the name stays the hero, set in Fraunces, and the hand frames it. Nothing to decode.<br><b>Gives up</b> a mark of its own: below the header it falls back on D's curl, and at 390&nbsp;px it is wide (about 160&nbsp;px).</p>
+    </div>
+    <div class="grid">
+      <div class="panel span12 sigpanel">
+        <a class="lockup" href="#f" aria-label="Alexandre Zua Caldeira" style="flex-direction:column"><svg class="bigsig loopbig" viewBox="0 0 340 100" aria-hidden="true">
+      <path class="w" pathLength="1" style="--t:2s" fill="none" stroke="var(--zc-azul)" stroke-width="2.6" stroke-linecap="round" d="M56 74 C130 74 250 72 296 56 C326 44 324 18 292 10 C244 0 124 1 72 7 C30 12 7 30 7 51 C7 76 36 93 84 94 C170 99 284 94 336 58"/>
+      <text x="168" y="55" text-anchor="middle" style="font:600 31px var(--zc-font-heading)" fill="currentColor">Zua Caldeira</text></svg></a>
+        <button type="button" class="tog replay" data-replay>Write again</button>
+      </div>
+      <div class="cell span12">
+        <h3>Header · 1280 px: today, light, night</h3>
+        <div class="stack scroller">
+          <img class="today" src="evidence/today-1280.png" width="1280" height="120" alt="Today's header: the letters zc." style="width:980px;max-width:none">
+          <div class="bar wide day"><a class="brand" href="#f" aria-label="Alexandre Zua Caldeira"><svg class="loop" aria-hidden="true"><use href="#f-loop-h"/></svg></a><span class="menu"><span>Software</span><span>Research</span><span>Writing</span><span>About</span></span><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><span class="cta">⊥ write to me</span></div>
+          <div class="bar wide night"><a class="brand" href="#f" aria-label="Alexandre Zua Caldeira"><svg class="loop" aria-hidden="true"><use href="#f-loop-h"/></svg></a><span class="menu"><span>Software</span><span>Research</span><span>Writing</span><span>About</span></span><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><span class="cta">⊥ write to me</span></div>
+        </div>
+      </div>
+      <div class="cell span6">
+        <h3>Header · 390 px: today, light, night</h3>
+        <div class="stack scroller">
+          <img class="today" src="evidence/today-390.png" width="390" height="120" alt="Today's phone header: the letters zc.">
+          <div class="bar phone day"><a class="brand" href="#f" aria-label="Alexandre Zua Caldeira"><svg class="loop" aria-hidden="true"><use href="#f-loop-h"/></svg></a><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><svg class="burger" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></div>
+          <div class="bar phone night"><a class="brand" href="#f" aria-label="Alexandre Zua Caldeira"><svg class="loop" aria-hidden="true"><use href="#f-loop-h"/></svg></a><span class="codes"><b>EN</b><span>DE</span><span>PT</span></span><svg class="burger" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></div>
+        </div>
+      </div>
+      <div class="cell span6 fixed-light">
+        <h3>Browser tab · 16 and 32 px, light and dark</h3>
+        <div class="tabs">
+          <div class="tab l"><span><svg class="fav16"><use href="#d-sq"/></svg>Zua Caldeira</span><svg class="fav32"><use href="#d-sq"/></svg><svg class="fav64"><use href="#d-sq"/></svg></div>
+          <div class="tab d"><span><svg class="fav16" viewBox="0 0 16 16"><rect width="16" height="16" rx="3" fill="var(--zc-bg-warm)"/><svg x="1" y="1" width="14" height="14"><use href="#d-sq"/></svg></svg>Zua Caldeira</span><svg class="fav32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="var(--zc-bg-warm)"/><svg x="3" y="3" width="26" height="26"><use href="#d-sq"/></svg></svg>
+            <span style="font-size:.75rem;opacity:.8">on a dark tab: on its glaze tile</span></div>
+        </div>
+      </div>
+      <div class="cell span12">
+        <h3>Shared link card · 1200 × 630: light, night</h3>
+        <div class="pair">
+          <div class="card2 day"><div><svg class="" aria-hidden="true" style="width:80%;height:auto;max-width:none"><use href="#f-loop"/></svg><div class="s">I build software, and prove its protocols hold.</div><div class="u">zuacaldeira.com</div></div></div>
+          <div class="card2 night"><div><svg class="" aria-hidden="true" style="width:80%;height:auto;max-width:none"><use href="#f-loop"/></svg><div class="s">I build software, and prove its protocols hold.</div><div class="u">zuacaldeira.com</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="opt" id="cmp" aria-labelledby="cmp-h">
+    <h2 id="cmp-h">D, E, F side by side</h2>
+    <div class="scroller"><table class="cmp">
+      <thead><tr><th></th><th>D Gesto</th><th>E C a</th><th>F Laço</th></tr></thead>
+      <tbody>
+        <tr><td>Reads at 16 px</td><td>yes (the curl)</td><td>two small letters</td><td>borrows D's curl</td></tr>
+        <tr><td>Recognisably his hand</td><td>yes</td><td>a little</td><td>yes</td></tr>
+        <tr><td>Shows of the signature</td><td>its outline, redrawn</td><td>almost nothing</td><td>the loop, stretched</td></tr>
+        <tr><td>Name in the header</td><td>beside the mark</td><td>beside the mark</td><td>inside the loop</td></tr>
+        <tr><td>Drawings to keep</td><td>2 (wide, square)</td><td>2 (large, small)</td><td>1 + D's curl</td></tr>
+        <tr><td>Recolours with the glaze</td><td>yes</td><td>yes</td><td>yes</td></tr>
+      </tbody>
+    </table></div>
+    <p style="margin-top:var(--zc-space-6)"><b>Recommendation: D.</b> It is the only one of the three that is
+    his hand at every size, from the 16&nbsp;px curl to the card where the tail rises out of the frame, and
+    one family covers the header, the tab and the card. F is the better header if the name should stay
+    the hero; D's curl and F's loop are the same gesture, so they can be one family too.</p>
+    <p class="note">The signature is his legal signature. Only these redrawn marks are in this repository;
+    the scan and its trace stay outside it. D keeps the most of its outline: if that is too close, E is
+    the private choice.</p>
+  </section>
+
+  <h2 class="part" id="earlier">Earlier ideas: from the lattice</h2>
+  <p>Round one (A, B, C), kept for comparison.</p>
+
   <!-- ===================== A ===================== -->
   <section class="opt" id="a" aria-labelledby="a-h">
     <div class="opt-head">
       <div>
-        <span class="tag rec">Option A · recommended</span>
+        <span class="tag">Option A · round 1's recommendation</span>
         <h2 id="a-h">Losango: the lattice diamond</h2>
         <p>The 2&times;2 Hasse diagram, which is also the azulejo lozenge. ⊤ in ochre is the name, the
         join; ⊥ is open, where a protocol starts. It is the mark already in the four agreed page mock-ups.</p>
@@ -447,8 +698,8 @@ footer{padding:var(--zc-space-12) 0;color:var(--zc-text-muted);font-size:.9rem}
     </div>
   </section>
 
-  <section class="opt" id="cmp" aria-labelledby="cmp-h">
-    <h2 id="cmp-h">Side by side</h2>
+  <section class="opt" id="cmp1" aria-labelledby="cmp1-h">
+    <h2 id="cmp1-h">Round 1 side by side</h2>
     <div class="scroller"><table class="cmp">
       <thead><tr><th></th><th>A Losango</th><th>B Cubo</th><th>C Placa</th></tr></thead>
       <tbody>
