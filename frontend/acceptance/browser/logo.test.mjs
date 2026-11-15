@@ -102,9 +102,7 @@ const paint = (page) =>
     };
     const svg = document.querySelector('header a.logo app-logo-mark svg');
     const style = (selector, prop) => {
-      const all = [...svg.querySelectorAll(selector)].map((el) =>
-        hex(getComputedStyle(el)[prop]),
-      );
+      const all = [...svg.querySelectorAll(selector)].map((el) => hex(getComputedStyle(el)[prop]));
       return [...new Set(all)].join(' ');
     };
     const root = getComputedStyle(document.documentElement);

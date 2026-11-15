@@ -32,20 +32,20 @@ name) hold as they are.
 
 | ID | In plain words | Given | When | Then | Test | Covered |
 |----|----------------|-------|------|------|------|---------|
-| LOGO-01 | On a laptop, the header shows the diamond and the name, linking home. | the built `/de/home` | the desktop header is read | `a.logo` leads to `/de/home` and holds the mark (an inline SVG with `aria-hidden="true"`) and the text "Zua Caldeira"; the header has no text `zc` | build and unit (`zc-nav-desktop.spec.ts`) | no |
-| LOGO-02 | The home link has the same name in every language. | the built `/en/home`, `/de/home`, `/pt/home` | the link's accessible name is read | "Alexandre Zua Caldeira" on all three (D5) | build and unit, both bars | no |
-| LOGO-03 | On a phone, the header shows the diamond alone. | a phone (`Handset`), `/en/home`, `/de/home`, `/pt/home` | the bar is read | `a.logo` holds the mark and no visible name; SHELL-06 still holds | unit (`zc-nav-mobile.spec.ts`) and browser at 390 px | no |
-| LOGO-04 | On a narrow laptop or tablet, the name gives way to the diamond. | the desktop bar at 768 and 1280 px | the link is measured | at 768 the name is not shown and the mark is; at 1280 both are | browser | no |
-| LOGO-05 | The diamond is drawn as the spec says. | the mark component | its SVG is read | `viewBox="0 0 48 48"`; four lines (24,7)–(8,24), (24,7)–(40,24), (8,24)–(24,41), (40,24)–(24,41), width 3, round caps; ⊤ at (24,7) r 5.5; atoms at (8,24), (40,24) r 4.5; ⊥ at (24,41) r 4.5 with a ring of width 3 | unit (`logo-mark.spec.ts`) | no |
-| LOGO-06 | The diamond takes the colours of the glaze, in light and at night. | `/en/home` at 1280 px, light, then dark | the mark's computed colours are read | edges, atoms and the ⊥ ring are `--zc-azul` (`#14417a`, then `#7fa5ce`); ⊤ is the ochre D1 names; ⊥'s fill is `--zc-bg-warm` (`#e9eff4`, then `#0b1526`) | browser, light and dark | no |
-| LOGO-07 | The diamond and the name are easy to see in light and at night. | the same | the mark and the name are measured against the header behind them | every part of the mark at 3:1 or more, the name at 4.5:1 or more (computed: cobalt 8.06 and 6.65, the name 14.49 and 14.74; ⊤ 4.51 with D1's a) | browser (`contrast.mjs`) | no |
-| LOGO-08 | The home link is easy to tap and shows where the keyboard is. | 390 and 1280 px | the link is measured; Tab reaches it | at least 44 × 44 px at both widths; a visible focus ring around it | browser | no |
-| LOGO-09 | The name is set in the site's display face. | `/en/home`, `/de/home`, `/pt/home` at 1280 px, light | the name's font is read | drawn by Fraunces alone, at weight 600 (SHELL-13c, which read the "zc" mark, now reads the name) | browser (`header-type.test.mjs`) | no |
-| LOGO-10 | The new header still fits a phone. | 390 px, `/en/home`, `/de/home`, `/pt/home` | the page is measured | no horizontal scroll; the bar's controls each 44 px or more (SHELL-06 with the mark) | browser | no |
-| LOGO-11 | The name is never translated. | the built pages in en, de and pt | the name is read | "Zua Caldeira" on every page, with `translate="no"` | build | no |
-| LOGO-P-01 | Putting the letters "zc" back in the header is refused. | a copy of the built `/de/home` | the name is replaced by `zc` | LOGO-01 goes red | break in the build | no |
-| LOGO-P-02 | A fixed colour in the header's diamond is refused. | the mark component | the cobalt is written as `#14417a` instead of `var(--zc-azul)` | LOGO-06 goes red at night | break in the component | no |
-| LOGO-P-03 | The name on the phone bar is refused. | the phone bar | the name is shown there | LOGO-03 and SHELL-06 go red | break in the component | no |
+| LOGO-01 | On a laptop, the header shows the diamond and the name, linking home. | the built `/de/home` | the desktop header is read | `a.logo` leads to `/de/home` and holds the mark (an inline SVG with `aria-hidden="true"`) and the text "Zua Caldeira"; the header has no text `zc` | build and unit (`zc-nav-desktop.spec.ts`) | yes (build and unit, 2026-11-15) |
+| LOGO-02 | The home link has the same name in every language. | the built `/en/home`, `/de/home`, `/pt/home` | the link's accessible name is read | "Alexandre Zua Caldeira" on all three (D5) | build and unit, both bars | yes (build, every page, and unit, both bars, 2026-11-15) |
+| LOGO-03 | On a phone, the header shows the diamond alone. | a phone (`Handset`), `/en/home`, `/de/home`, `/pt/home` | the bar is read | `a.logo` holds the mark and no visible name; SHELL-06 still holds | unit (`zc-nav-mobile.spec.ts`) and browser at 390 px | yes (unit, and browser through SHELL-06, 2026-11-15) |
+| LOGO-04 | On a narrow laptop or tablet, the name gives way to the diamond. | the desktop bar at 768 and 1280 px | the link is measured | at 768 the name is not shown and the mark is; at 1280 both are | browser | yes (browser, 2026-11-15) |
+| LOGO-05 | The diamond is drawn as the spec says. | the mark component | its SVG is read | `viewBox="0 0 48 48"`; four lines (24,7)–(8,24), (24,7)–(40,24), (8,24)–(24,41), (40,24)–(24,41), width 3, round caps; ⊤ at (24,7) r 5.5; atoms at (8,24), (40,24) r 4.5; ⊥ at (24,41) r 4.5 with a ring of width 3 | unit (`logo-mark.spec.ts`) | yes (unit, 2026-11-15) |
+| LOGO-06 | The diamond takes the colours of the glaze, in light and at night. | `/en/home` at 1280 px, light, then dark | the mark's computed colours are read | edges, atoms and the ⊥ ring are `--zc-azul` (`#14417a`, then `#7fa5ce`); ⊤ is the ochre D1 names; ⊥'s fill is `--zc-bg-warm` (`#e9eff4`, then `#0b1526`) | browser, light and dark | yes (browser, light and dark, 2026-11-15) |
+| LOGO-07 | The diamond and the name are easy to see in light and at night. | the same | the mark and the name are measured against the header behind them | every part of the mark at 3:1 or more, the name at 4.5:1 or more (computed: cobalt 8.06 and 6.65, the name 14.49 and 14.74; ⊤ 4.51 with D1's a) | browser (`contrast.mjs`) | yes (browser, light and dark, 2026-11-15) |
+| LOGO-08 | The home link is easy to tap and shows where the keyboard is. | 390 and 1280 px | the link is measured; Tab reaches it | at least 44 × 44 px at both widths; a visible focus ring around it | browser | yes (browser, 2026-11-15; the ring not shown to bite) |
+| LOGO-09 | The name is set in the site's display face. | `/en/home`, `/de/home`, `/pt/home` at 1280 px, light | the name's font is read | drawn by Fraunces alone, at weight 600 (SHELL-13c, which read the "zc" mark, now reads the name) | browser (`header-type.test.mjs`) | yes (browser, SHELL-13c, 2026-11-15) |
+| LOGO-10 | The new header still fits a phone. | 390 px, `/en/home`, `/de/home`, `/pt/home` | the page is measured | no horizontal scroll; the bar's controls each 44 px or more (SHELL-06 with the mark) | browser | yes (browser, SHELL-06 as it is, 2026-11-15) |
+| LOGO-11 | The name is never translated. | the built pages in en, de and pt | the name is read | "Zua Caldeira" on every page, with `translate="no"` | build | yes (build, every page, 2026-11-15) |
+| LOGO-P-01 | Putting the letters "zc" back in the header is refused. | a copy of the built `/de/home` | the name is replaced by `zc` | LOGO-01 goes red | break in the build | yes (break in the build) |
+| LOGO-P-02 | A fixed colour in the header's diamond is refused. | the mark component | the cobalt is written as `#14417a` instead of `var(--zc-azul)` | LOGO-06 goes red at night | break in the component | yes (break in the component: red at night only) |
+| LOGO-P-03 | The name on the phone bar is refused. | the phone bar | the name is shown there | LOGO-03 and SHELL-06 go red | break in the component | yes (break in the template: LOGO-03 and SHELL-06 unit red) |
 
 ## 2. Tab and home screen
 
@@ -231,6 +231,37 @@ Build ↾   = Page!prerender . end
 | forbidden: the name on the phone bar | `name if bar = desktop` | LOGO-P-03 (U4, SHELL-06) |
 
 The header is read-only: no repeat, stale-token or race rows.
+
+**Done 2026-11-15** (`436bc0a` to `fd33c37`). Red first, each for its own reason: A1 the built
+`/de/home`'s link held `zc` and no hidden SVG; U1 no `<svg>` at all; U2 `['span zc']`; U3 "Home" three
+times, in both bars; U4 `span` and `zc`; W1 the name shown at 768; W2 the parts unpainted (`none`,
+`#000000`) in both glazes; W4 the desktop link 164 × 32; W5 SHELL-13c timing out on `.logo-text`, gone
+with U2. Green at first and shown to bite, each break restored (md5 checked): A2 (the built `/pt/about`'s
+link named "Home"), A3 (`translate="no"` taken off the built `/de/research`'s name), W3 (D1's option b,
+⊤ in `--zc-ochre`: "top 2.95" by day). Not shown to bite: W4's focus ring, which is the site's
+`:focus-visible` rule. Protocol rows: LOGO-P-01 (`zc` in the built `/de/home`: A1 red), LOGO-P-02
+(`#14417a` on the edges: W2 green by day, red at night), LOGO-P-03 (the name in the phone bar: U4 and
+SHELL-06's unit test red).
+
+Measured (W3): light, cobalt 8.07, ⊤ 4.52, name 14.51; dark, cobalt 6.64, ⊤ 7.90, name 14.72 (the
+spec's computed 8.06, 4.51, 14.49; 6.65, 7.91, 14.74).
+
+Results: unit 279 passed, 5 skipped (47 files); `acceptance` 125/125; `test:scripts` 16/16; browser
+161/161 (13 files, one at a time); the build prerenders 26 routes. Not run: `acceptance:nginx` (no
+route or server change) and the backend (untouched).
+
+Leftovers, not built:
+- **SHELL-12's unit spec** (`zc-nav-mobile.spec.ts`, "after a link in the open menu, focus is on the
+  new page's main") lost twice in eight whole-suite runs today (5.4 s, `expected <mat-sidenav> to be
+  <main>`), under a load of about 4.5 on 8 cores, green on each rerun. As noted in `shell.md`; not
+  touched by this slice.
+- **The initial bundle** is 514.71 kB (513.81 before the logo; 500 kB budget).
+- **Prettier** wants the SHELL-12 test's `vi.waitFor` laid out differently; left as it is (not this
+  slice's code).
+- **The bar at 768 px** and the other three living glazes, for the review after the build (on the
+  preview).
+- **`docs/tdd.md`** still says `next` is merged into `main` page by page; since 2026-11-15 it waits
+  for the whole site (above, "Decisions").
 
 ## Decisions
 
