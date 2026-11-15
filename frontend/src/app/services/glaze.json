@@ -1,0 +1,124 @@
+{
+  "glazes": {
+    "cobalto": {
+      "name": "Cobalto",
+      "mode": "light",
+      "c": {
+        "bg": "#e9eff4",
+        "surface": "#f7fafc",
+        "raised": "#dfe8f0",
+        "wash": "#d3e0ec",
+        "border": "#c9d8e6",
+        "heading": "#0b1526",
+        "body": "#12203a",
+        "muted": "#556476",
+        "accent": "#14417a",
+        "accentHover": "#0a2a55",
+        "onAccent": "#f7fafc",
+        "ochre": "#b07a22",
+        "ochreText": "#8a5e15",
+        "edge": "#6987ab"
+      }
+    },
+    "amarelo": {
+      "name": "Amarelo e verde",
+      "mode": "light",
+      "c": {
+        "bg": "#f2eedf",
+        "surface": "#faf8ef",
+        "raised": "#e9e3cc",
+        "wash": "#e4e4ca",
+        "border": "#dcd5b8",
+        "heading": "#17190f",
+        "body": "#23261a",
+        "muted": "#5a5a44",
+        "accent": "#2f5b3b",
+        "accentHover": "#1f4029",
+        "onAccent": "#faf8ef",
+        "ochre": "#b07a22",
+        "ochreText": "#7c5512",
+        "edge": "#868260"
+      }
+    },
+    "manganes": {
+      "name": "Manganês",
+      "mode": "light",
+      "c": {
+        "bg": "#f0ebf2",
+        "surface": "#faf7fb",
+        "raised": "#e6dfeb",
+        "wash": "#e3d8ea",
+        "border": "#d9cde2",
+        "heading": "#1b1026",
+        "body": "#271a33",
+        "muted": "#5f526b",
+        "accent": "#5b2f73",
+        "accentHover": "#3f1d52",
+        "onAccent": "#faf7fb",
+        "ochre": "#a8741f",
+        "ochreText": "#80561a",
+        "edge": "#8c7a9c"
+      }
+    },
+    "manganesNoite": {
+      "name": "Manganês nocturno",
+      "mode": "dark",
+      "c": {
+        "bg": "#160f1f",
+        "surface": "#1f1629",
+        "raised": "#2a1f37",
+        "wash": "#2a1f37",
+        "border": "#3b2d4b",
+        "heading": "#f0e8f4",
+        "body": "#e0d4e8",
+        "muted": "#a093ad",
+        "accent": "#c4a3dc",
+        "accentHover": "#dcc4ec",
+        "onAccent": "#160f1f",
+        "ochre": "#d9a94a",
+        "ochreText": "#d9a94a",
+        "edge": "#76638c"
+      }
+    },
+    "noite": {
+      "name": "Vidrado nocturno",
+      "mode": "dark",
+      "c": {
+        "bg": "#0b1526",
+        "surface": "#12203a",
+        "raised": "#17294a",
+        "wash": "#17294a",
+        "border": "#2a3f63",
+        "heading": "#e9eff4",
+        "body": "#d3e0ec",
+        "muted": "#8496ab",
+        "accent": "#7fa5ce",
+        "accentHover": "#a8c4de",
+        "onAccent": "#0b1526",
+        "ochre": "#d9a94a",
+        "ochreText": "#d9a94a",
+        "edge": "#516b8b"
+      }
+    }
+  },
+  "keys": [[0,"noite"], [5,"noite"], [6,"manganesNoite"], [6.5,"manganes"], [10,"cobalto"], [15,"cobalto"], [18,"amarelo"], [19.5,"amarelo"], [20,"manganesNoite"], [23,"noite"], [24,"noite"]],
+  "guards": [["heading",4.5], ["body",4.5], ["muted",4.5], ["accent",4.5], ["accentHover",4.5], ["ochreText",4.5], ["ochre",3], ["edge",3]],
+  "map": {
+    "bg": ["--zc-bg-warm"],
+    "surface": ["--zc-bg-white"],
+    "raised": ["--zc-bg-light"],
+    "wash": ["--zc-azul-wash"],
+    "border": ["--zc-border-light"],
+    "heading": ["--zc-text-heading"],
+    "body": ["--zc-text-body"],
+    "muted": ["--zc-text-muted"],
+    "accent": ["--zc-azul","--zc-accent"],
+    "accentHover": ["--zc-azul-deep","--zc-accent-hover"],
+    "onAccent": ["--zc-on-accent"],
+    "ochre": ["--zc-ochre"],
+    "ochreText": ["--zc-ochre-text"],
+    "edge": ["--zc-edge"]
+  },
+  "states": {"light":750,"dark":120},
+  "fixed": { "footGold": "#d9a94a", "footOnGold": "#1a1205" }
+}
