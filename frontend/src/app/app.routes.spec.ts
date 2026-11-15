@@ -141,6 +141,14 @@ describe('App Routes', () => {
       // D18: the paper's shared text comes with the route too (its title on the card).
       expect(harness.routeNativeElement?.querySelector('.rs-paper h2')?.textContent?.trim()).toBe('Paper Title');
     });
+
+    it('ABOUT-01, ABOUT-06: should show /de/about as the About page in German, its text from its route', async () => {
+      TestBed.inject(I18nService).setLanguage('en');
+      const harness = await RouterTestingHarness.create('/de/about');
+      expect(harness.routeNativeElement?.tagName).toBe('APP-ABOUT');
+      expect(TestBed.inject(DOCUMENT).documentElement.lang).toBe('de');
+      expect(harness.routeNativeElement?.querySelector('h1')?.textContent?.trim()).toBe('about heading de');
+    });
   });
 
   describe('page head', () => {

@@ -11,7 +11,7 @@ const loadNotFound = () => import('./pages/not-found/not-found').then((m) => m.N
 
 const pages: Routes = [
   { path: 'home', loadChildren: () => import('./pages/home/home.routes').then((m) => m.HOME_ROUTES) },
-  { path: 'about', loadComponent: () => import('./pages/about/about').then((m) => m.About) },
+  { path: 'about', loadChildren: () => import('./pages/about/about.routes').then((m) => m.ABOUT_ROUTES) },
   {
     path: 'software',
     loadChildren: () => import('./pages/software/software.routes').then((m) => m.SOFTWARE_ROUTES),
