@@ -40,17 +40,26 @@ mat-toolbar {
   height: 64px;
 }
 
+/* The mark and the name, as the logo spec's header (docs/mockups/brand/logo-spec.md). */
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   text-decoration: none;
 }
 
-/* The mark as the home mock-up's brand (D44 in shell.md): Fraunces at 600, the heaviest loaded. */
-.logo-text {
+app-logo-mark {
+  width: 32px;
+  height: 32px;
+}
+
+/* The name as the home mock-up's brand (D44 in shell.md): Fraunces at 600, the heaviest loaded. */
+.logo-name {
   font-family: var(--zc-font-heading);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--nav-fg);
-  letter-spacing: -0.02em;
+  white-space: nowrap;
   transition: color var(--zc-transition-base);
 }
 

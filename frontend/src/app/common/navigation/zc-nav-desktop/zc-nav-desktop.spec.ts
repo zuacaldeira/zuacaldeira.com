@@ -41,6 +41,23 @@ describe('ZcNavDesktop', () => {
     expect([href('a.logo'), href('a.nav-cta')]).toEqual(['/de/home', '/de/contact']);
   });
 
+  it('LOGO-01: the home link holds the mark and the name "Zua Caldeira", never translated, and no "zc"', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavDesktop, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    TestBed.inject(I18nService).setLanguage('de');
+    const fixture = TestBed.createComponent(ZcNavDesktop);
+    await fixture.whenStable();
+    const logo = (fixture.nativeElement as HTMLElement).querySelector('a.logo');
+    expect(
+      [...(logo?.children ?? [])].map((el) =>
+        [el.tagName.toLowerCase(), el.textContent?.trim(), el.getAttribute('translate')]
+          .filter(Boolean)
+          .join(' '),
+      ),
+    ).toEqual(['app-logo-mark', 'span Zua Caldeira no']);
+  });
+
   it('SHELL-05: the contact button reads "⊥ Kontakt" on a German page', async () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([])],

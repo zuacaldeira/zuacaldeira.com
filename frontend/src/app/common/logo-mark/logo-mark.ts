@@ -24,5 +24,16 @@ import { Component } from '@angular/core';
       <circle cx="24" cy="41" r="4.5" class="bottom" />
     </svg>
   `,
+  styles: `
+    :host {
+      display: block;
+    }
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+  `,
 })
 export class LogoMark {}
