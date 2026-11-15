@@ -1,5 +1,6 @@
 import { provideTestContent } from '../../content/content.testing';
 import { TestBed } from '@angular/core/testing';
+import { Title } from '@angular/platform-browser';
 import { About } from './about';
 import { I18nService } from '../../services/i18n.service';
 
@@ -17,6 +18,11 @@ describe('About', () => {
   };
   const texts = (page: HTMLElement, selector: string) =>
     [...page.querySelectorAll(selector)].map((el) => el.textContent?.trim());
+
+  it('ABOUT-02: should title the page with the full name and its heading', () => {
+    render('pt');
+    expect(TestBed.inject(Title).getTitle()).toBe('Alexandre Zua Caldeira — about heading pt');
+  });
 
   it('ABOUT-09: should open with the eyebrow, the one <h1> and the intro in the page language', () => {
     const page = render('de');
