@@ -2,9 +2,10 @@
 // colour blocks are written by glaze-tokens.mjs, never by hand. Run: npm run test:scripts.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { themeAt } from '../src/app/services/glaze.mjs';
+import { generate } from './glaze-tokens.mjs';
 
 const frontend = join(import.meta.dirname, '..');
 const table = JSON.parse(readFileSync(join(frontend, 'src/app/services/glaze.json'), 'utf8'));
@@ -58,4 +59,27 @@ test("THEME-16: styles.css's colour tokens are the glaze's at 12:30 and 02:00, n
       outside: [],
     },
   );
+});
+
+// A copy of styles.css and a table in a scratch folder beside this file, removed afterwards.
+function withCopies(tableValue, run) {
+  const dir = mkdtempSync(join(import.meta.dirname, '.tmp-glaze-'));
+  try {
+    const paths = { table: join(dir, 'glaze.json'), styles: join(dir, 'styles.css') };
+    writeFileSync(paths.table, JSON.stringify(tableValue));
+    writeFileSync(paths.styles, readFileSync(stylesPath));
+    run(paths);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+test('THEME-P-07: the generator refuses a bad table by name and leaves styles.css as it was', () => {
+  const bad = structuredClone(table);
+  delete bad.glazes.amarelo.c.edge;
+  withCopies(bad, (paths) => {
+    const before = readFileSync(paths.styles, 'utf8');
+    assert.throws(() => generate(paths), /glaze amarelo has no edge/);
+    assert.equal(readFileSync(paths.styles, 'utf8'), before, 'styles.css changed after a refusal');
+  });
 });
