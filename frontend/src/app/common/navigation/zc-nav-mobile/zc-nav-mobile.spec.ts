@@ -37,6 +37,19 @@ describe('ZcNavMobile', () => {
     expect(names).toEqual(Array(3).fill('Alexandre Zua Caldeira'));
   });
 
+  it('LOGO-03: the home link holds the mark alone, with no text', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    await fixture.whenStable();
+    const logo = (fixture.nativeElement as HTMLElement).querySelector('a.logo');
+    expect({
+      children: [...(logo?.children ?? [])].map((el) => el.tagName.toLowerCase()),
+      text: logo?.textContent?.trim(),
+    }).toEqual({ children: ['app-logo-mark'], text: '' });
+  });
+
   it("SHELL-10: starts with the skip link to this page's main content, /pt/running#main-content", async () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([{ path: '**', children: [] }])],

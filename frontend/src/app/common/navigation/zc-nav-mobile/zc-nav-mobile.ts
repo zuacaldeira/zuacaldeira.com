@@ -9,6 +9,7 @@ import { ZcSidenavMenuItems } from '../../menu-items/zc-sidenav-menu-items/zc-si
 import { Footer } from '../../footer/footer';
 import { ThemeToggle } from '../../theme-toggle/theme-toggle';
 import { LanguageLinks } from '../../language-links/language-links';
+import { LogoMark } from '../../logo-mark/logo-mark';
 import { I18nService } from '../../../services/i18n.service';
 import { NavItem } from '../../../models/models';
 import { injectPageUrl, pagePath } from '../../../models/i18n';
@@ -26,6 +27,7 @@ import { injectPageUrl, pagePath } from '../../../models/i18n';
     Footer,
     ThemeToggle,
     LanguageLinks,
+    LogoMark,
   ],
   templateUrl: './zc-nav-mobile.html',
   styleUrl: './zc-nav-mobile.css',

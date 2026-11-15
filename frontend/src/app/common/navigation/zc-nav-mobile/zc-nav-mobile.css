@@ -51,9 +51,8 @@ header {
   margin-left: var(--zc-space-2);
 }
 
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--nav-fg);
-  letter-spacing: -0.02em;
+/* The mark alone: the name stays out of the phone bar (SHELL-06, LOGO-03). */
+app-logo-mark {
+  width: 32px;
+  height: 32px;
 }
