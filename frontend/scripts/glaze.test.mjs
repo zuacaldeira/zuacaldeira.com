@@ -167,3 +167,15 @@ test('THEME-13: a colour too faint for its ground is darkened only until it read
     { moved: ['muted'], readable: true, onlyJust: true, towardBlack: true, rest: c },
   );
 });
+
+test('THEME-02: in the middle of the night the site wears Vidrado nocturno, its edge lifted to 3:1', () => {
+  const { noite } = table.glazes;
+  assert.equal(noite.c.edge, '#516b8b');
+  assert.ok(ratio(noite.c.edge, noite.c.surface) < 3, "the table's night edge is below 3:1");
+  const glaze = themeAt(table, at('02:00'));
+  assert.deepEqual(
+    { hex: fourteen(glaze.hex), mode: glaze.mode, moved: glaze.moved },
+    { hex: { ...noite.c, edge: '#526c8c' }, mode: 'dark', moved: ['edge'] },
+  );
+  assert.ok(ratio('#526c8c', noite.c.surface) >= 3);
+});
