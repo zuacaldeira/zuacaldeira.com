@@ -36,6 +36,9 @@ const logos = (html) =>
       name: attrs.match(/\saria-label="([^"]*)"/)?.[1],
       mark: /<svg\b[^>]*\saria-hidden="true"/.test(inner),
       text: text(inner),
+      untranslated: [...inner.matchAll(/<span\b([^>]*)>([^<]*)<\/span>/g)]
+        .filter(([, spanAttrs]) => /\stranslate="no"/.test(spanAttrs))
+        .map(([, , name]) => name.trim()),
     }),
   );
 
@@ -58,5 +61,13 @@ test('LOGO-02 (D5): on every built page the home link is named "Alexandre Zua Ca
     PAGES.map(([route]) => [route, logos(page(route)).map(({ name }) => name)]),
   );
   const expected = Object.fromEntries(PAGES.map(([route]) => [route, ['Alexandre Zua Caldeira']]));
+  assert.deepEqual(names, expected);
+});
+
+test('LOGO-11: on every built page the name reads "Zua Caldeira", marked never to be translated', () => {
+  const names = Object.fromEntries(
+    PAGES.map(([route]) => [route, logos(page(route)).map(({ untranslated }) => untranslated)]),
+  );
+  const expected = Object.fromEntries(PAGES.map(([route]) => [route, [['Zua Caldeira']]]));
   assert.deepEqual(names, expected);
 });
