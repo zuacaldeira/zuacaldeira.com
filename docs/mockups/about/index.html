@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About page mock-up: two options</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Comparison page, in the Writing mock-up's index style: controls, the page at two widths, the options. */
+:root{--bg:#e9eff4;--bg-2:#f7fafc;--line:#c9d8e6;--ink:#0b1526;--text:#12203a;--muted:#556476;--azul:#14417a;--ochre-text:#8a5e15;--on-azul:#f7fafc;
+  --display:'Fraunces',Georgia,serif;--body:'Archivo',system-ui,sans-serif;--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:1560px;margin-inline:auto;padding:24px 16px 64px;display:grid;gap:28px;grid-template-columns:minmax(0,1fr)}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,3vw,2.25rem);line-height:1.15;color:var(--ink);margin:0}
+h2{font-family:var(--display);font-weight:600;font-size:1.25rem;color:var(--ink);margin:0 0 8px}
+h3{font-family:var(--display);font-weight:600;font-size:1.05rem;color:var(--ink);margin:0 0 4px}
+p{margin:0}
+.lede{margin-top:8px;max-width:70ch}
+.kicker{font-family:var(--mono);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ochre-text);margin:0 0 6px}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;position:sticky;top:0;z-index:5;background:var(--bg);padding-block:12px;border-bottom:1px solid var(--line)}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:0;margin-bottom:4px}
+.seg{display:flex;flex-wrap:wrap}
+.seg label{position:relative;display:inline-flex;align-items:center;min-height:44px;padding-inline:11px;border:1px solid var(--line);margin-inline-start:-1px;background:var(--bg-2);cursor:pointer;font-size:.875rem;white-space:nowrap}
+.seg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.seg label:has(input:checked){background:var(--azul);border-color:var(--azul);color:var(--on-azul);font-weight:600;z-index:1}
+.seg label:has(input:focus-visible){outline:2px solid var(--azul);outline-offset:2px;z-index:2}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 392px;gap:24px;align-items:start}
+.cap{font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-bottom:6px}
+.view{overflow:hidden;border:1px solid var(--line);background:#fff}
+iframe{display:block;border:0;transform-origin:0 0}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin-top:8px}
+.card{padding:14px 16px;background:var(--bg-2);border:1px solid var(--line)}
+.card[data-active="true"]{border-color:var(--azul);box-shadow:inset 0 0 0 1px var(--azul)}
+.card p{margin-top:6px;font-size:.95rem}
+.card b{font-weight:600;color:var(--ink)}
+.rec{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ochre-text);min-height:1.2em}
+ul.gaps{margin:8px 0 0;padding-left:1.2em;max-width:80ch}
+code{font-family:var(--mono);font-size:.9em}
+@media (max-width:1000px){.stage{grid-template-columns:minmax(0,1fr)}.controls{position:static}}
+</style>
+<div class="wrap">
+  <header>
+    <p class="kicker">About page · /en/about · mock-up, two options</p>
+    <h1>About: your CV as a story, along the route Piri → Estremoz → Lisbon → Berlin</h1>
+    <p class="lede">Both options tell the same story with the same text, one chapter per stop, as you decided on 2026-11-15 (<code>about-notes.md</code>). Every sentence comes from the site's repository; "Sources" shows where. Red boxes mark what is yours to give: <b>Gap</b> is a fact the repository does not have, <b>Confirm</b> is a claim from the old About page to check, and <b>Draft</b> is my wording, which states no fact. English only in this round. Scroll inside the frames: in option B, the route marks the chapter you are reading.</p>
+  </header>
+
+  <form class="controls" id="controls" aria-label="What to show">
+    <fieldset><legend>Option</legend><div class="seg">
+      <label><input type="radio" name="opt" value="a" checked>A Route on top</label><label><input type="radio" name="opt" value="b">B Route beside</label>
+    </div></fieldset>
+    <fieldset><legend>Theme</legend><div class="seg">
+      <label><input type="radio" name="state" value="living" checked>Living</label><label><input type="radio" name="state" value="light">Light</label><label><input type="radio" name="state" value="dark">Dark</label>
+    </div></fieldset>
+    <fieldset><legend>Sources</legend><div class="seg">
+      <label><input type="radio" name="src" value="0" checked>Hide</label><label><input type="radio" name="src" value="1">Show</label>
+    </div></fieldset>
+  </form>
+
+  <div class="stage">
+    <div><p class="cap">1280 px, scaled to fit</p><div class="view" id="v-wide"><iframe id="f-wide" title="The page at 1280 px" width="1280" height="900"></iframe></div></div>
+    <div><p class="cap">390 px</p><div class="view"><iframe id="f-phone" title="The page at 390 px" width="390" height="844"></iframe></div></div>
+  </div>
+
+  <section>
+    <h2>The two options</h2>
+    <div class="cards">
+      <article class="card" data-opt="a"><p class="rec">&nbsp;</p><h3>A · The route as a figure on top</h3><p><b>For:</b> the whole life in one look before reading: four stops on a line that draws itself in, each with what happened there, each a link to its chapter. The chapters below alternate grounds, each opening with a large numeral and a small route showing where you are. Without JavaScript, it works the same.</p><p><b>Costs:</b> once you scroll past it, the route is gone; each chapter's small route and its "The route" link have to stand in. On the phone it is the longest page (6,274 px).</p></article>
+      <article class="card" data-opt="b"><p class="rec">Recommended</p><h3>B · The route beside the chapters</h3><p><b>For:</b> the route travels with you. On a laptop it stays in the left margin; on the phone it is a bar under the header. The stop you are reading is marked, and the line fills up to it, so you always know where you are in the life and can jump to any stop. It is shorter on the phone (5,346 px), because the chapters share one ground.</p><p><b>Costs:</b> there is no single figure to take in at the start, and the text column is narrower on a laptop. It needs a little JavaScript to mark the stop; without it, the four stops are plain links.</p></article>
+    </div>
+    <p class="lede"><b>Why B:</b> this page is long and read in order, often on a phone. A route that stays on screen and moves with the reader is the table of contents and the figure at once. In A, the figure is gone after the first screen.</p>
+  </section>
+
+  <section>
+    <h2>Gaps for you to fill</h2>
+    <ul class="gaps">
+      <li><b>Piri:</b> where it is and when you lived there; your childhood; the move to Estremoz and why.</li>
+      <li><b>Estremoz:</b> when, and with whom; school; the move to Lisbon and why.</li>
+      <li><b>Lisbon:</b> the years of your studies; anything else from those years; when and why you left for Berlin.</li>
+      <li><b>Berlin:</b> what brought you there and your first years; employers and roles with years; when and why the turn to education came, and how long the training runs; what brought you back to research after 2010.</li>
+      <li><b>Years for each stop.</b></li>
+      <li><b>To confirm:</b> where you grew up (the old page says Lisbon; the route starts in Piri); the supervision by Vasco T. Vasconcelos; the degree's name (Computer Science and Informatics Engineering); "since 2011"; other races (the Berlin Marathon).</li>
+      <li><b>The head's sentence</b> is my draft.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Screenshots and checks</h2>
+    <p class="lede">Not in the repo: <code>~/.cache/zc-scratch/about-mock/shots/</code> holds <code>opt-{a,b}-en-{390,1280}-light.png</code> and <code>opt-{a,b}-en-390-dark.png</code> (full page), <code>motion-a-1280-drawing.png</code>, and <code>motion-b-{390,1280}-reading-lisbon.png</code>. Measured on each, both options, at 390 and 1280, light and dark: no horizontal scroll; no link or button under 44 px tall; the lowest text contrast is 4.59:1 in light (the ochre label on the route's raised ground) and 4.77:1 in dark.</p>
+  </section>
+</div>
+<script>
+const f={wide:document.getElementById('f-wide'),phone:document.getElementById('f-phone')};
+const base='about.html';
+function state(){const d=new FormData(document.getElementById('controls'));return Object.fromEntries(d.entries())}
+function mark(s){document.querySelectorAll('.card').forEach(c=>c.dataset.active=String(c.dataset.opt===s.opt))}
+function load(){const s=state();const h=`#opt=${s.opt}&state=${s.state}&src=${s.src}`;f.wide.src=base+h;f.phone.src=base+h;mark(s)}
+function scale(){const box=document.getElementById('v-wide');const k=Math.min(1,box.clientWidth/1280);f.wide.style.transform=`scale(${k})`;box.style.height=(900*k)+'px'}
+document.getElementById('controls').addEventListener('change',()=>{const s=state();for(const x of Object.values(f))x.contentWindow?.postMessage({zcSet:true,opt:s.opt,state:s.state,src:s.src==='1'},'*');mark(s)});
+window.addEventListener('resize',scale);
+load();scale();
+</script>
+</html>
