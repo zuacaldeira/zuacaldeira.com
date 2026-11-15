@@ -79,3 +79,16 @@ test('THEME-01: at lunchtime the site wears Cobalto, exactly as its table', () =
     { hex: table.glazes.cobalto.c, mode: 'light', moved: [] },
   );
 });
+
+test('THEME-03: morning, early evening and evening each wear their own glaze, exactly as its table', () => {
+  const glazes = ['06:30', '19:00', '20:00'].map((t) => {
+    const glaze = themeAt(table, at(t));
+    return { hex: fourteen(glaze.hex), mode: glaze.mode, moved: glaze.moved };
+  });
+  const { manganes, amarelo, manganesNoite } = table.glazes;
+  assert.deepEqual(glazes, [
+    { hex: manganes.c, mode: 'light', moved: [] },
+    { hex: amarelo.c, mode: 'light', moved: [] },
+    { hex: manganesNoite.c, mode: 'dark', moved: [] },
+  ]);
+});
