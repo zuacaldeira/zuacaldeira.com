@@ -5,6 +5,10 @@ import { pagePath } from '../../models/i18n';
 import { I18nService } from '../../services/i18n.service';
 import { PageHead } from '../../common/page-head/page-head';
 
+/** A route label with its chapter number and the number of chapters filled in. */
+const fill = (label: string, n: number, total: number) =>
+  label.replace('{n}', String(n)).replace('{total}', String(total));
+
 /**
  * The About page: Zua's CV told as a story along the route (docs/examples/about.md; build spec
  * docs/mockups/about/about-spec.md). Its head is the shared head, as on Software, Writing and
@@ -26,7 +30,9 @@ export class About {
   readonly stops = this.route.stops.map((stop, i) => ({
     ...stop,
     href: `${pagePath(this.lang, 'about')}#${stop.id}`,
-    chapter: this.route.chapter.replace('{n}', String(i + 1)),
+    chapter: fill(this.route.chapter, i + 1, this.route.stops.length),
+    // The " · years" joins with the chapter's text in slice 3 (D11).
+    chapterOf: fill(this.route.chapterOf, i + 1, this.route.stops.length),
   }));
 
   constructor() {

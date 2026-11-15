@@ -16,7 +16,7 @@ describe('About', () => {
     fixture.detectChanges();
     return fixture.nativeElement;
   };
-  const texts = (page: HTMLElement, selector: string) =>
+  const texts = (page: Element, selector: string) =>
     [...page.querySelectorAll(selector)].map((el) => el.textContent?.trim());
 
   it('ABOUT-02: should title the page with the full name and its heading', () => {
@@ -46,6 +46,39 @@ describe('About', () => {
           { href: '/de/about#berlin', chapter: 'chapter 4 de', place: 'Berlin de' },
         ],
       },
+    ]);
+  });
+
+  it('ABOUT-15 (D11): should head four chapters in route order with number, "of 4" label and the place, nothing more yet', () => {
+    const page = render('pt');
+    const chapters = [...page.querySelectorAll('.about-story section')].map((section) => {
+      const h2 = section.querySelector('h2');
+      return {
+        id: section.id,
+        labelledBy: section.getAttribute('aria-labelledby'),
+        h2Id: h2?.id,
+        place: h2?.textContent?.trim(),
+        number: [...section.querySelectorAll('.about-chapter__number[aria-hidden="true"]')].map((n) =>
+          n.textContent?.trim(),
+        ),
+        label: texts(section, '.about-chapter__label'),
+        parts: section.querySelectorAll('*').length,
+      };
+    });
+    const chapter = (n: number, id: string, place: string) => ({
+      id,
+      labelledBy: `h-${id}`,
+      h2Id: `h-${id}`,
+      place,
+      number: [String(n)],
+      label: [`chapter ${n} of 4 pt`],
+      parts: 4, // a head holding the number, the label and the <h2>
+    });
+    expect(chapters).toEqual([
+      chapter(1, 'piri', 'Piri'),
+      chapter(2, 'estremoz', 'Estremoz'),
+      chapter(3, 'lisbon', 'Lisbon pt'),
+      chapter(4, 'berlin', 'Berlin pt'),
     ]);
   });
 

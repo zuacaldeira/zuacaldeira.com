@@ -16,4 +16,15 @@
       }
     </ol>
   </nav>
+  <div class="about-chapters">
+    @for (stop of stops; track stop.id; let n = $index) {
+      <section class="about-chapter" [id]="stop.id" [attr.aria-labelledby]="'h-' + stop.id">
+        <div class="about-chapter__head">
+          <span class="about-chapter__number" aria-hidden="true">{{ n + 1 }}</span>
+          <p class="about-chapter__label">{{ stop.chapterOf }}</p>
+          <h2 [id]="'h-' + stop.id">{{ stop.place }}</h2>
+        </div>
+      </section>
+    }
+  </div>
 </div>
