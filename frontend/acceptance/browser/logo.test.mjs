@@ -197,6 +197,40 @@ for (const theme of ['light', 'dark']) {
   });
 }
 
+// The home link as a control: its box, and where the second Tab (after the skip link) lands, with
+// the outline drawn there.
+const asControl = async (page) => {
+  const box = await page.locator('header a.logo').evaluate((a) => {
+    const r = a.getBoundingClientRect();
+    return { width: Math.round(r.width), height: Math.round(r.height) };
+  });
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  const focus = await page.evaluate(() => {
+    const el = document.activeElement;
+    const style = getComputedStyle(el);
+    return {
+      on: el.matches('header a.logo') ? 'a.logo' : el.outerHTML.slice(0, 60),
+      ring: style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0,
+    };
+  });
+  return { box, focus };
+};
+
+for (const width of [390, 1280]) {
+  test(`LOGO-08: at ${width} px the home link is at least 44 × 44 px, and the second Tab reaches it with a ring`, async () => {
+    const found = await withPage({ width, height: 844 }, asControl);
+    assert.deepEqual(
+      {
+        big: found.box.width >= 44 && found.box.height >= 44,
+        focus: found.focus,
+      },
+      { big: true, focus: { on: 'a.logo', ring: true } },
+      JSON.stringify(found),
+    );
+  });
+}
+
 test('LOGO-04: the desktop bar shows the mark alone at 768 px, the mark and the name at 1280 px', async () => {
   const at768 = await withPage({ width: 768, height: 1024 }, shown);
   const at1280 = await withPage({ width: 1280 }, shown);
