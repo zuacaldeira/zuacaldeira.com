@@ -19,23 +19,6 @@ export const en: Translations = {
     aboutCta: 'About me',
     contactCta: 'Get in touch',
   },
-  about: {
-    title: 'About',
-    subtitle: 'From Lisbon to Berlin — a journey across research, code, education, and running.',
-    journeyHeading: 'The Journey',
-    journeyP1:
-      'I grew up in Lisbon, Portugal, where I studied Computer Science and Informatics Engineering at the University of Lisbon. Under the supervision of <strong>Vasco T. Vasconcelos</strong>, I explored the world of <strong>Session Types</strong> — a type discipline for concurrent and distributed systems that guarantees communication safety by construction.',
-    journeyP2:
-      'My research was presented at <strong>POPL</strong>, one of the premier venues in programming language theory. This experience shaped how I think about software: types as specifications, programs as proofs, correctness by design.',
-    berlinHeading: 'Berlin Chapter',
-    berlinP1:
-      "In Berlin, I combined my software engineering background with a new calling: <strong>early childhood education</strong>. I'm currently training as an <em>Erzieher</em> (state-recognized educator) at the <strong>Freie Fachschule Berlin</strong>, while building software for the bilingual Portuguese-German kindergarten <strong>Kita Casa Azul</strong>.",
-    berlinP2:
-      'On the technical side, I work with <strong>Angular</strong> and <strong>Spring Boot</strong>, building everything from the <strong>Casa Azul Website</strong> to the internal <strong>Dienstplan</strong> (shift planning) application. I also developed the web presence for the <strong>Embassy of Angola in Berlin</strong>.',
-    beyondHeading: 'Beyond Work',
-    beyondP1:
-      "I'm an amateur runner, training through Berlin's seasons. From the Silvesterlauf to the Berlin Marathon, running keeps me grounded and gives structure to everything else.",
-  },
   work: {
     title: 'Work',
     subtitle: 'Software projects — Angular, Spring Boot, and the Casa Azul ecosystem.',

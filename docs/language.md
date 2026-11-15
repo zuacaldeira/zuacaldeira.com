@@ -157,6 +157,10 @@ LA-24 and LA-25 were added after L13 was decided.
 (high), LA-04, 05, 13, 14, 15, 16 (medium), LA-08 (the headline). **Open:** the low ones, LA-03,
 06, 07, 09, 17 to 23. **Closed without a change:** LA-24, 25 (role names, exceptions to L13).
 
+**Gone with the old About page (2026-11-15, slice 1 of `docs/examples/about.md`):** the `about`
+block of `en.ts`, `de.ts` and `pt.ts`, so the About half of LA-04, 05, 12 to 16 (fixed before) and of
+LA-22 (open) no longer exists. LA-16's Running half and LA-22's Pädagogik half stay as they are.
+
 **Markup, not copy (found by the build test, 2026-11-10):** on `/de/home` and `/pt/home` the paper
 band's title "Session Type State Spaces Form Lattices" is not marked `lang="en"`/`translate="no"`,
 as it is on the Software, Research and Writing pages, so a screen reader reads it with German or

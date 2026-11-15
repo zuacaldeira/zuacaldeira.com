@@ -85,18 +85,6 @@ export interface Translations {
     aboutCta: string;
     contactCta: string;
   };
-  about: {
-    title: string;
-    subtitle: string;
-    journeyHeading: string;
-    journeyP1: string;
-    journeyP2: string;
-    berlinHeading: string;
-    berlinP1: string;
-    berlinP2: string;
-    beyondHeading: string;
-    beyondP1: string;
-  };
   work: {
     title: string;
     subtitle: string;

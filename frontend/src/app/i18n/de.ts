@@ -19,23 +19,6 @@ export const de: Translations = {
     aboutCta: 'Über mich',
     contactCta: 'Kontakt aufnehmen',
   },
-  about: {
-    title: 'Über mich',
-    subtitle: 'Von Lissabon nach Berlin — eine Reise durch Forschung, Code, Bildung und Laufen.',
-    journeyHeading: 'Der Weg',
-    journeyP1:
-      'Ich bin in Lissabon, Portugal, aufgewachsen, wo ich Informatik an der Universität Lissabon studiert habe. Unter der Betreuung von <strong>Vasco T. Vasconcelos</strong> erforschte ich die Welt der <strong>Session-Typen</strong> — eine Typdisziplin für nebenläufige und verteilte Systeme, die Kommunikationssicherheit durch Konstruktion garantiert.',
-    journeyP2:
-      'Meine Forschung wurde auf der <strong>POPL</strong> präsentiert, einer der führenden Konferenzen in der Programmiersprachentheorie. Diese Erfahrung hat mein Denken über Software geprägt: Typen als Spezifikationen, Programme als Beweise, Korrektheit durch Design.',
-    berlinHeading: 'Berliner Kapitel',
-    berlinP1:
-      'In Berlin habe ich meinen Software-Engineering-Hintergrund mit einer neuen Berufung verbunden: <strong>frühkindliche Bildung</strong>. Ich absolviere derzeit die Ausbildung zum staatlich anerkannten <em>Erzieher</em> an der <strong>Freien Fachschule Berlin</strong> und entwickle gleichzeitig Software für die zweisprachige portugiesisch-deutsche <strong>Kita Casa Azul</strong>.',
-    berlinP2:
-      'Auf der technischen Seite arbeite ich mit <strong>Angular</strong> und <strong>Spring Boot</strong> und entwickle alles von der <strong>Casa Azul Website</strong> bis zur internen <strong>Dienstplan</strong>-Anwendung (Schichtplanung). Außerdem habe ich die Webpräsenz der <strong>Botschaft von Angola in Berlin</strong> entwickelt.',
-    beyondHeading: 'Neben der Arbeit',
-    beyondP1:
-      'Ich bin Hobbyläufer und trainiere durch die Berliner Jahreszeiten. Vom Silvesterlauf bis zum Berlin-Marathon — das Laufen hält mich geerdet und gibt allem anderen Struktur.',
-  },
   work: {
     title: 'Arbeit',
     subtitle: 'Softwareprojekte — Angular, Spring Boot und das Casa-Azul-Ökosystem.',

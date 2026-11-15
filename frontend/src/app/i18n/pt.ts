@@ -19,23 +19,6 @@ export const pt: Translations = {
     aboutCta: 'Sobre mim',
     contactCta: 'Entrar em contacto',
   },
-  about: {
-    title: 'Sobre',
-    subtitle: 'De Lisboa a Berlim — um percurso entre investigação, código, educação e corrida.',
-    journeyHeading: 'O percurso',
-    journeyP1:
-      'Cresci em Lisboa, Portugal, onde estudei Engenharia Informática na Universidade de Lisboa. Sob a orientação de <strong>Vasco T. Vasconcelos</strong>, explorei o mundo dos <strong>tipos de sessão</strong> — uma disciplina de tipos para sistemas concorrentes e distribuídos que garante segurança na comunicação por construção.',
-    journeyP2:
-      'A minha investigação foi apresentada no <strong>POPL</strong>, um dos principais eventos em teoria de linguagens de programação. Esta experiência moldou a forma como penso sobre software: tipos como especificações, programas como provas, correção por design.',
-    berlinHeading: 'Capítulo Berlim',
-    berlinP1:
-      'Em Berlim, combinei a minha formação em engenharia de software com uma nova vocação: <strong>educação infantil</strong>. Estou atualmente em formação como <em>Erzieher</em> (educador reconhecido pelo estado) na <strong>Freie Fachschule Berlin</strong>, enquanto desenvolvo software para o jardim de infância bilingue português-alemão <strong>Kita Casa Azul</strong>.',
-    berlinP2:
-      'Do lado técnico, trabalho com <strong>Angular</strong> e <strong>Spring Boot</strong> e construí tudo, desde o <strong>site da Casa Azul</strong> até à aplicação interna de <strong>Dienstplan</strong> (planeamento de turnos). Também desenvolvi a presença web da <strong>Embaixada de Angola em Berlim</strong>.',
-    beyondHeading: 'Para além do trabalho',
-    beyondP1:
-      'Sou corredor amador e treino ao longo das estações de Berlim. Do Silvesterlauf à Maratona de Berlim, a corrida mantém-me equilibrado e dá estrutura a tudo o resto.',
-  },
   work: {
     title: 'Trabalho',
     subtitle: 'Projetos de software — Angular, Spring Boot e o ecossistema Casa Azul.',
