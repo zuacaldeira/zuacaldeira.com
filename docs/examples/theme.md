@@ -1,10 +1,10 @@
 # Examples: Theme
 
-Status: **draft for Zua, 2026-11-15.** THEME-01 to 11 were agreed on 2026-11-02; this rewrite makes
-the living glaze the site's one colour reference (Zua, 2026-11-15, the first section of "Settled" in
-`docs/design.md`) and adds the removal of the five sources of drift, B1 to B5. Waiting for Zua: the
-cases, the slices and D1 to D10 (D1 is the one question before the build). Nothing is built yet,
-except THEME-10 for today's two themes.
+Status: **agreed with Zua on 2026-11-15** (the cases, the five slices, D1 to D10; answers under
+"Decisions"). THEME-01 to 11 were agreed on 2026-11-02; this rewrite makes the living glaze the
+site's one colour reference (Zua, 2026-11-15, the first section of "Settled" in `docs/design.md`) and
+adds the removal of the five sources of drift, B1 to B5. Slice 1 is being built (below); before it,
+only THEME-10 for today's two themes was built.
 
 The site's colours follow the visitor's local time through five azulejo glazes. Design: the Living
 Glaze study, https://claude.ai/artifact/LGHSasJRc4DXdBmk95CGyD, agreed unchanged on 2026-11-02. Its
@@ -150,7 +150,34 @@ These two cases say the old one is gone and leaves nothing behind.
 
 ## Decisions
 
-Open, for Zua (recommendation first):
+**Answered by Zua on 2026-11-15:**
+- **The cases and the five slices as proposed:** (1) the glaze engine and tokens, `styles.css`'s
+  colour lines generated from the glaze; (2) Material follows the glaze, B1 to B3; (3) living, light
+  and dark, B4; (4) the new home hero, B5, its own element from `home.md`'s cases; (5) every glaze in
+  the browser.
+- **D1: living, as agreed (option 1).** On a first visit the device's dark setting is ignored;
+  everyone gets the glaze of the time. One press of the toggle gives dark, and that choice is
+  remembered.
+- **D2 to D10 as recommended** (the first option of each): among them, contrast is checked after
+  rounding to hex (D2), and the guard covers the footer's gold and text (D5).
+- **The site is built to its design:** a built colour outside the glaze's tokens is drift.
+- **Merging:** `next` goes into `main` only when the whole site is built.
+
+Taken while planning slice 1 (2026-11-15, tdd-peer; Zua may change them):
+- **D11. Where the parts live.** The table `src/app/services/glaze.json` and the engine
+  `src/app/services/glaze.mjs`, beside `theme.service.ts` and `theme-rule.cases.json`, which use them
+  in slice 3. The generator is `scripts/glaze-tokens.mjs`; the tests are `scripts/glaze.test.mjs`
+  (the engine and the table) and `scripts/glaze-tokens.test.mjs` (`styles.css`), run by
+  `npm run test:scripts` with `node --test`: the engine is plain JavaScript and needs no Angular.
+- **D12. The engine's names are the study's:** `themeAt(table, minute)` returns `{ hex, mode, moved }`,
+  `hex` keyed by the study's 14 names, plus the footer's and band's six (`footBg`, `footFg`,
+  `footGold`, `footOnGold`, `bandBg`, `bandFg`), derived by mode as `paint()` does and guarded (D5).
+  `checkTable(table)` refuses a bad table (THEME-P-07).
+- **D13. The gold pair is in the table too** (`fixed`), and the generator writes it into the `:root`
+  block with the 14, so every colour literal in `styles.css` is generated, apart from the shadows'
+  black (D5).
+
+The options as they were proposed (recommendation first):
 
 - **D1. A device set to dark, on a first visit.** The study and the 2026-11-02 agreement make living
   the default; today's site follows the device's dark setting.
@@ -242,7 +269,7 @@ Not designed yet, and not in these cases:
 - **Reacting to events** (a new post, a social event). The settings above are where it would
   attach.
 
-## Slices (proposed)
+## Slices (agreed 2026-11-15)
 
 Each slice ends green and visible on the preview. Slice 2 comes before 3: living with Material's
 teal still in place would show teal on violet and green grounds.
@@ -263,3 +290,111 @@ teal still in place would show teal on violet and green grounds.
    goes with THEME-25, 26, P-03 (D8).
 5. **Every glaze in the browser.** After 3 and 4: THEME-27 to 29, then the design review on the
    preview under all five glazes, at 390 and 1280, in en and de.
+
+## Slice 1: the glaze and the tokens
+
+What it builds: the study's table as `glaze.json`; the engine `glaze.mjs` (no imports, the table
+passed in) with the study's blend, crossings and guard, the guard measured on the rounded hex (D2) and
+extended to the footer and band (D5); and `scripts/glaze-tokens.mjs`, which writes `styles.css`'s two
+colour blocks between marker comments from the engine at 12:30 and 02:00 (D4). Nothing at runtime
+uses the engine yet (slice 3). Visible after the slice: only the night edge, `#516b8b` → `#526c8c`;
+the five hand-made tokens leave `styles.css` (no user outside the old hero, which sets its own
+`--zc-tile` and `--zc-ochre-wash` on `.hero__lattice` until slice 4).
+
+Test list (crossed off in the "Done" note below as each is committed):
+- **The table** (`scripts/glaze.test.mjs`):
+  - T1 THEME-15, `glaze.json` equals the engine in `docs/mockups/home/home.html` (its glazes, 14
+    tokens each, keyframes, minimums, the token map and the two states' minutes), read by running
+    the mock-up's engine part in a VM.
+  - T2 THEME-P-07, `checkTable` refuses Amarelo e verde without `edge`, and a glaze with `teal`,
+    naming the glaze and the token.
+- **The engine** (`scripts/glaze.test.mjs`, the minute injected):
+  - E1 THEME-01, 12:30 is Cobalto exactly, nothing moved.
+  - E2 THEME-03, 06:30, 19:00 and 20:00 are Manganês, Amarelo e verde, Manganês nocturno exactly.
+  - E3 THEME-14, 08:15 is the Oklab midpoint of Manganês and Cobalto (`bg` `#ededf3`).
+  - E4 THEME-12, the crossings: the ground moves every minute, the inks switch at 06:15 and 19:46,
+    and the mode changes at those two minutes only.
+  - E5 THEME-13, a test glaze with muted at 2:1 on a light ground is moved toward black only as far
+    as 4.5:1; tokens above their minimum stay as the table has them.
+  - E6 THEME-02, 02:00 is Vidrado nocturno with `edge` `#526c8c`, the one moved token.
+  - E7 THEME-04 with THEME-P-08, every minute of the day, each pair at its minimum on the rounded hex:
+    the eight inks against `bg` and `surface`, `onAccent` against `accent`, the footer's text and
+    gold and the band's text against their grounds, the label against the gold; 19:48 and 19:52
+    named.
+  - E8 THEME-P-01, the guard taken out of the engine: E7 goes red naming 02:00, `edge`, 2.96:1
+    (a break, restored, md5 checked).
+- **The tokens** (`scripts/glaze-tokens.test.mjs`):
+  - S1 THEME-16, `styles.css`'s `:root` colour block is the engine at 12:30 and its `html.dark-theme`
+    block the engine at 02:00, through the map, with the gold pair (D13); outside the blocks no
+    `--zc-*` holds a colour literal except the shadows. Red today: the dark edge, the five hand-made
+    tokens, no markers.
+  - S2 THEME-P-07 at the generator: with a bad table it fails naming the glaze and token, and
+    `styles.css` keeps its bytes.
+  - S3 Running the generator twice gives the same bytes as once.
+  - S4 THEME-P-06, the dark `--zc-edge` set back to `#516b8b` by hand: S1 goes red naming the token,
+    the value and `#526c8c` (a break, restored, md5 checked).
+- **After the slice:** the unit suite, `npm run test:scripts`, the build and `npm run acceptance`
+  green; `docs/design.md`'s trap about the night edge and `CLAUDE.md`'s "Styling" updated.
+
+Not in slice 1: the head script and `ThemeService` on the engine, the tick and its transition
+(slice 3); Material (slice 2); the old hero's local colours (slice 4); any browser check (slice 5).
+
+### Diagram: the engine and the generator
+
+```mermaid
+flowchart LR
+    T["glaze.json<br/>5 glazes × 14 tokens, keyframes,<br/>minimums, map, gold pair"] --> C{"checkTable (T2, S2)"}
+    C -->|"a token missing or not in the map"| X["refused: glaze and token named,<br/>styles.css keeps its bytes"]
+    C -->|"ok"| E["themeAt(table, minute)"]
+    M["the minute, injected<br/>750 = 12:30, 120 = 02:00"] --> E
+    E --> K["keyframe pair, smoothstep t<br/>08:15: Manganês → Cobalto, t = ½ (E3)"]
+    K --> B["surfaces blended in Oklab<br/>bg #ededf3 at 08:15"]
+    K --> S{"crossing?<br/>06:00–06:30, 19:30–20:00"}
+    S -->|"yes"| I["inks snap to the ground's side<br/>dark to 06:14, light from 06:15;<br/>light to 19:45, dark from 19:46 (E4)"]
+    S -->|"no"| J["inks blended too"]
+    B --> G["guard on the rounded hex (D2)<br/>edge #516b8b 2.96:1 → #526c8c 3.00:1 (E5, E6)"]
+    I --> G
+    J --> G
+    G --> D["footer and band by mode, guarded (D5)<br/>gold #d9a94a falls to 2.21:1 at 06:14 unguarded"]
+    D --> H["hex + mode"]
+    H -->|"every minute"| R["E7: each pair at its minimum"]
+    H -->|"12:30 → :root, 02:00 → html.dark-theme"| W["glaze-tokens.mjs writes<br/>styles.css's two blocks (S1, S3)"]
+```
+
+### Session type
+
+The engine itself is a pure calculation: no protocol. The generator has an order: the table is
+checked before anything is computed, and only the generator writes the blocks. Convention: a role
+that a branch never calls just ends there.
+
+```
+G = Gen → Engine : check(table) .
+    Engine → Gen : { ok .
+                       Gen → Engine : themeAt(750) . Engine → Gen : glaze(hex_light, light) .
+                       Gen → Engine : themeAt(120) . Engine → Gen : glaze(hex_dark, dark) .
+                       Gen → Styles : write(root = hex_light ∪ gold, dark = hex_dark) .
+                       Test → Styles : read .
+                       Styles → Test : { same . end , drift(token, have, want) . end } ,
+                     refused(glaze, token) . Gen → CI : fail(glaze, token) . end }
+
+Gen ↾    = Engine!check . Engine?{ ok . Engine!themeAt . Engine?glaze . Engine!themeAt . Engine?glaze .
+                                        Styles!write . end ,
+                                   refused . CI!fail . end }
+Engine ↾ = Gen?check . Gen!{ ok . Gen?themeAt . Gen!glaze . Gen?themeAt . Gen!glaze . end , refused . end }
+Styles ↾ = Gen?write . Test?read . Test!{ same . end , drift . end }
+```
+
+| Arrow in the diagram | Step in G | Rows |
+|---|---|---|
+| glaze.json → checkTable | `check(table)`, `{ok, refused}` | T1 (the table itself), T2, S2 |
+| checkTable → refused | `refused(glaze, token) . fail` | T2, S2 |
+| minute → themeAt → keyframes → blend, crossing, guard → hex | `themeAt(m)`, `glaze(hex, mode)` | E1–E7 |
+| hex at 12:30 and 02:00 → styles.css | `themeAt(750)`, `themeAt(120)`, `write(…)` | S1, S3 |
+| (the test reads styles.css) | `read`, `{same, drift}` | S1, S4 |
+
+Forbidden by G, each refused and the stored state checked unchanged:
+- **a write after `refused`:** S2 (`styles.css`'s md5 before and after).
+- **a write not by `Gen`** (a hand edit of a generated line): `drift(edge, #516b8b, #526c8c)`, S4.
+- **a repeat of the one-shot `write`:** allowed, and must change nothing: S3.
+- **a guard step left out** (`glaze` with a token below its minimum): E8 (THEME-P-01).
+- Stale tokens and races: none; one process, nothing shared.
