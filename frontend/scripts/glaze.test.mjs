@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { runInNewContext } from 'node:vm';
-import { checkTable } from '../src/app/services/glaze.mjs';
+import { checkTable, themeAt } from '../src/app/services/glaze.mjs';
 
 const frontend = join(import.meta.dirname, '..');
 const table = JSON.parse(readFileSync(join(frontend, 'src/app/services/glaze.json'), 'utf8'));
@@ -62,4 +62,20 @@ test('THEME-P-07: a glaze missing a token, or with a token not in the map, is re
   assert.throws(() => checkTable(extra), /glaze cobalto has teal, which the map does not name/);
 
   assert.doesNotThrow(() => checkTable(table));
+});
+
+// hh:mm as minutes of the day: the clock injected.
+const at = (hhmm) => {
+  const [h, m] = hhmm.split(':').map(Number);
+  return h * 60 + m;
+};
+// The 14 tokens of a result, without the footer's and band's.
+const fourteen = (hex) => Object.fromEntries(Object.keys(table.map).map((k) => [k, hex[k]]));
+
+test('THEME-01: at lunchtime the site wears Cobalto, exactly as its table', () => {
+  const glaze = themeAt(table, at('12:30'));
+  assert.deepEqual(
+    { hex: fourteen(glaze.hex ?? {}), mode: glaze.mode, moved: glaze.moved },
+    { hex: table.glazes.cobalto.c, mode: 'light', moved: [] },
+  );
 });
