@@ -1,0 +1,19 @@
+<app-page-head [head]="head" />
+<div class="about-story">
+  <nav class="about-route" [attr.aria-label]="route.label">
+    <p class="about-route__label" aria-hidden="true">{{ route.label }}</p>
+    <ol>
+      @for (stop of stops; track stop.id) {
+        <li>
+          <a [attr.href]="stop.href">
+            <span class="about-route__lozenge" aria-hidden="true"></span>
+            <span class="about-route__text">
+              <span class="about-route__chapter">{{ stop.chapter }}</span>
+              <span class="about-route__place">{{ stop.place }}</span>
+            </span>
+          </a>
+        </li>
+      }
+    </ol>
+  </nav>
+</div>
