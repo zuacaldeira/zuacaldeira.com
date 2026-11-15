@@ -1,6 +1,6 @@
-// Acceptance test for the header's type, in a real browser (SHELL-13c, D44 in docs/examples/shell.md):
-// the desktop menu in IBM Plex Mono and the "zc" mark in Fraunces at 600, as the home mock-up, not in
-// the Inter that Material's theme once set. Run `npm run build` first, then `npm run acceptance:browser`.
+// Acceptance test for the header's type, in a real browser (SHELL-13c, D44 in docs/examples/shell.md;
+// LOGO-09 in docs/examples/logo.md): the desktop menu in IBM Plex Mono and the name "Zua Caldeira"
+// beside the mark in Fraunces at 600, as the mock-ups, not in the Inter that Material's theme once set. Run `npm run build` first, then `npm run acceptance:browser`.
 // CHROMIUM_PATH picks a Chromium of your own, as in shell-phone.test.mjs. Needs the network (Google Fonts).
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
@@ -76,7 +76,7 @@ const familiesOf = async (cdp, rootId, selector) => {
 };
 
 for (const lang of ['en', 'de', 'pt']) {
-  test(`SHELL-13c: on /${lang}/home (1280, light) the menu is drawn in IBM Plex Mono, the "zc" mark in Fraunces at 600`, async () => {
+  test(`SHELL-13c, LOGO-09: on /${lang}/home (1280, light) the menu is drawn in IBM Plex Mono, the name in Fraunces at 600`, async () => {
     const context = await browser.newContext({
       viewport: { width: 1280, height: 800 },
       colorScheme: 'light',
@@ -95,13 +95,13 @@ for (const lang of ['en', 'de', 'pt']) {
       const { root } = await cdp.send('DOM.getDocument', { depth: -1 });
       const actual = {
         menu: await familiesOf(cdp, root.nodeId, '.desktop-menu-items a'),
-        mark: await familiesOf(cdp, root.nodeId, '.logo-text'),
-        markWeight: await page
-          .locator('.logo-text')
+        name: await familiesOf(cdp, root.nodeId, 'header a.logo .logo-name'),
+        nameWeight: await page
+          .locator('header a.logo .logo-name')
           .evaluate((n) => getComputedStyle(n).fontWeight),
       };
       await cdp.detach();
-      assert.deepEqual(actual, { menu: ['IBM Plex Mono'], mark: ['Fraunces'], markWeight: '600' });
+      assert.deepEqual(actual, { menu: ['IBM Plex Mono'], name: ['Fraunces'], nameWeight: '600' });
     } finally {
       await context.close();
     }

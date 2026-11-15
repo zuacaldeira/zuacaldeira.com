@@ -57,7 +57,7 @@ the home hero, because the hero's page needs them.
 | SHELL-07b-P-04 | any built page | its footer is read | a second bottom row, a second © line, or none, is refused | yes (break in the build, all three) |
 | SHELL-13 | every built page (the 21, `/` and `/404`), in Chromium at 1280 px, light, its fonts loaded | Chromium is asked which fonts drew each text in the header, `<main>` and the footer | only the site's families: Fraunces, Archivo, IBM Plex Mono, Material Icons (the icons), and the notation fonts Noto Sans Math and STIX Two Text; no system font (D38, D40) | yes (browser, 23 pages, 2026-11-10: red before, Inter and system fonts) |
 | SHELL-13b | every built page, and `src/index.html` | the heads and the text of each body are read | `index.html` asks Google Fonts once for Noto Sans Math and STIX Two Text with `&text=` and `display=swap`, and every built head carries one face of each (the build inlines them, D42); every character of the text is one the three families hold (D39) or one of that `&text=`, and the `&text=` holds no symbol that no page shows; today `₁ ₂ ℒ → ↗ ↠ ∥ ≅ ≡ ≤ ⊤ ⊥` (D41) | yes (build, 23 pages, 2026-11-10: red before) |
-| SHELL-13c | `/en/home`, `/de/home` and `/pt/home` in Chromium at 1280 px, light | the header's fonts are read | each menu link is drawn by IBM Plex Mono alone; the "zc" mark by Fraunces alone, at weight 600 (D44) | yes (browser, 2026-11-10: red before, Inter at 700) |
+| SHELL-13c | `/en/home`, `/de/home` and `/pt/home` in Chromium at 1280 px, light | the header's fonts are read | each menu link is drawn by IBM Plex Mono alone; the name "Zua Caldeira" beside the mark (the "zc" mark until 2026-11-15, LOGO-09 in `logo.md`) by Fraunces alone, at weight 600 (D44) | yes (browser, 2026-11-10: red before, Inter at 700; the name, 2026-11-15) |
 | SHELL-13-P-01 | the same as SHELL-13 | the fonts are read | a text with no notation symbol in it drawn partly by a notation font (letters leaving Fraunces, Archivo or Plex Mono) is refused | yes (break in the build: the full STIX file, no range, first in the token) |
 | SHELL-13-P-02 | the same, STIX Two Text left out of a token | the fonts are read | `₁ ₂` drawn by a system font are refused | yes (break in the built tokens) |
 | SHELL-13b-P-01 | a built page with a symbol outside the subset (`⊗`) | it is read | refused, naming the symbol and the page | yes (break in the build) |
@@ -1054,7 +1054,7 @@ rule; the site's own texts stay in en, de and pt).
 | SHELL-07b-P-04 | The footer has exactly one bottom row with one copyright line. |
 | SHELL-13 | Every letter and every math symbol on the site is drawn by the site's own fonts, the same on every device; nothing falls back to whatever the device has. |
 | SHELL-13b | The site loads its two math fonts only for the symbols its pages show, and a page cannot show a symbol those fonts were not loaded for. |
-| SHELL-13c | The top menu is set in the site's monospace and the "zc" mark in its serif, as in the agreed design. |
+| SHELL-13c | The top menu is set in the site's monospace and the name beside the mark in its serif, as in the agreed design. |
 | SHELL-13-P-01 | Letters stay in Fraunces, Archivo and Plex Mono; the math fonts draw only symbols. |
 | SHELL-13-P-02 | If a math font is missing from the type settings, the test notices the symbols falling back. |
 | SHELL-13b-P-01 | A new symbol in the text, outside the loaded set, stops the build's checks. |
@@ -1199,7 +1199,8 @@ Agreed with the developer on 2026-11-05, for SHELL-08:
   "Main", de "Hauptnavigation", pt "Navegação principal".
 - **D8, `common.mainNav` in the desktop menu too,** with its own unit test. The logo's
   `aria-label="Home"` (`zc-nav-mobile.html`, `zc-nav-desktop.html`) and the theme button's labels
-  (`theme-toggle.html`) are leftovers.
+  (`theme-toggle.html`) are leftovers. The logo's is closed on 2026-11-15: the link is named
+  "Alexandre Zua Caldeira" in every language (D5 and LOGO-02 in `logo.md`).
 - **D9, after following a link** A5 checks only that the menu closes; where focus goes stays open for
   SHELL-10.
 - **D10, `aria-current`** on the current page's link in the menu is a leftover.
