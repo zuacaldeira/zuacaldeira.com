@@ -177,7 +177,7 @@ Page `about` in the content API (`content_section`, one JSON object per page, se
 D11 in `software.md`), through the build's snapshot as `@page-content/about`, provided by
 `about.routes.ts` as `ABOUT_CONTENT` (D20, D21 in `software.md`). It is required in **en, de and
 pt**; a missing language or section stops the build (as HOME-HERO-06). The shape below is D1 in
-`docs/examples/about.md` (proposed: one section per chapter, so Zua's text can arrive one chapter at
+`docs/examples/about.md` (agreed 2026-11-15: one section per chapter, so Zua's text can arrive one chapter at
 a time).
 
 | Section | Fields |

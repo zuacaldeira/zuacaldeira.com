@@ -1,8 +1,9 @@
 # Examples: About page
 
-Status: **proposed by ui-design-peer on 2026-11-15, not yet agreed.** Option B is chosen (AB-D10 in
-`docs/mockups/about/about-notes.md`). Open before the build: D1 to D7 below. The story's facts come
-from Zua in a later turn and become the seed; they are not cases.
+Status: **agreed with the developer on 2026-11-15:** option B (AB-D10 in
+`docs/mockups/about/about-notes.md`), the 51 cases, the four slices, and D1 to D7 as recommended (the
+first option of each). Slices 1 and 2 can be built now. Slice 3 waits for Zua's facts, which come in
+a later turn and become the seed; they are not cases.
 
 The About page in three languages, at `/en/about`, `/de/about` and `/pt/about`. It is Zua's CV told
 as a story along the route Piri → Estremoz → Lisbon → Berlin, with the route beside the chapters.
@@ -188,7 +189,7 @@ a script, `read` and `jump` still move the reader, but `mark` is never sent (ABO
 
 The page is read-only: no repeat, stale-token or race rows. The loop only changes what is marked.
 
-## Slices (proposed)
+## Slices (agreed 2026-11-15)
 
 `next` is not merged into `main` until the last slice is done, as for Research (D5 there). The
 route, menu link and sitemap entry exist already, so each slice is visible on the preview once
@@ -219,7 +220,17 @@ pushed.
 
 ## Decisions
 
-Open, for Zua (recommendation first):
+**Answered by Zua on 2026-11-15: all seven as recommended**, the first option of each. So:
+- **D1: a.** One section per chapter.
+- **D2: a.** Slices 1 and 2 now; slice 3 once the facts are in.
+- **D3: a.** Zua writes; ui-design-peer drafts the other two languages; Zua reads both before the
+  merge.
+- **D4: a.** A copy of Lisbon's texts, held equal to Writing's.
+- **D5: a.** Dates and distances stored per language.
+- **D6: a.** No Berlin Marathon until Zua gives a time.
+- **D7: a.** The intro and labels built as drafted, reviewed on the preview.
+
+The options as they were proposed:
 - **D1. The stored shape.**
   - (a) One section per chapter (`about/piri`, `estremoz`, `lisbon`, `berlin`), plus `head` and
     `route`, as in the spec. Each chapter can be written, seeded and built on its own. **Recommended.**
