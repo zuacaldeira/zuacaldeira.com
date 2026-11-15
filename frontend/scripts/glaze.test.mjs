@@ -135,3 +135,35 @@ test('THEME-12: in the two crossings the ground fades every minute and the inks 
     if (themeAt(table, m).mode !== themeAt(table, m - 1).mode) switches.push(hhmm(m));
   assert.deepEqual(switches, ['06:15', '19:46']);
 });
+
+// WCAG 2 contrast of two #rrggbb colours, written here apart from the engine's.
+const luminance = (hex) => {
+  const lin = [1, 3, 5]
+    .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+};
+const ratio = (p, q) => {
+  const [x, y] = [luminance(p), luminance(q)].sort((m, n) => n - m);
+  return (x + 0.05) / (y + 0.05);
+};
+
+test('THEME-13: a colour too faint for its ground is darkened only until it reads, the rest left as is', () => {
+  const faint = '#a0a8b0';
+  const c = { ...table.glazes.cobalto.c, muted: faint };
+  const one = { ...table, glazes: { test: { name: 'Test', mode: 'light', c } }, keys: [[0, 'test'], [24, 'test']] };
+  assert.ok(ratio(faint, c.bg) < 2.2, `the test's muted should start near 2:1, is ${ratio(faint, c.bg)}`);
+
+  const glaze = themeAt(one, at('12:30'));
+  const worst = Math.min(ratio(glaze.hex.muted, c.bg), ratio(glaze.hex.muted, c.surface));
+  assert.deepEqual(
+    {
+      moved: glaze.moved,
+      readable: worst >= 4.5,
+      onlyJust: worst < 4.6,
+      towardBlack: luminance(glaze.hex.muted) < luminance(faint),
+      rest: fourteen({ ...glaze.hex, muted: faint }),
+    },
+    { moved: ['muted'], readable: true, onlyJust: true, towardBlack: true, rest: c },
+  );
+});

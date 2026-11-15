@@ -46,6 +46,27 @@ const contrast = (p, q) => {
 const isDark = (rgb) => contrast([1, 1, 1], rgb) > contrast([0, 0, 0], rgb);
 
 const SURFACES = ['bg', 'surface', 'raised', 'wash', 'border'];
+const BLACK = [0, 0, 0];
+const WHITE = [1, 0, 0];
+
+/**
+ * The study's guard: a colour below its minimum against any of its grounds moves toward black or
+ * white, by bisection, only as far as it must. Judged on the rounded hex the page gets (D2), so the
+ * colour it returns passes once rounded. Returns null when the colour already passes.
+ */
+function guard(lab, against, target) {
+  const grounds = against.map(hexToRgb);
+  const worst = (l) => Math.min(...grounds.map((g) => contrast(hexToRgb(rgbToHex(labToRgb(l))), g)));
+  if (worst(lab) >= target) return null;
+  const toward = worst(BLACK) > worst(WHITE) ? BLACK : WHITE;
+  let [lo, hi] = [0, 1];
+  for (let i = 0; i < 18; i++) {
+    const mid = (lo + hi) / 2;
+    if (worst(mixLab(lab, toward, mid)) >= target) hi = mid;
+    else lo = mid;
+  }
+  return mixLab(lab, toward, hi);
+}
 
 /** Refuses a table whose glazes do not hold exactly the map's tokens (THEME-P-07). */
 export function checkTable(table) {
@@ -74,7 +95,19 @@ export function themeAt(table, minute) {
   const dark = isDark(blendRgb('bg'));
   // A crossing (the two keyframes differ in mode): the inks snap to the side the ground is on.
   const side = a.mode === b.mode ? null : (a.mode === 'dark') === dark ? a : b;
-  for (const k of Object.keys(table.map))
-    if (!SURFACES.includes(k)) hex[k] = side ? side.c[k] : blend(k);
-  return { hex, mode: dark ? 'dark' : 'light', moved: [] };
+  const lab = {};
+  for (const k of Object.keys(table.map).filter((k) => !SURFACES.includes(k))) {
+    lab[k] = side ? labOf(side.c[k]) : mixLab(labOf(a.c[k]), labOf(b.c[k]), t);
+    hex[k] = rgbToHex(labToRgb(lab[k]));
+  }
+  const moved = [];
+  const hold = (k, against, target) => {
+    const held = guard(lab[k], against, target);
+    if (!held) return;
+    hex[k] = rgbToHex(labToRgb(held));
+    moved.push(k);
+  };
+  for (const [k, target] of table.guards) hold(k, [hex.bg, hex.surface], target);
+  hold('onAccent', [hex.accent], 4.5);
+  return { hex, mode: dark ? 'dark' : 'light', moved };
 }
