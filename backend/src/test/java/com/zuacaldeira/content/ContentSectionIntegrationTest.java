@@ -124,6 +124,23 @@ class ContentSectionIntegrationTest {
         assertThat(json(response.body())).isEqualTo(json(DE_RESEARCH_HEAD));
     }
 
+    private static final String DE_ABOUT_HEAD = """
+            {"eyebrow": "Piri → Estremoz → Lissabon → Berlin", "heading": "Über mich", "intro": "Mein \
+            Lebenslauf als Geschichte: vier Orte, was ich an jedem gelernt und getan habe, und warum ich \
+            weitergezogen bin."}""";
+
+    @Test
+    @DisplayName("ABOUT-10 answers the stored German head of the About page as it is")
+    void answersTheStoredAboutHead() throws Exception {
+        store("about", "head", "de", DE_ABOUT_HEAD);
+        store("about", "head", "en", DE_RESEARCH_HEAD);
+
+        HttpResponse<String> response = get("/api/content/about/head?lang=de");
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(json(response.body())).isEqualTo(json(DE_ABOUT_HEAD));
+    }
+
     private static String researchPaper(String kind, String abstractLabel) {
         return """
                 {"kind": "%s", "note": "Versão final · a publicar na EPTCS", "inEnglish": "Em inglês",
