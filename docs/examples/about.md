@@ -3,7 +3,7 @@
 Status: **agreed with the developer on 2026-11-15:** option B (AB-D10 in
 `docs/mockups/about/about-notes.md`), the 51 cases, the four slices, and D1 to D7 as recommended (the
 first option of each). Slices 1 and 2 can be built now. Slice 3 waits for Zua's facts, which come in
-a later turn and become the seed; they are not cases. **Slice 1 is planned (2026-11-15)** below.
+a later turn and become the seed; they are not cases. **Slice 1 is built (2026-11-15)**, below.
 
 The About page in three languages, at `/en/about`, `/de/about` and `/pt/about`. It is Zua's CV told
 as a story along the route Piri → Estremoz → Lisbon → Berlin, with the route beside the chapters.
@@ -49,44 +49,44 @@ seed holds them. The one rule on the words is a refused path: no gap marker reac
 
 | ID | In plain words | Given | When | Then | How a test checks it | Covered |
 |----|----------------|-------|------|------|----------------------|---------|
-| ABOUT-01 | The About page is the new page in all three languages. | the about content in en, de and pt | the site is built | `/en/about/index.html`, `/de/about/index.html`, `/pt/about/index.html` exist with `<html lang>` en, de, pt, each with `app-page-head` | build (acceptance) and unit | |
-| ABOUT-02 | The browser tab names the page in its language. | the built pages | they are read | `<title>` is "Alexandre Zua Caldeira — About", "— Über mich", "— Sobre" | build and unit | |
-| ABOUT-03 | Search engines learn that the three pages are one page in three languages. | the built `/de/about` | it is read | `<link rel="alternate">` for en, de, pt to `https://zuacaldeira.com/{en,de,pt}/about`, and `x-default` to `/en/about` | build | |
-| ABOUT-04 | The header shows About as the page you are on. | the built `/de/about` | the main navigation is read | its "Über mich" link goes to `/de/about` with `aria-current="page"`; no other link has it | build | |
-| ABOUT-05 | A missing German text stops the build instead of showing English. | no `about` section stored for de | the snapshot is taken | it fails, naming page `about`, the section and `de`; nothing is built (as WR-PAGE-09) | the snapshot script's test | |
-| ABOUT-06 | The page downloads only its own text. | the built site | the files `/en/about` loads at once are read | its own text is among them; none holds the home hero's sentence, the Software lead's title, the Writing intro or the Research intro; and no other page's files hold the About intro (as RS-PAGE-06) | build and unit (the route provides `ABOUT_CONTENT`) | |
-| ABOUT-07 | The old page is gone. | the built pages in en, de, pt | `<main>` is read | no `app-section-header`; none of the old headings ("The Journey", "Berlin Chapter", "Beyond Work"; "Der Weg" as a heading, "Berliner Kapitel", "Neben der Arbeit"; "O percurso" as a heading, "Capítulo Berlim", "Para além do trabalho"); no `<strong>`; the `about` block is gone from `Translations` | build; the compiler for the i18n block | |
-| ABOUT-P-01 | An About page in only one or two languages is refused. | the build | a language's about page is missing | ABOUT-01 goes red, naming the language | break in the build | |
-| ABOUT-P-02 | An old heading put back is refused. | the built `/en/about` | "Berlin Chapter" is put in `<main>` | ABOUT-07 goes red | break in the build | |
+| ABOUT-01 | The About page is the new page in all three languages. | the about content in en, de and pt | the site is built | `/en/about/index.html`, `/de/about/index.html`, `/pt/about/index.html` exist with `<html lang>` en, de, pt, each with `app-page-head` | build (acceptance) and unit | yes (build and unit, slice 1) |
+| ABOUT-02 | The browser tab names the page in its language. | the built pages | they are read | `<title>` is "Alexandre Zua Caldeira — About", "— Über mich", "— Sobre" | build and unit | yes (build and unit, slice 1) |
+| ABOUT-03 | Search engines learn that the three pages are one page in three languages. | the built `/de/about` | it is read | `<link rel="alternate">` for en, de, pt to `https://zuacaldeira.com/{en,de,pt}/about`, and `x-default` to `/en/about` | build | yes (build, slice 1) |
+| ABOUT-04 | The header shows About as the page you are on. | the built `/de/about` | the main navigation is read | its "Über mich" link goes to `/de/about` with `aria-current="page"`; no other link has it | build | yes (build, slice 1) |
+| ABOUT-05 | A missing German text stops the build instead of showing English. | no `about` section stored for de | the snapshot is taken | it fails, naming page `about`, the section and `de`; nothing is built (as WR-PAGE-09) | the snapshot script's test | yes (the snapshot script's test, slice 1) |
+| ABOUT-06 | The page downloads only its own text. | the built site | the files `/en/about` loads at once are read | its own text is among them; none holds the home hero's sentence, the Software lead's title, the Writing intro or the Research intro; and no other page's files hold the About intro (as RS-PAGE-06) | build and unit (the route provides `ABOUT_CONTENT`) | yes (build and unit, slice 1) |
+| ABOUT-07 | The old page is gone. | the built pages in en, de, pt | `<main>` is read | no `app-section-header`; none of the old headings ("The Journey", "Berlin Chapter", "Beyond Work"; "Der Weg" as a heading, "Berliner Kapitel", "Neben der Arbeit"; "O percurso" as a heading, "Capítulo Berlim", "Para além do trabalho"); no `<strong>`; the `about` block is gone from `Translations` | build; the compiler for the i18n block | yes (build; the compiler for the i18n block, slice 1) |
+| ABOUT-P-01 | An About page in only one or two languages is refused. | the build | a language's about page is missing | ABOUT-01 goes red, naming the language | break in the build | yes (break in the build, slice 1) |
+| ABOUT-P-02 | An old heading put back is refused. | the built `/en/about` | "Berlin Chapter" is put in `<main>` | ABOUT-07 goes red | break in the build | yes (break in the build, slice 1) |
 
 ## 2. Head
 
 | ID | In plain words | Given | When | Then | How a test checks it | Covered |
 |----|----------------|-------|------|------|----------------------|---------|
-| ABOUT-08 | The page opens with the route, its name and one sentence. | the built `/en/about` | the head is read | eyebrow "Piri → Estremoz → Lisbon → Berlin", `<h1>` "About", `head.intro` en; exactly one `<h1>` | build | |
-| ABOUT-09 | The German and Portuguese heads read in their language. | the built `/de/about`, `/pt/about` | the head is read | "Piri → Estremoz → Lissabon → Berlin", "Über mich"; "Piri → Estremoz → Lisboa → Berlim", "Sobre"; each `head.intro` in its language | build and unit | |
-| ABOUT-10 | When the site asks for the German head, it gets it exactly as stored. | `about/head` stored for de | `GET /api/content/about/head?lang=de` | 200 with the stored JSON as it is | integration | |
-| ABOUT-11 | A fresh database gives the head in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/about/head?lang=en`, `de`, `pt` | 200 with the spec's copy, every field non-empty | integration | |
-| ABOUT-P-03 | English text on the German head is refused. | the built `/de/about` | the English intro is put in | ABOUT-09 goes red | break in the build | |
+| ABOUT-08 | The page opens with the route, its name and one sentence. | the built `/en/about` | the head is read | eyebrow "Piri → Estremoz → Lisbon → Berlin", `<h1>` "About", `head.intro` en; exactly one `<h1>` | build | yes (build, slice 1) |
+| ABOUT-09 | The German and Portuguese heads read in their language. | the built `/de/about`, `/pt/about` | the head is read | "Piri → Estremoz → Lissabon → Berlin", "Über mich"; "Piri → Estremoz → Lisboa → Berlim", "Sobre"; each `head.intro` in its language | build and unit | yes (build and unit, slice 1) |
+| ABOUT-10 | When the site asks for the German head, it gets it exactly as stored. | `about/head` stored for de | `GET /api/content/about/head?lang=de` | 200 with the stored JSON as it is | integration | yes (integration, slice 1) |
+| ABOUT-11 | A fresh database gives the head in every language, none empty. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/about/head?lang=en`, `de`, `pt` | 200 with the spec's copy, every field non-empty | integration | yes (integration, slice 1) |
+| ABOUT-P-03 | English text on the German head is refused. | the built `/de/about` | the English intro is put in | ABOUT-09 goes red | break in the build | yes (break in the build, slice 1) |
 
 ## 3. The route (as prerendered)
 
 | ID | In plain words | Given | When | Then | How a test checks it | Covered |
 |----|----------------|-------|------|------|----------------------|---------|
-| ABOUT-12 | Beside the story, the route lists the four stops, each a link to its chapter. | the built `/de/about` | the story's `<nav>` is read | a `<nav aria-label="Der Weg">`, distinct from the main menu, holding an `<ol>` of four links in order: Piri → `#piri`, Estremoz → `#estremoz`, Lissabon → `#lisbon`, Berlin → `#berlin`; each link at least 44 px tall (ABOUT-38) | build and unit | |
-| ABOUT-13 | The head's route and the `<nav>`'s stops are the same places in the same order. | the built pages in en, de, pt | the eyebrow and the stops are read | the eyebrow equals the four stops' places joined by " → " | build | |
-| ABOUT-14 | A fresh database gives the route in every language, the stops' ids the same in each. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/about/route?lang=en`, `de`, `pt` | 200; four stops with ids `piri`, `estremoz`, `lisbon`, `berlin` in that order in each language; every label and place non-empty | integration | |
-| ABOUT-P-04 | A fifth stop, a missing stop or another order is refused. | the stored route | Lisbon is put before Estremoz, or a stop is added | ABOUT-14 goes red; on the built page ABOUT-12 goes red | break in the seed, and in the build | |
+| ABOUT-12 | Beside the story, the route lists the four stops, each a link to its chapter. | the built `/de/about` | the story's `<nav>` is read | a `<nav aria-label="Der Weg">`, distinct from the main menu, holding an `<ol>` of four links in order: Piri → `#piri`, Estremoz → `#estremoz`, Lissabon → `#lisbon`, Berlin → `#berlin`; each link at least 44 px tall (ABOUT-38) | build and unit | yes (build and unit, slice 1); the 44 px in the browser comes with slice 2 |
+| ABOUT-13 | The head's route and the `<nav>`'s stops are the same places in the same order. | the built pages in en, de, pt | the eyebrow and the stops are read | the eyebrow equals the four stops' places joined by " → " | build | yes (build, slice 1) |
+| ABOUT-14 | A fresh database gives the route in every language, the stops' ids the same in each. | an empty MySQL with Flyway and the `seed` profile | `GET /api/content/about/route?lang=en`, `de`, `pt` | 200; four stops with ids `piri`, `estremoz`, `lisbon`, `berlin` in that order in each language; every label and place non-empty | integration | yes (integration, slice 1) |
+| ABOUT-P-04 | A fifth stop, a missing stop or another order is refused. | the stored route | Lisbon is put before Estremoz, or a stop is added | ABOUT-14 goes red; on the built page ABOUT-12 goes red | break in the seed, and in the build | yes (break in the seed and in the build, slice 1) |
 
 ## 4. Chapters
 
 | ID | In plain words | Given | When | Then | How a test checks it | Covered |
 |----|----------------|-------|------|------|----------------------|---------|
-| ABOUT-15 | The story has four chapters in route order, each headed by its place, number and years. | the built `/en/about` | the sections after the head are read | four `<section>`s, ids `piri`, `estremoz`, `lisbon`, `berlin`, each `aria-labelledby` its `<h2>` (the place in the page's language); the label reads `route.chapterOf` with n and 4, then " · " and the chapter's stored `years` | build and unit | |
+| ABOUT-15 | The story has four chapters in route order, each headed by its place, number and years. | the built `/en/about` | the sections after the head are read | four `<section>`s, ids `piri`, `estremoz`, `lisbon`, `berlin`, each `aria-labelledby` its `<h2>` (the place in the page's language); the label reads `route.chapterOf` with n and 4, then " · " and the chapter's stored `years` | build and unit | in part (build and unit, slice 1): without years, which come with slice 3 (D11) |
 | ABOUT-16 | Each chapter shows the text stored for it, in its language, in order, as written. | the about content in en, de, pt | each chapter is read | its paragraphs equal the stored `paragraphs` of that chapter and language, in order, one `<p>` each, and nothing else in the prose | unit (given test content); build (each stored paragraph is on the built page in its language) | |
 | ABOUT-17 | The first three chapters say why Zua moved on; Berlin does not. | the built `/de/about` | the chapters' ends are read | Piri, Estremoz and Lisbon end with "Warum ich weitergezogen bin" and their stored `onward`; Berlin has neither | build and unit | |
 | ABOUT-18 | The stored text is shown as text, never as markup. | a paragraph holding `<b>x</b>` in the test content; the seed | the chapter renders; every about string in the seed is read | the page shows the characters `<b>x</b>` and has no `<b>` element from it; no stored about string holds `<` or `>` | unit; integration on the seed | |
-| ABOUT-19 | No gap marker from the mock-up reaches a page. | the built pages in en, de, pt | `<main>` and the files the page loads are read | no `[[`, no "gap:", and no element with the class `gap`, `ph`, `ann` or `mocknote` | build | |
+| ABOUT-19 | No gap marker from the mock-up reaches a page. | the built pages in en, de, pt | `<main>` and the files the page loads are read | no `[[`, no "gap:", and no element with the class `gap`, `ph`, `ann` or `mocknote` | build | yes (build, slice 1) |
 | ABOUT-20 | Lisbon shows its three texts on a year axis, as published. | the built `/de/about` | Lisbon's `<figure>` is read | caption "Veröffentlicht in Lissabon"; an `<ol>` of three, 2007, 2009, 2010: ConGu, Checking Java Classes Against Property-Driven Algebraic Specifications; Dynamic Interfaces; Modular Session Types for Distributed Object-Oriented Programming; kinds "Technischer Bericht", "Workshop-Paper", "Konferenz-Paper"; titles and venues `translate="no"`, titles `lang="en"` | build and unit | |
 | ABOUT-21 | Lisbon's texts match the Writing page's, and Lisbon links there. | an empty MySQL with Flyway and the `seed` profile; the built page | `about/lisbon` and `writing/texts` are read in en, de, pt; Lisbon's link is read | years, titles, venues, co-authors and kinds of `congu2007`, `fool2009`, `popl2010` are equal in the two (D4); one link to `/de/writing` on `/de/about`, same tab | integration (a drifted title goes red) and build | |
 | ABOUT-22 | Berlin tells four threads, in order, with their links. | the built `/en/about` | Berlin's threads are read | four `<section>`s with `<h3>`s, ids `software`, `education`, `research`, `running`, in that order; kickers `software`, `research`, `running` `translate="no"` and identical on the three pages, `education`'s kicker "a turn" ("eine Wende", "uma viragem"); software lists Embassy of Angola in Berlin, Casa Azul website, Kita Dienstplan (names `translate="no"`) and links to `/en/software`; research links to `/en/research`; both same tab | build and unit | |
@@ -96,7 +96,7 @@ seed holds them. The one rule on the words is a refused path: no gap marker reac
 | ABOUT-26 | No CV link on the page until the file exists. | the built pages | `<main>` is read | no link to a CV and no "CV" or "Lebenslauf" link text (AB-D7; the footer's is the shell's) | build | |
 | ABOUT-27 | When the site asks for a chapter, it gets it exactly as stored. | `about/berlin` stored for pt | `GET /api/content/about/berlin?lang=pt` | 200 with the stored JSON as it is (D1's shape) | integration | |
 | ABOUT-28 | A fresh database gives every chapter in every language, complete and consistent. | an empty MySQL with Flyway and the `seed` profile | `about/piri`, `estremoz`, `lisbon`, `berlin` are read in en, de, pt | 200; every paragraph non-empty; in each chapter, the same number of paragraphs in the three languages; years, thread ids, names of things made, race names and times, link targets and the Strava `href` identical in the three | integration | |
-| ABOUT-P-05 | A gap marker stored in the text stops the build. | `about/estremoz` for de holds "[[gap: school]]" | the snapshot is taken | it fails, naming page `about`, section `estremoz` and `de`; nothing is built | the snapshot script's test | |
+| ABOUT-P-05 | A gap marker stored in the text stops the build. | `about/estremoz` for de holds "[[gap: school]]" | the snapshot is taken | it fails, naming page `about`, section `estremoz` and `de`; nothing is built | the snapshot script's test | yes (the snapshot script's test, slice 1) |
 | ABOUT-P-06 | A mock-up marker put into the built page is refused. | the built `/en/about` | an element with the class `gap` is put in `<main>` | ABOUT-19 goes red | break in the build | |
 | ABOUT-P-07 | A chapter missing a paragraph in one language is refused. | the seed | one of Lisbon's pt paragraphs is removed | ABOUT-28 goes red, naming the chapter and `pt` | break in the seed | |
 | ABOUT-P-08 | A race time or name that differs between languages is refused. | the built `/de/about` | 48:32 is changed to 48:23 | ABOUT-24 goes red | break in the build | |
@@ -333,6 +333,36 @@ Visitor ↾ = Page?page(…) . Page!{ jump . end , leave . end }
 
 The build is read-only: no repeat, stale-token or race rows. The old page is not a refactor: what
 the visitor sees changes, so there is no `G_pre`/`G_post` claim; A2 and ABOUT-P-02 hold the change.
+
+**Done 2026-11-15** (`fb67a02` to `99e993a`). Red first, each for its own reason: A1 on the old
+build, eyebrow and intro `[]`; A2 on the old build, `app-section-header`, the three old headings and
+`<strong>` in en, de and pt; S1 and S2 "Missing expected rejection"; U1 eyebrow `[]` and the old
+`<h1>`; U2 title `''`; U3 `NG0201 No provider found for ABOUT_CONTENT`; U4 `[]`; U5 `[]` (a first
+red came from the test's own selector, which caught the shared head's `<section>`); B1 and B2
+`expected: 200 but was: 404` in en, de and pt; A3, A4, A7, A8, A9, A10 and A11 on the old build. A10
+first passed on the old build with both sides empty; it now asks for four stops. A9 was red once on
+the new build from a bug in the test (it read the outer span); fixed in the test. Green at first and
+shown to bite, each break restored (md5 checked): B3 (the service answering the English row for every
+language), A5 (the `pt` alternate to `/pt/home`), A6 (Forschung marked current too), A8 (the home
+hero's sentence in the About chunk), A12 (a `span.gap` in `<main>`). Protocol rows: ABOUT-P-01
+(`pt/about` moved out: A3 red), P-02 ("Berlin Chapter" in en's `<main>`: A2 red), P-03 (the English
+intro on de: A1 red), P-04 (Lisbon before Estremoz in the seed: B2 red; in the built nav: A9 red),
+P-05 (S2). The cleanup was held by the compiler and the suite.
+
+Results: unit 278 passed, 5 skipped (47 files; one whole-suite run failed at random under load, its
+output cut off before the test's name, and the rerun was green); scripts 19/19; `acceptance`
+138/138; backend `AboutSeedIntegrationTest` 6 and `ContentSectionIntegrationTest` 10, one class pair
+per run (not `./mvnw verify` whole: the machine was shared); the build prerenders 26 routes. Looked
+at in Chromium (not a test): no horizontal scroll at 390 (de) or 1280 (en), the route's links 55 and
+44 px tall. Not run: the browser tests (slice 2 adds the first for this page) and
+`acceptance:nginx` (no server change).
+
+Leftovers, not built:
+- **For Zua's review on the preview** (D7): the drafted intro and the route's labels in en, de, pt.
+- **The title line** (`Alexandre Zua Caldeira — ${heading}`) is now in Writing, Research and About;
+  one helper for the three is worth it (Research's leftover said so at the third).
+- **The initial bundle** is 508.50 kB (514.71 before; 500 kB budget): the old About text left it.
+- **`docs/tdd.md`** still says `next` is merged page by page (as `logo.md` noted).
 
 ## Decisions
 

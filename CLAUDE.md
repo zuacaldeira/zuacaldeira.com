@@ -22,10 +22,11 @@ Build output: `dist/zuacaldeira-com/browser/` (prerendered static HTML).
 
 **Content snapshot.** `npm run content` (`scripts/fetch-content.mjs`) asks the content API for
 every page, section and language and writes one file per page, `src/app/content/generated/<page>.json`
-(git-ignored). Each page's route file (`pages/home/home.routes.ts`, `pages/software/software.routes.ts`,
-`pages/writing/writing.routes.ts`, `pages/research/research.routes.ts`) imports its own as
-`@page-content/<page>` and provides it (`HOME_CONTENT`, `SOFTWARE_CONTENT`, `WRITING_CONTENT`,
-`RESEARCH_CONTENT`), so a
+(git-ignored), and stops if a page, section or language is missing, or if any stored string still
+holds a gap marker `[[` (D9 in `docs/examples/about.md`). Each page's route file (`pages/home/home.routes.ts`, `pages/software/software.routes.ts`,
+`pages/writing/writing.routes.ts`, `pages/research/research.routes.ts`, `pages/about/about.routes.ts`)
+imports its own as `@page-content/<page>` and provides it (`HOME_CONTENT`, `SOFTWARE_CONTENT`,
+`WRITING_CONTENT`, `RESEARCH_CONTENT`, `ABOUT_CONTENT`), so a
 page downloads only its own text (D20, D21 in `docs/examples/software.md`). Text several pages read
 is a page of its own, `shared` (`shared.json`, `@page-content/shared`, `SHARED_CONTENT`; today the
 paper's labels at `shared/paper`, read by the shared `common/theorem-band/`, D30), provided by each
@@ -49,7 +50,9 @@ URL. Specs never read the fetched files: they use `provideTestContent()` from
   The Research page (`docs/examples/research.md`) is done: the simple shared head (no wall since
   D26), the paper card, its four statements on the theorem band (`shared/paper`'s, which the
   Research route provides too), how it was checked, the tool (the Software page's row, shared as
-  `common/work-row/`), and more research. The hero's lattice wall is generated from
+  `common/work-row/`), and more research. The About page (`docs/examples/about.md`) is being
+  rebuilt in slices: the shared head, the route `<nav>` beside the four chapters' headings
+  (`about/head`, `about/route`); the chapters' text waits for Zua's words. The hero's lattice wall is generated from
   `scripts/lattice-wall/lattices.json` by `render.py` (never hand-edit it;
   `scripts/lattice-wall.test.mjs` holds it). `.visually-hidden` is the site's one class
   for screen-reader-only words, in `styles.css`; a component's scoped copy reaches nothing outside it
@@ -186,7 +189,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 46 test files, 279 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-10) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 47 test files, 283 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-15) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 
