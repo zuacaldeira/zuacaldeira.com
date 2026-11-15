@@ -92,3 +92,13 @@ test('THEME-03: morning, early evening and evening each wear their own glaze, ex
     { hex: manganesNoite.c, mode: 'dark', moved: [] },
   ]);
 });
+
+test('THEME-14: halfway from Manganês to Cobalto, each token is the Oklab midpoint of the two', () => {
+  const study = mockupEngine().themeAt(at('08:15'));
+  const glaze = themeAt(table, at('08:15'));
+  assert.equal(glaze.hex.bg, '#ededf3');
+  assert.deepEqual(
+    { hex: fourteen(glaze.hex), mode: glaze.mode, moved: glaze.moved },
+    { hex: json(study.hex), mode: 'light', moved: [] },
+  );
+});
