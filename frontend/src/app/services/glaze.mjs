@@ -109,5 +109,21 @@ export function themeAt(table, minute) {
   };
   for (const [k, target] of table.guards) hold(k, [hex.bg, hex.surface], target);
   hold('onAccent', [hex.accent], 4.5);
+
+  // The footer and the band, by mode as the mock-ups' paint(); their inks guarded too (D5).
+  const derive = (k, value) => {
+    hex[k] = value;
+    lab[k] = labOf(value);
+  };
+  derive('footBg', dark ? hex.raised : hex.heading);
+  derive('footFg', dark ? hex.heading : hex.bg);
+  derive('footGold', table.fixed.footGold);
+  derive('footOnGold', table.fixed.footOnGold);
+  derive('bandBg', dark ? hex.raised : hex.accent);
+  derive('bandFg', dark ? hex.heading : hex.onAccent);
+  hold('footFg', [hex.footBg], 4.5);
+  hold('footGold', [hex.footBg], 4.5);
+  hold('footOnGold', [hex.footGold], 4.5);
+  hold('bandFg', [hex.bandBg], 4.5);
   return { hex, mode: dark ? 'dark' : 'light', moved };
 }

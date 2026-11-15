@@ -179,3 +179,50 @@ test('THEME-02: in the middle of the night the site wears Vidrado nocturno, its 
   );
   assert.ok(ratio('#526c8c', noite.c.surface) >= 3);
 });
+
+// Every pair the page draws, at its minimum: [what, ink, ground, minimum]. The footer's and band's
+// grounds are derived by mode, as the mock-ups' paint() does (D5).
+function pairs(glaze) {
+  const h = glaze.hex;
+  const dark = glaze.mode === 'dark';
+  const list = [];
+  for (const [k, min] of table.guards) {
+    list.push([`${k} on bg`, h[k], h.bg, min], [`${k} on surface`, h[k], h.surface, min]);
+  }
+  list.push(['onAccent on accent', h.onAccent, h.accent, 4.5]);
+  list.push(['footer ground', h.footBg, dark ? h.raised : h.heading, 'same']);
+  list.push(['band ground', h.bandBg, dark ? h.raised : h.accent, 'same']);
+  list.push(['footFg on footBg', h.footFg, h.footBg, 4.5]);
+  list.push(['footGold on footBg', h.footGold, h.footBg, 4.5]);
+  list.push(['footOnGold on footGold', h.footOnGold, h.footGold, 4.5]);
+  list.push(['bandFg on bandBg', h.bandFg, h.bandBg, 4.5]);
+  return list;
+}
+
+function belowAt(engine, m) {
+  const out = [];
+  for (const [what, ink, ground, min] of pairs(engine(m))) {
+    if (!ink || !ground) out.push(`${hhmm(m)} ${what}: missing`);
+    else if (min === 'same' ? ink !== ground : ratio(ink, ground) < min)
+      out.push(`${hhmm(m)} ${what}: ${min === 'same' ? ink : ratio(ink, ground).toFixed(2)}`);
+  }
+  return out;
+}
+
+test('THEME-04: at every minute of the day, every text and drawing reads against its ground', () => {
+  const below = [];
+  for (let m = 0; m < 1440; m++) below.push(...belowAt((n) => themeAt(table, n), m));
+  assert.deepEqual(below.slice(0, 20), [], `${below.length} pairs below their minimum`);
+});
+
+test("THEME-P-08: the study's rounding slip at 19:48 and 19:52 does not reach the site", () => {
+  const study = mockupEngine().themeAt;
+  const s48 = study(at('19:48')).hex;
+  const s52 = study(at('19:52')).hex;
+  assert.ok(ratio(s48.body, s48.surface) < 4.5, `the study's body at 19:48 is ${ratio(s48.body, s48.surface)}`);
+  assert.ok(ratio(s52.edge, s52.surface) < 3, `the study's edge at 19:52 is ${ratio(s52.edge, s52.surface)}`);
+  const h48 = themeAt(table, at('19:48')).hex;
+  const h52 = themeAt(table, at('19:52')).hex;
+  assert.ok(Math.min(ratio(h48.body, h48.bg), ratio(h48.body, h48.surface)) >= 4.5);
+  assert.ok(Math.min(ratio(h52.edge, h52.bg), ratio(h52.edge, h52.surface)) >= 3);
+});
