@@ -58,6 +58,23 @@ describe('ZcNavDesktop', () => {
     ).toEqual(['app-logo-mark', 'span Zua Caldeira no']);
   });
 
+  it('LOGO-02 (D5): names the home link "Alexandre Zua Caldeira" in en, de and pt', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavDesktop, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const i18n = TestBed.inject(I18nService);
+    const fixture = TestBed.createComponent(ZcNavDesktop);
+    const names = [];
+    for (const lang of ['en', 'de', 'pt'] as const) {
+      i18n.setLanguage(lang);
+      await fixture.whenStable();
+      names.push(
+        (fixture.nativeElement as HTMLElement).querySelector('a.logo')?.getAttribute('aria-label'),
+      );
+    }
+    expect(names).toEqual(Array(3).fill('Alexandre Zua Caldeira'));
+  });
+
   it('SHELL-05: the contact button reads "⊥ Kontakt" on a German page', async () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([])],

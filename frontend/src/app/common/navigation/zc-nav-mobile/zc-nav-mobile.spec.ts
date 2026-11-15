@@ -20,6 +20,23 @@ describe('ZcNavMobile', () => {
     expect(logo?.getAttribute('href')).toBe('/de/home');
   });
 
+  it('LOGO-02 (D5): names the home link "Alexandre Zua Caldeira" in en, de and pt', async () => {
+    TestBed.configureTestingModule({
+      providers: [provideRouter([])],
+    }).overrideComponent(ZcNavMobile, { set: { schemas: [NO_ERRORS_SCHEMA] } });
+    const i18n = TestBed.inject(I18nService);
+    const fixture = TestBed.createComponent(ZcNavMobile);
+    const names = [];
+    for (const lang of ['en', 'de', 'pt'] as const) {
+      i18n.setLanguage(lang);
+      await fixture.whenStable();
+      names.push(
+        (fixture.nativeElement as HTMLElement).querySelector('a.logo')?.getAttribute('aria-label'),
+      );
+    }
+    expect(names).toEqual(Array(3).fill('Alexandre Zua Caldeira'));
+  });
+
   it("SHELL-10: starts with the skip link to this page's main content, /pt/running#main-content", async () => {
     TestBed.configureTestingModule({
       providers: [provideRouter([{ path: '**', children: [] }])],
