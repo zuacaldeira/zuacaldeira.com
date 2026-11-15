@@ -83,3 +83,12 @@ test('THEME-P-07: the generator refuses a bad table by name and leaves styles.cs
     assert.equal(readFileSync(paths.styles, 'utf8'), before, 'styles.css changed after a refusal');
   });
 });
+
+test('Running the generator twice writes the same styles.css as running it once', () => {
+  withCopies(table, (paths) => {
+    generate(paths);
+    const once = readFileSync(paths.styles, 'utf8');
+    generate(paths);
+    assert.equal(readFileSync(paths.styles, 'utf8'), once);
+  });
+});
