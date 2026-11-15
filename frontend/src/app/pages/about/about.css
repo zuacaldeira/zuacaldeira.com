@@ -1,1 +1,221 @@
-/* The About page's story: the route beside the chapters (about-spec.md, "Layout per width"). */
+/* The About page's story: the route beside the chapters (about-spec.md, "Layout per width", "The
+   route, in its two forms", "Chapters"). Static in slice 1: the marker, the fill, `off` and the
+   bar's stickiness come with slice 2. Pure styling, reviewed against the spec, not test-first. */
+.about-story {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  display: grid;
+  grid-template-columns: 13.5rem minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+
+/* The route: a column beside the chapters on a laptop. */
+.about-route {
+  padding-block: var(--zc-space-8);
+}
+
+.about-route__label {
+  margin: 0 0 var(--zc-space-4);
+  font-family: var(--zc-font-mono);
+  font-size: 0.8125rem;
+  color: var(--zc-ochre-text);
+}
+
+.about-route ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--zc-space-6);
+}
+
+/* The track through the stops (the fill over it comes with the marker, slice 2). */
+.about-route ol::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  background: var(--zc-edge);
+  opacity: 0.45;
+}
+
+.about-route a {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--zc-space-4);
+  min-height: 44px;
+  color: var(--zc-text-body);
+  text-decoration: none;
+}
+
+.about-route a:hover .about-route__place {
+  color: var(--zc-text-heading);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* The Losango's node: open at Piri, azul on the way, ochre where Zua is now. */
+.about-route__lozenge {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-inline: 1px;
+  box-sizing: border-box;
+  transform: rotate(45deg);
+  border: 3px solid var(--zc-azul);
+  background: var(--zc-azul);
+  box-shadow: 0 0 0 5px var(--zc-bg-warm);
+}
+
+li:first-child .about-route__lozenge {
+  background: var(--zc-bg-warm);
+}
+
+li:last-child .about-route__lozenge {
+  border-color: var(--zc-ochre);
+  background: var(--zc-ochre);
+}
+
+.about-route__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.about-route__chapter {
+  font-family: var(--zc-font-mono);
+  font-size: 0.7rem;
+}
+
+.about-route__place {
+  font-family: var(--zc-font-heading);
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+/* The chapters: a rule between them, none above the first. */
+.about-chapter {
+  padding-block: clamp(36px, 5vw, 72px);
+  border-top: 1px solid var(--zc-border-light);
+  scroll-margin-top: 80px;
+}
+
+.about-chapter:first-child {
+  border-top: 0;
+}
+
+.about-chapter__head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: clamp(16px, 3vw, 40px);
+  row-gap: var(--zc-space-2);
+  align-items: end;
+}
+
+.about-chapter__number {
+  grid-row: 1 / span 2;
+  font-family: var(--zc-font-heading);
+  font-weight: 400;
+  font-size: clamp(3rem, 6vw, 5rem);
+  line-height: 0.85;
+  color: var(--zc-azul);
+  font-variant-numeric: lining-nums;
+}
+
+.about-chapter:last-child .about-chapter__number {
+  color: var(--zc-ochre-text);
+}
+
+.about-chapter__label {
+  margin: 0;
+  font-family: var(--zc-font-mono);
+  font-size: 0.8125rem;
+  color: var(--zc-ochre-text);
+}
+
+.about-chapter h2 {
+  margin: 0;
+  font-family: var(--zc-font-heading);
+  font-weight: 600;
+  font-size: clamp(2rem, 4.4vw, 3.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--zc-text-heading);
+}
+
+/* Below 900 px: one column; the route is a row of four stops above the chapters (the bar under
+   the header, sticky, comes with slice 2). */
+@media (max-width: 899.98px) {
+  .about-story {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .about-route {
+    padding-block: var(--zc-space-2);
+    border-bottom: 1px solid var(--zc-border-light);
+  }
+
+  .about-route__label,
+  .about-route__chapter {
+    display: none;
+  }
+
+  .about-route ol {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .about-route ol::before {
+    left: 11px;
+    right: 11px;
+    top: auto;
+    bottom: 21px;
+    width: auto;
+    height: 3px;
+  }
+
+  .about-route a {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 6px;
+    padding-block: 8px 6px;
+  }
+
+  li:nth-child(2) a,
+  li:nth-child(3) a {
+    align-items: center;
+  }
+
+  li:last-child a {
+    align-items: flex-end;
+  }
+
+  .about-route__lozenge {
+    width: 16px;
+    height: 16px;
+    border-width: 2px;
+    margin-inline: 3px;
+    box-shadow: 0 0 0 4px var(--zc-bg-warm);
+  }
+
+  .about-route__place {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 599.98px) {
+  .about-story {
+    padding-inline: 16px;
+  }
+}
