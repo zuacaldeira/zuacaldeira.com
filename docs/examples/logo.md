@@ -1,8 +1,8 @@
 # Examples: the logo
 
-Status: **proposed by ui-design-peer on 2026-11-15, not yet agreed.** The developer chose option A,
-Losango, the lattice diamond, on 2026-11-15. The cases, the decisions D1 to D6 and the slices wait
-for the developer.
+Status: **agreed with the developer on 2026-11-15:** option A, Losango, the lattice diamond; the
+cases, the three slices and D1 to D6 as recommended (see "Decisions"). Proposed by ui-design-peer the
+same day.
 
 The site's mark in the header, the browser tab, the home screen and on a shared link's card. Design:
 `docs/mockups/brand/logo-spec.md` (option A), with the mock-up `docs/mockups/brand/index.html`
@@ -115,7 +115,7 @@ Preview ↾ = Page?card . end
 
 The site is read-only: no repeat, stale-token or race rows.
 
-## Slices (proposed)
+## Slices (agreed 2026-11-15)
 
 1. **Header.** The mark component (`common/logo-mark/`), both bars, the name and its breakpoint at
    980 px, the link's name; SHELL-13c and `shell.md`'s D8 leftover move with it. LOGO-01 to 11, P-01
@@ -134,9 +134,123 @@ and `og:description` "Researcher. Developer. Educator. Runner." in `index.html`,
 preview shows beside the card (a wording question for the developer, not part of the mark); a
 one-colour version of the mark (in the mock-up, for print, not for the site).
 
+## Slice 1: the header
+
+The markup this slice builds, in both bars: `a.logo` (`aria-label="Alexandre Zua Caldeira"`, D5)
+holds `<app-logo-mark>` (an inline `<svg>`, `aria-hidden="true"`, `focusable="false"`) and, in the
+desktop bar only, `<span class="logo-name" translate="no">Zua Caldeira</span>`, hidden below 980 px.
+The mark's colours are in `logo-mark.css`, from the tokens: `--zc-azul`, ⊤ in `--zc-ochre-text`
+(D1), ⊥'s fill `--zc-bg-warm`.
+
+Test list (crossed off in the "Done" note below as each is committed):
+- **Acceptance, the outer test** (new `acceptance/logo.test.mjs`, on the build):
+  - A1 LOGO-01, declared first: on the built `/de/home`, `a.logo` leads to `/de/home` and holds an
+    `<svg aria-hidden="true">` and the text "Zua Caldeira"; the header has no text `zc`. Red today.
+- **Unit:**
+  - U1 LOGO-05, `LogoMark` (`common/logo-mark/logo-mark.spec.ts`): `viewBox="0 0 48 48"`, the four
+    edges, ⊤, the two atoms and ⊥ with the spec's geometry, in that order; `aria-hidden="true"`,
+    `focusable="false"`.
+  - U2 LOGO-01, the desktop bar (`zc-nav-desktop.spec.ts`): `a.logo` holds `app-logo-mark` and the
+    name "Zua Caldeira" with `translate="no"`, and no `zc`.
+  - U3 LOGO-02, both bars: the link's name is "Alexandre Zua Caldeira" in en, de and pt (D5; today
+    "Home").
+  - U4 LOGO-03, the phone bar (`zc-nav-mobile.spec.ts`): `a.logo` holds `app-logo-mark` and no text;
+    SHELL-06's unit tests hold.
+- **Acceptance, after the units:**
+  - A2 LOGO-02 on every built page (the 21, `/` and `/404`): `a.logo` is named "Alexandre Zua
+    Caldeira".
+  - A3 LOGO-11 on every built page: the name is "Zua Caldeira" with `translate="no"`.
+- **Browser** (new `acceptance/browser/logo.test.mjs`, after a build, one run at a time):
+  - W1 LOGO-04: the desktop bar at 768 shows the mark and not the name; at 1280 both.
+  - W2 LOGO-06: the computed paint of each part in light and dark, `/en/home` at 1280: edges, atoms
+    and the ⊥ ring the page's `--zc-azul`, ⊤ the page's `--zc-ochre-text`, ⊥'s fill `--zc-bg-warm`.
+  - W3 LOGO-07: each part of the mark at 3:1 or more, the name at 4.5:1 or more, against the
+    header's painted background, light and dark.
+  - W4 LOGO-08: `a.logo` at least 44 × 44 px at 390 and 1280; the second Tab (after the skip link)
+    lands on it, with an outline drawn around it.
+  - W5 LOGO-09 (SHELL-13c, `header-type.test.mjs`): the name, not the "zc" mark, drawn by Fraunces
+    alone at 600, on the three home pages.
+  - W6 LOGO-10 and LOGO-03 in the browser: SHELL-06's test (`shell-phone.test.mjs`) runs as it is
+    with the new mark: mark, `EN DE PT`, theme, menu, each 44 px, within 390 px, no name.
+- **Protocol rows**, each shown red by its break, then restored (md5 checked):
+  - LOGO-P-01: `zc` in place of the name in a copy of the built `/de/home`: A1 red.
+  - LOGO-P-02: `#14417a` in place of `var(--zc-azul)` in `logo-mark.css`: W2 red at night.
+  - LOGO-P-03: the name in the phone bar: U4 and SHELL-06's unit test red.
+- **Docs:** SHELL-13c in `shell.md` reads the name, not "zc"; `shell.md`'s D8 leftover (the logo's
+  `aria-label="Home"`) is closed by D5 here.
+
+Not in slice 1: the icon files and the card (slices 2 and 3); the other three living glazes, looked
+at in the review after the build.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    participant U as Vitest + jsdom (U1–U4)
+    participant H as zc-nav-desktop, zc-nav-mobile, LogoMark
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/p/index.html
+    participant C as Chromium (W1–W6)
+    T->>U: U1 the mark's drawing; U2–U4 a.logo in both bars
+    U->>H: render with l in en, de, pt
+    H->>NG: a.logo → /l/home, named n: mark (+ name, desktop)
+    NG->>P: the desktop bar, prerendered (A1–A3, P-01)
+    T->>C: open P at 390, 768, 1280, light and dark
+    C-->>T: name shown ≥ 980 (W1), paint from the tokens (W2, P-02), contrast (W3), 44 px and focus (W4), Fraunces 600 (W5), phone bar (W6, P-03)
+```
+
+Session type. Convention: a role that a branch never calls just ends there. `l` the page's
+language, `w` the width, `g` the glaze (light or night), `n` = "Alexandre Zua Caldeira" for every
+`l`.
+
+```
+G = Build  → Page    : prerender(l, bar = desktop) .
+    Page   → Visitor : header(logo(href /l/home, named n, mark(g), name if bar = desktop and w ≥ 980)) .
+    Visitor → Page   : { home . Page → Visitor : page(/l/home) . end ,
+                         stay . end }
+  bar = phone when Handset (after Angular starts); mark(g): edges, atoms, ⊥ ring azul(g), ⊤ ochreText(g), ⊥ fill bgWarm(g)
+
+Visitor ↾ = Page?header(logo(…)) . Page!{ home . Page?page . end , stay . end }
+Page ↾    = Build?prerender . Visitor!header(logo(…)) . Visitor?{ home . Visitor!page . end , stay . end }
+Build ↾   = Page!prerender . end
+```
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1–2 the mark's drawing | `mark(g)`, its geometry | U1 (LOGO-05) |
+| 2–3 a.logo in both bars | `logo(href /l/home, named n, mark, name if …)` | U2, U3, U4 (LOGO-01, 02, 03) |
+| 4 the prerendered desktop bar | `prerender(l, desktop)`, `header(logo(…))` | A1, A2, A3 (LOGO-01, 02, 11) |
+| 5–6 `name if w ≥ 980` | the width condition | W1 (LOGO-04) |
+| 5–6 `mark(g)` | the glaze's tokens | W2, W3 (LOGO-06, 07) |
+| 5–6 the link as a control | `logo(…)` reachable and 44 px | W4 (LOGO-08) |
+| 5–6 the name's face | `name` in Fraunces 600 | W5 (LOGO-09, SHELL-13c) |
+| 5–6 `bar = phone` | no name in the phone bar | W6, U4 (LOGO-03, 10; SHELL-06) |
+| `home` | `page(/l/home)` | SHELL-04 (holds) |
+| forbidden: `zc` in place of the mark and name | `logo(mark, …)` | LOGO-P-01 (A1) |
+| forbidden: a fixed colour | `mark(g)` follows `g` | LOGO-P-02 (W2) |
+| forbidden: the name on the phone bar | `name if bar = desktop` | LOGO-P-03 (U4, SHELL-06) |
+
+The header is read-only: no repeat, stale-token or race rows.
+
 ## Decisions
 
-Open, for the developer; ui-design-peer's recommendation first.
+Agreed with the developer on 2026-11-15:
+
+- **The cases** LOGO-01 to 18 and LOGO-P-01 to 05, as proposed.
+- **The three slices,** as proposed: the header; the tab and home-screen icons; the shared-link card.
+- **D1 a:** ⊤ in `--zc-ochre-text` (`#8a5e15` by day, 4.51:1 in the light header; `#d9a94a` at
+  night).
+- **D2 a:** the tab icon always on its glaze tile, at every size and in every file.
+- **D3 a:** the cobalt card as drawn, the same in the light and the night glaze, with `og:image:alt`
+  "Zua Caldeira: I build software, and prove its protocols hold."
+- **D4 a:** one English card for every page.
+- **D5 a:** "Alexandre Zua Caldeira" as the home link's name in every language.
+- **D6 a:** a script in the repository draws the image files from one source; the files are
+  committed.
+- **Merging:** `next` goes into `main` only when the whole site is built (this replaces "page by
+  page" in `docs/tdd.md`'s "When to push, merge and deploy" for this work).
+
+The options as proposed, ui-design-peer's recommendation first:
 
 - **D1. The colour of ⊤ in the light glaze.** As drawn, `--zc-ochre` reaches 2.95:1 against the
   light header, under the 3:1 that `docs/design.md` asks of ochre graphics (7.91 at night).
