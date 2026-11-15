@@ -42,13 +42,49 @@ Open, for the developer:
   not designed around them. The running page stays.
 
 ## Settled: do not propose replacing these
+
+### The reference for colour and theme (Zua, 2026-11-15)
+"First make the Living glaze design the reference … If it's correct let's delete all other
+sources that are provoking the drift." Decided after comparing the built site with the
+mock-ups. The cases and slices are in `docs/examples/theme.md`.
+
+- **The reference is the Living Glaze study,** https://claude.ai/artifact/LGHSasJRc4DXdBmk95CGyD.
+  Its values are copied, identical, in the glaze engine of every agreed mock-up
+  (`docs/mockups/{home,software,research,writing,about}/*.html`, checked 2026-11-15).
+  - **Five glazes by the visitor's local time,** each with the same 14 colour tokens (background,
+    surface, raised, wash, border; heading, body, muted; accent, accent hover, on accent; ochre,
+    ochre text; edge): Manganês from 06:30; Cobalto 10:00 to 15:00 (today's light theme); Amarelo
+    e verde until 19:30; Manganês nocturno at 20:00; Vidrado nocturno from 23:00 to 05:00 (today's
+    dark theme). Between two keyframes the colours blend.
+  - **Two crossings,** 06:00 to 06:30 and 19:30 to 20:00: the ground crosses between dark and
+    light in about 30 minutes; the inks snap once, where both sides give equal contrast.
+  - **The tokens are set once a minute,** with a short transition.
+  - **The contrast guard:** text at least 4.5:1, lattice edges and ochre at least 3:1, against
+    the background and the surface; the label on the accent at least 4.5:1. A token below its
+    minimum is pushed toward black or white until it passes.
+  - **A three-state toggle,** light, dark and living; **living is the default.** Light is
+    Cobalto, dark is Vidrado nocturno, whatever the time.
+  - **Reduced motion** keeps the glaze the page loaded with until the next load.
+  - **Material follows the glaze:** its `--mat-sys-*` colours are the glaze's tokens, so
+    buttons, toolbars and backgrounds take the current glaze.
+- **The `--zc-*` colour tokens in `styles.css` come from the glaze,** never typed by hand.
+- **Beside it, not colour:** this file (type, notation, contrast, languages, anatomy) and the
+  agreed mock-ups' layouts.
+- **Sources of drift, to go** (agreed 2026-11-15): Material's cyan and violet palettes in
+  `material-theme.scss` (B1); the page ground from `--mat-sys-surface` (B2); the dead `--mdc-*`
+  overrides (B3); light and dark only, from the device setting, in `theme.service.ts` (B4); the
+  old photo hero with the lattice wall and its fixed colours (B5, replaced by D10 and D11 in
+  `docs/examples/home.md`). The Visual Identity canvas stays for pages and message, no longer as
+  a colour source.
+
+### Also settled
 - **Direction: azulejo and lattice** (settled 2026-07-17). The Hasse diagram of the
   author's theorem and a Lisbon tile panel are the same drawing. The blue is Lisbon tile
   cobalt and also Casa Azul. Do not bring back the generic look it replaced: Inter, a cyan
   accent, Material cards everywhere, a blurred gradient-mesh hero.
 - **Tokens:** the `--zc-*` custom properties in `frontend/src/styles.css`, light theme on
-  `:root` and the night glaze on `html.dark-theme`. Every colour is contrast-checked
-  against its background; the comment at the top of that file says how. Mock-ups copy
+  `:root` and the night glaze on `html.dark-theme`. Their colours come from the glaze (the
+  reference above): Cobalto and Vidrado nocturno as the guard leaves them. Mock-ups copy
   these properties, never retyped hex.
   - Cobalt `--zc-azul` `#14417a` on glaze `--zc-bg-warm` `#e9eff4`, ink `#0b1526`.
   - Ochre `--zc-ochre` `#b07a22` is for graphics only (3.21:1). Ochre text uses
@@ -83,12 +119,8 @@ Open, for the developer:
 - **Hidden pages:** `/work` and `/paedagogik` stay out of the navigation until the
   developer brings them back.
 
-- **Living glaze** (agreed 2026-11-02, as the study has it, unchanged):
-  https://claude.ai/artifact/LGHSasJRc4DXdBmk95CGyD. Five azulejo glazes follow the visitor's
-  local time: Manganês, Cobalto (today's light theme), Amarelo e verde, Manganês nocturno,
-  Vidrado nocturno (today's night glaze). The study holds the values, the times, the fast
-  light/dark crossing, the contrast guard and the reduced-motion rule. The toggle has three
-  states: light, dark, living. Every new screen is checked under all five glazes.
+- **Living glaze** (agreed 2026-11-02, as the study has it, unchanged; the colour reference since
+  2026-11-15, above). Every new screen is checked under all five glazes.
 
 - **Living is the default theme state** (agreed 2026-11-02); light and dark are manual overrides.
 - **Theme settings** (agreed 2026-11-02): the hero and the theorem band are settings beside the
@@ -96,8 +128,8 @@ Open, for the developer:
   the mock-up until first wanted. The frame is not a setting.
 - **Website v2** (agreed 2026-11-02): the row of boards on the Visual Identity canvas,
   https://claude.ai/artifact/V4BY3xCveYFdkCky8kFXXa, gives the pages, sections, message and
-  the 2³ lattice hero. Its cream and white grounds and its per-page Rota glaze do not
-  apply: colours come from the living glaze.
+  the 2³ lattice hero. It is not a colour source (2026-11-15): its cream and white grounds
+  and its per-page Rota glaze do not apply; colours come only from the living glaze.
 
 Not yet agreed:
 - **Reacting to events** (a new post, a social event): wanted, not designed.
@@ -124,8 +156,11 @@ the language codes sit in the header at every width (frame option A, agreed 2026
 - **Teal is a bug, not a decision.** `frontend/src/material-theme.scss` still sets the
   cyan and violet palettes and Inter, and the ochre button overrides in the components use
   `--mdc-*` variables that have no visible effect. Every Material button renders `#006a6a`
-  (night `#00dddd`), on the live site too (measured 2026-11-02). Mock-ups use the intended
-  ochre and gold, never the teal.
+  (night `#00dddd`), on the live site too (measured 2026-11-02). Mock-ups use the glaze's
+  accent, never the teal. These are drifts B1 to B3, to go (`docs/examples/theme.md`).
+- **The night edge is typed by hand, and low.** `styles.css` sets the dark `--zc-edge` to
+  `#516b8b`, 2.96:1 on the dark surface `#12203a`; the glaze's guard gives `#526c8c`, 3.00:1
+  (measured 2026-11-15 with the mock-ups' engine; THEME-16).
 - The layout wrapper `ZcPage` switches between mobile and desktop navigation with the
   CDK `Breakpoints.Handset` query, not a CSS width. Check both sides of it.
 - The lattice wall is generated (`frontend/scripts/lattice-wall/render.py`); do not
