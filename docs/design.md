@@ -158,9 +158,12 @@ the language codes sit in the header at every width (frame option A, agreed 2026
   `--mdc-*` variables that have no visible effect. Every Material button renders `#006a6a`
   (night `#00dddd`), on the live site too (measured 2026-11-02). Mock-ups use the glaze's
   accent, never the teal. These are drifts B1 to B3, to go (`docs/examples/theme.md`).
-- **The night edge is typed by hand, and low.** `styles.css` sets the dark `--zc-edge` to
-  `#516b8b`, 2.96:1 on the dark surface `#12203a`; the glaze's guard gives `#526c8c`, 3.00:1
-  (measured 2026-11-15 with the mock-ups' engine; THEME-16).
+- **The colour tokens are generated.** `styles.css`'s two colour blocks are written by
+  `npm run glaze` from `frontend/src/app/services/glaze.json` (the study's table) through the
+  site's engine `glaze.mjs`; a hand edit fails THEME-16. Change a colour in the table, which must
+  stay equal to the mock-ups' engine (THEME-15). Since 2026-11-15 the night edge is the guard's
+  `#526c8c` (3.00:1), no longer the hand-typed `#516b8b` (2.96:1), and `--zc-azul-pale`,
+  `--zc-accent-light`, `--zc-ochre-wash`, `--zc-tile` and `--zc-grout` are gone.
 - The layout wrapper `ZcPage` switches between mobile and desktop navigation with the
   CDK `Breakpoints.Handset` query, not a CSS width. Check both sides of it.
 - The lattice wall is generated (`frontend/scripts/lattice-wall/render.py`); do not

@@ -135,7 +135,11 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 ## Styling
 
 **Design tokens** — CSS custom properties prefixed `--zc-*` defined in `src/styles.css`:
-- Colors: `--zc-text-heading`, `--zc-bg-warm`, `--zc-accent`, etc.
+- Colors: `--zc-text-heading`, `--zc-bg-warm`, `--zc-accent`, etc. They are the living glaze's
+  (`docs/examples/theme.md`): `npm run glaze` (`scripts/glaze-tokens.mjs`) writes the `:root` and
+  `html.dark-theme` colour blocks between their `glaze:` marker comments from the table
+  `services/glaze.json` through the engine `services/glaze.mjs` (the glaze at 12:30 and at 02:00).
+  Never edit those lines by hand; THEME-16 in `npm run test:scripts` fails on it
 - Spacing: `--zc-space-2` through `--zc-space-24`
 - Typography: Fraunces (`--zc-font-heading`), Archivo (`--zc-font-body`), IBM Plex Mono
   (`--zc-font-mono`), each followed by the notation fonts Noto Sans Math and STIX Two Text, which
@@ -189,7 +193,7 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
 - `localStorage`: leaks between test files — explicitly set language/theme in tests rather than assuming defaults
 - Input components (`@Input`): set inputs before `detectChanges()`
 
-**Coverage:** 47 test files, 283 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-15) covering App component, all 3 services, all 22 components, and app routes.
+**Coverage:** 47 test files, 286 tests, 5 of them skipped while `TRANSLATIONS_ENABLED` is `false` (2026-11-15) covering App component, all 3 services, all 22 components, and app routes.
 
 ## TypeScript
 

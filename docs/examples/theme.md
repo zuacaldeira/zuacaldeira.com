@@ -38,20 +38,20 @@ Sections, in build order:
 
 | ID | In plain words | Given | When | Then | How a test checks it | Covered |
 |----|----------------|-------|------|------|----------------------|---------|
-| THEME-01 | At lunchtime the site wears its cobalt-blue glaze. | the time 12:30 | the glaze is computed | it is Cobalto, exactly as its table: background `#e9eff4`, surface `#f7fafc`, accent `#14417a`, edge `#6987ab`; nothing moved by the guard | unit (the engine, time injected) | |
-| THEME-02 | In the middle of the night the site wears its dark night glaze. | the time 02:00 | the glaze is computed | it is Vidrado nocturno: background `#0b1526`, accent `#7fa5ce`; edge `#526c8c`, the one token the guard moves | unit | |
-| THEME-03 | Morning, early evening and evening each have their own glaze. | the times 06:30, 19:00 and 20:00 | the glaze is computed | Manganês (background `#f0ebf2`, accent `#5b2f73`), Amarelo e verde (`#f2eedf`, `#2f5b3b`) and Manganês nocturno (`#160f1f`, `#c4a3dc`), each exactly as its table | unit | |
-| THEME-04 | At every minute of the day, text and drawings stay readable. | every minute from 00:00 to 23:59 | the glaze is computed and written as the hex values the page gets | heading, body, muted, accent, accent hover and ochre text at least 4.5:1, ochre and edge at least 3:1, each against both background and surface; on accent at least 4.5:1 against the accent; the footer's text and gold, and the band's text, at least 4.5:1 against their grounds (derived by mode, as the mock-ups' `paint()`; D5). Red with the study's engine: the fixed gold falls to 2.21:1 at 06:14 and 19:46 (12 minutes below), the footer text to the edge at 06:15 | unit, 1440 minutes, measured on the rounded hex values (D2) | |
-| THEME-12 | Between night and morning, and evening and night, the ground fades and the ink switches once. | the minutes 06:00 to 06:30 and 19:30 to 20:00 | the glaze is computed | the background changes every minute; the inks are the dark side's up to 06:14 and the light side's from 06:15, the light side's up to 19:45 and the dark side's from 19:46; the mode changes at those two minutes and at no other minute of the day | unit | |
-| THEME-13 | A colour too faint for its ground is darkened or lightened until it is readable. | a glaze below its minimum: Vidrado nocturno's edge `#516b8b` (2.96:1 on its surface); and a test glaze whose muted is 2:1 on a light ground | the glaze is computed | the edge becomes `#526c8c` (3.00:1); the test muted moves toward black, only as far as 4.5:1; a token already above its minimum is left as its table has it (THEME-01) | unit (the night edge; a test table injected) | |
-| THEME-14 | Two glazes blend smoothly between their times. | the time 08:15, halfway from Manganês (06:30) to Cobalto (10:00) | the glaze is computed | each token is the Oklab midpoint of the two glazes' values (the study's smoothstep at t = ½; background `#ededf3`), before the guard; 06:30 and 10:00 give the pure glazes | unit | |
-| THEME-15 | The glaze's values are kept in one table, the same the mock-ups use. | the build's glaze table (D3) and the engine in `docs/mockups/home/home.html` | both are read | the five glazes, 14 tokens each, the keyframes and the minimums are equal | the scripts' test (`npm run test:scripts`) | |
+| THEME-01 | At lunchtime the site wears its cobalt-blue glaze. | the time 12:30 | the glaze is computed | it is Cobalto, exactly as its table: background `#e9eff4`, surface `#f7fafc`, accent `#14417a`, edge `#6987ab`; nothing moved by the guard | unit (the engine, time injected) | yes (unit, slice 1) |
+| THEME-02 | In the middle of the night the site wears its dark night glaze. | the time 02:00 | the glaze is computed | it is Vidrado nocturno: background `#0b1526`, accent `#7fa5ce`; edge `#526c8c`, the one token the guard moves | unit | yes (unit, slice 1) |
+| THEME-03 | Morning, early evening and evening each have their own glaze. | the times 06:30, 19:00 and 20:00 | the glaze is computed | Manganês (background `#f0ebf2`, accent `#5b2f73`), Amarelo e verde (`#f2eedf`, `#2f5b3b`) and Manganês nocturno (`#160f1f`, `#c4a3dc`), each exactly as its table | unit | yes (unit, slice 1) |
+| THEME-04 | At every minute of the day, text and drawings stay readable. | every minute from 00:00 to 23:59 | the glaze is computed and written as the hex values the page gets | heading, body, muted, accent, accent hover and ochre text at least 4.5:1, ochre and edge at least 3:1, each against both background and surface; on accent at least 4.5:1 against the accent; the footer's text and gold, and the band's text, at least 4.5:1 against their grounds (derived by mode, as the mock-ups' `paint()`; D5). Red with the study's engine: the fixed gold falls to 2.21:1 at 06:14 and 19:46 (12 minutes below), the footer text to the edge at 06:15 | unit, 1440 minutes, measured on the rounded hex values (D2) | yes (unit, 1440 minutes on the rounded hex, slice 1) |
+| THEME-12 | Between night and morning, and evening and night, the ground fades and the ink switches once. | the minutes 06:00 to 06:30 and 19:30 to 20:00 | the glaze is computed | the background changes every minute; the inks are the dark side's up to 06:14 and the light side's from 06:15, the light side's up to 19:45 and the dark side's from 19:46; the mode changes at those two minutes and at no other minute of the day | unit | yes (unit, slice 1) |
+| THEME-13 | A colour too faint for its ground is darkened or lightened until it is readable. | a glaze below its minimum: Vidrado nocturno's edge `#516b8b` (2.96:1 on its surface); and a test glaze whose muted is 2:1 on a light ground | the glaze is computed | the edge becomes `#526c8c` (3.00:1); the test muted moves toward black, only as far as 4.5:1; a token already above its minimum is left as its table has it (THEME-01) | unit (the night edge; a test table injected) | yes (unit, a test table, slice 1) |
+| THEME-14 | Two glazes blend smoothly between their times. | the time 08:15, halfway from Manganês (06:30) to Cobalto (10:00) | the glaze is computed | each token is the Oklab midpoint of the two glazes' values (the study's smoothstep at t = ½; background `#ededf3`), before the guard; 06:30 and 10:00 give the pure glazes | unit | yes (unit, slice 1) |
+| THEME-15 | The glaze's values are kept in one table, the same the mock-ups use. | the build's glaze table (D3) and the engine in `docs/mockups/home/home.html` | both are read | the five glazes, 14 tokens each, the keyframes and the minimums are equal | the scripts' test (`npm run test:scripts`) | yes (scripts' test, slice 1) |
 
 ## 2. The tokens and Material
 
 | ID | In plain words | Given | When | Then | How a test checks it | Covered |
 |----|----------------|-------|------|------|----------------------|---------|
-| THEME-16 | The site's colour tokens are the glaze's, not typed by hand. | `styles.css` | its colour blocks are read | the `:root` block equals the glaze at 12:30 and the `html.dark-theme` block the glaze at 02:00, token for token, through the mock-ups' map (`bg` → `--zc-bg-warm`, `surface` → `--zc-bg-white`, `accent` → `--zc-azul` and `--zc-accent`, …); no other colour token is declared except the footer's gold pair (D5). Red today: the dark `--zc-edge` is `#516b8b`; `--zc-azul-pale`, `--zc-accent-light`, `--zc-ochre-wash`, `--zc-tile` and `--zc-grout` are declared | the scripts' test (D4) | |
+| THEME-16 | The site's colour tokens are the glaze's, not typed by hand. | `styles.css` | its colour blocks are read | the `:root` block equals the glaze at 12:30 and the `html.dark-theme` block the glaze at 02:00, token for token, through the mock-ups' map (`bg` → `--zc-bg-warm`, `surface` → `--zc-bg-white`, `accent` → `--zc-azul` and `--zc-accent`, …); no other colour token is declared except the footer's gold pair (D5). Red today: the dark `--zc-edge` is `#516b8b`; `--zc-azul-pale`, `--zc-accent-light`, `--zc-ochre-wash`, `--zc-tile` and `--zc-grout` are declared | the scripts' test (D4) | yes (scripts' test, slice 1) |
 | THEME-11 | Buttons and other ready-made controls take the current glaze's colours, not a foreign teal. | a Material filled button and an icon button on a built page, in light, dark and living at 06:30, 19:00, 20:00 | they render | the filled button's background is the glaze's `--zc-accent` and its label `--zc-on-accent`; the icon button's glyph is its bar's ink. Red today: `#006a6a` in light, `#00dddd` in dark | browser | |
 | THEME-17 | Material has no palette of its own any more. (B1) | the built stylesheet | its `--mat-sys-*` declarations are read | every `--mat-sys-*` colour is a `var(--zc-…)` or a mix of them (D9); no colour literal; `material-theme.scss` names no `$cyan-palette` or `$violet-palette`. Red today: the cyan and violet palettes, `--mat-sys-primary: #006a6a` | build and a source check | |
 | THEME-18 | The page's ground is the glaze's ground, on a phone too. (B2) | `/en/software` at 390 (the phone layout inside the Material sidenav) and at 1280, light, dark and living at 20:00 | the ground behind `<main>` is measured | `body`, the sidenav container and the sidenav content are each `--zc-bg-warm` or transparent over it; `material-theme.scss`'s `body` no longer takes `--mat-sys-surface`. Expected red today at 390: the sidenav's ground is Material's (measure when the test is written) | browser, and a source check | |
@@ -138,14 +138,14 @@ These two cases say the old one is gone and leaves nothing behind.
 
 | ID | In plain words | Given | When | Then | How a test checks it | Covered |
 |----|----------------|-------|------|------|----------------------|---------|
-| THEME-P-01 | A guard that leaves a colour below its minimum is refused. | the engine with its guard taken out | the day is computed | THEME-04 goes red, naming the minute and the token (02:00, edge, 2.96:1) | break in the engine | |
+| THEME-P-01 | A guard that leaves a colour below its minimum is refused. | the engine with its guard taken out | the day is computed | THEME-04 goes red, naming the minute and the token (02:00, edge, 2.96:1) | break in the engine | yes (break in the engine, slice 1) |
 | THEME-P-02 | Reduced motion never changes the glaze with time. | living, reduced motion, the tick forced to run | three hours pass | THEME-08 goes red if any token changes | break in the service | |
 | THEME-P-03 | A fixed colour put back in a component is refused. | `hero.css` | `color: #ffffff` is put back | THEME-26 goes red, naming the file and line | break in the source | |
 | THEME-P-04 | A dead `--mdc-` override put back is refused. | `zc-nav-desktop.css` | `--mdc-filled-button-container-color` is put back | THEME-19 goes red | break in the source | |
 | THEME-P-05 | Material's own palette put back is refused. | `material-theme.scss` | `primary: mat.$cyan-palette` is put back | THEME-17 goes red, naming `--mat-sys-primary` | break in the build | |
-| THEME-P-06 | A hand edit of a generated colour token is refused. | `styles.css` | the dark `--zc-edge` is set back to `#516b8b` | THEME-16 goes red, naming the token, the value and the glaze's `#526c8c` | break in the source | |
-| THEME-P-07 | A glaze table missing a token, or with a token not in the map, is refused. | the glaze table | Amarelo e verde's `edge` is removed, or a token `teal` is added | the table's check fails naming the glaze and the token; nothing is generated | the scripts' test | |
-| THEME-P-08 | The study's rounding slip does not reach the site. | the minutes 19:48 and 19:52, where the study's engine, rounded to hex, gives body 4.455:1 and edge 2.969:1 | the glaze is computed | the hex values set pass 4.5:1 and 3:1 (D2) | unit (named minutes, inside THEME-04) | |
+| THEME-P-06 | A hand edit of a generated colour token is refused. | `styles.css` | the dark `--zc-edge` is set back to `#516b8b` | THEME-16 goes red, naming the token, the value and the glaze's `#526c8c` | break in the source | yes (break in the source, slice 1) |
+| THEME-P-07 | A glaze table missing a token, or with a token not in the map, is refused. | the glaze table | Amarelo e verde's `edge` is removed, or a token `teal` is added | the table's check fails naming the glaze and the token; nothing is generated | the scripts' test | yes (scripts' test, the engine and the generator, slice 1) |
+| THEME-P-08 | The study's rounding slip does not reach the site. | the minutes 19:48 and 19:52, where the study's engine, rounded to hex, gives body 4.455:1 and edge 2.969:1 | the glaze is computed | the hex values set pass 4.5:1 and 3:1 (D2) | unit (named minutes, inside THEME-04) | yes (unit, slice 1) |
 | THEME-P-09 | The device's dark setting does not override living. | nothing stored, the device asking for dark, the clock at 12:30 | the page loads | Cobalto, not Vidrado nocturno (D1, recommended option) | unit; build (VM) | |
 
 ## Decisions
@@ -398,3 +398,37 @@ Forbidden by G, each refused and the stored state checked unchanged:
 - **a repeat of the one-shot `write`:** allowed, and must change nothing: S3.
 - **a guard step left out** (`glaze` with a token below its minimum): E8 (THEME-P-01).
 - Stale tokens and races: none; one process, nothing shared.
+
+**Done 2026-11-15** (the plan, then T1 to S3, one commit each). Red first, each for its own reason:
+T1 an empty table against the mock-up's (a first red came from the test itself, a TypeError on
+`{}`; the mock-up writes the gold as `--foot-gold` and the label in `.foot__mail`); T2 "Missing
+expected exception"; E1 `undefined` for every token; E3 `#f0ebf2` for `#ededf3`; E4 the inks blending
+through grey and the mode from the earlier keyframe; E5 `moved []`, muted left near 2:1; E7 the
+footer's and band's pairs missing; S1 no blocks and 44 hand-typed colour lines (the dark edge, the
+five tokens; a second red from the test's own selector, which caught the comments above `:root`).
+Green at first and shown to bite, each break restored (md5 checked): E2 (the lookup's `>=` made `>`),
+E6 (the guard's loop emptied: edge `#516b8b`), THEME-P-08 (the guard judging the unrounded colour:
+19:48's body red, and THEME-04 with 115 pairs a hair under), S2 (the generator emptying `styles.css`
+before rendering), S3 (the block inserted, not replaced). Protocol and break rows: THEME-P-01 (the
+guard taken out: THEME-04 red naming the night minutes, `edge on surface`, 2.96), THEME-P-06 (the dark
+`--zc-edge` set back to `#516b8b`: THEME-16 red naming `--zc-edge`, `#516b8b`, `#526c8c`; restored by
+`npm run glaze`, md5 checked), THEME-P-07 (T2, S2). The gold's guard, taken out once, gave THEME-04
+the case's figures: 12 minutes under 4.5:1, 2.21:1 at 06:14 and 19:46.
+
+Found on the way: on the rounded ground the morning switch fell at 06:16; the study judges the side
+on the unrounded ground, which gives the agreed 06:15, so the engine does that (D2 is about the
+minimums, not the mode).
+
+Results: scripts 32/32 (the engine's 10, the generator's 3); unit 281 passed, 5 skipped (47 files);
+the build prerenders 26 routes (the 508 kB budget warning as before); `acceptance` 138/138; the built
+stylesheet holds `--zc-edge: #526c8c` and none of the five removed tokens. Not run: the browser tests
+(no rendering change but the night edge's one step; slice 5 measures every glaze) and
+`acceptance:nginx` (no server change). The load stayed high most of the slice (up to 20 on 8 cores);
+each heavy run waited for it, and none failed.
+
+Leftovers, not built:
+- **The engine is not used at runtime yet:** the head script and `ThemeService` take it in slice 3,
+  which also sets the guarded footer gold and text at the crossings (today the page has only the two
+  fixed states, where the gold is unmoved).
+- **The other four mock-ups** hold the same engine; THEME-15 compares the table with the home
+  mock-up's only. A check across all five is cheap if they are ever edited.
