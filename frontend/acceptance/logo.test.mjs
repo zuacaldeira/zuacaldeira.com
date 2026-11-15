@@ -9,6 +9,18 @@ import { join } from 'node:path';
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
 const page = (route) => readFileSync(join(browser, route, 'index.html'), 'utf8');
 
+// Every built page with its language; `/` and the 404 page are English (as PAGES in shell.test.mjs).
+const PAGES = [
+  ...['en', 'de', 'pt'].flatMap((lang) =>
+    ['home', 'about', 'software', 'research', 'writing', 'running', 'contact'].map((name) => [
+      `${lang}/${name}`,
+      lang,
+    ]),
+  ),
+  ['.', 'en'],
+  ['404', 'en'],
+];
+
 const header = (html) => html.match(/<header\b[^>]*>([\s\S]*?)<\/header>/)?.[1] ?? '';
 const text = (html) =>
   html
@@ -21,6 +33,7 @@ const logos = (html) =>
   [...header(html).matchAll(/<a\b([^>]*\sclass="[^"]*\blogo\b[^"]*"[^>]*)>([\s\S]*?)<\/a>/g)].map(
     ([, attrs, inner]) => ({
       href: attrs.match(/\shref="([^"]*)"/)?.[1],
+      name: attrs.match(/\saria-label="([^"]*)"/)?.[1],
       mark: /<svg\b[^>]*\saria-hidden="true"/.test(inner),
       text: text(inner),
     }),
@@ -30,7 +43,7 @@ test('LOGO-01: the header of /de/home shows the diamond and "Zua Caldeira", link
   const html = page('de/home');
   assert.deepEqual(
     {
-      logos: logos(html),
+      logos: logos(html).map(({ href, mark, text }) => ({ href, mark, text })),
       zc: text(header(html)).split(' ').includes('zc'),
     },
     {
@@ -38,4 +51,12 @@ test('LOGO-01: the header of /de/home shows the diamond and "Zua Caldeira", link
       zc: false,
     },
   );
+});
+
+test('LOGO-02 (D5): on every built page the home link is named "Alexandre Zua Caldeira", in every language', () => {
+  const names = Object.fromEntries(
+    PAGES.map(([route]) => [route, logos(page(route)).map(({ name }) => name)]),
+  );
+  const expected = Object.fromEntries(PAGES.map(([route]) => [route, ['Alexandre Zua Caldeira']]));
+  assert.deepEqual(names, expected);
 });
