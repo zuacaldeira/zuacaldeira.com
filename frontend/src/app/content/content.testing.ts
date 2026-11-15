@@ -1,6 +1,7 @@
 import { Provider } from '@angular/core';
 import { Language } from '../models/i18n';
 import {
+  ABOUT_CONTENT,
   ContentSnapshot,
   HOME_CONTENT,
   HomeHero,
@@ -202,10 +203,32 @@ export const TEST_CONTENT: ContentSnapshot = {
       researchGate: { label: 'Profile', href: 'https://example.org/profile' },
     })),
   },
+  about: {
+    head: inEvery((lang) => ({
+      eyebrow: `about eyebrow ${lang}`,
+      heading: `about heading ${lang}`,
+      intro: `about intro ${lang}`,
+    })),
+    route: inEvery((lang) => ({
+      label: `route label ${lang}`,
+      chapter: `chapter {n} ${lang}`,
+      chapterOf: `chapter {n} of {total} ${lang}`,
+      movedOn: `moved on ${lang}`,
+      newTab: `new tab ${lang}`,
+      // Two places stay as they are, two are translated, as in the seed.
+      stops: [
+        { id: 'piri', place: 'Piri' },
+        { id: 'estremoz', place: 'Estremoz' },
+        { id: 'lisbon', place: `Lisbon ${lang}` },
+        { id: 'berlin', place: `Berlin ${lang}` },
+      ],
+    })),
+  },
   shared: { paper: inEvery(sharedPaperIn) },
 };
 
 export const provideTestContent = (): Provider => [
+  { provide: ABOUT_CONTENT, useValue: TEST_CONTENT.about },
   { provide: HOME_CONTENT, useValue: TEST_CONTENT.home },
   { provide: SOFTWARE_CONTENT, useValue: TEST_CONTENT.software },
   { provide: WRITING_CONTENT, useValue: TEST_CONTENT.writing },

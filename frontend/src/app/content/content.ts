@@ -222,12 +222,38 @@ export interface ResearchChecked {
   readonly figures: readonly { readonly value: string; readonly label: string }[];
 }
 
+/** A stop of the About page's route: its chapter's id, the same in every language, and its place. */
+export interface AboutStop {
+  readonly id: string;
+  readonly place: string;
+}
+
+/**
+ * One language's route of the About page, `about/route` (D1, D10 in about.md): its labels, with
+ * `{n}` and `{total}` to fill in, and the four stops in route order.
+ */
+export interface AboutRoute {
+  readonly label: string;
+  readonly chapter: string;
+  readonly chapterOf: string;
+  readonly movedOn: string;
+  readonly newTab: string;
+  readonly stops: readonly AboutStop[];
+}
+
+/** The About page's text, `@page-content/about` (D1 in about.md); the chapters join in slice 3. */
+export interface AboutContent {
+  readonly head: Readonly<Record<Language, PageHead>>;
+  readonly route: Readonly<Record<Language, AboutRoute>>;
+}
+
 /** The content the build took from the API before prerendering (D25: scripts/fetch-content.mjs). */
 export interface ContentSnapshot {
   readonly home: HomeContent;
   readonly software: SoftwareContent;
   readonly writing: WritingContent;
   readonly research: ResearchContent;
+  readonly about: AboutContent;
   readonly shared: SharedContent;
 }
 
@@ -239,5 +265,6 @@ export const HOME_CONTENT = new InjectionToken<HomeContent>('HOME_CONTENT');
 export const SOFTWARE_CONTENT = new InjectionToken<SoftwareContent>('SOFTWARE_CONTENT');
 export const WRITING_CONTENT = new InjectionToken<WritingContent>('WRITING_CONTENT');
 export const RESEARCH_CONTENT = new InjectionToken<ResearchContent>('RESEARCH_CONTENT');
+export const ABOUT_CONTENT = new InjectionToken<AboutContent>('ABOUT_CONTENT');
 /** Text several pages read, provided by each route that needs it (D30). */
 export const SHARED_CONTENT = new InjectionToken<SharedContent>('SHARED_CONTENT');
