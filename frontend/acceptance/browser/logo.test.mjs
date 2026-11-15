@@ -86,6 +86,58 @@ const shown = (page) =>
     };
   });
 
+// The paint of each part of the header's mark, and the page's own tokens, all as `#rrggbb` (a canvas
+// turns any CSS colour into sRGB).
+const paint = (page) =>
+  page.evaluate(() => {
+    const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    const hex = (css) => {
+      if (!css || css === 'none') return css;
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = css;
+      ctx.fillRect(0, 0, 1, 1);
+      return `#${[...ctx.getImageData(0, 0, 1, 1).data.slice(0, 3)]
+        .map((v) => v.toString(16).padStart(2, '0'))
+        .join('')}`;
+    };
+    const svg = document.querySelector('header a.logo app-logo-mark svg');
+    const style = (selector, prop) => {
+      const all = [...svg.querySelectorAll(selector)].map((el) =>
+        hex(getComputedStyle(el)[prop]),
+      );
+      return [...new Set(all)].join(' ');
+    };
+    const root = getComputedStyle(document.documentElement);
+    return {
+      parts: {
+        edges: style('line', 'stroke'),
+        atoms: style('circle.atom', 'fill'),
+        top: style('circle.top', 'fill'),
+        bottomRing: style('circle.bottom', 'stroke'),
+        bottomFill: style('circle.bottom', 'fill'),
+      },
+      tokens: Object.fromEntries(
+        ['--zc-azul', '--zc-ochre-text', '--zc-bg-warm'].map((t) => [
+          t,
+          hex(root.getPropertyValue(t).trim()),
+        ]),
+      ),
+    };
+  });
+
+for (const theme of ['light', 'dark']) {
+  test(`LOGO-06: in the ${theme} glaze the mark is painted from the page's tokens: azul, ⊤ in the text ochre (D1), ⊥ open`, async () => {
+    const { parts, tokens } = await withPage({ width: 1280, theme }, paint);
+    assert.deepEqual(parts, {
+      edges: tokens['--zc-azul'],
+      atoms: tokens['--zc-azul'],
+      top: tokens['--zc-ochre-text'],
+      bottomRing: tokens['--zc-azul'],
+      bottomFill: tokens['--zc-bg-warm'],
+    });
+  });
+}
+
 test('LOGO-04: the desktop bar shows the mark alone at 768 px, the mark and the name at 1280 px', async () => {
   const at768 = await withPage({ width: 768, height: 1024 }, shown);
   const at1280 = await withPage({ width: 1280 }, shown);

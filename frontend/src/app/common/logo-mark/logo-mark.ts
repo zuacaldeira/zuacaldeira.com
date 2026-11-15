@@ -34,6 +34,20 @@ import { Component } from '@angular/core';
       height: 100%;
       overflow: visible;
     }
+    /* The glaze's tokens, so the mark follows light and night; ⊤ in the text ochre (D1). */
+    line {
+      stroke: var(--zc-azul);
+    }
+    .atom {
+      fill: var(--zc-azul);
+    }
+    .top {
+      fill: var(--zc-ochre-text);
+    }
+    .bottom {
+      fill: var(--zc-bg-warm);
+      stroke: var(--zc-azul);
+    }
   `,
 })
 export class LogoMark {}
