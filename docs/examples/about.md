@@ -3,7 +3,7 @@
 Status: **agreed with the developer on 2026-11-15:** option B (AB-D10 in
 `docs/mockups/about/about-notes.md`), the 51 cases, the four slices, and D1 to D7 as recommended (the
 first option of each). Slices 1 and 2 can be built now. Slice 3 waits for Zua's facts, which come in
-a later turn and become the seed; they are not cases.
+a later turn and become the seed; they are not cases. **Slice 1 is planned (2026-11-15)** below.
 
 The About page in three languages, at `/en/about`, `/de/about` and `/pt/about`. It is Zua's CV told
 as a story along the route Piri → Estremoz → Lisbon → Berlin, with the route beside the chapters.
@@ -191,9 +191,9 @@ The page is read-only: no repeat, stale-token or race rows. The loop only change
 
 ## Slices (agreed 2026-11-15)
 
-`next` is not merged into `main` until the last slice is done, as for Research (D5 there). The
-route, menu link and sitemap entry exist already, so each slice is visible on the preview once
-pushed.
+`next` is not merged into `main` until the whole site is built (Zua, 2026-11-15; this page's last
+slice is one part of that). The route, menu link and sitemap entry exist already, so each slice is
+visible on the preview once pushed.
 
 1. **Frame, head and the route, before the facts:**
    - the route becomes `loadChildren` with `about.routes.ts` providing `ABOUT_CONTENT`;
@@ -218,6 +218,122 @@ pushed.
 4. **The whole page, in the browser:** phone, keyboard, contrast and colours, in en, de and pt.
    Cases: ABOUT-37 to 41. Then the design review on the preview against the spec.
 
+## Slice 1: frame, head and the route
+
+The markup this slice builds, after the shared head: one `div.about-story` holding the route
+`<nav class="about-route" aria-label="{route.label}">` (a visible label, then an `<ol>` of four
+`<a href="/l/about#{id}">`, each with a lozenge, "Chapter n" and the place) and the four chapters,
+each `<section id="{id}" aria-labelledby="h-{id}">` with its number (`aria-hidden`), its label
+`route.chapterOf` with n and 4, and `<h2 id="h-{id}">` the place. No years, paragraphs or onward
+text: those are Zua's (slice 3, D2). The places and labels come from `about/route`, so the headings
+need no fact that is not agreed. Static only: the marker, the fill, `off` and the phone bar's
+stickiness are slice 2's.
+
+Test list (crossed off in the "Done" note below as each is committed):
+- **Acceptance, the outer tests** (new `acceptance/about.test.mjs`), declared first and red on
+  today's build of the old page:
+  - A1 ABOUT-09, the German page opens with "Piri → Estremoz → Lissabon → Berlin", one `<h1>` "Über
+    mich" and the German intro.
+  - A2 ABOUT-07, the old page is gone from `<main>` in en, de, pt: no `app-section-header`, no old
+    heading, no `<strong>`.
+- **Backend** (Testcontainers, one class per run):
+  - B1 ABOUT-11, the seed answers the agreed head in en, de, pt, none empty (new
+    `AboutSeedIntegrationTest`, new seed `R__about.sql`).
+  - B2 ABOUT-14, the seed answers the route in en, de, pt: four stops `piri`, `estremoz`, `lisbon`,
+    `berlin` in that order in each, every label and place non-empty, and the spec's English labels.
+  - B3 ABOUT-10, the stored German head as it is (`ContentSectionIntegrationTest`). The table is
+    page-agnostic, so B3 is expected green at once; it is shown to bite by a break in the service.
+- **Script** (`fetch-content.test.mjs`):
+  - S1 ABOUT-05, `about/head` missing in `de` stops the snapshot, naming page, section, language.
+  - S2 ABOUT-P-05, a gap marker in any stored string stops the snapshot, naming page, section and
+    language (D9).
+- **Unit** (`pages/about/about.spec.ts`, the old spec replaced):
+  - U1 ABOUT-09, the page shows `PageHead` with the head from `ABOUT_CONTENT` on a German page.
+  - U2 ABOUT-02, the title `Alexandre Zua Caldeira — ${heading}`.
+  - U3 ABOUT-01 and ABOUT-06, `/de/about` brings its own text with its route (`about.routes.ts`,
+    `loadChildren`), in German.
+  - U4 ABOUT-12, the route: a `<nav>` named `route.label`, an `<ol>` of four links in stop order to
+    `/de/about#piri` … `#berlin` (D8), each reading "Chapter n" and the place.
+  - U5 ABOUT-15 without years, the chapters: four `<section>`s with the stops' ids, each
+    `aria-labelledby` its `<h2>` (the place); the label `route.chapterOf` with n and 4; the number
+    `aria-hidden`; nothing else in a chapter yet.
+- **Cleanup (as D7, D12 in `research.md`):** the old page's template, styles and spec, and the
+  `about` block of `Translations` in `en`, `de`, `pt`; the compiler and the suite hold it. The About
+  half of LA-04, 05, 12 to 16 and 22 in `docs/language.md` is marked fixed by the rebuild.
+- **Acceptance, after the build:** A3 ABOUT-01 (three pages, their `lang`, each with
+  `app-page-head`), A4 ABOUT-02, A5 ABOUT-03, A6 ABOUT-04, A7 ABOUT-08 (en, exactly one `<h1>`) and
+  ABOUT-09 for pt, A8 ABOUT-06 (own text loaded; not the home hero's sentence, the Software lead's
+  title, the Writing or the Research intro; the About intro in no other page's files), A9 ABOUT-12
+  on the built `/de/about`, A10 ABOUT-13 (the eyebrow equals the stops joined by " → ", en, de,
+  pt), A11 ABOUT-15 on the built pages (no years), A12 ABOUT-19 (no `[[`, no "gap:", no element
+  with the class `gap`, `ph`, `ann` or `mocknote` in `<main>` or the files the page loads).
+- **Protocol rows,** each that is green at first shown red by its break, then restored (md5
+  checked): ABOUT-P-01 (`pt/about` moved out of the build: A3), ABOUT-P-02 ("Berlin Chapter" put in
+  `<main>` of the built `/en/about`: A2), ABOUT-P-03 (the English intro on the built `/de/about`:
+  A1), ABOUT-P-04 (Lisbon before Estremoz in the seed: B2; and in the built `/de/about`: A9),
+  ABOUT-P-05 (S2).
+
+Not in slice 1: the years, paragraphs, onward texts, Lisbon's texts, Berlin's threads and
+`#running` (slice 3); the marker, the fill, the bar and every browser check (slices 2 and 4). The
+route, menu link, current marker, sitemap entries and nginx exist already.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor T as Tests
+    box Real: compose.build.yml, Testcontainers in B1–B3
+        participant DB as MySQL 8 (Flyway + seed R__about.sql)
+        participant API as Content API
+    end
+    participant F as fetch-content.mjs
+    participant NG as ng build (prerender)
+    participant P as dist/…/l/about/index.html
+    T->>API: B1–B3: GET about/{head, route}?lang=l
+    API->>DB: select body where page=about, section=s, lang=l
+    F->>API: GET about/{head, route}?lang=l, for l in en, de, pt
+    API-->>F: 200 {…}; 404 → the build stops (S1); a [[gap: …]] in any string → it stops (S2)
+    F->>NG: about.json (@page-content/about)
+    NG->>P: route /l/about (U3): lang, alternates, title (U2), PageHead (U1), route nav (U4), four chapter heads (U5)
+    T->>P: A1–A12, P rows
+```
+
+Session type. Convention: a role that a branch never calls just ends there. `s` in `head`,
+`route`; `c` in `piri`, `estremoz`, `lisbon`, `berlin`, in that order.
+
+```
+G = Build → API : get(about, s, l) .
+    API → Build : { ok200(s_l) .
+                    Build → Page : prerender(l, title_l, alternates, current(about), head_l, route_l) .
+                    Page → Visitor : page(lang = l, h1, nav(label_l, [c ↦ /l/about#c]), chapters[c: n, of 4, place_l]) .
+                    Visitor → Page : { jump(c) . end , leave . end } ,
+                    missing404 . Build → CI : fail(about, s, l) . end ,
+                    gapMarker  . Build → CI : fail(about, s, l) . end }
+
+Build ↾   = API!get . API?{ ok200 . Page!prerender . end , missing404 . CI!fail . end , gapMarker . CI!fail . end }
+API ↾     = Build?get . Build!{ ok200 . end , missing404 . end , gapMarker . end }
+Page ↾    = Build?prerender . Visitor!page(…) . Visitor?{ jump . end , leave . end }
+Visitor ↾ = Page?page(…) . Page!{ jump . end , leave . end }
+```
+
+`gapMarker` is the API's `200` whose body holds `[[`: the API does not know it; the snapshot does.
+`jump(c)` here is the plain link to the chapter; the marker that answers it (`mark(c)`) is slice 2's.
+
+| Arrow | Step in G | Rows |
+|---|---|---|
+| 1–2 tests → API → DB | `get`, `ok200(s_l)` | B1, B2, B3 (ABOUT-10, 11, 14) |
+| 3–4 F → API | `get` × 6, `{ok200, missing404, gapMarker}` | S1, S2 (ABOUT-05, P-05) |
+| 5–6 F → NG → P | `prerender(l, title_l, alternates, current(about), head_l, route_l)` | U1–U5 |
+| 7 T → P | `page(lang = l, h1, nav(…), chapters[…])` | A1, A3–A12 |
+| `jump(c)` | the stop's link `/l/about#c` to `section#c` | U4, U5, A9, A11 |
+| forbidden: a page missing for some `l` | `prerender` for every `l` | ABOUT-P-01 (A3) |
+| forbidden: the old page in `page(…)` | `page` holds the new parts only | ABOUT-P-02 (A2) |
+| forbidden: `head_en` on `l = de` | `ok200(head_l)` | ABOUT-P-03 (A1) |
+| forbidden: stops in another order, or not four | `nav([c …])` in route order | ABOUT-P-04 (B2, A9) |
+| forbidden: unfinished text reaches `prerender` | `gapMarker` ends in `fail` | ABOUT-P-05 (S2), A12 |
+
+The build is read-only: no repeat, stale-token or race rows. The old page is not a refactor: what
+the visitor sees changes, so there is no `G_pre`/`G_post` claim; A2 and ABOUT-P-02 hold the change.
+
 ## Decisions
 
 **Answered by Zua on 2026-11-15: all seven as recommended**, the first option of each. So:
@@ -229,6 +345,29 @@ pushed.
 - **D5: a.** Dates and distances stored per language.
 - **D6: a.** No Berlin Marathon until Zua gives a time.
 - **D7: a.** The intro and labels built as drafted, reviewed on the preview.
+
+Zua's answers, repeated when the build began (2026-11-15):
+- The cases, the four slices and D1 to D7 as recommended: D1 one section per chapter; D2 slices 1
+  and 2 built now, the story (slice 3) only once Zua's text for it is in, nothing unfinished stored;
+  D3 Zua writes the story, the designer drafts de and pt, Zua reads both before `next` is merged; D4
+  Lisbon's texts a copy held equal to Writing's by a test; D5 the races' dates and distances as text
+  per language; D6 the Berlin Marathon not shown until Zua gives a time; D7 the head's intro and
+  labels built as drafted, reviewed by Zua on the preview.
+- **Merging:** `next` goes into `main` only when the whole site is built (as in `logo.md`).
+
+Taken while planning slice 1 (2026-11-15, tdd-peer; Zua may change them):
+- **D8. The stops link to `/l/about#{id}`,** the page's path with the fragment, as the skip link
+  does (SHELL-10). The site's `<base href="/">` makes a bare `#piri` lead to `/#piri`, the home
+  page. The fragment is ABOUT-12's `#piri`.
+- **D9. The gap guard is the snapshot's, for every page:** any string in any section holding `[[`
+  stops the snapshot with "Unfinished text (a gap marker) in page p, section s, language l". The
+  API stores what it is given; the build refuses it (ABOUT-P-05).
+- **D10. `about/route` is stored whole in slice 1,** with the spec's labels (`movedOn`, `newTab`
+  included, D7's drafts): they are labels, not facts about Zua. Slice 1 shows `label`, `chapter`,
+  `chapterOf` and the stops' places.
+- **D11. The chapters' heads in slice 1** take the place from `route.stops` and the label from
+  `route.chapterOf` alone ("Chapter 1 of 4"). The " · years" joins with the chapter's section in
+  slice 3; until then there is no `about/piri` and the rest, and the snapshot does not ask for them.
 
 The options as they were proposed:
 - **D1. The stored shape.**
