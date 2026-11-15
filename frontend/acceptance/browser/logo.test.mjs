@@ -1,0 +1,96 @@
+// Acceptance tests for the logo in the header, in a real browser: the name's breakpoint, the mark's
+// colours and contrast in the light and the night glaze, the link's size and focus. Run
+// `npm run build` first, then `npm run acceptance:browser`. CHROMIUM_PATH picks a Chromium of your
+// own, as in shell-phone.test.mjs. Examples: docs/examples/logo.md, slice 1.
+import { test, before, after } from 'node:test';
+import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { extname, join, normalize } from 'node:path';
+import { chromium } from 'playwright-core';
+
+const site = join(import.meta.dirname, '../../dist/zuacaldeira-com/browser');
+const TYPES = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript',
+  '.css': 'text/css',
+  '.json': 'application/json',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.ico': 'image/x-icon',
+  '.woff2': 'font/woff2',
+};
+
+// A static server for the built site, as nginx serves it: /de/home is de/home/index.html.
+const file = (url) => {
+  const path = normalize(decodeURIComponent(new URL(url, 'http://x').pathname));
+  const asFile = join(site, path);
+  if (existsSync(asFile) && statSync(asFile).isFile()) return asFile;
+  const asPage = join(site, path, 'index.html');
+  return existsSync(asPage) ? asPage : join(site, '404/index.html');
+};
+const server = createServer((req, res) => {
+  const f = file(req.url ?? '/');
+  res.writeHead(200, { 'content-type': TYPES[extname(f)] ?? 'application/octet-stream' });
+  res.end(readFileSync(f));
+});
+
+const chromiumPath = () => {
+  if (process.env.CHROMIUM_PATH) return process.env.CHROMIUM_PATH;
+  if (existsSync(chromium.executablePath())) return undefined;
+  const cache = join(homedir(), '.cache/ms-playwright');
+  return (existsSync(cache) ? readdirSync(cache) : [])
+    .filter((d) => /^chromium-\d+$/.test(d))
+    .sort((a, b) => Number(b.split('-')[1]) - Number(a.split('-')[1]))
+    .map((d) => join(cache, d, 'chrome-linux64/chrome'))
+    .find(existsSync);
+};
+
+let browser;
+let origin;
+before(async () => {
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  origin = `http://127.0.0.1:${server.address().port}`;
+  browser = await chromium.launch({ executablePath: chromiumPath() });
+});
+after(async () => {
+  await browser?.close();
+  server.close();
+});
+
+// Opens a page at a width and glaze, after Angular has started, and hands it to `fn`.
+const withPage = async ({ route = '/en/home', width, height = 900, theme = 'light' }, fn) => {
+  const context = await browser.newContext({ viewport: { width, height }, colorScheme: theme });
+  try {
+    const page = await context.newPage();
+    await page.goto(`${origin}${route}`, { waitUntil: 'networkidle' });
+    await page.waitForFunction(() => document.querySelectorAll('[ngh]').length === 0, null, {
+      timeout: 15000,
+    });
+    await page.evaluate(() => document.fonts.ready);
+    return await fn(page);
+  } finally {
+    await context.close();
+  }
+};
+
+// Whether the header's home link shows its mark and its name: each drawn with a box of its own.
+const shown = (page) =>
+  page.evaluate(() => {
+    const logo = document.querySelector('header a.logo');
+    const drawn = (el) => !!el && el.getBoundingClientRect().width > 0 && el.checkVisibility();
+    return {
+      mark: drawn(logo?.querySelector('app-logo-mark svg')),
+      name: drawn(logo?.querySelector('.logo-name')),
+    };
+  });
+
+test('LOGO-04: the desktop bar shows the mark alone at 768 px, the mark and the name at 1280 px', async () => {
+  const at768 = await withPage({ width: 768, height: 1024 }, shown);
+  const at1280 = await withPage({ width: 1280 }, shown);
+  assert.deepEqual(
+    { at768, at1280 },
+    { at768: { mark: true, name: false }, at1280: { mark: true, name: true } },
+  );
+});

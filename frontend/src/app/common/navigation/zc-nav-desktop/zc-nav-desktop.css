@@ -63,6 +63,13 @@ app-logo-mark {
   transition: color var(--zc-transition-base);
 }
 
+/* Below 980 px the name gives way to the mark (shell.md's widths; the link keeps its name, D5). */
+@media (max-width: 979.98px) {
+  .logo-name {
+    display: none;
+  }
+}
+
 nav {
   flex: 1;
   display: flex;
