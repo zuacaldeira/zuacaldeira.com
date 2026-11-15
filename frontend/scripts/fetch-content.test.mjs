@@ -142,6 +142,17 @@ test('ABOUT-05: the About route missing in pt stops the build, naming page, sect
   });
 });
 
+test('ABOUT-P-05 (D9): a gap marker in any stored string stops the build, naming page, section and language', async (t) => {
+  const stored = everything();
+  stored.about.route.de.stops[0].place = 'Piri [[gap: the village]]';
+  const api = await fakeApi(stored);
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'Unfinished text (a gap marker) in page about, section route, language de',
+  });
+});
+
 test('SW-PAGE-09 (D30): the shared paper labels missing in pt stop the build, naming page, section and language', async (t) => {
   const stored = everything();
   delete stored.shared.paper.pt;

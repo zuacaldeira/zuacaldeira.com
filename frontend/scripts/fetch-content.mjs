@@ -39,11 +39,23 @@ export async function fetchContent(api) {
           `No content for page ${page}, section ${section}, language ${lang} (${response.status})`,
         );
       }
-      ((snapshot[page] ??= {})[section] ??= {})[lang] = await response.json();
+      const body = await response.json();
+      if (strings(body).some((s) => s.includes('[['))) {
+        throw new Error(`Unfinished text (a gap marker) in page ${page}, section ${section}, language ${lang}`);
+      }
+      ((snapshot[page] ??= {})[section] ??= {})[lang] = body;
     }
   }
   return snapshot;
 }
+
+// Every string in a stored section, however deep (D9 in about.md: no gap marker reaches a page).
+const strings = (value) =>
+  typeof value === 'string'
+    ? [value]
+    : value && typeof value === 'object'
+      ? Object.values(value).flatMap(strings)
+      : [];
 
 /** Writes the snapshot as one file per page, `<dir>/<page>.json` (D21). */
 export function writeSnapshot(snapshot, dir) {
