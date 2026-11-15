@@ -138,6 +138,65 @@ for (const theme of ['light', 'dark']) {
   });
 }
 
+// The contrast of each part of the header's mark (its stroke or fill) and of the name against what
+// is painted behind the link: the first backgrounds up its ancestors, half-transparent ones laid
+// over the next (as contrast.mjs does for text).
+const contrasts = (page) =>
+  page.evaluate(() => {
+    const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    const rgba = (css) => {
+      ctx.clearRect(0, 0, 1, 1);
+      ctx.fillStyle = css;
+      ctx.fillRect(0, 0, 1, 1);
+      const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
+      return [r, g, b, a / 255];
+    };
+    const over = ([r, g, b, a], [R, G, B]) => [
+      r * a + R * (1 - a),
+      g * a + G * (1 - a),
+      b * a + B * (1 - a),
+      1,
+    ];
+    const luminance = (c) => {
+      const [r, g, b] = c.slice(0, 3).map((v) => {
+        const s = v / 255;
+        return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const logo = document.querySelector('header a.logo');
+    const layers = [];
+    for (let e = logo; e; e = e.parentElement) {
+      const c = rgba(getComputedStyle(e).backgroundColor);
+      if (c[3] > 0) layers.push(c);
+      if (c[3] === 1) break;
+    }
+    const bg = layers.reduceRight((below, layer) => over(layer, below), [255, 255, 255, 1]);
+    const ratio = (css) => {
+      const [l1, l2] = [luminance(over(rgba(css), bg)), luminance(bg)].sort((a, b) => b - a);
+      return Math.round(((l1 + 0.05) / (l2 + 0.05)) * 100) / 100;
+    };
+    const of = (selector, prop) => ratio(getComputedStyle(logo.querySelector(selector))[prop]);
+    return {
+      edges: of('line', 'stroke'),
+      atoms: of('circle.atom', 'fill'),
+      top: of('circle.top', 'fill'),
+      bottomRing: of('circle.bottom', 'stroke'),
+      name: of('.logo-name', 'color'),
+    };
+  });
+
+for (const theme of ['light', 'dark']) {
+  test(`LOGO-07: in the ${theme} glaze each part of the mark stands at 3:1 or more, the name at 4.5:1 or more`, async (t) => {
+    const found = await withPage({ width: 1280, theme }, contrasts);
+    t.diagnostic(JSON.stringify(found));
+    const low = Object.entries(found)
+      .filter(([part, ratio]) => ratio < (part === 'name' ? 4.5 : 3))
+      .map(([part, ratio]) => `${part} ${ratio}`);
+    assert.deepEqual(low, [], JSON.stringify(found));
+  });
+}
+
 test('LOGO-04: the desktop bar shows the mark alone at 768 px, the mark and the name at 1280 px', async () => {
   const at768 = await withPage({ width: 768, height: 1024 }, shown);
   const at1280 = await withPage({ width: 1280 }, shown);
