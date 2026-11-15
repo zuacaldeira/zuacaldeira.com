@@ -12,7 +12,8 @@
     "acceptance:nginx": "node --test acceptance/nginx/*.test.mjs",
     "acceptance:browser": "node --test acceptance/browser/*.test.mjs",
     "test:scripts": "node --test scripts/*.test.mjs",
-    "content": "node scripts/fetch-content.mjs"
+    "content": "node scripts/fetch-content.mjs",
+    "glaze": "node scripts/glaze-tokens.mjs"
   },
   "prettier": {
     "printWidth": 100,

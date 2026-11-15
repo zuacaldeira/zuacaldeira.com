@@ -2,38 +2,34 @@
 
 /*
  * Azulejo — the palette is Lisbon blue-and-white tile, the structure is a lattice.
- * Every value below is contrast-checked against its intended background; --zc-ochre
- * is the one exception and is graphics-only (3.21:1, clears 1.4.11 but not 1.4.3),
- * so use --zc-ochre-text whenever ochre carries words.
+ * The colours are the living glaze's (docs/examples/theme.md): its engine
+ * (src/app/services/glaze.mjs) holds every text at 4.5:1 or more, and --zc-ochre and
+ * --zc-edge at 3:1 or more, against the background and the surface, at every minute of
+ * the day (THEME-04). --zc-ochre is graphics-only (3:1 clears 1.4.11 but not 1.4.3), so
+ * use --zc-ochre-text whenever ochre carries words. The colour lines below are generated.
  */
 :root {
+  /* glaze:light: the glaze at 12:30, written by npm run glaze (scripts/glaze-tokens.mjs) from
+     src/app/services/glaze.json. Never edit these lines by hand (THEME-16). */
+  --zc-bg-warm: #e9eff4;
+  --zc-bg-white: #f7fafc;
+  --zc-bg-light: #dfe8f0;
+  --zc-azul-wash: #d3e0ec;
+  --zc-border-light: #c9d8e6;
   --zc-text-heading: #0b1526;
   --zc-text-body: #12203a;
   --zc-text-muted: #556476;
-
-  --zc-bg-white: #f7fafc;
-  --zc-bg-warm: #e9eff4;
-  --zc-bg-light: #dfe8f0;
-
   --zc-azul: #14417a;
+  --zc-accent: #14417a;
   --zc-azul-deep: #0a2a55;
-  --zc-azul-pale: #7fa5ce;
-  --zc-azul-wash: #d3e0ec;
-
+  --zc-accent-hover: #0a2a55;
+  --zc-on-accent: #f7fafc;
   --zc-ochre: #b07a22;
   --zc-ochre-text: #8a5e15;
-  --zc-ochre-wash: #faf5ec;
-  --zc-tile: #f7fafc;
-
-  --zc-accent: #14417a;
-  --zc-accent-light: #7fa5ce;
-  --zc-accent-hover: #0a2a55;
-
-  --zc-border-light: #c9d8e6;
-  --zc-grout: rgba(20, 65, 122, 0.16);
-  /* Lattice edges carry the diagram's meaning, so they are held at >=3:1 (WCAG 1.4.11)
-     rather than reusing the decorative grout hairline, which resolves to 1.31:1. */
   --zc-edge: #6987ab;
+  --zc-foot-gold: #d9a94a;
+  --zc-foot-on-gold: #1a1205;
+  /* glaze:light end */
 
   /* Each main family, then the notation fonts for the symbols it lacks (loaded in index.html for
      those symbols only; D38 to D42 in docs/examples/shell.md), then the system's. */
@@ -68,17 +64,15 @@
   --zc-max-width: 1100px;
 
   /* The ink footer (home-spec.md, "Footer colours"): heading ink on light glazes, raised surface on
-     dark ones. The gold is fixed in both: 8.4:1 on the light ink, 6.9:1 on the dark raised surface;
-     the mail button's text on it is 8.7:1 (SHELL-07 C checks them in the browser). */
+     dark ones. The gold (--zc-foot-gold, in the block above) is 8.4:1 on the light ink, 6.9:1 on the
+     dark raised surface; the mail button's text on it is 8.7:1 (SHELL-07 C checks them in the
+     browser). In the crossings the glaze's guard lifts it (D5 in theme.md). */
   --zc-foot-bg: var(--zc-text-heading);
   --zc-foot-fg: var(--zc-bg-warm);
-  --zc-foot-gold: #d9a94a;
-  --zc-foot-on-gold: #1a1205;
 
   /* The theorem band (home-spec.md, "Theorem band colours", D32): the accent with on-accent text on
      light glazes (about 9.8:1), the raised surface with heading text on dark ones (about 12:1); the
      filled button swaps them. SW-PROOF-05 C measures them in the browser. */
-  --zc-on-accent: #f7fafc;
   --zc-band-bg: var(--zc-accent);
   --zc-band-fg: var(--zc-on-accent);
   --zc-band-btn: var(--zc-on-accent);
@@ -87,31 +81,25 @@
 
 /* Night glaze: the tile fires darker, the blue lifts to read against it. */
 html.dark-theme {
+  /* glaze:dark: the glaze at 02:00, written by npm run glaze (scripts/glaze-tokens.mjs) from
+     src/app/services/glaze.json. Never edit these lines by hand (THEME-16). */
+  --zc-bg-warm: #0b1526;
+  --zc-bg-white: #12203a;
+  --zc-bg-light: #17294a;
+  --zc-azul-wash: #17294a;
+  --zc-border-light: #2a3f63;
   --zc-text-heading: #e9eff4;
   --zc-text-body: #d3e0ec;
   --zc-text-muted: #8496ab;
-
-  --zc-bg-white: #12203a;
-  --zc-bg-warm: #0b1526;
-  --zc-bg-light: #17294a;
-
   --zc-azul: #7fa5ce;
+  --zc-accent: #7fa5ce;
   --zc-azul-deep: #a8c4de;
-  --zc-azul-pale: #14417a;
-  --zc-azul-wash: #17294a;
-
+  --zc-accent-hover: #a8c4de;
+  --zc-on-accent: #0b1526;
   --zc-ochre: #d9a94a;
   --zc-ochre-text: #d9a94a;
-  --zc-ochre-wash: #221a0e;
-  --zc-tile: #12203a;
-
-  --zc-accent: #7fa5ce;
-  --zc-accent-light: #a8c4de;
-  --zc-accent-hover: #a8c4de;
-
-  --zc-border-light: #2a3f63;
-  --zc-grout: rgba(127, 165, 206, 0.22);
-  --zc-edge: #516b8b;
+  --zc-edge: #526c8c;
+  /* glaze:dark end */
 
   --zc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
   --zc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -122,7 +110,6 @@ html.dark-theme {
 
   /* Dark glazes: the lifted accent would glare as a slab, so the band takes the raised surface; the
      filled button is the accent with on-accent text (about 7.5:1). */
-  --zc-on-accent: #0b1526;
   --zc-band-bg: var(--zc-bg-light);
   --zc-band-fg: var(--zc-text-heading);
   --zc-band-btn: var(--zc-accent);
