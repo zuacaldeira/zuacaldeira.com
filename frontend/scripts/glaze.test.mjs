@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { runInNewContext } from 'node:vm';
+import { checkTable } from '../src/app/services/glaze.mjs';
 
 const frontend = join(import.meta.dirname, '..');
 const table = JSON.parse(readFileSync(join(frontend, 'src/app/services/glaze.json'), 'utf8'));
@@ -49,4 +50,16 @@ test('THEME-15: the glaze table is the one the mock-ups use', () => {
       fixed: { footGold, footOnGold },
     },
   );
+});
+
+test('THEME-P-07: a glaze missing a token, or with a token not in the map, is refused by name', () => {
+  const without = structuredClone(table);
+  delete without.glazes.amarelo.c.edge;
+  assert.throws(() => checkTable(without), /glaze amarelo has no edge/);
+
+  const extra = structuredClone(table);
+  extra.glazes.cobalto.c.teal = '#006a6a';
+  assert.throws(() => checkTable(extra), /glaze cobalto has teal, which the map does not name/);
+
+  assert.doesNotThrow(() => checkTable(table));
 });
