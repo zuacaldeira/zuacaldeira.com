@@ -18,6 +18,9 @@ const SECTIONS = [
   ['research', 'checked'],
   ['research', 'tool'],
   ['research', 'more'],
+  // The chapters (about/piri …) join with Zua's text (D2, D11 in about.md).
+  ['about', 'head'],
+  ['about', 'route'],
   // Text several pages read, written as shared.json (D30).
   ['shared', 'paper'],
 ];

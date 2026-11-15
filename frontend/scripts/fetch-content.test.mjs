@@ -113,8 +113,34 @@ const everything = () => {
       tool: all((lang) => ({ heading: `heading ${lang}`, title: 'reticulateP' })),
       more: all((lang) => ({ heading: `heading ${lang}` })),
     },
+    about: {
+      head: all(headIn),
+      route: all((lang) => ({ label: `label ${lang}`, stops: [{ id: 'piri', place: 'Piri' }] })),
+    },
   };
 };
+
+test('ABOUT-05: an About head missing in de stops the build, naming page, section and language', async (t) => {
+  const stored = everything();
+  delete stored.about.head.de;
+  const api = await fakeApi(stored);
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'No content for page about, section head, language de (404)',
+  });
+});
+
+test('ABOUT-05: the About route missing in pt stops the build, naming page, section and language', async (t) => {
+  const stored = everything();
+  delete stored.about.route.pt;
+  const api = await fakeApi(stored);
+  t.after(api.close);
+
+  await assert.rejects(fetchContent(api.url), {
+    message: 'No content for page about, section route, language pt (404)',
+  });
+});
 
 test('SW-PAGE-09 (D30): the shared paper labels missing in pt stop the build, naming page, section and language', async (t) => {
   const stored = everything();
