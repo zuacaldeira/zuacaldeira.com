@@ -102,3 +102,36 @@ test('THEME-14: halfway from Manganês to Cobalto, each token is the Oklab midpo
     { hex: json(study.hex), mode: 'light', moved: [] },
   );
 });
+
+const INKS = ['heading', 'body', 'muted', 'accent', 'accentHover', 'ochre', 'ochreText', 'edge', 'onAccent'];
+const hhmm = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+
+test('THEME-12: in the two crossings the ground fades every minute and the inks switch once', () => {
+  const { manganesNoite, manganes, amarelo } = table.glazes;
+  // [from, to, the side before the switch, the minute it switches, the side after]
+  const crossings = [
+    ['06:00', '06:30', manganesNoite, '06:15', manganes],
+    ['19:30', '20:00', amarelo, '19:46', manganesNoite],
+  ];
+  const seen = [];
+  for (const [from, to] of crossings) {
+    for (let m = at(from); m <= at(to); m++) {
+      const glaze = themeAt(table, m);
+      const inks = INKS.filter((k) => !glaze.moved.includes(k)).map((k) => [k, glaze.hex[k]]);
+      const ground = m > at(from) && glaze.hex.bg === themeAt(table, m - 1).hex.bg ? 'still' : 'moved';
+      seen.push({ at: hhmm(m), mode: glaze.mode, ground, inks: Object.fromEntries(inks) });
+    }
+  }
+  const want = seen.map(({ at: t, inks }) => {
+    const [, , before, switchAt, after] = crossings.find(([f, to]) => t >= f && t <= to);
+    const side = at(t) < at(switchAt) ? before : after;
+    const inkSide = Object.fromEntries(Object.keys(inks).map((k) => [k, side.c[k]]));
+    return { at: t, mode: side.mode, ground: 'moved', inks: inkSide };
+  });
+  assert.deepEqual(seen, want);
+
+  const switches = [];
+  for (let m = 1; m < 1440; m++)
+    if (themeAt(table, m).mode !== themeAt(table, m - 1).mode) switches.push(hhmm(m));
+  assert.deepEqual(switches, ['06:15', '19:46']);
+});

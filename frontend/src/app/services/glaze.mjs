@@ -34,6 +34,18 @@ function labToRgb([L, a, b]) {
 const mixLab = (p, q, t) => p.map((v, i) => v + (q[i] - v) * t);
 const smooth = (t) => t * t * (3 - 2 * t);
 const labOf = (hex) => rgbToLab(hexToRgb(hex));
+const lum = (rgb) => {
+  const [r, g, b] = rgb.map(toLin);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const contrast = (p, q) => {
+  const [x, y] = [lum(p), lum(q)];
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+};
+/** Dark when white reads better on it than black: the study's test, on the unrounded ground (THEME-12). */
+const isDark = (rgb) => contrast([1, 1, 1], rgb) > contrast([0, 0, 0], rgb);
+
+const SURFACES = ['bg', 'surface', 'raised', 'wash', 'border'];
 
 /** Refuses a table whose glazes do not hold exactly the map's tokens (THEME-P-07). */
 export function checkTable(table) {
@@ -55,8 +67,14 @@ export function themeAt(table, minute) {
   const a = table.glazes[k0];
   const b = table.glazes[k1];
   const t = h1 > h0 ? smooth((h - h0) / (h1 - h0)) : 0;
+  const blendRgb = (k) => labToRgb(mixLab(labOf(a.c[k]), labOf(b.c[k]), t));
+  const blend = (k) => rgbToHex(blendRgb(k));
   const hex = {};
+  for (const k of SURFACES) hex[k] = blend(k);
+  const dark = isDark(blendRgb('bg'));
+  // A crossing (the two keyframes differ in mode): the inks snap to the side the ground is on.
+  const side = a.mode === b.mode ? null : (a.mode === 'dark') === dark ? a : b;
   for (const k of Object.keys(table.map))
-    hex[k] = rgbToHex(labToRgb(mixLab(labOf(a.c[k]), labOf(b.c[k]), t)));
-  return { hex, mode: a.mode, moved: [] };
+    if (!SURFACES.includes(k)) hex[k] = side ? side.c[k] : blend(k);
+  return { hex, mode: dark ? 'dark' : 'light', moved: [] };
 }
