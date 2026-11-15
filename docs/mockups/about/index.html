@@ -49,7 +49,7 @@ code{font-family:var(--mono);font-size:.9em}
 
   <form class="controls" id="controls" aria-label="What to show">
     <fieldset><legend>Option</legend><div class="seg">
-      <label><input type="radio" name="opt" value="a" checked>A Route on top</label><label><input type="radio" name="opt" value="b">B Route beside</label>
+      <label><input type="radio" name="opt" value="a">A Route on top</label><label><input type="radio" name="opt" value="b" checked>B Route beside (chosen)</label>
     </div></fieldset>
     <fieldset><legend>Theme</legend><div class="seg">
       <label><input type="radio" name="state" value="living" checked>Living</label><label><input type="radio" name="state" value="light">Light</label><label><input type="radio" name="state" value="dark">Dark</label>
@@ -67,10 +67,10 @@ code{font-family:var(--mono);font-size:.9em}
   <section>
     <h2>The two options</h2>
     <div class="cards">
-      <article class="card" data-opt="a"><p class="rec">&nbsp;</p><h3>A · The route as a figure on top</h3><p><b>For:</b> the whole life in one look before reading: four stops on a line that draws itself in, each with what happened there, each a link to its chapter. The chapters below alternate grounds, each opening with a large numeral and a small route showing where you are. Without JavaScript, it works the same.</p><p><b>Costs:</b> once you scroll past it, the route is gone; each chapter's small route and its "The route" link have to stand in. On the phone it is the longest page (6,274 px).</p></article>
-      <article class="card" data-opt="b"><p class="rec">Recommended</p><h3>B · The route beside the chapters</h3><p><b>For:</b> the route travels with you. On a laptop it stays in the left margin; on the phone it is a bar under the header. The stop you are reading is marked, and the line fills up to it, so you always know where you are in the life and can jump to any stop. It is shorter on the phone (5,346 px), because the chapters share one ground.</p><p><b>Costs:</b> there is no single figure to take in at the start, and the text column is narrower on a laptop. It needs a little JavaScript to mark the stop; without it, the four stops are plain links.</p></article>
+      <article class="card" data-opt="a"><p class="rec">For reference, not built</p><h3>A · The route as a figure on top</h3><p><b>For:</b> the whole life in one look before reading: four stops on a line that draws itself in, each with what happened there, each a link to its chapter. The chapters below alternate grounds, each opening with a large numeral and a small route showing where you are. Without JavaScript, it works the same.</p><p><b>Costs:</b> once you scroll past it, the route is gone; each chapter's small route and its "The route" link have to stand in. On the phone it is the longest page (6,274 px).</p></article>
+      <article class="card" data-opt="b"><p class="rec">Chosen by Zua, 2026-11-15 · build spec: about-spec.md</p><h3>B · The route beside the chapters</h3><p><b>For:</b> the route travels with you. On a laptop it stays in the left margin; on the phone it is a bar under the header. The stop you are reading is marked, and the line fills up to it, so you always know where you are in the life and can jump to any stop. It is shorter on the phone (5,346 px), because the chapters share one ground.</p><p><b>Costs:</b> there is no single figure to take in at the start, and the text column is narrower on a laptop. It needs a little JavaScript to mark the stop; without it, the four stops are plain links.</p></article>
     </div>
-    <p class="lede"><b>Why B:</b> this page is long and read in order, often on a phone. A route that stays on screen and moves with the reader is the table of contents and the figure at once. In A, the figure is gone after the first screen.</p>
+    <p class="lede"><b>Zua chose B on 2026-11-15.</b> The build follows <code>about-spec.md</code> and the cases in <code>docs/examples/about.md</code>; A stays here for reference only. <b>Why B:</b> this page is long and read in order, often on a phone. A route that stays on screen and moves with the reader is the table of contents and the figure at once. In A, the figure is gone after the first screen.</p>
   </section>
 
   <section>

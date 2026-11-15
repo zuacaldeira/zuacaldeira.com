@@ -1,8 +1,9 @@
 # About page: notes for the mock-up
 
 Status: **decisions from Zua, 2026-11-15**, after ui-design-peer's proposal the same day. The mock-up
-(`about.html`, compared in `index.html`) shows two options. Once one is chosen, the build spec
-(`about-spec.md`) and the examples file (`docs/examples/about.md`) follow.
+(`about.html`, compared in `index.html`) shows two options. **Zua chose option B, the route beside
+the chapters, on 2026-11-15 (AB-D10).** The build spec is `about-spec.md` and the cases are in
+`docs/examples/about.md`. Zua's facts for the gaps come later, in Zua's own words.
 
 The page: `/en/about`, `/de/about` ("Über mich"), `/pt/about` ("Sobre"). It is in the menu (Software,
 Research, Writing, About) and the home hero's first button leads to it.
@@ -46,6 +47,9 @@ the background comes from, teams building AI agents who want to know whom they w
   chapters meet: A, the route as a figure at the top and the chapters below in order; B, the route
   running down the page beside the chapters, each stop marking its chapter as you read. English only
   in this round, at 390 and 1280 px, light and dark, with the shared header (Losango mark) and footer.
+- **AB-D10. Option B is built** (Zua, 2026-11-15): the route beside the chapters, a column on a laptop
+  and a bar under the header on a phone, marking the chapter being read. Option A stays on the
+  comparison page for reference and is not built.
 
 ## Where each fact comes from
 
