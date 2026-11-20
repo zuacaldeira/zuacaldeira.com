@@ -258,6 +258,76 @@ for (const lang of ['en', 'de', 'pt']) {
   }
 }
 
+// In the page: the gap from ⊥ to the first letter of the words after it, and the width of one
+// space in the same element's font (measured on a hidden copy of the link).
+const READ_SIGN_GAP = (selector) => {
+  const link = document.querySelector(selector);
+  const sign = [...link.querySelectorAll('[aria-hidden="true"]')].find((el) => el.textContent === '⊥');
+  const walker = document.createTreeWalker(link, NodeFilter.SHOW_TEXT);
+  let word = null;
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    // The words after the sign; not the sign, and not an icon's ligature text ("mail").
+    if (!sign.contains(node) && !node.parentElement.closest('mat-icon') && /\S/.test(node.textContent)) {
+      word = node;
+      break;
+    }
+  }
+  const first = document.createRange();
+  const at = word.textContent.search(/\S/);
+  first.setStart(word, at);
+  first.setEnd(word, at + 1);
+  const probe = document.createElement('span');
+  probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre';
+  probe.textContent = 'a a';
+  sign.parentElement.append(probe);
+  const one = document.createElement('span');
+  one.style.cssText = probe.style.cssText;
+  one.textContent = 'aa';
+  sign.parentElement.append(one);
+  const space = probe.getBoundingClientRect().width - one.getBoundingClientRect().width;
+  probe.remove();
+  one.remove();
+  const tenth = (n) => Math.round(n * 10) / 10;
+  return {
+    gap: tenth(first.getBoundingClientRect().left - sign.getBoundingClientRect().right),
+    space: tenth(space),
+  };
+};
+
+// The phone menu's links are drawn only once the menu is open.
+const phoneContactGap = async (route) => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  try {
+    await context.addInitScript(() => localStorage.setItem('zc-theme', 'light'));
+    const page = await context.newPage();
+    await page.goto(`${origin}${route}`, { waitUntil: 'networkidle' });
+    await page.click('app-zc-nav-mobile .menu-button');
+    await page.waitForSelector('mat-sidenav nav a[href$="/contact"]', { state: 'visible' });
+    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
+    return await page.evaluate(READ_SIGN_GAP, 'mat-sidenav nav a[href$="/contact"]');
+  } finally {
+    await context.close();
+  }
+};
+
+for (const lang of ['en', 'de', 'pt']) {
+  test(`SHELL-17b: at 1280 in ${lang}, a space stands between ⊥ and the contact button's words`, async () => {
+    const { gap, space } = await atWidth(
+      { route: `/${lang}/software`, width: 1280 },
+      READ_SIGN_GAP,
+      'app-zc-nav-desktop .nav-cta',
+    );
+    assert.ok(space >= 8 && gap >= space - 1, `gap ${gap} px, one space ${space} px`);
+  });
+
+  test(`SHELL-17b: at 390 in ${lang}, a space stands between ⊥ and the phone menu's Contact`, async () => {
+    const { gap, space } = await phoneContactGap(`/${lang}/software`);
+    assert.ok(space >= 1 && gap >= space - 1, `gap ${gap} px, one space ${space} px`);
+  });
+}
+
 for (const route of ['/en/software', '/de/writing', '/pt/research']) {
   for (const width of [390, 768, 1280, 1440]) {
     test(`SHELL-14 (D48): at ${width} on ${route}, header, heading and footer share the column's edges`, async () => {
