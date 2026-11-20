@@ -98,6 +98,14 @@ test('THEME-17: every colour role of Material is the glaze token of D9', () => {
   assert.deepEqual(wrong, []);
 });
 
+test('THEME-19: no file of the built site holds an --mdc- override', () => {
+  const files = readdirSync(browser, { recursive: true }).filter((f) => /\.(css|js|html)$/.test(f));
+  assert.deepEqual(
+    files.filter((f) => readFileSync(join(browser, f), 'utf8').includes('--mdc-')),
+    [],
+  );
+});
+
 test('THEME-17: no --mat-sys-* declaration in the build holds a colour literal', () => {
   const literal = matSys().filter(([, v]) => COLOUR_LITERAL.test(v));
   assert.deepEqual(

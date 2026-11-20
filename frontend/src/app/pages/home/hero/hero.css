@@ -142,18 +142,14 @@
   margin-top: var(--zc-space-4);
 }
 
-/* The hero sits on a fixed dark ground, so the Material buttons are restyled for it
-   rather than following the theme. */
+/* The buttons take the glaze's colours through Material (THEME-11); this old hero goes in the
+   theme's slice 4 (THEME-25). */
 .hero__cta.mat-mdc-unelevated-button {
-  --mdc-filled-button-container-color: #ffd68a;
-  --mdc-filled-button-label-text-color: #1a1205;
   font-family: var(--zc-font-body);
   font-weight: 500;
 }
 
 .hero__cta-ghost.mat-mdc-outlined-button {
-  --mdc-outlined-button-label-text-color: #ffffff;
-  --mdc-outlined-button-outline-color: rgba(255, 255, 255, 0.5);
   font-family: var(--zc-font-body);
   font-weight: 500;
 }
