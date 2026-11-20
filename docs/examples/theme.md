@@ -178,7 +178,7 @@ Taken while planning slice 1 (2026-11-15, tdd-peer; Zua may change them):
   block with the 14, so every colour literal in `styles.css` is generated, apart from the shadows'
   black (D5).
 
-Taken while building slice 2 (2026-11-20, tdd-peer; Zua may change them):
+Taken while building slice 2 (2026-11-20, tdd-peer); both kept by Zua on the preview the same day:
 - **D14. The phone menu's scrim** is Material's `neutral-variant20` mixed at 40%, a role D9 does
   not name. It is the darkest ink of each mode: `--zc-text-heading` on light glazes, `--zc-bg-warm`
   on dark ones, so the veil stays dark as the mock-up's (`rgb(11 21 38 / .45)`). Left unmapped,
