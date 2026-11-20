@@ -3,10 +3,11 @@ import { Translations } from '../models/i18n';
 export const pt: Translations = {
   nav: {
     home: 'Início',
-    about: 'Sobre',
-    software: 'Software',
-    research: 'Investigação',
-    writing: 'Textos',
+    // The menu's words, in lower case as the mock-ups write them (D45 in docs/examples/shell.md).
+    about: 'sobre',
+    software: 'software',
+    research: 'investigação',
+    writing: 'textos',
     work: 'Trabalho',
     paedagogik: 'Pedagogia',
     running: 'Corrida',

@@ -62,11 +62,17 @@ describe('ZcSidenavMenuItems', () => {
     expect(hidden).toEqual([['/de/contact', '⊥']]);
   });
 
-  it('should translate labels based on current language', () => {
+  it('SHELL-16 (D45, D46): translates the labels, in Portuguese in lower case as the bar', () => {
     const i18nService = TestBed.inject(I18nService);
     i18nService.setLanguage('pt');
     const items = component.navItems();
-    expect(items[2].label).toBe('Textos');
+    expect(items.map((item) => item.label)).toEqual([
+      'software',
+      'investigação',
+      'textos',
+      'sobre',
+      'Contacto',
+    ]);
   });
 });
 

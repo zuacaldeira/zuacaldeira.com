@@ -51,14 +51,15 @@ const TITLES = [
 ];
 
 // SHELL-11: the menu as the developer settled it (2026-11-08); Home and Running leave it (D13 in
-// software.md). The home page is no menu item, so nothing in it is current there.
+// software.md). The home page is no menu item, so nothing in it is current there. Its words since
+// 2026-11-20 are the mock-ups' (D45 in shell.md): en and pt in lower case.
 const MENU = {
-  en: ['Software', 'Research', 'Writing', 'About'],
+  en: ['software', 'research', 'writing', 'about'],
   de: ['Software', 'Forschung', 'Texte', 'Über mich'],
-  pt: ['Software', 'Investigação', 'Textos', 'Sobre'],
+  pt: ['software', 'investigação', 'textos', 'sobre'],
 };
 
-test('WR-PAGE-06 (SHELL-11): the menu reads Software, Research, Writing, About, in each language', () => {
+test('WR-PAGE-06 (SHELL-11, D45): the menu reads software, research, writing, about, in each language', () => {
   assert.deepEqual(
     Object.fromEntries(LANGS.map((lang) => [lang, menu(page(`${lang}/home`))])),
     Object.fromEntries(
@@ -70,11 +71,11 @@ test('WR-PAGE-06 (SHELL-11): the menu reads Software, Research, Writing, About, 
   );
 });
 
-test('WR-PAGE-07 (D34 in software.md): the menu shows Textos as the page you are on, and only it', () => {
+test('WR-PAGE-07 (D34 in software.md): the menu shows textos as the page you are on, and only it', () => {
   const links = menu(page('pt/writing'));
   assert.deepEqual(
     links.filter((link) => link.includes('/pt/writing') || link.endsWith('(current)')),
-    ['Textos → /pt/writing (current)'],
+    ['textos → /pt/writing (current)'],
   );
 });
 

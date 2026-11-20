@@ -200,8 +200,9 @@ const readMenu = (page) =>
     };
   });
 
+// The bar's words (D45, D46 in shell.md: en and pt in lower case), then Contact as SHELL-05b has it.
 const MENU = {
-  en: { name: 'Menu', nav: 'Main', labels: ['Software', 'Research', 'Writing', 'About', 'Contact'] },
+  en: { name: 'Menu', nav: 'Main', labels: ['software', 'research', 'writing', 'about', 'Contact'] },
   de: {
     name: 'Menü',
     nav: 'Hauptnavigation',
@@ -210,7 +211,7 @@ const MENU = {
   pt: {
     name: 'Menu',
     nav: 'Navegação principal',
-    labels: ['Software', 'Investigação', 'Textos', 'Sobre', 'Contacto'],
+    labels: ['software', 'investigação', 'textos', 'sobre', 'Contacto'],
   },
 };
 // SHELL-11 and D16 in writing.md: the desktop menu's four pages, then Contact.
