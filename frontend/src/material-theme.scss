@@ -77,10 +77,9 @@ html.dark-theme {
   --mat-sys-neutral-variant20: var(--zc-bg-warm);
 }
 
+// The page's ground and ink are the glaze's, in styles.css (B2, THEME-18), not Material's surface.
 body {
   color-scheme: light;
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
   margin: 0;
   height: 100%;
