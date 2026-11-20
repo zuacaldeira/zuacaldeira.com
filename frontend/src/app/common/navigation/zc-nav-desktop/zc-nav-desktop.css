@@ -37,6 +37,9 @@ mat-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* The mock-up's 12 px gap plus its menu links' 12 px padding, which ours do not carry: the
+     menu's last word ends 24 px before EN (SHELL-15). */
+  gap: var(--zc-space-6);
   height: 64px;
 }
 
@@ -65,17 +68,24 @@ app-logo-mark {
   transition: color var(--zc-transition-base);
 }
 
-/* Below 980 px the name gives way to the mark (shell.md's widths; the link keeps its name, D5). */
+/* Below 980 px the name gives way to the mark (shell.md's widths; the link keeps its name, D5),
+   and the bar tightens as the mock-up's (its links' padding drops to 8 px): 16 px gaps, so the
+   bar holds its column at 768 in every language (SHELL-14, SHELL-15b). */
 @media (max-width: 979.98px) {
   .logo-name {
     display: none;
   }
+
+  .toolbar-content {
+    gap: var(--zc-space-4);
+  }
 }
 
+/* The menu stands at the right, beside the languages, as in every mock-up (SHELL-15). */
 nav {
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .toolbar-actions {

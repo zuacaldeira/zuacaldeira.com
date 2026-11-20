@@ -101,6 +101,43 @@ const READ_EDGES = () => {
   };
 };
 
+// In the desktop bar: whether the controls stand in the mock-up's order (the name, the menu, EN DE
+// PT, the contact button, the theme button) and how far the menu's last word ends before EN. The
+// words are measured, not the links' boxes (the mock-up's links carry padding, ours none).
+const READ_BAR = () => {
+  const header = document.querySelector('app-zc-nav-desktop header');
+  const box = (el) => el.getBoundingClientRect();
+  const words = (el) => {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    return range.getBoundingClientRect();
+  };
+  const links = [...header.querySelectorAll('.desktop-menu-items a')];
+  const parts = [
+    ['name', box(header.querySelector('.logo-name'))],
+    ['menu', { left: words(links[0]).left, right: words(links.at(-1)).right }],
+    ['languages', box(header.querySelector('app-language-links a'))],
+    ['contact', box(header.querySelector('.nav-cta'))],
+    ['theme', box(header.querySelector('app-theme-toggle button'))],
+  ];
+  const outOfOrder = parts
+    .slice(1)
+    .filter(([, b], i) => b.left < parts[i][1].right)
+    .map(([name]) => name);
+  return { outOfOrder, menuToLanguages: Math.round(parts[2][1].left - parts[1][1].right) };
+};
+
+for (const width of [1280, 1440]) {
+  for (const lang of ['en', 'de', 'pt']) {
+    test(`SHELL-15: at ${width} in ${lang}, the menu stands at the right, its last word 24 px before EN`, async () => {
+      assert.deepEqual(await atWidth({ route: `/${lang}/software`, width }, READ_BAR), {
+        outOfOrder: [],
+        menuToLanguages: 24,
+      });
+    });
+  }
+}
+
 for (const route of ['/en/software', '/de/writing', '/pt/research']) {
   for (const width of [390, 768, 1280, 1440]) {
     test(`SHELL-14 (D48): at ${width} on ${route}, header, heading and footer share the column's edges`, async () => {
