@@ -188,6 +188,76 @@ for (const [lang, words] of [
   }
 }
 
+// In the page: the contact button as drawn, beside the tokens it must take, resolved in the bar.
+const READ_CTA = () => {
+  const header = document.querySelector('app-zc-nav-desktop header');
+  const cta = header.querySelector('.nav-cta');
+  const resolve = (token) => {
+    const probe = document.createElement('span');
+    probe.style.color = `var(${token})`;
+    header.append(probe);
+    const value = getComputedStyle(probe).color;
+    probe.remove();
+    return value;
+  };
+  const cs = getComputedStyle(cta);
+  return {
+    drawn: {
+      material: cta.classList.contains('mat-mdc-button-base'),
+      font: cs.fontFamily.split(',')[0].replace(/"/g, ''),
+      size: cs.fontSize,
+      corners: cs.borderTopLeftRadius,
+      tall: cta.getBoundingClientRect().height >= 44,
+      ground: cs.backgroundColor,
+      label: cs.color,
+    },
+    tokens: {
+      accent: resolve('--zc-accent'),
+      onAccent: resolve('--zc-on-accent'),
+      hover: resolve('--zc-accent-hover'),
+    },
+  };
+};
+
+// The same page, the pointer over the button, every transition done: its ground.
+const hoveredGround = async ({ route, dark }) => {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  try {
+    await context.addInitScript((v) => localStorage.setItem('zc-theme', v), dark ? 'dark' : 'light');
+    const page = await context.newPage();
+    await page.goto(`${origin}${route}`, { waitUntil: 'networkidle' });
+    await page.hover('app-zc-nav-desktop .nav-cta');
+    await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
+    return await page.evaluate(
+      () => getComputedStyle(document.querySelector('app-zc-nav-desktop .nav-cta')).backgroundColor,
+    );
+  } finally {
+    await context.close();
+  }
+};
+
+for (const lang of ['en', 'de', 'pt']) {
+  for (const dark of [false, true]) {
+    test(`SHELL-17 (D47): at 1280 in ${lang}, ${dark ? 'dark' : 'light'}, the contact button is the mock-up's plain link`, async () => {
+      const route = `/${lang}/software`;
+      const { drawn, tokens } = await atWidth({ route, width: 1280, dark }, READ_CTA);
+      assert.deepEqual(
+        { ...drawn, hovered: await hoveredGround({ route, dark }) },
+        {
+          material: false,
+          font: 'IBM Plex Mono',
+          size: '14px',
+          corners: '2px',
+          tall: true,
+          ground: tokens.accent,
+          label: tokens.onAccent,
+          hovered: tokens.hover,
+        },
+      );
+    });
+  }
+}
+
 for (const route of ['/en/software', '/de/writing', '/pt/research']) {
   for (const width of [390, 768, 1280, 1440]) {
     test(`SHELL-14 (D48): at ${width} on ${route}, header, heading and footer share the column's edges`, async () => {

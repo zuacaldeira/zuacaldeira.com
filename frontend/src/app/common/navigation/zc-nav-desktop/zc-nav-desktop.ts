@@ -1,6 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { ZcDesktopMenuItems } from '../../menu-items/zc-desktop-menu-items/zc-desktop-menu-items';
 import { Footer } from '../../footer/footer';
@@ -15,7 +14,6 @@ import { injectPageUrl, pagePath } from '../../../models/i18n';
   selector: 'app-zc-nav-desktop',
   imports: [
     MatToolbarModule,
-    MatButtonModule,
     RouterOutlet,
     RouterLink,
     ZcDesktopMenuItems,
