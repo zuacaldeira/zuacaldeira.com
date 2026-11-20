@@ -4,7 +4,7 @@ Status: **agreed with Zua on 2026-11-15** (the cases, the five slices, D1 to D10
 "Decisions"). THEME-01 to 11 were agreed on 2026-11-02; this rewrite makes the living glaze the
 site's one colour reference (Zua, 2026-11-15, the first section of "Settled" in `docs/design.md`) and
 adds the removal of the five sources of drift, B1 to B5. Slice 1 is built (2026-11-15, on the
-preview since 2026-11-20); slice 2 is being built (below). Before slice 1, only THEME-10 for today's
+preview since 2026-11-20); slice 2 is built (2026-11-20, below, not pushed yet). Before slice 1, only THEME-10 for today's
 two themes was built.
 
 The site's colours follow the visitor's local time through five azulejo glazes. Design: the Living
@@ -53,10 +53,10 @@ Sections, in build order:
 | ID | In plain words | Given | When | Then | How a test checks it | Covered |
 |----|----------------|-------|------|------|----------------------|---------|
 | THEME-16 | The site's colour tokens are the glaze's, not typed by hand. | `styles.css` | its colour blocks are read | the `:root` block equals the glaze at 12:30 and the `html.dark-theme` block the glaze at 02:00, token for token, through the mock-ups' map (`bg` → `--zc-bg-warm`, `surface` → `--zc-bg-white`, `accent` → `--zc-azul` and `--zc-accent`, …); no other colour token is declared except the footer's gold pair (D5). Red today: the dark `--zc-edge` is `#516b8b`; `--zc-azul-pale`, `--zc-accent-light`, `--zc-ochre-wash`, `--zc-tile` and `--zc-grout` are declared | the scripts' test (D4) | yes (scripts' test, slice 1) |
-| THEME-11 | Buttons and other ready-made controls take the current glaze's colours, not a foreign teal. | a Material filled button and an icon button on a built page, in light, dark and living at 06:30, 19:00, 20:00 | they render | the filled button's background is the glaze's `--zc-accent` and its label `--zc-on-accent`; the icon button's glyph is its bar's ink. Red today: `#006a6a` in light, `#00dddd` in dark | browser | |
-| THEME-17 | Material has no palette of its own any more. (B1) | the built stylesheet | its `--mat-sys-*` declarations are read | every `--mat-sys-*` colour is a `var(--zc-…)` or a mix of them (D9); no colour literal; `material-theme.scss` names no `$cyan-palette` or `$violet-palette`. Red today: the cyan and violet palettes, `--mat-sys-primary: #006a6a` | build and a source check | |
-| THEME-18 | The page's ground is the glaze's ground, on a phone too. (B2) | `/en/software` at 390 (the phone layout inside the Material sidenav) and at 1280, light, dark and living at 20:00 | the ground behind `<main>` is measured | `body`, the sidenav container and the sidenav content are each `--zc-bg-warm` or transparent over it; `material-theme.scss`'s `body` no longer takes `--mat-sys-surface`. Expected red today at 390: the sidenav's ground is Material's (measure when the test is written) | browser, and a source check | |
-| THEME-19 | No override is left that Material no longer reads. (B3) | the app's sources and the built CSS | they are searched | no `--mdc-` anywhere; the header's "write to me" button is `--zc-accent` with `--zc-on-accent` as in the home mock-up; the header's icon buttons draw in `--nav-fg`. Red today: eight `--mdc-` declarations in `zc-nav-desktop.css`, `zc-nav-mobile.css`, `hero.css`; the button is teal | source check, build and browser | |
+| THEME-11 | Buttons and other ready-made controls take the current glaze's colours, not a foreign teal. | a Material filled button and an icon button on a built page, in light, dark and living at 06:30, 19:00, 20:00 | they render | the filled button's background is the glaze's `--zc-accent` and its label `--zc-on-accent`; the icon button's glyph is its bar's ink. Red today: `#006a6a` in light, `#00dddd` in dark | browser | yes (browser, 1280 and 390, five states, slice 2; living from the engine's tokens until slice 3) |
+| THEME-17 | Material has no palette of its own any more. (B1) | the built stylesheet | its `--mat-sys-*` declarations are read | every `--mat-sys-*` colour is a `var(--zc-…)` or a mix of them (D9); no colour literal; `material-theme.scss` names no `$cyan-palette` or `$violet-palette`. Red today: the cyan and violet palettes, `--mat-sys-primary: #006a6a` | build and a source check | yes (build and source, slice 2) |
+| THEME-18 | The page's ground is the glaze's ground, on a phone too. (B2) | `/en/software` at 390 (the phone layout inside the Material sidenav) and at 1280, light, dark and living at 20:00 | the ground behind `<main>` is measured | `body`, the sidenav container and the sidenav content are each `--zc-bg-warm` or transparent over it; `material-theme.scss`'s `body` no longer takes `--mat-sys-surface`. Expected red today at 390: the sidenav's ground is Material's (measure when the test is written; measured 2026-11-20: `#f7faf9` light, `#101414` dark) | browser, and a source check | yes (browser and source, slice 2) |
+| THEME-19 | No override is left that Material no longer reads. (B3) | the app's sources and the built CSS | they are searched | no `--mdc-` anywhere; the header's "write to me" button is `--zc-accent` with `--zc-on-accent` as in the home mock-up; the header's icon buttons draw in `--nav-fg`. Red today: eight `--mdc-` declarations in `zc-nav-desktop.css`, `zc-nav-mobile.css`, `hero.css`; the button is teal | source check, build and browser | yes (source, build; the button and icons in THEME-11's browser rows, slice 2) |
 
 ## 3. Living, light and dark
 
@@ -142,8 +142,8 @@ These two cases say the old one is gone and leaves nothing behind.
 | THEME-P-01 | A guard that leaves a colour below its minimum is refused. | the engine with its guard taken out | the day is computed | THEME-04 goes red, naming the minute and the token (02:00, edge, 2.96:1) | break in the engine | yes (break in the engine, slice 1) |
 | THEME-P-02 | Reduced motion never changes the glaze with time. | living, reduced motion, the tick forced to run | three hours pass | THEME-08 goes red if any token changes | break in the service | |
 | THEME-P-03 | A fixed colour put back in a component is refused. | `hero.css` | `color: #ffffff` is put back | THEME-26 goes red, naming the file and line | break in the source | |
-| THEME-P-04 | A dead `--mdc-` override put back is refused. | `zc-nav-desktop.css` | `--mdc-filled-button-container-color` is put back | THEME-19 goes red | break in the source | |
-| THEME-P-05 | Material's own palette put back is refused. | `material-theme.scss` | `primary: mat.$cyan-palette` is put back | THEME-17 goes red, naming `--mat-sys-primary` | break in the build | |
+| THEME-P-04 | A dead `--mdc-` override put back is refused. | `zc-nav-desktop.css` | `--mdc-filled-button-container-color` is put back | THEME-19 goes red | break in the source | yes (break in the source, slice 2) |
+| THEME-P-05 | Material's own palette put back is refused. | `material-theme.scss` | `primary: mat.$cyan-palette` is put back | THEME-17 goes red, naming `--mat-sys-primary` | break in the build | yes (break in the build, slice 2) |
 | THEME-P-06 | A hand edit of a generated colour token is refused. | `styles.css` | the dark `--zc-edge` is set back to `#516b8b` | THEME-16 goes red, naming the token, the value and the glaze's `#526c8c` | break in the source | yes (break in the source, slice 1) |
 | THEME-P-07 | A glaze table missing a token, or with a token not in the map, is refused. | the glaze table | Amarelo e verde's `edge` is removed, or a token `teal` is added | the table's check fails naming the glaze and the token; nothing is generated | the scripts' test | yes (scripts' test, the engine and the generator, slice 1) |
 | THEME-P-08 | The study's rounding slip does not reach the site. | the minutes 19:48 and 19:52, where the study's engine, rounded to hex, gives body 4.455:1 and edge 2.969:1 | the glaze is computed | the hex values set pass 4.5:1 and 3:1 (D2) | unit (named minutes, inside THEME-04) | yes (unit, slice 1) |
@@ -559,3 +559,43 @@ Forbidden by G, each refused and the stored state checked unchanged:
 - **a stale colour** (Material holding a value from before the tokens changed): B1 and G1 set the
   tokens after load, at three more glazes, and read again.
 - Races: none; the paint has one writer per state.
+
+**Done 2026-11-20** (the plan, then B1, M1 with M2, G1, G2, D1, one commit each; D2 a break, recorded
+here). Red first, each for its own reason: B1 all ten rows (the header's button `rgb(0, 106, 106)`
+on `rgb(255, 255, 255)` in light, `rgb(0, 221, 221)` on `rgb(0, 55, 55)` in dark; the toggle's
+muted glyph; the phone's menu button Material's `rgb(63, 73, 72)`); G2 the body's two
+`--mat-sys-surface` lines; D1 the six `--mdc-` lines (`zc-nav-desktop.css:91, 92`, `hero.css:148,
+149, 155, 156`) and the 28 built files that inline them. Green at first and shown to bite: M1 by
+THEME-P-05 (the cyan palette put back and built: `--mat-sys-primary: light-dark(#006a6a, #00dddd)`
+declared before the override, 56 literal declarations, `$cyan-palette` named; restored, md5 checked,
+rebuilt to the same stylesheet hash); G1 by `--mat-sys-background` set back to `#f7faf9` in the
+built stylesheet (red at 390 only, `container rgb(247, 250, 249)`; restored, md5 checked). D2,
+THEME-P-04: `--mdc-filled-button-container-color` put back in `zc-nav-desktop.css`, THEME-19 red
+naming `zc-nav-desktop.css:91`; restored, md5 checked.
+
+Found on the way:
+- **Material writes its elevation only with a palette,** so dropping the palettes dropped the
+  shadows of the Running page's elevated cards and of raised buttons; D15 maps them to the site's
+  shadows. Likewise the phone menu's scrim reads `neutral-variant20`, which no palette now writes
+  (D14).
+- **The sidenav container is painted from `--mat-sys-background`,** not `surface` (the drawer
+  panel); G1's first planned break hit `surface` and stayed green, so it was redone.
+- **The theme toggle was muted on purpose** (`theme-toggle.css`, the heading colour on hover);
+  THEME-11 and the mock-up's `.icon-btn` give it the bar's ink, so the muted grey and its hover
+  went.
+- **Without the palettes the initial bundle fell under its 500 kB budget** (499.6 kB; the global
+  stylesheet 20 kB → 11.6 kB), so the build's budget warning is gone.
+
+Results: scripts 35/35; unit 281 passed, 5 skipped (47 files); the build prerenders 26 routes with
+no warning; `acceptance` 141/141; `acceptance:browser` 181/181 (`theme-material` 20 of them). Not
+run: `acceptance:nginx` (no server change). The load rose to 9.7 once; SHELL-12
+(`zc-nav-mobile.spec.ts`, focus after a menu link) failed once then, the drawer still animating
+after 5.7 s, and passed alone and in two full runs.
+
+Leftovers, not built:
+- **The old hero's buttons** now take the glaze's accent on the photo, as they took the teal
+  before (their gold and white lines never worked); the stroked button's label reads poorly on the
+  photo in light. The hero goes in slice 4 (THEME-25), so it was not restyled.
+- **The header button's type and corners** (Plex Mono at .875rem, 2 px corners in the mock-up;
+  Archivo and Material's full round today) and its hover (`--zc-azul-deep` in the mock-up,
+  Material's state layer today): with the header's own cases below.

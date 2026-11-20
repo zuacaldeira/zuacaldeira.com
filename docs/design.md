@@ -153,11 +153,14 @@ the language codes sit in the header at every width (frame option A, agreed 2026
 `docs/mockups/home/home-spec.md`.
 
 ## Known traps
-- **Teal is a bug, not a decision.** `frontend/src/material-theme.scss` still sets the
-  cyan and violet palettes and Inter, and the ochre button overrides in the components use
-  `--mdc-*` variables that have no visible effect. Every Material button renders `#006a6a`
-  (night `#00dddd`), on the live site too (measured 2026-11-02). Mock-ups use the glaze's
-  accent, never the teal. These are drifts B1 to B3, to go (`docs/examples/theme.md`).
+- **Material has no colours of its own** (since 2026-11-20, slice 2 of `docs/examples/theme.md`).
+  `frontend/src/material-theme.scss` sets Material's type and density only; every `--mat-sys-*`
+  colour is a `--zc-*` token by D9's map (the scrim by D14, the elevation from `--zc-shadow-*` by
+  D15), so buttons, sidenav and toolbars follow the glaze. To restyle a Material component, set
+  its live `--mat-<component>-*` token to a `--zc-*` token; `--mdc-*` variables are read by
+  nothing in Material 21 (THEME-19 fails on one), and a palette put back fails THEME-17. Before
+  this, every Material button rendered teal `#006a6a` (night `#00dddd`); the live site still does
+  until `next` is merged.
 - **The colour tokens are generated.** `styles.css`'s two colour blocks are written by
   `npm run glaze` from `frontend/src/app/services/glaze.json` (the study's table) through the
   site's engine `glaze.mjs`; a hand edit fails THEME-16. Change a colour in the table, which must
