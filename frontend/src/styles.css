@@ -61,7 +61,8 @@
   --zc-transition-base: 0.25s ease;
   --zc-transition-slow: 0.4s ease;
 
-  --zc-max-width: 1100px;
+  /* The one column of header, pages and footer (home-spec.md, SHELL-14, D48 in shell.md). */
+  --zc-max-width: 1200px;
 
   /* The ink footer (home-spec.md, "Footer colours"): heading ink on light glazes, raised surface on
      dark ones. The gold (--zc-foot-gold, in the block above) is 8.4:1 on the light ink, 6.9:1 on the
