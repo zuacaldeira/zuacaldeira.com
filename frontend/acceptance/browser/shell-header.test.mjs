@@ -138,6 +138,33 @@ for (const width of [1280, 1440]) {
   }
 }
 
+// In the desktop bar: its visible controls, left to right; those off the first row, those
+// overlapping the one before, and whether the page scrolls sideways.
+const READ_ROW = () => {
+  const header = document.querySelector('app-zc-nav-desktop header');
+  const controls = [...header.querySelectorAll('a, button')]
+    .map((el) => ({ text: el.textContent.trim(), r: el.getBoundingClientRect() }))
+    .filter(({ r }) => r.width > 0 && r.height > 0)
+    .sort((a, b) => a.r.left - b.r.left);
+  const middle = (r) => r.top + r.height / 2;
+  return {
+    offRow: controls.filter(({ r }) => Math.abs(middle(r) - middle(controls[0].r)) > 2).map((c) => c.text),
+    overlapping: controls.slice(1).filter((c, i) => c.r.left < controls[i].r.right - 0.5).map((c) => c.text),
+    // styles.css clips html and body sideways, so a bar too wide is cut off, not scrolled: check both.
+    outside: controls.filter(({ r }) => r.left < 0 || r.right > window.innerWidth).map((c) => c.text),
+    sideways: document.documentElement.scrollWidth > window.innerWidth,
+  };
+};
+
+test('SHELL-15b: at 768 in German, the bar holds every control in one row, none overlapping', async () => {
+  assert.deepEqual(await atWidth({ route: '/de/software', width: 768 }, READ_ROW), {
+    offRow: [],
+    overlapping: [],
+    outside: [],
+    sideways: false,
+  });
+});
+
 for (const route of ['/en/software', '/de/writing', '/pt/research']) {
   for (const width of [390, 768, 1280, 1440]) {
     test(`SHELL-14 (D48): at ${width} on ${route}, header, heading and footer share the column's edges`, async () => {
