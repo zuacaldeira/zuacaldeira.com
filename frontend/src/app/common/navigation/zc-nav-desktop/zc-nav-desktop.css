@@ -37,6 +37,9 @@ mat-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* The mock-up's 12 px gap plus its menu links' 12 px padding, which ours do not carry: the
+     menu's last word ends 24 px before EN (SHELL-15). */
+  gap: var(--zc-space-6);
   height: 64px;
 }
 
@@ -65,17 +68,24 @@ app-logo-mark {
   transition: color var(--zc-transition-base);
 }
 
-/* Below 980 px the name gives way to the mark (shell.md's widths; the link keeps its name, D5). */
+/* Below 980 px the name gives way to the mark (shell.md's widths; the link keeps its name, D5),
+   and the bar tightens as the mock-up's (its links' padding drops to 8 px): 16 px gaps, so the
+   bar holds its column at 768 in every language (SHELL-14, SHELL-15b). */
 @media (max-width: 979.98px) {
   .logo-name {
     display: none;
   }
+
+  .toolbar-content {
+    gap: var(--zc-space-4);
+  }
 }
 
+/* The menu stands at the right, beside the languages, as in every mock-up (SHELL-15). */
 nav {
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .toolbar-actions {
@@ -85,12 +95,38 @@ nav {
   color: var(--nav-fg);
 }
 
-/* The "write to me" button is the glaze's accent with its label in on-accent, as the home
-   mock-up's .btn--fill; Material's map gives it both (THEME-11, THEME-19). */
-.nav-cta.mat-mdc-unelevated-button {
-  font-family: var(--zc-font-body);
+/* The "write to me" button is the mock-up's plain link, .btn--fill.cta (D47, SHELL-17): the glaze's
+   accent with its label in on-accent (THEME-11), IBM Plex Mono, 2 px corners, 44 px tall. */
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding-inline: var(--zc-space-4);
+  border: 1px solid var(--zc-accent);
+  border-radius: 2px;
+  background: var(--zc-accent);
+  color: var(--zc-on-accent);
+  font-family: var(--zc-font-mono);
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--zc-transition-fast),
+    border-color var(--zc-transition-fast);
+}
+
+.nav-cta:hover {
+  background: var(--zc-accent-hover);
+  border-color: var(--zc-accent-hover);
+  color: var(--zc-on-accent);
+}
+
+@media (max-width: 979.98px) {
+  .nav-cta {
+    padding-inline: var(--zc-space-3);
+  }
 }
 
 /* Icon buttons draw in the bar's ink (THEME-11), through Material's own hook. */

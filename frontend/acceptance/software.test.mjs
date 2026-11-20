@@ -625,7 +625,7 @@ test('SW-PAGE-07: the menu shows Software as the page you are on', () => {
   const links = menu(page('pt/software'));
   assert.deepEqual(
     links.filter((link) => link.includes('/pt/software') || link.endsWith('(current)')),
-    ['Software → /pt/software (current)'],
+    ['software → /pt/software (current)'],
   );
 });
 

@@ -12,8 +12,10 @@
       </nav>
       <div class="toolbar-actions">
         <app-language-links />
-        <a mat-flat-button [routerLink]="link('contact')" class="nav-cta"
-          ><span aria-hidden="true">⊥</span> {{ t().common.contactCta }}</a
+        <!-- One inline span for sign and words: the link is inline-flex, which would drop the
+             space at the edge of a bare text item (SHELL-17b). -->
+        <a [routerLink]="link('contact')" class="nav-cta"
+          ><span><span aria-hidden="true">⊥</span> {{ t().common.contactCta }}</span></a
         >
         <app-theme-toggle />
       </div>

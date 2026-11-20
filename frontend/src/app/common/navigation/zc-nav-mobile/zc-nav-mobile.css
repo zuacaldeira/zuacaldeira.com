@@ -45,7 +45,6 @@ header {
   min-width: 44px;
   min-height: 44px;
   text-decoration: none;
-  margin-left: var(--zc-space-2);
 }
 
 /* The mark alone: the name stays out of the phone bar (SHELL-06, LOGO-03). */

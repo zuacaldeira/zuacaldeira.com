@@ -4,6 +4,13 @@
   align-items: center;
 }
 
+/* Below 980 px the words stand 16 px apart, as the mock-up's (SHELL-15b). */
+@media (max-width: 979.98px) {
+  .desktop-menu-items {
+    gap: var(--zc-space-4);
+  }
+}
+
 /* Colours come from the header's --nav-* tokens so the links stay in step with the
    rest of the bar; the fallbacks keep them right if used outside that context. */
 a {

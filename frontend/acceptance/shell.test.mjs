@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { menu } from './menu.mjs';
 
 const browser = join(import.meta.dirname, '../dist/zuacaldeira-com/browser');
 const page = (route) => readFileSync(join(browser, route, 'index.html'), 'utf8');
@@ -336,4 +337,19 @@ test("SHELL-07: on every built page the footer invites a talk, in the page's lan
     ]),
   );
   assert.deepEqual(actual, expected);
+});
+
+// D45: the mock-ups' words; English and Portuguese in lower case, German with its nouns' capitals.
+const MENU_WORDS = {
+  en: ['software', 'research', 'writing', 'about'],
+  de: ['Software', 'Forschung', 'Texte', 'Über mich'],
+  pt: ['software', 'investigação', 'textos', 'sobre'],
+};
+
+test("SHELL-16 (D45): every page's menu reads its language's words, as the mock-ups write them", () => {
+  const words = (html) => menu(html).map((link) => link.split(' → ')[0]);
+  assert.deepEqual(
+    Object.fromEntries(PAGES.map(([route]) => [route, words(page(route))])),
+    Object.fromEntries(PAGES.map(([route, lang]) => [route, MENU_WORDS[lang]])),
+  );
 });

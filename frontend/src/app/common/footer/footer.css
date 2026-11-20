@@ -103,3 +103,10 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* The column's phone gutter, as the page heads' (home-spec.md, SHELL-14). */
+@media (max-width: 599.98px) {
+  .foot__col {
+    padding-inline: var(--zc-space-4);
+  }
+}
