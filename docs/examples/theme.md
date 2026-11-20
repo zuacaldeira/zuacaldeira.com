@@ -475,7 +475,9 @@ Test list (crossed off in the "Done" note below as each is committed):
     `mat-sidenav-container` and `mat-sidenav-content` are each `--zc-bg-warm` or transparent, and
     the first opaque ground behind `<main>` is `--zc-bg-warm`. Expected green once B1's map is in
     (`background` and `surface` → `--zc-bg-warm`), so shown to bite: the built stylesheet's
-    `--mat-sys-surface` set back to `#f7faf9` once, red at 390, restored (md5 checked).
+    `--mat-sys-background` set back to `#f7faf9` once, red at 390, restored (md5 checked). (The
+    plan first named `surface`; Material paints the sidenav container from `background`, and
+    `surface` only the drawer, so that break stayed green and proved nothing.)
 - **In the build** (`acceptance/theme.test.mjs`):
   - M1 THEME-17, the built stylesheet: every role of D9 is declared as its token, and no
     `--mat-sys-*` declaration holds a colour literal, apart from the shadows' black in

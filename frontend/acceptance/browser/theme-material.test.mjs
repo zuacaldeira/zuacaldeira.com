@@ -132,7 +132,42 @@ const READ_BUTTONS = () => {
   };
 };
 
+// In the page: the grounds of the layers Material puts around <main>, and the first opaque ground
+// behind <main>, beside the glaze's ground resolved on the same page.
+const READ_GROUNDS = () => {
+  const ground = (el) => (el ? getComputedStyle(el).backgroundColor : 'absent');
+  const probe = document.createElement('span');
+  probe.style.color = 'var(--zc-bg-warm)';
+  document.body.append(probe);
+  const warm = getComputedStyle(probe).color;
+  probe.remove();
+  let behind = document.querySelector('main');
+  while (behind && ['rgba(0, 0, 0, 0)', 'transparent'].includes(ground(behind))) {
+    behind = behind.parentElement;
+  }
+  return {
+    warm,
+    layers: {
+      body: ground(document.body),
+      container: ground(document.querySelector('mat-sidenav-container')),
+      content: ground(document.querySelector('mat-sidenav-content')),
+    },
+    behindMain: behind ? ground(behind) : 'none',
+  };
+};
+
 for (const state of STATES) {
+  for (const width of [390, 1280]) {
+    test(`THEME-18: at ${width} in ${state.name}, the ground behind the page is the glaze's`, async () => {
+      const { warm, layers, behindMain } = await inState({ width, state }, READ_GROUNDS);
+      const ok = (g) => [warm, 'rgba(0, 0, 0, 0)', 'absent'].includes(g);
+      assert.deepEqual(
+        { layers: Object.entries(layers).filter(([, g]) => !ok(g)), behindMain },
+        { layers: [], behindMain: warm },
+      );
+    });
+  }
+
   test(`THEME-11: at 1280 in ${state.name}, the header's filled button is the accent with its label, the toggle the bar's ink`, async () => {
     const { painted, tokens } = await inState({ width: 1280, state }, READ_BUTTONS);
     assert.deepEqual(
