@@ -74,8 +74,11 @@ Routes defined in `src/app/app.routes.ts`. All lazy-loaded:
 - `/` is the prerendered English home itself, not a redirect (D1 in `docs/examples/home.md`)
 - `/en/...`, `/de/...`, `/pt/...`: `home`, `about`, `software`, `research`, `writing`, `running`,
   `contact` under each language prefix. The prefix sets the language, `<html lang>` and the `hreflang`
-  alternates. The menu is Software, Research, Writing, About (SHELL-11; `ContentService.navItems`,
-  the phone menu adds Contact): Home and Running are in no menu. `software`, `research` and `writing`
+  alternates. The menu is software, research, writing, about (SHELL-11; `ContentService.navItems`,
+  the phone menu adds Contact): Home and Running are in no menu. Its words are the `nav` keys in the
+  i18n files, in lower case in en and pt and with German's capitals in de, never lowered by CSS
+  (D45 in `docs/examples/shell.md`). Header, pages and footer share one 1200 px column
+  (`--zc-max-width`, SHELL-14); the desktop menu stands at the right, beside `EN DE PT` `software`, `research` and `writing`
   (`docs/examples/software.md`, `research.md`, `writing.md`) are in the sitemap (21 pages). The menus
   mark the page you are on with `aria-current="page"` (D34). The three pages' heads are the shared
   `common/page-head/` (D13 in `writing.md`): eyebrow, `<h1>` and intro, nothing beside them (D26 in

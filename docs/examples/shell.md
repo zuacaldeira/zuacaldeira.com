@@ -1019,18 +1019,18 @@ the mock-up's drawer repeats "⊥ write to me", which is not taken up.
 
 | ID | Given | When | Then | Covered |
 |----|-------|------|------|---------|
-| SHELL-14 | `/en/software`, `/de/writing`, `/pt/research` at 390, 768, 1280 and 1440, light | the header, the page's `<h1>` and the footer are measured | the logo, the `<h1>` and the footer's content start on the one column's left edge, 16, 24, 64 and 144 px (`home-spec.md`); the header's last control and the footer's content end on its right edge (1216 at 1280). Red today: the logo at 24 (390) and 114 (1280), the footer at 90 (1280) | |
-| SHELL-15 | the desktop bar at 1280 and 1440, `/en/software`, `/de/software`, `/pt/software` | the bar is measured | from the left the mark and name; then, at the right, the four menu links, `EN DE PT`, the contact button, the theme button; the menu's last word ends 24 px before `EN`'s box, as in the mock-up (its last word ends at 880, `EN` at 904; the mock-up's links carry 12 px of padding, ours none, so the words are measured, not the boxes). Red today: the menu centred, 128 px before `EN` in en | |
-| SHELL-15b | the desktop bar at 768 in de (the longest words) | it is measured | every control in one row, none overlapping, no horizontal scroll (the mock-up holds them at 768) | |
-| SHELL-16 | the built pages in en, de and pt | the main menu is read, in the bar and in the phone menu | en "software, research, writing, about"; pt "software, investigação, textos, sobre"; de "Software, Forschung, Texte, Über mich" (SHELL-11 as it is); the words are the text itself, in the i18n files, not a CSS `text-transform`, so a screen reader, a copy and a search read what is shown. Red today: en and pt capitalised | |
-| SHELL-17 | the contact button at 1280, `/en/software`, `/de/software`, `/pt/software`, light and dark | it is read | as the mock-up's `.btn--fill.cta`: a plain link (`home-spec.md`: "Not Material"), IBM Plex Mono at 0.875 rem, 2 px corners, at least 44 px tall, `--zc-accent` with `--zc-on-accent` (THEME-11), `--zc-accent-hover` on hover; its words as SHELL-05. Red today: Archivo, round corners, Material's hover layer | |
-| SHELL-14-P-01 | the header's column set back to 1100 px (the token, or a `max-width` of the bar's own) | SHELL-14 runs | red, naming the header and 114 against 64 at 1280 | |
-| SHELL-14-P-02 | the footer given a width of its own | SHELL-14 runs | red, naming the footer's edges | |
-| SHELL-15-P-01 | `justify-content: center` put back on the bar's `nav` | SHELL-15 runs | red, naming the gap before `EN` | |
-| SHELL-16-P-01 | the menu lowered by `text-transform: lowercase` in place of the words | SHELL-16 runs | red, naming the link and its computed transform (in de it would also print "über mich") | |
-| SHELL-16-P-02 | the English words capitalised again in `en.ts` | SHELL-16 runs | red on every English page, naming the link | |
-| SHELL-16-P-03 | the phone menu given other words than the bar | SHELL-16 runs | red, naming the phone menu's link | |
-| SHELL-17-P-01 | Material's full round corners put back on the button | SHELL-17 runs | red, naming the radius | |
+| SHELL-14 | `/en/software`, `/de/writing`, `/pt/research` at 390, 768, 1280 and 1440, light | the header, the page's `<h1>` and the footer are measured | the logo, the `<h1>` and the footer's content start on the one column's left edge, 16, 24, 64 and 144 px (`home-spec.md`); the header's last control and the footer's content end on its right edge (1216 at 1280). Red today: the logo at 24 (390) and 114 (1280), the footer at 90 (1280) || yes (browser, 3 pages × 4 widths, 2026-11-20) |
+| SHELL-15 | the desktop bar at 1280 and 1440, `/en/software`, `/de/software`, `/pt/software` | the bar is measured | from the left the mark and name; then, at the right, the four menu links, `EN DE PT`, the contact button, the theme button; the menu's last word ends 24 px before `EN`'s box, as in the mock-up (its last word ends at 880, `EN` at 904; the mock-up's links carry 12 px of padding, ours none, so the words are measured, not the boxes). Red today: the menu centred, 128 px before `EN` in en || yes (browser, 1280 and 1440 × en, de, pt, 2026-11-20; words measured) |
+| SHELL-15b | the desktop bar at 768 in de (the longest words) | it is measured | every control in one row, none overlapping, no horizontal scroll (the mock-up holds them at 768) || yes (browser, 2026-11-20; also no control outside the viewport) |
+| SHELL-16 | the built pages in en, de and pt | the main menu is read, in the bar and in the phone menu | en "software, research, writing, about"; pt "software, investigação, textos, sobre"; de "Software, Forschung, Texte, Über mich" (SHELL-11 as it is); the words are the text itself, in the i18n files, not a CSS `text-transform`, so a screen reader, a copy and a search read what is shown. Red today: en and pt capitalised || yes (build, every page; browser, both menus, 2026-11-20) |
+| SHELL-17 | the contact button at 1280, `/en/software`, `/de/software`, `/pt/software`, light and dark | it is read | as the mock-up's `.btn--fill.cta`: a plain link (`home-spec.md`: "Not Material"), IBM Plex Mono at 0.875 rem, 2 px corners, at least 44 px tall, `--zc-accent` with `--zc-on-accent` (THEME-11), `--zc-accent-hover` on hover; its words as SHELL-05. Red today: Archivo, round corners, Material's hover layer || yes (browser, en, de, pt × light, dark, 2026-11-20) |
+| SHELL-14-P-01 | the header's column set back to 1100 px (the token, or a `max-width` of the bar's own) | SHELL-14 runs | red, naming the header and 114 against 64 at 1280 || yes (break in the built stylesheet) |
+| SHELL-14-P-02 | the footer given a width of its own | SHELL-14 runs | red, naming the footer's edges || yes (break in the source, built) |
+| SHELL-15-P-01 | `justify-content: center` put back on the bar's `nav` | SHELL-15 runs | red, naming the gap before `EN` || yes (break in the source, built) |
+| SHELL-16-P-01 | the menu lowered by `text-transform: lowercase` in place of the words | SHELL-16 runs | red, naming the link and its computed transform (in de it would also print "über mich") || yes (break in the source, built) |
+| SHELL-16-P-02 | the English words capitalised again in `en.ts` | SHELL-16 runs | red on every English page, naming the link || yes (break in the source, built) |
+| SHELL-16-P-03 | the phone menu given other words than the bar | SHELL-16 runs | red, naming the phone menu's link || yes (break in the source, built: SHELL-16 at 390 and SHELL-08 A1 red) |
+| SHELL-17-P-01 | Material's full round corners put back on the button | SHELL-17 runs | red, naming the radius || yes (break in the source, built) |
 
 Side effects to check when it is built: `--zc-max-width` is also the column of the Contact and
 Running pages (and the hidden Work and Pädagogik), which widen by 100 px; unit specs and build
@@ -1096,6 +1096,38 @@ footer's inner grid.
 
 The diagram is the layout above. Layout and words have no interaction, so no session type:
 the refused rows are breaks of the layout or the words, not protocol rows.
+
+**Done 2026-11-20** (the plan, then W1, C1, M1, M2, W2, K1, one commit each; the breaks recorded in
+the commits that follow them). Red first, each for its own reason: W1 every en and pt page's menu
+capitalised (with WR-PAGE-06, 07 and SW-PAGE-07, changed on purpose); C1 the logo and footer at 114
+for 64 at 1280, 194 for 144 at 1440, 24 for 16 at 390 (768 already right); M1 the last word 171 to
+178 px before `EN`; K1 a Material button, Archivo, 9999 px corners, 40 px tall, no hover colour.
+Green at first and shown to bite: M2 (the menu forced to 600 px: `DE`, `PT`, the button and the
+theme button outside the screen); W2 (`text-transform: lowercase` on the bar; the phone menu on
+`ContentService`'s own labels). Breaks of the rows above, each restored with its md5: SHELL-14-P-01
+and P-02, 15-P-01, 16-P-01 to P-03, 17-P-01.
+
+Found on the way:
+- **The first green of M1 broke the bar at 768:** the 24 px gaps pushed it 4 to 17 px past its
+  column (SHELL-14's 768 rows red). The mock-up tightens below 980 px (its links' padding drops to
+  8 px), so the bar's gaps and the menu's words are 16 px apart there.
+- **`styles.css` clips `html` and `body` sideways,** so a bar too wide is cut off and never scrolls:
+  SHELL-15b's `scrollWidth` check stayed green under the break. The row also checks that no control
+  leaves the viewport, which is the check that bites.
+- **The Material contact button was 40 px tall,** under the 44 px the shell asks of every control;
+  the plain link is 44.
+- **The initial bundle is 307 bytes over its 500 kB warning budget** again (500.31 kB) with the
+  button's rules; a warning, as before slice 2.
+
+Results: unit 281 passed, 5 skipped (47 files); scripts 35/35; the build prerenders 26 routes;
+`acceptance` 142/142; `acceptance:browser` 212/212 (`shell-header` 31 of them). Not run:
+`acceptance:nginx` (no server change). Under load (up to 25 that morning) HOME-PAGE-04
+(`app.routes.spec.ts`) and SHELL-12 (`zc-nav-mobile.spec.ts`) timed out once each, at 5 s and 10 s,
+and passed in the rerun; C1's commit went in before that suite had finished, and the rerun was green.
+
+Leftovers, not built:
+- **The Contact and Running pages** widen with the token (1100 → 1200 px); not reviewed by eye.
+- **The menu's current-page underline** sits under the word, as before; the mock-up draws none.
 
 ## Width of the header
 
