@@ -147,11 +147,14 @@ Server routes in `src/app/app.routes.server.ts` use `RenderMode.Prerender` for a
   a new symbol goes into that link's `text=`)
 
 **Material 3 theme** — `src/material-theme.scss`:
-- Primary: `mat.$cyan-palette`
-- Tertiary: `mat.$violet-palette`
+- No palette: every `--mat-sys-*` colour is a `--zc-*` token (`mat.theme-overrides`, D9, D14, D15
+  in `docs/examples/theme.md`), so Material follows the glaze. THEME-17 (`acceptance/theme.test.mjs`,
+  `scripts/material.test.mjs`) fails on a palette or a colour literal
+- Restyle a component through its live `--mat-<component>-*` token, never `--mdc-*` (read by nothing
+  in Material 21; THEME-19 fails on one). The page's ground and ink are `styles.css`'s `body`
 - Typography: the site's tokens, `--zc-font-body` for plain text, `--zc-font-heading` for display
   (toolbar, card titles), never Inter (D43, D44 in `docs/examples/shell.md`)
-- Dark theme via `.dark-theme` class on `<html>`
+- Dark theme via `.dark-theme` class on `<html>`; the tokens change there, Material with them
 
 ## Internationalization (i18n)
 

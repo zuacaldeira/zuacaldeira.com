@@ -85,18 +85,17 @@ nav {
   color: var(--nav-fg);
 }
 
-/* The contact CTA keeps the hero's ochre in both states — it reads on glaze and on
-   the photo, and matches the hero's own button. */
+/* The "write to me" button is the glaze's accent with its label in on-accent, as the home
+   mock-up's .btn--fill; Material's map gives it both (THEME-11, THEME-19). */
 .nav-cta.mat-mdc-unelevated-button {
-  --mdc-filled-button-container-color: var(--zc-ochre);
-  --mdc-filled-button-label-text-color: #1a1205;
   font-family: var(--zc-font-body);
   font-weight: 500;
   letter-spacing: 0.01em;
 }
 
+/* Icon buttons draw in the bar's ink (THEME-11), through Material's own hook. */
 app-theme-toggle {
   color: var(--nav-fg);
-  --mdc-icon-button-icon-color: var(--nav-fg);
+  --mat-icon-button-icon-color: var(--nav-fg);
   transition: color var(--zc-transition-base);
 }

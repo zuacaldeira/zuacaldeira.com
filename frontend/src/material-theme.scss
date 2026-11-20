@@ -2,35 +2,84 @@
 
 // Material's type is the site's font tokens, not Inter (D43, D44 in docs/examples/shell.md): plain
 // text in Archivo, display (toolbar, card titles) in Fraunces, each with the notation fallbacks.
+//
+// Material has no palette of its own (B1, THEME-17 in docs/examples/theme.md): without `color`,
+// mat.theme writes no colour, and every colour role is the living glaze's token by D9's map. The
+// tokens change with the glaze on <html>, so Material's components follow it.
 
 html {
   height: 100%;
   @include mat.theme((
-    color: (
-      primary: mat.$cyan-palette,
-      tertiary: mat.$violet-palette,
-    ),
     typography: (plain-family: var(--zc-font-body), brand-family: var(--zc-font-heading)),
     density: 0,
   ));
+  @include mat.theme-overrides((
+    primary: var(--zc-accent),
+    secondary: var(--zc-accent),
+    tertiary: var(--zc-accent),
+    surface-tint: var(--zc-accent),
+    on-primary: var(--zc-on-accent),
+    on-secondary: var(--zc-on-accent),
+    on-tertiary: var(--zc-on-accent),
+    primary-container: var(--zc-azul-wash),
+    secondary-container: var(--zc-azul-wash),
+    tertiary-container: var(--zc-azul-wash),
+    primary-fixed: var(--zc-azul-wash),
+    primary-fixed-dim: var(--zc-azul-wash),
+    secondary-fixed: var(--zc-azul-wash),
+    secondary-fixed-dim: var(--zc-azul-wash),
+    tertiary-fixed: var(--zc-azul-wash),
+    tertiary-fixed-dim: var(--zc-azul-wash),
+    on-primary-container: var(--zc-text-heading),
+    on-secondary-container: var(--zc-text-heading),
+    on-tertiary-container: var(--zc-text-heading),
+    on-primary-fixed: var(--zc-text-heading),
+    on-primary-fixed-variant: var(--zc-text-heading),
+    on-secondary-fixed: var(--zc-text-heading),
+    on-secondary-fixed-variant: var(--zc-text-heading),
+    on-tertiary-fixed: var(--zc-text-heading),
+    on-tertiary-fixed-variant: var(--zc-text-heading),
+    background: var(--zc-bg-warm),
+    surface: var(--zc-bg-warm),
+    surface-bright: var(--zc-bg-warm),
+    surface-dim: var(--zc-bg-warm),
+    surface-container-lowest: var(--zc-bg-white),
+    surface-container-low: var(--zc-bg-white),
+    surface-container: var(--zc-bg-light),
+    surface-container-high: var(--zc-bg-light),
+    surface-container-highest: var(--zc-bg-light),
+    surface-variant: var(--zc-bg-light),
+    on-background: var(--zc-text-body),
+    on-surface: var(--zc-text-body),
+    on-surface-variant: var(--zc-text-muted),
+    outline: var(--zc-edge),
+    outline-variant: var(--zc-border-light),
+    inverse-surface: var(--zc-text-heading),
+    inverse-on-surface: var(--zc-bg-warm),
+    inverse-primary: var(--zc-azul-wash),
+    error: var(--zc-ochre-text),
+    on-error: var(--zc-bg-light),
+    error-container: var(--zc-bg-light),
+    on-error-container: var(--zc-ochre-text),
+    // Elevation is written with the colours, so it goes with them: the site's shadows (D15).
+    level0: none,
+    level1: var(--zc-shadow-sm),
+    level2: var(--zc-shadow-md),
+    level3: var(--zc-shadow-lg),
+    level4: var(--zc-shadow-lg),
+    level5: var(--zc-shadow-lg),
+  ));
+  // The phone menu's scrim (Material mixes it at 40%): the darkest ink of each mode (D14).
+  --mat-sys-neutral-variant20: var(--zc-text-heading);
 }
 
 html.dark-theme {
-  @include mat.theme((
-    color: (
-      theme-type: dark,
-      primary: mat.$cyan-palette,
-      tertiary: mat.$violet-palette,
-    ),
-    typography: (plain-family: var(--zc-font-body), brand-family: var(--zc-font-heading)),
-    density: 0,
-  ));
+  --mat-sys-neutral-variant20: var(--zc-bg-warm);
 }
 
+// The page's ground and ink are the glaze's, in styles.css (B2, THEME-18), not Material's surface.
 body {
   color-scheme: light;
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
   margin: 0;
   height: 100%;
