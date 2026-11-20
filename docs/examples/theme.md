@@ -3,8 +3,9 @@
 Status: **agreed with Zua on 2026-11-15** (the cases, the five slices, D1 to D10; answers under
 "Decisions"). THEME-01 to 11 were agreed on 2026-11-02; this rewrite makes the living glaze the
 site's one colour reference (Zua, 2026-11-15, the first section of "Settled" in `docs/design.md`) and
-adds the removal of the five sources of drift, B1 to B5. Slice 1 is being built (below); before it,
-only THEME-10 for today's two themes was built.
+adds the removal of the five sources of drift, B1 to B5. Slice 1 is built (2026-11-15, on the
+preview since 2026-11-20); slice 2 is being built (below). Before slice 1, only THEME-10 for today's
+two themes was built.
 
 The site's colours follow the visitor's local time through five azulejo glazes. Design: the Living
 Glaze study, https://claude.ai/artifact/LGHSasJRc4DXdBmk95CGyD, agreed unchanged on 2026-11-02. Its
@@ -432,3 +433,118 @@ Leftovers, not built:
   fixed states, where the gold is unmoved).
 - **The other four mock-ups** hold the same engine; THEME-15 compares the table with the home
   mock-up's only. A check across all five is cheap if they are ever edited.
+
+## Slice 2: Material follows the glaze (B1, B2, B3)
+
+What it builds: `material-theme.scss` keeps Material's type and density and loses its palettes;
+every `--mat-sys-*` colour becomes a `var(--zc-…)` by D9's map, through `mat.theme-overrides`
+(Material 21 writes no colour of its own when `mat.theme` has no `color`). The page ground stops
+coming from `--mat-sys-surface` (B2). The dead `--mdc-*` overrides go (B3): the header's "write to
+me" button is a plain filled button again, which now takes `--zc-accent` and `--zc-on-accent` as
+the home mock-up's `.btn--fill`; the header's icon buttons draw in the bar's ink `--nav-fg` (the
+mock-up's `.icon-btn`), through Material's live hook `--mat-icon-button-icon-color`. Nothing at
+runtime changes the glaze yet (slice 3), so the browser tests write the engine's tokens for 06:30,
+19:00 and 20:00 on `<html>` themselves (with `dark-theme` by the glaze's mode): what slice 2 claims
+is that Material follows whatever tokens the page has.
+
+Measured on the build of `42b1516` (2026-11-20, before the slice; a scratch probe, not a test):
+- the header's filled button `#006a6a` with a `#ffffff` label in light, `#00dddd` with `#003737`
+  in dark; the theme toggle's glyph `#556476` (muted, `theme-toggle.css`), not the bar's ink;
+- at 390, `mat-sidenav-container` is Material's `#f7faf9` in light and `#101414` in dark (the
+  glaze's ground is `#e9eff4` and `#0b1526`); `body` is already the glaze's (`styles.css` comes
+  after `material-theme.scss`), and `mat-sidenav-content` is transparent;
+- every `--mdc-` in the build is ours: the header's (desktop and phone) and the old hero's.
+
+Test list (crossed off in the "Done" note below as each is committed):
+- **In the browser** (`acceptance/browser/theme-material.test.mjs`, on the built site):
+  - B1 THEME-11, `/en/software`: at 1280 the header's filled button is `--zc-accent` with a
+    `--zc-on-accent` label and the theme toggle's glyph is `--nav-fg`; at 390 the theme toggle's
+    and the menu button's glyphs are `--nav-fg`. In light, dark, and the engine's glaze at 06:30,
+    19:00, 20:00 set on `<html>`. Each colour compared with the token resolved on the same page.
+    Red today: the teal above.
+  - G1 THEME-18, `/en/software` at 390 and 1280, the same five states: `body`,
+    `mat-sidenav-container` and `mat-sidenav-content` are each `--zc-bg-warm` or transparent, and
+    the first opaque ground behind `<main>` is `--zc-bg-warm`. Expected green once B1's map is in
+    (`background` and `surface` → `--zc-bg-warm`), so shown to bite: the built stylesheet's
+    `--mat-sys-surface` set back to `#f7faf9` once, red at 390, restored (md5 checked).
+- **In the build** (`acceptance/theme.test.mjs`):
+  - M1 THEME-17, the built stylesheet: every role of D9 is declared as its token, and no
+    `--mat-sys-*` declaration holds a colour literal, apart from the shadows' black in
+    `level0` to `level5` (D5). With it, in `scripts/material.test.mjs`: `material-theme.scss` names
+    no `$…-palette`. Expected green once B1 is in; it bites in M2.
+  - M2 THEME-P-05, `primary: mat.$cyan-palette` put back in `material-theme.scss` and built: M1
+    red naming `--mat-sys-primary`; restored (md5 checked) and built again.
+- **In the sources** (`scripts/material.test.mjs`, `npm run test:scripts`):
+  - G2 THEME-18, `material-theme.scss`'s `body` takes no `--mat-sys-*` colour. Red today:
+    `background-color: var(--mat-sys-surface)` and `color: var(--mat-sys-on-surface)`.
+  - D1 THEME-19, no `--mdc-` in any `.css`, `.scss`, `.html` or `.ts` under `src/`, nor in the
+    built site. Red: the header button's two and the old hero's four (the icon buttons' two go in
+    B1, replaced by the live hook).
+  - D2 THEME-P-04, `--mdc-filled-button-container-color` put back in `zc-nav-desktop.css`: D1 red
+    naming the file and line; restored (md5 checked).
+- **After the slice:** the unit suite, `npm run test:scripts`, the build, `npm run acceptance` and
+  `npm run acceptance:browser` green; `docs/design.md`'s teal trap and `CLAUDE.md`'s "Material 3
+  theme" lines say what is true now.
+
+Not in slice 2: the glaze at runtime, the toggle's three states (slice 3); the old hero's colours,
+whose dead `--mdc-` lines go here but whose fixed colours go in slice 4 (THEME-26); the header
+button's type and corners as the mock-up (the header's own cases, below the slices); every glaze
+measured on every page (slice 5).
+
+### Diagram: where Material's colours come from
+
+```mermaid
+flowchart LR
+    T["--zc-* on html<br/>styles.css (12:30, 02:00), or the engine's<br/>06:30, 19:00, 20:00 set by the test"] --> Y
+    S["material-theme.scss<br/>type and density, no palette (M1, M2);<br/>theme-overrides: D9's map"] --> Y["--mat-sys-* = var(--zc-…)"]
+    Y -->|"primary, on-primary<br/>today #006a6a on #ffffff"| B["filled button: --zc-accent,<br/>label --zc-on-accent (B1)"]
+    Y -->|"surface, background<br/>today #f7faf9 at 390"| G["sidenav container and content:<br/>--zc-bg-warm (G1)"]
+    N["--nav-fg, the header's CSS"] -->|"--mat-icon-button-icon-color<br/>today #556476 and on-surface-variant"| I["icon buttons: the bar's ink (B1)"]
+    W["body in material-theme.scss<br/>--mat-sys-surface (G2)"] -.->|"removed"| G
+    X["--mdc-* overrides,<br/>read by nothing"] -.->|"refused (D1, D2)"| R["THEME-19 red, file and line"]
+    P["a palette put back"] -.->|"refused (M2)"| R2["THEME-17 red, --mat-sys-primary"]
+```
+
+### Session type
+
+The interaction is the page's paint: the build compiles Material's theme, the page sets the
+glaze's tokens, Material's components ask for a role and get a token's colour, and the test reads
+what was painted. Convention: a role that a branch never calls just ends there.
+
+```
+G = Build → Theme : compile .
+    Theme → Build : { mapped .
+                        Glaze → Html : tokens(hex, mode) .
+                        Test → Page : open(route, width) .
+                        Page → Material : style(element) .
+                        Material → Html : read(--mat-sys-role = var(--zc-token)) .
+                        Html → Material : colour(hex) .
+                        Material → Test : { glaze(element, hex) . end ,
+                                            foreign(element, hex) . end } ,
+                      palette(name) . Build → CI : fail(--mat-sys-primary) . end }
+
+Test ↾     = Page!open . Material?{ glaze . end , foreign . end }
+Material ↾ = Page?style . Html!read . Html?colour . Test!{ glaze . end , foreign . end }
+Theme ↾    = Build?compile . Build!{ mapped . end , palette . end }
+```
+
+| Arrow in the diagram | Step in G | Rows |
+|---|---|---|
+| material-theme.scss → `--mat-sys-*` | `compile`, `{mapped, palette}` | M1, M2 |
+| a palette put back → THEME-17 red | `palette(name) . fail(--mat-sys-primary)` | M2 |
+| `--zc-*` on html → `--mat-sys-*` | `tokens(hex, mode)`, `read(…)`, `colour(hex)` | B1, G1 (five states each) |
+| `--mat-sys-*` → filled button | `style(button)`, `{glaze, foreign}` | B1 |
+| `--nav-fg` → icon buttons | `style(icon button)`, `{glaze, foreign}` | B1 |
+| `--mat-sys-*` → sidenav ground; body's `--mat-sys-surface` removed | `style(sidenav)`, `{glaze, foreign}` | G1, G2 |
+| `--mdc-*` → refused | (a `style` hook no role reads: not in G) | D1, D2 |
+
+Forbidden by G, each refused and the stored state checked unchanged:
+- **a colour from a palette** (a `--mat-sys-*` not read from a `--zc-*`): M2, the scss's md5
+  restored and the build redone.
+- **a message to a role that never receives it** (an `--mdc-*` hook, which Material 21 no longer
+  reads): D1, D2, the file's md5 restored.
+- **a ground painted before the glaze's** (`--mat-sys-surface` on a layer above `body`): G1's
+  break, the built stylesheet's md5 restored.
+- **a stale colour** (Material holding a value from before the tokens changed): B1 and G1 set the
+  tokens after load, at three more glazes, and read again.
+- Races: none; the paint has one writer per state.
