@@ -165,6 +165,29 @@ test('SHELL-15b: at 768 in German, the bar holds every control in one row, none 
   });
 });
 
+// In the page: each menu word's text and its computed text-transform, the bar's (desktop) or the
+// phone menu's (its titles), so what a screen reader and a copy read is what shows (D45).
+const READ_TRANSFORMS = () =>
+  [...document.querySelectorAll('.desktop-menu-items a, mat-sidenav nav [matListItemTitle]')].map(
+    (el) => `${el.textContent.replace(/\s+/g, ' ').trim()}: ${getComputedStyle(el).textTransform}`,
+  );
+
+for (const [lang, words] of [
+  ['en', ['software', 'research', 'writing', 'about']],
+  ['de', ['Software', 'Forschung', 'Texte', 'Über mich']],
+  ['pt', ['software', 'investigação', 'textos', 'sobre']],
+]) {
+  for (const width of [1280, 390]) {
+    test(`SHELL-16 (D45, D46): at ${width} in ${lang}, the menu's words are its text, with no text-transform`, async () => {
+      const read = await atWidth({ route: `/${lang}/software`, width }, READ_TRANSFORMS);
+      assert.deepEqual(
+        read.slice(0, 4),
+        words.map((w) => `${w}: none`),
+      );
+    });
+  }
+}
+
 for (const route of ['/en/software', '/de/writing', '/pt/research']) {
   for (const width of [390, 768, 1280, 1440]) {
     test(`SHELL-14 (D48): at ${width} on ${route}, header, heading and footer share the column's edges`, async () => {
