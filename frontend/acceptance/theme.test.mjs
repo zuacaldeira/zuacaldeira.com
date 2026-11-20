@@ -2,7 +2,7 @@
 // Run `npm run build` first, then `npm run acceptance`. Examples: THEME-10 in docs/examples/theme.md.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { runInNewContext } from 'node:vm';
 
@@ -39,3 +39,69 @@ for (const route of ['en/software', 'de/home', '.', '404']) {
     );
   });
 }
+
+// Material has no palette of its own: its colour roles are the glaze's tokens (THEME-17, B1, D9 in
+// docs/examples/theme.md), so its components follow the glaze.
+const D9 = {
+  primary: 'accent',
+  secondary: 'accent',
+  tertiary: 'accent',
+  'surface-tint': 'accent',
+  'on-primary': 'on-accent',
+  'on-secondary': 'on-accent',
+  'on-tertiary': 'on-accent',
+  'primary-container': 'azul-wash',
+  'secondary-container': 'azul-wash',
+  'tertiary-container': 'azul-wash',
+  'on-primary-container': 'text-heading',
+  'on-secondary-container': 'text-heading',
+  'on-tertiary-container': 'text-heading',
+  background: 'bg-warm',
+  surface: 'bg-warm',
+  'surface-bright': 'bg-warm',
+  'surface-dim': 'bg-warm',
+  'surface-container-lowest': 'bg-white',
+  'surface-container-low': 'bg-white',
+  'surface-container': 'bg-light',
+  'surface-container-high': 'bg-light',
+  'surface-container-highest': 'bg-light',
+  'surface-variant': 'bg-light',
+  'on-background': 'text-body',
+  'on-surface': 'text-body',
+  'on-surface-variant': 'text-muted',
+  outline: 'edge',
+  'outline-variant': 'border-light',
+  'inverse-surface': 'text-heading',
+  'inverse-on-surface': 'bg-warm',
+  'inverse-primary': 'azul-wash',
+  error: 'ochre-text',
+  'on-error': 'bg-light',
+  'error-container': 'bg-light',
+  'on-error-container': 'ochre-text',
+};
+const COLOUR_LITERAL = /#[0-9a-f]{3,8}\b|\b(rgba?|hsla?|light-dark)\(/i;
+
+// Every --mat-sys-* declaration in the built global stylesheet, in order: [name, value].
+const matSys = () => {
+  const name = readdirSync(browser).find((f) => /^styles-.*\.css$/.test(f));
+  const css = readFileSync(join(browser, name), 'utf8');
+  return [...css.matchAll(/--mat-sys-([a-z0-9-]+):\s*([^;}]*)/g)].map(([, n, v]) => [n, v.trim()]);
+};
+
+test('THEME-17: every colour role of Material is the glaze token of D9', () => {
+  const declared = matSys();
+  const wrong = Object.entries(D9).flatMap(([role, token]) => {
+    const values = declared.filter(([n]) => n === role).map(([, v]) => v);
+    const want = `var(--zc-${token})`;
+    return values.length > 0 && values.every((v) => v === want) ? [] : [{ role, values, want }];
+  });
+  assert.deepEqual(wrong, []);
+});
+
+test('THEME-17: no --mat-sys-* declaration in the build holds a colour literal', () => {
+  const literal = matSys().filter(([, v]) => COLOUR_LITERAL.test(v));
+  assert.deepEqual(
+    literal.map(([n, v]) => `--mat-sys-${n}: ${v}`),
+    [],
+  );
+});
