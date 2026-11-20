@@ -178,6 +178,15 @@ Taken while planning slice 1 (2026-11-15, tdd-peer; Zua may change them):
   block with the 14, so every colour literal in `styles.css` is generated, apart from the shadows'
   black (D5).
 
+Taken while building slice 2 (2026-11-20, tdd-peer; Zua may change them):
+- **D14. The phone menu's scrim** is Material's `neutral-variant20` mixed at 40%, a role D9 does
+  not name. It is the darkest ink of each mode: `--zc-text-heading` on light glazes, `--zc-bg-warm`
+  on dark ones, so the veil stays dark as the mock-up's (`rgb(11 21 38 / .45)`). Left unmapped,
+  the backdrop would be transparent.
+- **D15. Material's elevation** is written by `mat.theme` only with a palette, so it goes with the
+  palettes; the elevated cards (Running) and raised buttons read it. `level0` is `none`, `level1`
+  to `level5` are the site's `--zc-shadow-sm`, `-md`, `-lg`, which deepen on dark glazes already.
+
 The options as they were proposed (recommendation first):
 
 - **D1. A device set to dark, on a first visit.** The study and the 2026-11-02 agreement make living

@@ -95,8 +95,9 @@ nav {
   letter-spacing: 0.01em;
 }
 
+/* Icon buttons draw in the bar's ink (THEME-11), through Material's own hook. */
 app-theme-toggle {
   color: var(--nav-fg);
-  --mdc-icon-button-icon-color: var(--nav-fg);
+  --mat-icon-button-icon-color: var(--nav-fg);
   transition: color var(--zc-transition-base);
 }

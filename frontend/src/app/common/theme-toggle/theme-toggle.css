@@ -1,10 +1,6 @@
+/* The glyph is the bar's ink, set by the bar through --mat-icon-button-icon-color (THEME-11). */
 button {
-  color: var(--zc-text-muted);
   transition: color var(--zc-transition-fast);
-}
-
-button:hover {
-  color: var(--zc-text-heading);
 }
 
 button mat-icon {
