@@ -986,6 +986,90 @@ Leftovers, not built:
 - **Material Icons** is 128 kB of every page's 265 kB of fonts, for a few icons.
 - **The browser tests need Google Fonts:** a failed font load fails SHELL-13 and SHELL-13c, by design.
 
+## The header as the mock-ups draw it (proposed 2026-11-20, not agreed yet)
+
+Zua's comparison on 2026-11-20 ("the header follows the mock-ups"): on the built site the menu is
+centred and capitalised and the logo stands further in; in every agreed mock-up the menu stands on
+the right beside the languages, in lower case, and the logo starts on the content's left edge. No
+decision records the difference, so it is drift. `home-spec.md` already says it: "One column for
+everything: `max-width: 1200px` … Header, hero text, band and footer all start on its left edge …
+16 px at 390, 24 at 768, 64 at 1280, 144 at 1440", and "`--zc-max-width` from 1100 px to 1200 px",
+which was never built: the rebuilt pages' sections use 1200 px each, the header and footer still
+`--zc-max-width` (1100).
+
+Measured 2026-11-20 (a scratch probe; the Software mock-up `#frame=a` beside the built
+`/xx/software` after theme slice 2):
+
+| | Mock-up | Built |
+|---|---|---|
+| 1280: logo's left edge, `<h1>`'s left edge | 64, 64 | **114**, 64 |
+| 1280: footer's content box | 40 to 1240 (the 1200 column) | **90 to 1190** (1100) |
+| 1280: menu, en | `software research writing about`, 572 to 892, 12 px before `EN` | **`Software Research Writing About`**, **406 to 710, centred, 128 px before `EN`** |
+| 1280: menu, de | `Software Forschung Texte Über mich`, ends 12 px before `EN` | the same words, **centred** |
+| 1280: menu, pt | `software investigação escrita sobre` (home, software) or `… textos …` (research, writing, about) | **`Software Investigação Textos Sobre`** |
+| 1280: contact button | `⊥ write to me`, `⊥ Kontakt`, `⊥ Contacto`; IBM Plex Mono, 2 px corners | the same words; **Archivo, Material's round corners** |
+| 390: logo's left edge, `<h1>`'s | 16, 16 | **24**, 16 |
+| 390: phone menu | the bar's words, lower case in en and pt | **capitalised**, with icons |
+
+So the mock-ups write German with its nouns' capitals (all five agree), and English and Portuguese
+in lower case. Portuguese "writing" is **textos**: D5 in `writing.md` replaced the home mock-up's
+"escrita". The phone menu's look (white, icons, Plex Mono) was reviewed on 2026-11-05 ("good as it
+is"); only its words are in question here. Its Contact link reads "⊥ Contact" by SHELL-05b, agreed;
+the mock-up's drawer repeats "⊥ write to me", which is not taken up.
+
+| ID | Given | When | Then | Covered |
+|----|-------|------|------|---------|
+| SHELL-14 | `/en/software`, `/de/writing`, `/pt/research` at 390, 768, 1280 and 1440, light | the header, the page's `<h1>` and the footer are measured | the logo, the `<h1>` and the footer's content start on the one column's left edge, 16, 24, 64 and 144 px (`home-spec.md`); the header's last control and the footer's content end on its right edge (1216 at 1280). Red today: the logo at 24 (390) and 114 (1280), the footer at 90 (1280) | |
+| SHELL-15 | the desktop bar at 1280 and 1440, `/en/software`, `/de/software`, `/pt/software` | the bar is measured | from the left the mark and name; then, at the right, the four menu links, `EN DE PT`, the contact button, the theme button; the menu's last link ends one gap (`--zc-space-3`, 12 px) before `EN`. Red today: the menu centred, 128 px before `EN` in en | |
+| SHELL-15b | the desktop bar at 768 in de (the longest words) | it is measured | every control in one row, none overlapping, no horizontal scroll (the mock-up holds them at 768) | |
+| SHELL-16 | the built pages in en, de and pt | the main menu is read, in the bar and in the phone menu | en "software, research, writing, about"; pt "software, investigação, textos, sobre"; de "Software, Forschung, Texte, Über mich" (SHELL-11 as it is); the words are the text itself, in the i18n files, not a CSS `text-transform`, so a screen reader, a copy and a search read what is shown. Red today: en and pt capitalised | |
+| SHELL-17 | the contact button at 1280, `/en/software`, `/de/software`, `/pt/software`, light and dark | it is read | as the mock-up's `.btn--fill.cta`: a plain link (`home-spec.md`: "Not Material"), IBM Plex Mono at 0.875 rem, 2 px corners, at least 44 px tall, `--zc-accent` with `--zc-on-accent` (THEME-11), `--zc-accent-hover` on hover; its words as SHELL-05. Red today: Archivo, round corners, Material's hover layer | |
+| SHELL-14-P-01 | the header's column set back to 1100 px (the token, or a `max-width` of the bar's own) | SHELL-14 runs | red, naming the header and 114 against 64 at 1280 | |
+| SHELL-14-P-02 | the footer given a width of its own | SHELL-14 runs | red, naming the footer's edges | |
+| SHELL-15-P-01 | `justify-content: center` put back on the bar's `nav` | SHELL-15 runs | red, naming the gap before `EN` | |
+| SHELL-16-P-01 | the menu lowered by `text-transform: lowercase` in place of the words | SHELL-16 runs | red, naming the link and its computed transform (in de it would also print "über mich") | |
+| SHELL-16-P-02 | the English words capitalised again in `en.ts` | SHELL-16 runs | red on every English page, naming the link | |
+| SHELL-16-P-03 | the phone menu given other words than the bar | SHELL-16 runs | red, naming the phone menu's link | |
+| SHELL-17-P-01 | Material's full round corners put back on the button | SHELL-17 runs | red, naming the radius | |
+
+Side effects to check when it is built: `--zc-max-width` is also the column of the Contact and
+Running pages (and the hidden Work and Pädagogik), which widen by 100 px; unit specs and build
+tests that read the English menu words ("Software", "About") change with SHELL-16; SHELL-06 (the
+phone bar) and LOGO-04, LOGO-08 must stay green.
+
+Layout and words, no interaction: no protocol. The refused rows are breaks of the layout or the
+words, each shown red once and restored.
+
+```mermaid
+flowchart LR
+    subgraph COL["one column, 1200 px, gutter 24 (16 under Handset): left edge 64 at 1280"]
+        M["mark + name<br/>starts at 64 (SHELL-14)<br/>today 114"] --- S(("space"))
+        S --- N["software research writing about<br/>(SHELL-16; today capitalised)"]
+        N -->|"12 px (SHELL-15)<br/>today centred, 128 px"| L["EN DE PT"]
+        L --- C["⊥ write to me<br/>plain link, Plex Mono, 2 px (SHELL-17)"]
+        C --- T["theme"]
+    end
+    F["footer content: same edges (SHELL-14)<br/>today 90 to 1190"] -.- COL
+```
+
+Proposed home and order: this file, as its own element (the header and footer are the shell's,
+`logo.md` covers the mark only, `theme.md` colour only), built after theme slice 2 and before
+slice 3.
+
+Open for Zua (recommendation first):
+- **Q1. The case of the menu's words.** (1) As the mock-ups: English and Portuguese in lower case,
+  German with its nouns' capitals. (2) Lower case in all three ("über mich" breaks German
+  spelling). (3) Capitals everywhere, and the mock-ups change instead.
+- **Q2. The phone menu's words.** (1) The bar's words, as the mock-up's drawer; its look, icons
+  and Contact link stay as reviewed. (2) The phone menu keeps its capitals.
+- **Q3. The contact button.** (1) The mock-up's plain link (`home-spec.md`: "Not Material"): Plex
+  Mono, 2 px corners, the accent hover. (2) Keep Material's button and set only its type and
+  corners. (3) Leave it as it is after theme slice 2 (the right colours, Archivo, round).
+- **Q4. The footer.** (1) It joins the same 1200 px column, as `home-spec.md` says. (2) Only the
+  header moves now.
+- **Q5. Where and when.** (1) Here, as its own element, after theme slice 2 and before slice 3.
+  (2) A slice of the theme. (3) In `logo.md`, beside the mark.
+
 ## Width of the header
 
 The bar is the tightest part of the page, so these were measured in the mock-up in all three
